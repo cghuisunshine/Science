@@ -1,0 +1,1160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Science 10 (UHill) — One-Semester Master Tutorial</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#0f1733;
+      --ink:#e9eefc;
+      --muted:#b9c2e6;
+      --line:rgba(255,255,255,.10);
+      --accent:#7aa2ff;
+      --accent2:#7ef0c2;
+      --warn:#ffdd7a;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --radius:16px;
+      --max: 980px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--ink);
+      background: radial-gradient(1200px 600px at 10% 0%, rgba(122,162,255,.18), transparent 60%),
+                  radial-gradient(900px 600px at 90% 10%, rgba(126,240,194,.14), transparent 55%),
+                  var(--bg);
+      line-height:1.55;
+    }
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+    header{
+      position:sticky; top:0; z-index:10;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, rgba(11,16,32,.92), rgba(11,16,32,.65));
+      border-bottom:1px solid var(--line);
+    }
+    .topbar{
+      max-width: calc(var(--max) + 360px);
+      margin: 0 auto;
+      padding: 12px 16px;
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+    }
+    .brand{
+      display:flex; flex-direction:column;
+      gap:2px;
+    }
+    .brand .kicker{
+      font-size:12px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase;
+    }
+    .brand h1{
+      margin:0;
+      font-size:16px;
+      font-weight:700;
+    }
+    .actions{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    }
+    .btn{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border:1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.04);
+      color: var(--ink);
+      font-size: 13px;
+      cursor:pointer;
+    }
+    .btn:hover{ background: rgba(255,255,255,.07); }
+    .btn code{font-family:var(--mono); font-size:12px; color:var(--muted)}
+    .layout{
+      max-width: calc(var(--max) + 360px);
+      margin: 0 auto;
+      padding: 18px 16px 60px;
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
+      align-items:start;
+    }
+    nav{
+      position:sticky;
+      top: 68px;
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.03);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .nav-head{
+      padding: 14px 14px 10px;
+      border-bottom:1px solid var(--line);
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+    }
+    .nav-head h2{
+      margin:0;
+      font-size:14px;
+      letter-spacing:.02em;
+    }
+    .nav-head .small{
+      font-size:12px; color:var(--muted);
+      white-space:nowrap;
+    }
+    .nav-body{
+      padding: 10px 10px 14px;
+      max-height: calc(100vh - 110px);
+      overflow:auto;
+    }
+    .nav-body a{
+      display:block;
+      padding: 8px 10px;
+      border-radius: 12px;
+      color: var(--ink);
+      border:1px solid transparent;
+      font-size:13px;
+    }
+    .nav-body a:hover{
+      border-color: var(--line);
+      background: rgba(255,255,255,.04);
+      text-decoration:none;
+    }
+    .nav-body .group{
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top:1px solid var(--line);
+    }
+    .tag{
+      display:inline-block;
+      font-size:11px;
+      color: var(--muted);
+      border:1px solid var(--line);
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-left:8px;
+      vertical-align:middle;
+    }
+    main{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.03);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .hero{
+      padding: 18px 18px 14px;
+      border-bottom:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(122,162,255,.14), rgba(255,255,255,0));
+    }
+    .hero h2{
+      margin:0 0 8px;
+      font-size: 22px;
+      line-height:1.2;
+    }
+    .meta{
+      display:flex; gap:10px; flex-wrap:wrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .content{
+      padding: 18px;
+      max-width: var(--max);
+    }
+    h3{
+      margin: 28px 0 10px;
+      font-size: 18px;
+      line-height:1.25;
+    }
+    h4{
+      margin: 18px 0 8px;
+      font-size: 15px;
+      line-height:1.25;
+      color: var(--ink);
+    }
+    p{margin: 8px 0 10px}
+    ul{margin: 8px 0 12px; padding-left: 18px}
+    li{margin: 6px 0}
+    .callout{
+      border:1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 12px;
+      margin: 12px 0;
+      background: rgba(255,255,255,.03);
+    }
+    .callout strong{color: var(--accent2)}
+    .say{
+      border-left: 3px solid var(--accent);
+      padding-left: 10px;
+      color: var(--ink);
+      background: rgba(122,162,255,.06);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin: 10px 0;
+    }
+    .warn{
+      border-left: 3px solid var(--warn);
+      background: rgba(255,221,122,.08);
+    }
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    table{
+      width:100%;
+      border-collapse: collapse;
+      margin: 10px 0 14px;
+      border:1px solid var(--line);
+      border-radius: 12px;
+      overflow:hidden;
+    }
+    th, td{
+      text-align:left;
+      padding: 10px 10px;
+      border-bottom:1px solid var(--line);
+      vertical-align:top;
+      font-size: 13px;
+    }
+    th{
+      background: rgba(255,255,255,.04);
+      color: var(--ink);
+      font-weight: 700;
+    }
+    tr:last-child td{border-bottom:none}
+    code, pre{
+      font-family: var(--mono);
+      font-size: 12.5px;
+      color: #eaf0ff;
+    }
+    pre{
+      margin: 10px 0 14px;
+      padding: 12px 12px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(0,0,0,.25);
+      overflow:auto;
+    }
+    details{
+      border:1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+      margin: 10px 0 14px;
+      overflow:hidden;
+    }
+    summary{
+      cursor:pointer;
+      padding: 12px 12px;
+      font-weight:700;
+      font-size: 13px;
+      list-style:none;
+    }
+    summary::-webkit-details-marker{display:none}
+    details[open] summary{border-bottom:1px solid var(--line); background: rgba(255,255,255,.03)}
+    .details-body{padding: 10px 12px 12px}
+    .hr{
+      height:1px; background: var(--line);
+      margin: 18px 0;
+    }
+    .foot{
+      margin-top: 30px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12.5px;
+    }
+    .pill{
+      display:inline-block;
+      padding: 3px 10px;
+      border-radius:999px;
+      background: rgba(122,162,255,.10);
+      border:1px solid rgba(122,162,255,.25);
+      color: var(--ink);
+      font-size: 12px;
+      margin-right:8px;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .layout{grid-template-columns: 1fr}
+      nav{position:relative; top:auto}
+      .nav-body{max-height: 260px}
+    }
+
+    /* Print */
+    @media print{
+      header, nav, .actions{display:none !important}
+      body{background:white; color:black}
+      main{box-shadow:none; border:none}
+      .hero{border:none; background:none}
+      .content{max-width: none}
+      a{color:black; text-decoration:underline}
+      .callout, details, pre, table{break-inside: avoid}
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="topbar">
+    <div class="brand">
+      <div class="kicker">Science 10 · UHill Secondary School</div>
+      <h1>One-Semester Master Tutorial (Teach-from-this)</h1>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="toggleAll(true)">Expand all</button>
+      <button class="btn" onclick="toggleAll(false)">Collapse all</button>
+      <button class="btn" onclick="window.print()">Print / Save PDF</button>
+      <span class="btn" style="cursor:default">
+        <code>18 weeks</code> <code>Inquiry</code> <code>Big Ideas</code>
+      </span>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav aria-label="Table of contents">
+    <div class="nav-head">
+      <h2>Table of Contents</h2>
+      <div class="small">Jump to unit</div>
+    </div>
+    <div class="nav-body">
+      <a href="#part0">Part 0 — How to Use This</a>
+      <a href="#unit1">Unit 1 — Science as a Way of Knowing <span class="tag">Weeks 1–2</span></a>
+      <a href="#unit2">Unit 2 — Biology: Genes &amp; Diversity <span class="tag">Weeks 3–6</span></a>
+      <a href="#unit3">Unit 3 — Chemistry: Matter &amp; Energy <span class="tag">Weeks 7–10</span></a>
+      <a href="#unit4">Unit 4 — Physics: Energy &amp; Environment <span class="tag">Weeks 11–14</span></a>
+      <a href="#unit5">Unit 5 — Space Science: The Universe <span class="tag">Weeks 15–17</span></a>
+      <a href="#unit6">Unit 6 — Synthesis &amp; Inquiry <span class="tag">Week 18</span></a>
+
+      <div class="group">
+        <a href="#goals">Course Goals (Student-Friendly)</a>
+        <a href="#competencies">Core Competencies in Science 10</a>
+        <a href="#assessment">Assessment &amp; Evidence of Learning</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <h2>Science 10 — Semester Tutorial (UHill)</h2>
+      <div class="meta">
+        <div><span class="pill">Grade 10</span>BC-aligned Big Ideas + Inquiry + Lab Skills</div>
+        <div>Use as: teacher script • student reading • slide source • unit planner</div>
+      </div>
+    </section>
+
+    <section class="content">
+      <section id="goals">
+        <h3>Overarching Course Goals (Tell Students)</h3>
+        <div class="say">
+          <strong>Say to students:</strong><br/>
+          Science is not about memorizing facts. Science is about <strong>asking questions, testing ideas, and using evidence</strong> to explain the world.
+        </div>
+        <p>By the end of Science 10, students should be able to:</p>
+        <ul>
+          <li><strong>Explain scientific ideas using evidence</strong> (not just opinions).</li>
+          <li><strong>Design and interpret experiments</strong> using variables and fair-testing principles.</li>
+          <li>Understand how <strong>matter and energy interact</strong> across biology, chemistry, physics, and space science.</li>
+          <li>Describe how <strong>living things and the universe change over time</strong> based on scientific explanations.</li>
+          <li><strong>Communicate scientific thinking clearly</strong> (writing, speaking, graphs, diagrams).</li>
+          <li><strong>Work safely and collaboratively</strong> (lab culture, responsibility, reflection).</li>
+        </ul>
+      </section>
+
+      <section id="competencies">
+        <h3>Core Competencies Integrated All Semester</h3>
+        <div class="grid2">
+          <div class="callout">
+            <strong>Communication</strong>
+            <ul>
+              <li>Lab reports, claim-evidence-reasoning (CER)</li>
+              <li>Diagrams, graphs, explanations in your own words</li>
+              <li>Group discussion and presentation skills</li>
+            </ul>
+          </div>
+          <div class="callout">
+            <strong>Thinking</strong>
+            <ul>
+              <li>Patterns, trends, and cause-effect reasoning</li>
+              <li>Interpreting data and judging evidence quality</li>
+              <li>Designing investigations and revising ideas</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>Personal &amp; Social Skills</strong>
+          <ul>
+            <li>Lab safety, shared responsibility, respectful teamwork</li>
+            <li>Self-assessment: strengths, next steps, growth mindset</li>
+            <li>Ethics and impact: choices in science affect people and environment</li>
+          </ul>
+        </div>
+      </section>
+
+      <div class="hr"></div>
+
+      <section id="part0">
+        <h3>Part 0 — How to Use This Document</h3>
+        <p>This tutorial is written so you can teach directly from it.</p>
+        <ul>
+          <li><strong>Bold</strong> = key ideas to emphasize</li>
+          <li><em>Italic</em> = student-friendly phrasing</li>
+          <li><strong>Check for understanding</strong> = quick formative prompts</li>
+          <li><strong>Misconceptions</strong> = common mistakes to pre-correct</li>
+        </ul>
+
+        <details>
+          <summary>Recommended lesson rhythm (75–80 min block)</summary>
+          <div class="details-body">
+            <ol>
+              <li><strong>Launch (5–8 min):</strong> hook question or demo</li>
+              <li><strong>Mini-lesson (15–20 min):</strong> key concept + examples</li>
+              <li><strong>Guided practice (15–20 min):</strong> small tasks, circulate</li>
+              <li><strong>Lab / application (20–30 min):</strong> collect evidence/data</li>
+              <li><strong>Closure (5–10 min):</strong> CER exit ticket, reflection</li>
+            </ol>
+          </div>
+        </details>
+      </section>
+
+      <div class="hr"></div>
+
+      <section id="unit1">
+        <h3>Unit 1 — Science as a Way of Knowing (Weeks 1–2)</h3>
+        <p><strong>Unit Goal:</strong> Students understand that science is a <strong>process</strong> for building explanations using evidence.</p>
+
+        <details open>
+          <summary>Lesson 1.1 — What is Science?</summary>
+          <div class="details-body">
+            <h4>Teacher framing</h4>
+            <div class="say">
+              <strong>Say:</strong> Science is not about being right the first time. Science is about <strong>testing ideas, making mistakes, and improving explanations</strong> using evidence.
+            </div>
+
+            <h4>Core definition</h4>
+            <p><strong>Science</strong> is a systematic way of understanding the natural world through observation, measurement, experimentation, and reasoning.</p>
+
+            <table>
+              <thead><tr><th>Science</th><th>Not Science</th></tr></thead>
+              <tbody>
+                <tr><td>Testable and measurable</td><td>Not testable (belief/faith-only claims)</td></tr>
+                <tr><td>Evidence-based</td><td>Opinion or authority-based</td></tr>
+                <tr><td>Revisable with new data</td><td>Fixed, not open to revision</td></tr>
+              </tbody>
+            </table>
+
+            <h4>Activity</h4>
+            <p>Show an image of a phenomenon (e.g., plants leaning toward light). Students write:</p>
+            <ul>
+              <li>5 <strong>observations</strong> (what they see)</li>
+              <li>3 <strong>inferences</strong> (what they think it means)</li>
+            </ul>
+
+            <div class="warn callout">
+              <strong>Misconception to address:</strong> “Science proves things.”<br/>
+              <strong>Correction:</strong> Science <strong>supports</strong> explanations with evidence; conclusions can change with new data.
+            </div>
+
+            <h4>Check for understanding</h4>
+            <ul>
+              <li>What makes a claim scientific?</li>
+              <li>Can scientific ideas change? Why?</li>
+            </ul>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 1.2 — Observations, Inferences, and Bias</summary>
+          <div class="details-body">
+            <h4>Teach explicitly</h4>
+            <ul>
+              <li><strong>Observation:</strong> what your senses/tools detect</li>
+              <li><strong>Inference:</strong> an explanation based on observations</li>
+            </ul>
+
+            <h4>Example</h4>
+            <ul>
+              <li>Observation: The beaker feels warm.</li>
+              <li>Inference: A reaction released energy.</li>
+            </ul>
+
+            <h4>Bias</h4>
+            <p>Bias can affect what we notice and how we interpret results. Scientists reduce bias by using:</p>
+            <ul>
+              <li>repeat trials</li>
+              <li>clear measurement methods</li>
+              <li>peer review and transparency</li>
+            </ul>
+
+            <h4>Check for understanding</h4>
+            <p>Ask: <strong>Can two people make the same observation but different inferences?</strong> (Yes.)</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 1.3 — Scientific Questions</summary>
+          <div class="details-body">
+            <h4>What makes a strong scientific question?</h4>
+            <ul>
+              <li>Testable with a procedure</li>
+              <li>Has measurable variables</li>
+              <li>Specific (not vague or opinion-based)</li>
+            </ul>
+
+            <table>
+              <thead><tr><th>Weak Question</th><th>Strong Question</th></tr></thead>
+              <tbody>
+                <tr><td>Is sugar bad?</td><td>How does sugar concentration affect yeast growth?</td></tr>
+                <tr><td>Is solar power good?</td><td>How does panel angle affect energy output in sunlight?</td></tr>
+              </tbody>
+            </table>
+
+            <h4>Student task</h4>
+            <p>Convert 3 weak questions into strong, testable ones.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 1.4 — Hypotheses</summary>
+          <div class="details-body">
+            <h4>Hypothesis structure</h4>
+            <pre><code>If (independent variable changes), then (dependent variable changes), because (scientific reason).</code></pre>
+
+            <h4>Example + breakdown</h4>
+            <p><strong>Example:</strong> If temperature increases, then reaction rate increases, because particles move faster and collide more often.</p>
+            <ul>
+              <li><strong>Prediction:</strong> what will happen</li>
+              <li><strong>Reason:</strong> why it happens (science explanation)</li>
+            </ul>
+
+            <h4>Check for understanding</h4>
+            <p>Ask students to underline the IV, DV, and the “because” reasoning in a sample hypothesis.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 1.5 — Variables &amp; Fair Tests</summary>
+          <div class="details-body">
+            <h4>Core idea</h4>
+            <p>In a fair test, you change <strong>only one</strong> independent variable at a time so you can trust the conclusion.</p>
+
+            <h4>Worked example</h4>
+            <p><strong>Question:</strong> How does ramp height affect toy car speed?</p>
+            <ul>
+              <li><strong>IV:</strong> ramp height</li>
+              <li><strong>DV:</strong> speed (or time to travel a distance)</li>
+              <li><strong>Controls:</strong> same car, same ramp surface, same distance, same release method</li>
+            </ul>
+
+            <div class="warn callout">
+              <strong>Common student error:</strong> changing multiple things (height + car + surface).<br/>
+              <strong>Fix:</strong> if you change more than one thing, you can’t tell what caused the result.
+            </div>
+
+            <h4>Check for understanding</h4>
+            <p>Give 3 scenarios; students identify IV/DV/controls.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 1.6 — Measurement &amp; Error</summary>
+          <div class="details-body">
+            <h4>Key ideas</h4>
+            <ul>
+              <li>No measurement is perfect; all data includes uncertainty.</li>
+              <li><strong>Accuracy:</strong> closeness to true value</li>
+              <li><strong>Precision:</strong> consistency/repeatability</li>
+            </ul>
+
+            <h4>Dartboard model (quick demo)</h4>
+            <ul>
+              <li>Accurate + precise: tight cluster at bullseye</li>
+              <li>Precise but not accurate: tight cluster off-center</li>
+              <li>Accurate but not precise: scattered around bullseye</li>
+            </ul>
+
+            <h4>Check for understanding</h4>
+            <p>Ask: “Which matters more in science?” (Often both; depends on purpose.)</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 1.7 — Graphing &amp; Trends</summary>
+          <div class="details-body">
+            <h4>Graphing rules (non-negotiable)</h4>
+            <ul>
+              <li>X-axis = <strong>independent variable</strong></li>
+              <li>Y-axis = <strong>dependent variable</strong></li>
+              <li>Include units, clear scale, accurate plotting</li>
+            </ul>
+
+            <h4>Trend interpretation prompts</h4>
+            <ul>
+              <li>Describe the relationship (increases, decreases, no change).</li>
+              <li>Is it linear or curved?</li>
+              <li>Are there anomalies? What might explain them?</li>
+              <li>What does this trend suggest about cause-effect?</li>
+            </ul>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 1.8 — Lab Safety &amp; Responsibility</summary>
+          <div class="details-body">
+            <h4>Culture-setting message</h4>
+            <div class="say warn">
+              <strong>Say:</strong> Safety is not a rule you follow for the teacher. Safety is a responsibility you carry for your group.
+            </div>
+
+            <h4>Key safety habits</h4>
+            <ul>
+              <li>Goggles when instructed; hair tied; no food/drink</li>
+              <li>Read procedures before starting</li>
+              <li>Report spills and breakage immediately</li>
+              <li>Clean and reset station</li>
+            </ul>
+
+            <h4>Exit ticket</h4>
+            <p>“What is one safety habit you will practice consistently?”</p>
+          </div>
+        </details>
+      </section>
+
+      <div class="hr"></div>
+
+      <section id="unit2">
+        <h3>Unit 2 — Biology: Genes &amp; Diversity (Weeks 3–6)</h3>
+        <p><strong>Big Idea:</strong> Genes are the foundation for the diversity of living things.</p>
+
+        <details open>
+          <summary>Lesson 2.1 — What Is Life?</summary>
+          <div class="details-body">
+            <h4>Teach core characteristics</h4>
+            <p>Living things typically:</p>
+            <ul>
+              <li>are made of cells</li>
+              <li>use energy</li>
+              <li>grow and reproduce</li>
+              <li>respond to the environment</li>
+            </ul>
+
+            <h4>Check for understanding</h4>
+            <p>Ask: “Is a virus alive?” Use this to introduce how definitions can be debated and refined.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 2.2 — Cells</summary>
+          <div class="details-body">
+            <h4>Core concept</h4>
+            <p>A cell is the <strong>smallest unit of life</strong> capable of carrying out life processes.</p>
+
+            <table>
+              <thead><tr><th>Prokaryotic</th><th>Eukaryotic</th></tr></thead>
+              <tbody>
+                <tr><td>No nucleus (bacteria)</td><td>Nucleus present (plants, animals)</td></tr>
+                <tr><td>Simpler structure</td><td>More complex organelles</td></tr>
+              </tbody>
+            </table>
+
+            <h4>Analogy: cell as factory</h4>
+            <table>
+              <thead><tr><th>Cell Part</th><th>Factory Role</th></tr></thead>
+              <tbody>
+                <tr><td>Nucleus</td><td>Control center (instructions)</td></tr>
+                <tr><td>Mitochondria</td><td>Power plant (energy release)</td></tr>
+                <tr><td>Cell membrane</td><td>Security gate (controls entry/exit)</td></tr>
+              </tbody>
+            </table>
+
+            <h4>Check for understanding</h4>
+            <p>“If the mitochondria stop working, what happens to the cell?”</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 2.3 — DNA &amp; Genetic Information</summary>
+          <div class="details-body">
+            <h4>Key statement</h4>
+            <div class="callout">
+              <strong>DNA does not directly make traits.</strong> DNA contains instructions to make <strong>proteins</strong>, and proteins affect traits.
+            </div>
+
+            <h4>Student-friendly explanation</h4>
+            <p><em>DNA is like a set of instructions. Genes are small sections of DNA, like specific recipes. When the cell follows those recipes, it builds proteins that affect how your body looks and works.</em></p>
+
+            <h4>Check for understanding</h4>
+            <p>“What is a gene?” “What do proteins do?”</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 2.4 — Genes &amp; Traits (Gene–Environment Interaction)</summary>
+          <div class="details-body">
+            <h4>Teach this clearly</h4>
+            <p>Genes provide potential, and environment can affect how traits appear (gene expression).</p>
+
+            <h4>Examples</h4>
+            <ul>
+              <li>Height: genes + nutrition/sleep/health</li>
+              <li>Skin tone: genes + sunlight exposure</li>
+              <li>Athletic performance: genes + training</li>
+            </ul>
+
+            <h4>Check for understanding</h4>
+            <p>Ask: “Give one trait mostly genetic and one trait strongly influenced by environment.”</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 2.5 — Mitosis (Growth &amp; Repair)</summary>
+          <div class="details-body">
+            <h4>Purpose</h4>
+            <ul>
+              <li>Growth</li>
+              <li>Repair</li>
+              <li>Replacement of damaged cells</li>
+            </ul>
+
+            <h4>Conceptual focus</h4>
+            <p>Mitosis produces <strong>genetically identical</strong> daughter cells.</p>
+
+            <details>
+              <summary>Stages explained (focus on what + why)</summary>
+              <div class="details-body">
+                <ul>
+                  <li><strong>Prophase:</strong> chromosomes condense (easier to move)</li>
+                  <li><strong>Metaphase:</strong> line up in middle (organized split)</li>
+                  <li><strong>Anaphase:</strong> pulled apart (separating copies)</li>
+                  <li><strong>Telophase:</strong> nuclei reform (two new control centers)</li>
+                </ul>
+              </div>
+            </details>
+
+            <h4>Check for understanding</h4>
+            <p>“Why does the body need identical cells for growth?”</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 2.6 — Meiosis (Variation &amp; Reproduction)</summary>
+          <div class="details-body">
+            <h4>Purpose</h4>
+            <p>Meiosis produces sex cells (gametes) and creates <strong>genetic variation</strong>.</p>
+
+            <table>
+              <thead><tr><th>Feature</th><th>Mitosis</th><th>Meiosis</th></tr></thead>
+              <tbody>
+                <tr><td>Purpose</td><td>Growth/repair</td><td>Reproduction</td></tr>
+                <tr><td># of cells made</td><td>2</td><td>4</td></tr>
+                <tr><td>Genetic makeup</td><td>Identical</td><td>Different</td></tr>
+              </tbody>
+            </table>
+
+            <div class="callout">
+              <strong>Key idea:</strong> Genetic variation increases the chance that some individuals survive if the environment changes.
+            </div>
+
+            <h4>Check for understanding</h4>
+            <p>“Why is variation helpful for a species?”</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 2.7 — Natural Selection</summary>
+          <div class="details-body">
+            <h4>Mechanism (teach as 4 steps)</h4>
+            <ol>
+              <li><strong>Variation</strong> exists in a population.</li>
+              <li>More offspring are produced than can survive (<strong>overproduction</strong>).</li>
+              <li>There is <strong>competition</strong> for resources.</li>
+              <li>Individuals with advantageous traits survive and reproduce more (<strong>differential survival</strong>).</li>
+            </ol>
+
+            <div class="say">
+              <strong>Say:</strong> Individuals don’t evolve — <strong>populations</strong> do, across generations.
+            </div>
+
+            <h4>Check for understanding</h4>
+            <p>“If one rabbit becomes faster during its lifetime, does that mean the species evolved?” (No — evolution is population-level over generations.)</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 2.8 — Biodiversity &amp; Ethics</summary>
+          <div class="details-body">
+            <h4>Connect science to real life</h4>
+            <ul>
+              <li>Habitat loss and conservation</li>
+              <li>Human impact on ecosystems</li>
+              <li>Ethics of genetic testing / engineering (age-appropriate)</li>
+            </ul>
+
+            <h4>Discussion prompt</h4>
+            <p>“Should humans intervene to save endangered species? What evidence matters?”</p>
+          </div>
+        </details>
+      </section>
+
+      <div class="hr"></div>
+
+      <section id="unit3">
+        <h3>Unit 3 — Chemistry: Matter &amp; Energy (Weeks 7–10)</h3>
+        <p><strong>Big Idea:</strong> Chemical processes require energy as atoms are rearranged.</p>
+
+        <details open>
+          <summary>Lesson 3.1 — Matter &amp; Atoms</summary>
+          <div class="details-body">
+            <h4>Core concept</h4>
+            <p>Atoms are the building blocks of matter. Their structure explains chemical behavior.</p>
+
+            <table>
+              <thead><tr><th>Particle</th><th>Charge</th><th>Main role</th></tr></thead>
+              <tbody>
+                <tr><td>Proton</td><td>+</td><td>Identity (element)</td></tr>
+                <tr><td>Neutron</td><td>0</td><td>Stability (mass)</td></tr>
+                <tr><td>Electron</td><td>−</td><td>Bonding (reactivity)</td></tr>
+              </tbody>
+            </table>
+
+            <h4>Check for understanding</h4>
+            <p>“If an atom gains an electron, what happens to its charge?” (Becomes negative ion.)</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 3.2 — Periodic Table Logic</summary>
+          <div class="details-body">
+            <h4>Teach patterns (not memorization)</h4>
+            <ul>
+              <li>Columns (groups) often have similar chemical properties.</li>
+              <li>Valence electrons strongly influence bonding and reactivity.</li>
+              <li>Metals vs non-metals behave differently in bonding and conductivity.</li>
+            </ul>
+
+            <h4>Check for understanding</h4>
+            <p>“Why are elements in the same group similar?”</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 3.3 — Chemical Bonding</summary>
+          <div class="details-body">
+            <h4>Conceptual focus</h4>
+            <p>Atoms bond to become more stable (often by achieving a more stable electron arrangement).</p>
+
+            <table>
+              <thead><tr><th>Bond Type</th><th>What happens?</th><th>Example</th></tr></thead>
+              <tbody>
+                <tr><td>Ionic</td><td>Electron transfer</td><td>NaCl</td></tr>
+                <tr><td>Covalent</td><td>Electron sharing</td><td>H<sub>2</sub>O</td></tr>
+              </tbody>
+            </table>
+
+            <h4>Check for understanding</h4>
+            <p>“Why would sodium transfer an electron to chlorine?”</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 3.4 — Chemical Reactions &amp; Conservation</summary>
+          <div class="details-body">
+            <h4>Core law</h4>
+            <div class="callout">
+              <strong>Atoms are rearranged in reactions.</strong> They are not created or destroyed in ordinary chemical reactions.
+            </div>
+
+            <h4>Student-friendly meaning</h4>
+            <p><em>Reactants are the starting substances. Products are what you end up with. The atoms move around to make new combinations.</em></p>
+
+            <h4>Check for understanding</h4>
+            <p>“In a reaction, where do the atoms in the products come from?” (From reactants.)</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 3.5 — Energy in Reactions</summary>
+          <div class="details-body">
+            <h4>Energy flow</h4>
+            <ul>
+              <li><strong>Exothermic:</strong> energy leaves the system (often warms surroundings)</li>
+              <li><strong>Endothermic:</strong> energy enters the system (often cools surroundings)</li>
+            </ul>
+
+            <h4>Check for understanding</h4>
+            <p>“If a reaction makes the container feel cold, what type might it be?” (Endothermic.)</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 3.6 — Reaction Rates</summary>
+          <div class="details-body">
+            <h4>Key factors + mechanisms</h4>
+            <ul>
+              <li><strong>Temperature:</strong> particles move faster → more collisions</li>
+              <li><strong>Concentration:</strong> more particles → more collisions</li>
+              <li><strong>Surface area:</strong> more exposed particles → more collisions</li>
+            </ul>
+
+            <h4>Check for understanding</h4>
+            <p>“Why does crushed tablet dissolve faster than a whole tablet?”</p>
+          </div>
+        </details>
+      </section>
+
+      <div class="hr"></div>
+
+      <section id="unit4">
+        <h3>Unit 4 — Physics: Energy &amp; Environment (Weeks 11–14)</h3>
+        <p><strong>Big Idea:</strong> Energy is conserved, and its transformation can affect the environment.</p>
+
+        <details open>
+          <summary>Lesson 4.1 — What Is Energy?</summary>
+          <div class="details-body">
+            <h4>Concept</h4>
+            <p><strong>Energy</strong> is the ability to cause change (motion, heating, sound, light, chemical change).</p>
+
+            <h4>Check for understanding</h4>
+            <p>“Name one example of energy causing change in your daily life.”</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 4.2 — Forms of Energy (Everyday Anchors)</summary>
+          <div class="details-body">
+            <ul>
+              <li><strong>Kinetic:</strong> moving objects (running, moving car)</li>
+              <li><strong>Potential:</strong> stored energy (object on a shelf)</li>
+              <li><strong>Thermal:</strong> heat energy (hot tea, friction)</li>
+              <li><strong>Electrical:</strong> moving charges (circuits)</li>
+              <li><strong>Chemical:</strong> energy stored in bonds (food, fuel)</li>
+            </ul>
+
+            <h4>Check for understanding</h4>
+            <p>“In a phone battery, what form of energy is stored?” (Chemical.)</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 4.3 — Conservation of Energy</summary>
+          <div class="details-body">
+            <h4>Core law</h4>
+            <div class="callout">
+              <strong>Energy cannot be created or destroyed</strong> — it can only be transferred or transformed.
+            </div>
+
+            <h4>Student-friendly explanation</h4>
+            <p><em>The total energy stays the same, but it can change forms (like from electrical to light and heat).</em></p>
+
+            <h4>Check for understanding</h4>
+            <p>“If energy is ‘lost’ as heat, is it actually gone?” (No—still energy, just less useful.)</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 4.4 — Energy Transformations &amp; Efficiency</summary>
+          <div class="details-body">
+            <h4>Real systems</h4>
+            <ul>
+              <li>Light bulb: electrical → light + thermal (heat)</li>
+              <li>Car engine: chemical (fuel) → kinetic + thermal + sound</li>
+              <li>Wind turbine: kinetic (wind) → electrical</li>
+            </ul>
+
+            <div class="warn callout">
+              <strong>Key idea:</strong> In most real systems, some energy becomes thermal energy in the surroundings. This is why systems are not 100% efficient.
+            </div>
+
+            <h4>Check for understanding</h4>
+            <p>“Why do machines get hot when they run?”</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 4.5 — Energy &amp; Environment</summary>
+          <div class="details-body">
+            <h4>Connect to society</h4>
+            <ul>
+              <li>Fossil fuels provide lots of energy but can increase greenhouse gases.</li>
+              <li>Renewables reduce emissions but have limitations (location, storage, cost).</li>
+              <li>Efficiency and conservation are often the fastest ways to reduce impact.</li>
+            </ul>
+
+            <h4>Discussion prompt</h4>
+            <p>“What energy choices should our community prioritize, and why?”</p>
+          </div>
+        </details>
+      </section>
+
+      <div class="hr"></div>
+
+      <section id="unit5">
+        <h3>Unit 5 — Space Science: The Universe (Weeks 15–17)</h3>
+        <p><strong>Big Idea:</strong> The formation of the universe can be explained by the Big Bang Theory.</p>
+
+        <details open>
+          <summary>Lesson 5.1 — Scale and Structure of the Universe</summary>
+          <div class="details-body">
+            <h4>Hierarchy</h4>
+            <p>Planet → Star → Solar system → Galaxy → Universe</p>
+
+            <h4>Teaching move</h4>
+            <p>Have students rank objects by size (Earth, Sun, solar system, Milky Way, universe) and explain their reasoning.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 5.2 — Big Bang Theory (Evidence-Based)</summary>
+          <div class="details-body">
+            <h4>Core idea</h4>
+            <p>The Big Bang Theory explains that the universe began in a very hot, dense state and has been expanding over time.</p>
+
+            <h4>Evidence (teach conceptually, not just names)</h4>
+            <ul>
+              <li><strong>Red shift:</strong> light from distant galaxies shifts, indicating they are moving away → expansion.</li>
+              <li><strong>Cosmic background radiation:</strong> leftover “afterglow” energy from the early universe.</li>
+            </ul>
+
+            <h4>Check for understanding</h4>
+            <p>“If the universe is expanding, what should happen to distances between galaxies over time?” (Increase.)</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Lesson 5.3 — Life Cycle of Stars (Connection to Chemistry)</summary>
+          <div class="details-body">
+            <h4>Big connection statement</h4>
+            <div class="callout">
+              <strong>Many elements in your body were formed in stars.</strong> Star life cycles connect space science to chemistry.
+            </div>
+
+            <h4>Basic life cycle (Grade 10 level)</h4>
+            <ul>
+              <li>Nebula (gas/dust cloud)</li>
+              <li>Star forms → main sequence stage</li>
+              <li>Star changes as fuel runs out</li>
+              <li>Massive stars can explode as supernovae, forming heavier elements</li>
+            </ul>
+
+            <h4>Check for understanding</h4>
+            <p>“Why is a supernova important for forming heavier elements?” (It creates extreme conditions.)</p>
+          </div>
+        </details>
+      </section>
+
+      <div class="hr"></div>
+
+      <section id="unit6">
+        <h3>Unit 6 — Synthesis &amp; Inquiry (Week 18)</h3>
+        <p><strong>Final goal:</strong> Students connect ideas across biology, chemistry, physics, and space science using evidence and scientific reasoning.</p>
+
+        <details open>
+          <summary>Final Inquiry Project</summary>
+          <div class="details-body">
+            <h4>Driving question</h4>
+            <div class="say">
+              <strong>Project question:</strong> How do <strong>energy</strong> and <strong>matter</strong> connect all areas of Science 10?
+            </div>
+
+            <h4>Project expectations</h4>
+            <ul>
+              <li>Make a claim (your answer)</li>
+              <li>Support with evidence from at least 3 units</li>
+              <li>Explain your reasoning (how evidence supports your claim)</li>
+              <li>Communicate clearly (poster, slides, report, or video)</li>
+            </ul>
+
+            <h4>Reflection prompt</h4>
+            <p>“What skill did you improve most this semester: communication, thinking, or personal/social skills? Give an example.”</p>
+          </div>
+        </details>
+      </section>
+
+      <div class="hr"></div>
+
+      <section id="assessment">
+        <h3>Assessment &amp; Evidence of Learning (Semester-Long)</h3>
+        <p>Use multiple sources of evidence to reflect BC competency-based assessment.</p>
+
+        <div class="grid2">
+          <div class="callout">
+            <strong>Formative (for learning)</strong>
+            <ul>
+              <li>Exit tickets (CER)</li>
+              <li>Quick quizzes</li>
+              <li>Lab check-ins</li>
+              <li>Notebook checks</li>
+              <li>Discussion participation</li>
+            </ul>
+          </div>
+          <div class="callout">
+            <strong>Summative (of learning)</strong>
+            <ul>
+              <li>Lab reports / write-ups</li>
+              <li>Unit tests</li>
+              <li>Projects / presentations</li>
+              <li>Final synthesis task</li>
+            </ul>
+          </div>
+        </div>
+
+        <details>
+          <summary>Simple CER (Claim–Evidence–Reasoning) template for students</summary>
+          <div class="details-body">
+            <pre><code>CLAIM:
+(My answer to the question.)
+
+EVIDENCE:
+(Data, observations, or facts from our work.)
+
+REASONING:
+(Why the evidence supports the claim using science ideas.)</code></pre>
+          </div>
+        </details>
+
+        <div class="foot">
+          <p><strong>Tip:</strong> For UHill-style learning conversations, track growth in:</p>
+          <ul>
+            <li>Lab skills (safety, procedure, measurement)</li>
+            <li>Data literacy (tables, graphs, trends, error)</li>
+            <li>Scientific explanation quality (CER clarity)</li>
+            <li>Collaboration and reflection (personal/social competency)</li>
+          </ul>
+        </div>
+      </section>
+    </section>
+  </main>
+</div>
+
+<script>
+  function toggleAll(open){
+    document.querySelectorAll('details').forEach(d => d.open = open);
+  }
+
+  // Optional: highlight active section in TOC on scroll (lightweight)
+  const tocLinks = Array.from(document.querySelectorAll('nav a[href^="#"]'));
+  const sections = tocLinks
+    .map(a => document.querySelector(a.getAttribute('href')))
+    .filter(Boolean);
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        const id = "#" + entry.target.id;
+        tocLinks.forEach(a => {
+          const active = a.getAttribute('href') === id;
+          a.style.background = active ? "rgba(122,162,255,.10)" : "";
+          a.style.borderColor = active ? "rgba(122,162,255,.30)" : "transparent";
+        });
+      }
+    });
+  }, { rootMargin: "-40% 0px -55% 0px", threshold: 0.01 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
+
