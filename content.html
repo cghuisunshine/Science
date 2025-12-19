@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contents</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#0f1733;
+      --ink:#e9eefc;
+      --muted:#b9c2e6;
+      --line:rgba(255,255,255,.10);
+      --accent:#7aa2ff;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --radius:16px;
+      --max: 860px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--ink);
+      background: radial-gradient(1200px 600px at 10% 0%, rgba(122,162,255,.18), transparent 60%),
+                  radial-gradient(900px 600px at 90% 10%, rgba(126,240,194,.14), transparent 55%),
+                  var(--bg);
+      line-height:1.55;
+    }
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:var(--max); margin:0 auto; padding:26px 16px 56px;}
+    header{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.03);
+      box-shadow: var(--shadow);
+      padding:18px 18px 14px;
+      margin-bottom:14px;
+    }
+    header h1{margin:0 0 6px; font-size:22px;}
+    header p{margin:0; color:var(--muted); font-size:13px;}
+    .card{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.03);
+      box-shadow: var(--shadow);
+      padding:14px 14px;
+    }
+    ul{margin:0; padding:0; list-style:none;}
+    li{margin:10px 0;}
+    .item{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border-radius: 14px;
+      border:1px solid transparent;
+    }
+    .item:hover{border-color:var(--line); background:rgba(255,255,255,.04);}
+    .name{font-weight:650;}
+    .file{color:var(--muted); font-size:12px; white-space:nowrap;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Contents</h1>
+      <p>Links to other HTML files in this folder.</p>
+    </header>
+
+    <main class="card">
+      <ul>
+        <li>
+          <a class="item" href="index.html">
+            <span class="name">Science 10 (UHill) — One-Semester Master Tutorial</span>
+            <span class="file">index.html</span>
+          </a>
+        </li>
+        <li>
+          <a class="item" href="1218.html">
+            <span class="name">Physics 10 Master Notes</span>
+            <span class="file">1218.html</span>
+          </a>
+        </li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Physics 10 Master Notes</title>
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --card:#101826;
+      --text:#e8eef7;
+      --muted:#b7c4d6;
+      --line:#243244;
+      --accent:#7cc4ff;
+      --accent2:#ffd27c;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    html,body{background:var(--bg); color:var(--text); font-family:var(--sans); margin:0; padding:0;}
+    a{color:var(--accent); text-decoration:none;}
+    a:hover{text-decoration:underline;}
+    .wrap{max-width:980px; margin:0 auto; padding:28px 18px 80px;}
+    header{
+      background:linear-gradient(180deg, rgba(124,196,255,.16), rgba(124,196,255,0));
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:22px 18px;
+      margin-bottom:18px;
+    }
+    header h1{margin:0 0 6px; font-size:1.6rem;}
+    header p{margin:6px 0 0; color:var(--muted); line-height:1.45;}
+    .toc{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px 18px;
+      margin:18px 0 22px;
+    }
+    .toc h2{margin:0 0 10px; font-size:1.05rem; color:var(--accent);}
+    .toc ul{margin:0; padding-left:18px; columns:1; }
+    @media (min-width: 860px){
+      .toc ul{columns:2;}
+    }
+    .toc li{margin:6px 0;}
+    section{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px 18px;
+      margin:14px 0;
+    }
+    section h2{margin:0 0 10px; font-size:1.25rem;}
+    section h3{margin:16px 0 8px; font-size:1.05rem; color:var(--accent);}
+    section h4{margin:14px 0 6px; font-size:0.98rem; color:var(--accent2);}
+    p{margin:8px 0; line-height:1.6;}
+    ul,ol{margin:8px 0 8px 22px; line-height:1.6;}
+    li{margin:4px 0;}
+    .note{color:var(--muted);}
+    .quote{
+      border-left:4px solid rgba(124,196,255,.5);
+      padding:10px 12px;
+      margin:10px 0;
+      background:rgba(124,196,255,.06);
+      border-radius:10px;
+      color:var(--muted);
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin:10px 0;
+      overflow:hidden;
+      border-radius:12px;
+    }
+    th,td{
+      border:1px solid var(--line);
+      padding:10px 10px;
+      vertical-align:top;
+    }
+    th{background:rgba(255,255,255,.03); color:var(--text); text-align:left;}
+    td{color:var(--text);}
+    .figure{
+      border:1px dashed rgba(183,196,214,.35);
+      border-radius:12px;
+      padding:10px 12px;
+      margin:10px 0;
+      color:var(--muted);
+    }
+    .eq{
+      font-family:var(--mono);
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:8px 10px;
+      border-radius:10px;
+      display:block;
+      margin:8px 0;
+      white-space:normal;
+      overflow-wrap:anywhere;
+    }
+    footer{
+      margin-top:24px;
+      color:var(--muted);
+      font-size:0.92rem;
+      text-align:center;
+    }
+    .tag{
+      display:inline-block;
+      font-size:0.82rem;
+      padding:2px 8px;
+      border:1px solid rgba(124,196,255,.35);
+      border-radius:999px;
+      color:var(--accent);
+      margin-right:8px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Physics 10 Master Notes</h1>
+    </header>
+
+    <nav class="toc" aria-label="Table of contents">
+      <h2>Table of Contents</h2>
+      <ul>
+        <li><a href="#unit-overview">Physics 10 – Unit Overview</a></li>
+        <li><a href="#class-1">Class #1 – Scientific Notation, Measurements, Units and Conversions</a></li>
+        <li><a href="#class-2">Class #2 – Work, Energy, Power and Efficiency</a></li>
+        <li><a href="#class-3">Class #3 – Nuclear Fission and Fusion</a></li>
+        <li><a href="#class-4">Class #4 – Rutherford’s Three Types of Radiation</a></li>
+        <li><a href="#class-5">Class #5 – Half-Life (λ) and Radiometric Dating</a></li>
+      </ul>
+    </nav>
+
+    <!-- UNIT OVERVIEW -->
+    <section id="unit-overview">
+      <h2><span class="tag">Overview</span>Physics 10 – Unit Overview</h2>
+
+      <h3>Descriptors of Standards for Assessment</h3>
+      <p>State and apply the Law of Conservation of Energy and the Principle of Conservation of Mechanical Energy.</p>
+      <ul>
+        <li>types of mechanical energy (kinetic energy &amp; gravitational potential energy)</li>
+        <li>work (W) done on a system is equivalent to the change in energy (ΔE)</li>
+        <li>solve a variety of problems involving kinetic energy, gravitational potential energy, work and power using principles of conservation of mechanical energy</li>
+        <li>solve a variety of problems involving kinetic energy, gravitational potential energy, work, power and efficiency in situations where mechanical energy is not conserved during an energy transformation process</li>
+        <li>explore the environmental impacts of local and global mechanical energy transformation systems using various technologies and give special consideration to pollution, habitat destruction, carbon dioxide output and First Peoples perspectives</li>
+      </ul>
+
+      <div class="quote">
+        “All energy is the same as mechanical energy, whether it exists in the form of motion or in that of elasticity, or in any other form.” — <em>James C. Maxwell</em>
+      </div>
+
+      <h3>Big Ideas</h3>
+      <p>
+        Big ideas are ideas that are central to our understanding in this area of learning. They are the key concepts,
+        principles, and theories that are used to organize knowledge within this subject.
+      </p>
+      <p>The Big Ideas in this course are:</p>
+      <ul>
+        <li>Outline the Law of Conservation of Energy.</li>
+        <li>Solve quantitative problems involving energy conservation and transformation, including energy losses and work done, by using the work–energy theorem.</li>
+        <li>Apply concepts of heat, thermal energy, temperature, specific heat capacity, and modes of thermal energy transfer to simple systems.</li>
+        <li>Explore local and global impacts of energy transformations from technologies (pollution, habitat destruction, carbon dioxide output), including First Peoples perspectives on energy.</li>
+        <li>Demonstrate an understanding of nuclear decay and nuclear reactions, their applications as well as the associated environmental and technological challenges and risks presented.</li>
+      </ul>
+    </section>
+
+    <!-- CLASS 1 -->
+    <section id="class-1">
+      <h2><span class="tag">Class #1</span>Scientific Notation, Measurements, Units and Conversions</h2>
+
+      <h3>1.1 Number notation</h3>
+      <ul>
+        <li>Scientific notation is a convenient way of writing really big numbers and really small numbers.</li>
+        <li>Its general form must be given as:
+          <ul>
+            <li>A power of 10 statement to state how many steps the decimal point moved.
+              <ul>
+                <li>The exponent is positive for large numbers (× 10<sup>x</sup>).</li>
+                <li>The exponent is negative for small numbers (÷ 10<sup>x</sup> = × 10<sup>−x</sup>).</li>
+              </ul>
+            </li>
+            <li>Only one number before the decimal point that can’t be a zero.</li>
+            <li>Rounded to the required number of significant figures or to two decimal points.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Action Quick Check</h4>
+      <p>Circle the numbers that are in proper scientific notation:</p>
+      <ul>
+        <li>6.02 × 10<sup>23</sup></li>
+        <li>67.2 × 10<sup>3</sup></li>
+        <li>5.45 × 10<sup>−2</sup></li>
+        <li>545 × 10<sup>−4</sup></li>
+        <li>0.45 × 10<sup>3</sup></li>
+        <li>5012</li>
+        <li>10<sup>6</sup></li>
+        <li>3.1415926535 × 10<sup>12</sup></li>
+      </ul>
+
+      <h3>1.1 Writing in decimal notation</h3>
+      <p>To go from scientific to decimal notation:</p>
+      <ul>
+        <li>The exponent on the 10 is the number of steps to move the decimal point.
+          <ul>
+            <li>A negative sign means move left.</li>
+            <li>A positive sign means move right.</li>
+          </ul>
+        </li>
+      </ul>
+      <div class="figure">Figure 1.1 – Converting from scientific to decimal notation.</div>
+
+      <h3>1.1.2 Writing in scientific notation</h3>
+      <p>To go from decimal to scientific notation:</p>
+      <ul>
+        <li>Count how many places you need to move the decimal point to end up with one number to the left.</li>
+        <li>The number of steps becomes the exponent on the 10.
+          <ul>
+            <li>If you moved left, the exponent is positive.</li>
+            <li>If you moved right, the exponent is negative.</li>
+          </ul>
+        </li>
+      </ul>
+      <div class="figure">Figure 1.2 – Converting from decimal to scientific notation.</div>
+
+      <h3>1.2 Scientific measurements</h3>
+      <ul>
+        <li>Scientific measurement is a process by which we use tools to take precise readings of quantities such as temperature, mass, length or time.</li>
+        <li>Proper calibration of instruments and cross-referencing of data is required for accuracy.</li>
+      </ul>
+
+      <h3>1.2.1 The metric system</h3>
+      <ul>
+        <li>In Canada, we make use of the metric system of measurement.</li>
+        <li>The metric system has replaced the outdated imperial system that is still used in the USA today.</li>
+      </ul>
+
+      <h4>Table 1.1 – Units of measurement used in the metric and imperial systems</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Measurement</th>
+            <th>Metric system</th>
+            <th>Imperial system</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>length</td>
+            <td>millimetres, centimetres, metres and kilometres</td>
+            <td>inches, feet, yards and miles</td>
+          </tr>
+          <tr>
+            <td>mass</td>
+            <td>milligrams, grams and kilograms</td>
+            <td>ounces, pounds and stones</td>
+          </tr>
+          <tr>
+            <td>volume</td>
+            <td>millilitres and litres</td>
+            <td>pints and gallons</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>1.2.2 The Système Internationale (SI units)</h3>
+      <ul>
+        <li>The metric system of measurement is also used in the Système Internationale of Scientific Units.</li>
+        <li>These units are the international standard units used for measuring.</li>
+        <li>We use the French abbreviation, SI units, in reference to the International System of Units.</li>
+      </ul>
+
+      <h4>Table 1.2 – SI units for scientific measurements and abbreviations</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Measurement</th>
+            <th>SI unit</th>
+            <th>Abbreviation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>amount of matter</td><td>mole</td><td>mol</td></tr>
+          <tr><td>length AND distance</td><td>metres</td><td>m</td></tr>
+          <tr><td>mass</td><td>kilograms</td><td>kg</td></tr>
+          <tr><td>force AND weight</td><td>newton</td><td>N</td></tr>
+          <tr><td>time</td><td>seconds</td><td>s</td></tr>
+          <tr><td>energy AND work</td><td>joule</td><td>J</td></tr>
+          <tr><td>speed</td><td>metres per second</td><td>m/s</td></tr>
+          <tr><td>thermodynamic temperature</td><td>Kelvin = °C + 273</td><td>K</td></tr>
+        </tbody>
+      </table>
+
+      <h3>1.3 Conversions</h3>
+      <ul>
+        <li>We also convert between smaller and larger units of measurement to avoid very large and small numbers.</li>
+        <li>The prefix that is placed before the unit gives us the factor by which a unit is reduced or multiplied.</li>
+      </ul>
+
+      <h3>1.3.1 Prefixes</h3>
+      <h4>Table 1.3 – Commonly used prefixes for small and large numbers</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Prefix</th>
+            <th>Symbol</th>
+            <th>Description</th>
+            <th>Factor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>micro-</td><td>μ</td><td>a millionth of…</td><td>÷ 1 000 000 or × 10<sup>−6</sup></td></tr>
+          <tr><td>milli-</td><td>m</td><td>a thousandth of…</td><td>÷ 1 000 or × 10<sup>−3</sup></td></tr>
+          <tr><td>centi-</td><td>c</td><td>a hundredth of…</td><td>÷ 100 or × 10<sup>−2</sup></td></tr>
+          <tr><td>deci-</td><td>d</td><td>a tenth of…</td><td>÷ 10 or × 10<sup>−1</sup></td></tr>
+          <tr><td>kilo-</td><td>k</td><td>a thousand times…</td><td>× 1 000 or × 10<sup>3</sup></td></tr>
+          <tr><td>Mega-</td><td>M</td><td>a million times…</td><td>× 1 000 000 or × 10<sup>6</sup></td></tr>
+        </tbody>
+      </table>
+
+      <h3>1.3.2 Conversion factors</h3>
+      <ul>
+        <li>If you are in doubt about which conversion factor to use, convert to the basic unit first (metres or grams) and then to the unit that is desired.</li>
+        <li>You can use the table and diagrams as a guideline:</li>
+      </ul>
+
+      <h4>Table 1.4 – Conversion factors for units and prefixes</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Converting from…</th>
+            <th>Converting to…</th>
+            <th>Conversion factor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>millimetres, millilitres or milligrams</td><td>metres, litres or grams</td><td>÷ 1 000</td></tr>
+          <tr><td>centimetres</td><td>metres</td><td>÷ 100</td></tr>
+          <tr><td>kilometres, kilolitres or kilograms</td><td>metres, litres or grams</td><td>× 1 000</td></tr>
+          <tr><td>tonnes</td><td>grams</td><td>× 1 000 000</td></tr>
+          <tr><td>metres, litres or grams</td><td>millimetres, millilitres or milligrams</td><td>× 1 000</td></tr>
+          <tr><td>metres</td><td>centimetres</td><td>× 100</td></tr>
+          <tr><td>metres, litres or grams</td><td>kilometres, kilolitres or kilograms</td><td>÷ 1 000</td></tr>
+          <tr><td>grams</td><td>tonnes</td><td>÷ 1 000 000</td></tr>
+          <tr><td>seconds</td><td>minutes</td><td>÷ 60</td></tr>
+          <tr><td>seconds</td><td>hours</td><td>÷ 3 600</td></tr>
+          <tr><td>minutes</td><td>seconds</td><td>× 60</td></tr>
+          <tr><td>minutes</td><td>hours</td><td>÷ 60</td></tr>
+          <tr><td>hours</td><td>seconds</td><td>× 3 600</td></tr>
+          <tr><td>hours</td><td>minutes</td><td>× 60</td></tr>
+        </tbody>
+      </table>
+
+      <h3>1.3.3 Converting squares and cubes</h3>
+      <ul>
+        <li>Squares and cubes must be converted by doing each conversion twice for squares (²) and three times for cubes (³).</li>
+        <li>Area is length unit squared, e.g.: cm²</li>
+        <li>Volume is length unit cubed, e.g.: cm³</li>
+        <li>Take note:
+          <ul>
+            <li>1 cm³ = 1 mL</li>
+            <li>1 dm³ = 1 L</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <!-- CLASS 2 -->
+    <section id="class-2">
+      <h2><span class="tag">Class #2</span>Work, Energy, Power and Efficiency</h2>
+
+      <h3>2.1 Summary of the key points</h3>
+      <ul>
+        <li>The Law of Conservation of Energy states that energy cannot be created or destroyed; it can only be transformed from one form to another.</li>
+        <li>“All energy is the same as mechanical energy, whether it exists in the form of motion or in that of elasticity, or in any other form.” — James C. Maxwell</li>
+        <li>Energy (E) can be defined as the ability to do work (W).</li>
+        <li>We will explore how energy is transformed from one form to another:
+          <ul>
+            <li>nuclear energy</li>
+            <li>thermal energy</li>
+            <li>gravitational potential energy</li>
+            <li>kinetic energy</li>
+            <li>mechanical energy</li>
+          </ul>
+        </li>
+      </ul>
+      <div class="figure">Figure 2.1 – Different forms of energy.</div>
+
+      <h3>Units and symbols commonly used</h3>
+      <ul>
+        <li>P = power (watt, W)</li>
+        <li>W = work (joules, J)</li>
+        <li>ΔE = energy gain (joules, J)</li>
+        <li>Δt = time taken (seconds, s)</li>
+        <li>The unit for energy and work is joules (J).</li>
+      </ul>
+
+      <h3>Power (P)</h3>
+      <ul>
+        <li>Power (P) is the rate at which work is done or the rate at which energy is transferred.</li>
+      </ul>
+      <span class="eq">P = W / Δt</span>
+      <span class="eq">P = ΔE / Δt</span>
+      <ul>
+        <li>The unit for power is watt (W).</li>
+      </ul>
+
+      <h3>Efficiency</h3>
+      <ul>
+        <li>Efficiency is the ratio of useful work done to total energy transferred.</li>
+      </ul>
+      <span class="eq">% efficiency = (useful work done / total energy transferred) × 100%</span>
+      <span class="eq">% efficiency = (W / E) × 100%</span>
+
+      <h3>Energy as the ability to do work (W)</h3>
+      <ul>
+        <li>Work (W) is done when an object or particle is moved in the direction of an applied force.</li>
+      </ul>
+      <span class="eq">work = force × distance</span>
+      <span class="eq">W = F × d</span>
+      <span class="eq">force = mass × acceleration</span>
+      <span class="eq">W = m × a × d</span>
+      <ul>
+        <li>Work is measured in joules (J).</li>
+        <li>Energy can be defined as the ability to do work.</li>
+        <li>The change in energy of a system can be given by the amount of work done on a system.</li>
+      </ul>
+      <span class="eq">ΔE = W</span>
+      <div class="figure">Figure 2.2 – Work is the product of the distance an object is moved and the component of the force that is in the same direction (W = F × d × cosθ).</div>
+
+      <h3>2.2.1 Applications of energy and work to power (P)</h3>
+      <ul>
+        <li>Power (P) can be defined as the rate at which work is done.</li>
+      </ul>
+      <span class="eq">Power = work done / time</span>
+      <span class="eq">power = W / Δt</span>
+      <span class="eq">power = ΔE / Δt</span>
+      <ul>
+        <li>Power is measured in watt (W).</li>
+        <li>Appliances with a greater power rating can do more work in the same amount of time.</li>
+      </ul>
+
+      <h3>2.2 Applications of energy and work to efficiency</h3>
+      <ul>
+        <li>Energy efficiency refers to the amount of useful work done relative to the amount of total energy transferred.</li>
+        <li>Efficiency describes the ratio of useful energy that is being conserved during a transformation process.</li>
+        <li>Energy is used to do work, but some energy is lost due to resistive forces and commonly converted to heat, sound and light.</li>
+        <li>Energy efficiency is almost always less than 100%.</li>
+        <li>Efficiency can be given by:</li>
+      </ul>
+      <span class="eq">% efficiency = (useful work done / total energy transferred) × 100%</span>
+      <p class="note">OR</p>
+      <span class="eq">% efficiency = (change in energy / total energy transferred) × 100%</span>
+      <div class="figure">Figure 2.3 – Energy efficiency example (input 300 J; useful output 30 J; wasted 270 J; Efficiency = 30/300 = 0.1).</div>
+    </section>
+
+    <!-- CLASS 3 -->
+    <section id="class-3">
+      <h2><span class="tag">Class #3</span>Nuclear Fission and Fusion</h2>
+
+      <h3>Summary of key points</h3>
+      <ul>
+        <li>Nuclear reactions are different from chemical reactions.
+          <ul>
+            <li>In chemical reactions there are no changes to the size or number of nuclei, mass is conserved and energy changes are relatively small.</li>
+            <li>In nuclear reactions there are changes to the size and number of nuclei and small changes in mass yields massive amounts of energy.</li>
+          </ul>
+        </li>
+        <li>Breaking the strong nuclear binding forces yields vast amounts of wave energy and kinetic energy in the form of high-speed subatomic particles.</li>
+        <li>Fission is a nuclear reaction in which a heavy nucleus is split apart, yielding two or more smaller nuclei, subatomic particles and vast amounts of kinetic and wave energy.
+          <ul>
+            <li>The daughter products are often radioactive and present a significant waste disposal problem.</li>
+          </ul>
+        </li>
+        <li>Fusion is a nuclear reaction in which two light nuclei combine, yielding a single larger nucleus, subatomic particles and vast amounts of kinetic and wave energy.
+          <ul>
+            <li>Fusion is the source of energy in the Sun.</li>
+            <li>Fusion techniques are currently being developed (https://www.nature.com/articles/d43978-022-00171-5).</li>
+          </ul>
+        </li>
+        <li>Fission is the source of energy for all nuclear power generation used today.</li>
+        <li>During nuclear reactions, the mass defect is converted to high-energy waves and particles according to:</li>
+      </ul>
+      <span class="eq">E = mc²</span>
+      <ul>
+        <li>We will later relate the thermal energy yield (ΔH) to:</li>
+      </ul>
+      <span class="eq">Q = mcΔT</span>
+
+      <h3>3.2 Nuclear fission</h3>
+      <ul>
+        <li>Neutrons have no charge and so they are not deflected by the electrostatic force from a positively charged atomic nucleus.</li>
+        <li>Nuclear fission reactors and weapons use this principle to smash large and heavy atomic nuclei into smaller nuclei to release the energy from the strong nuclear binding forces.
+          <ul>
+            <li>A neutron (¹₀n) crashes into an atom of stable uranium-235 to create radioactive uranium-236, which then undergoes radioactive decay (see next class).</li>
+            <li>After several steps, nuclei of krypton and barium are formed, along with the release of 3 neutrons and huge quantities of energy.</li>
+            <li>This nuclear reaction is the technique used in nuclear power and nuclear bombs.</li>
+          </ul>
+        </li>
+      </ul>
+      <div class="figure">
+        <strong>Figure 3.1</strong><br/>
+        ¹₀n + ²³⁵₉₂U → ⁹²₃₆Kr + ¹⁴¹₅₆Ba + 3 ¹₀n + energy<br/>
+        When a uranium-235 nucleus is split by a neutron, barium-141 and krypton-92 are produced with 3 neutrons that creates a chain reaction if sustained and not controlled.
+      </div>
+      <ul>
+        <li>Once the nuclear fission reaction has started, it can keep sustaining itself.
+          <ul>
+            <li>The neutrons released in the reaction can then trigger more reactions on other uranium-235 atoms.</li>
+            <li>This chain reaction can quickly get out of control and can be regulated by:
+              <ul>
+                <li>Controlling the amount of exposure of uranium rods in the reactor of a nuclear powerplant.</li>
+                <li>Using materials that could absorb some neutrons emitted.</li>
+              </ul>
+            </li>
+            <li>Nuclear reactors have complex systems to ensure the chain reaction stays at safe levels. An uncontrolled chain reaction can result in the release of destructive energy and harmful radiation. It is on this concept that nuclear bombs are created.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>3.3 Nuclear fusion</h3>
+      <ul>
+        <li>Fusion is the combination of two small atomic nuclei into a single larger nucleus that involves the release of vast amounts of energy.
+          <ul>
+            <li>The process requires tremendous heat and pressure.</li>
+            <li>Recently and for the first time, a controlled nuclear fusion reaction produced more energy than the energy used by the lasers that initiated the reaction.
+              <ul>
+                <li>The target absorbed 2.05 megajoules of energy and emitted 3.15 megajoules to yield a 54% energy gain.</li>
+                <li>https://www.nature.com/articles/d43978-022-00171-5</li>
+              </ul>
+            </li>
+            <li>Fusion reactions are also used in nuclear weapons such as hydrogen bombs.</li>
+          </ul>
+        </li>
+        <li>In the core of the Sun, two hydrogen nuclei combine to form a helium nucleus.
+          <ul>
+            <li>As a helium atom, a.k.a. an alpha particle (⁴₂He), is formed, vast amounts of nuclear energy is released as waves and as the subatomic particles gain kinetic energy.</li>
+          </ul>
+        </li>
+      </ul>
+      <div class="figure">
+        <strong>Figure 3.2</strong><br/>
+        ²₁H + ³₁H → ⁴₂He + ¹₀n + energy<br/>
+        When a hydrogen-2 nucleus fuses with hydrogen-3 it yields helium-4 and a neutron with vast amounts of nuclear energy.
+      </div>
+    </section>
+
+    <!-- CLASS 4 -->
+    <section id="class-4">
+      <h2><span class="tag">Class #4</span>Rutherford’s Three Types of Radiation</h2>
+
+      <h3>4.1 Atomic theory and searching for the invisible rays</h3>
+      <ul>
+        <li>Radiation is everywhere but can be difficult to detect.</li>
+        <li>A brief history on the discovery of radiation:
+          <ul>
+            <li>Roentgen coined the term X-rays in 1895 to describe this previously unknown energy that behaved mysteriously.</li>
+            <li>Becquerel realized uranium emitted seemingly invisible energy as well.</li>
+            <li>Marie Curie and her husband Pierre named this energy radioactivity.
+              <ul>
+                <li>Early discoveries of radiation relied on photographic equipment and harmful levels of exposure.</li>
+                <li>Later, more sophisticated devices such as the Geiger–Müller counter were developed to measure radioactivity more precisely.</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>Natural background radiation exists all around us in the form of high energy particles or waves being emitted from a variety of materials.
+          <ul>
+            <li>Being exposed to radioactive waves and materials is mostly harmful because high energy particles and waves cause damage to DNA and our tissues.
+              <ul>
+                <li>UV rays</li>
+                <li>X-rays</li>
+                <li>radiation therapy</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <div class="figure">Figure 4.1 – Wave energy increases with frequency from left to right in the electromagnetic spectrum.</div>
+
+      <h3>4.2 Radioactive decay</h3>
+      <ul>
+        <li>Unstable nuclei continue to emit subatomic particles and waves until they reach a stable configuration.
+          <ul>
+            <li>This phenomenon is called radioactive decay.</li>
+            <li>When atoms emit high energy particles and waves, ions and even new atoms are formed with completely new atomic nuclei.</li>
+            <li>Radioactivity results from having an unstable nucleus.</li>
+            <li>Radioactive decay releases energy as radiation.</li>
+          </ul>
+        </li>
+        <li>Only certain isotopes of some elements are radioactive.
+          <ul>
+            <li>These are called radioisotopes.</li>
+            <li>Isotopes are atoms of the same element with the same number of protons but with a different number of neutrons.</li>
+            <li>The rate of radioactive decay of different radioisotopes have been accurately determined and can be extrapolated to predict the age of rocks and fossils.</li>
+          </ul>
+        </li>
+        <li>High energy waves and particles are called radiation when they leave the atom.
+          <ul>
+            <li>We will learn about three types of radiation:
+              <ul>
+                <li>alpha particles (α)</li>
+                <li>beta particles (β)</li>
+                <li>gamma particles (γ)</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>4.3 Three types of radiation</h3>
+      <ul>
+        <li>Rutherford identified three types of radiation by passing radiation through an electric field where charged particles are deflected.
+          <ul>
+            <li>Positive alpha particles (α) were attracted to the negative plate.</li>
+            <li>Negative beta particles (β) were attracted to the positive plate.</li>
+            <li>Neutral gamma particles (γ) were not attracted by any plate.</li>
+          </ul>
+        </li>
+      </ul>
+      <div class="figure">Figure 4.2 – Deflection of positive alpha particles (α), negative beta particles (β) and uncharged gamma waves (γ) when passed through an electric field.</div>
+
+      <h3>4.3.1 Alpha radiation (⁴₂He or ⁴₂α)</h3>
+      <ul>
+        <li>Alpha radiation emits alpha particles (⁴₂He or ⁴₂α).
+          <ul>
+            <li>Positively charged.</li>
+            <li>Largest and heaviest of the radiation particles.</li>
+          </ul>
+        </li>
+        <li>Alpha particles are essentially a helium nucleus and it carries a nett charge of +2.
+          <ul>
+            <li>2 protons</li>
+            <li>2 neutrons</li>
+          </ul>
+        </li>
+        <li>The release of alpha particles is called alpha decay.</li>
+        <li>A sheet of paper can stop an alpha particle.
+          <ul>
+            <li>Alpha particles are heavy and slow and have a much lower penetration potential than the other forms of radiation.</li>
+          </ul>
+        </li>
+      </ul>
+      <div class="figure">
+        <strong>Figure 4.2</strong> – The α-decay of radium-226 to radon-222.<br/>
+        ²²⁶₈₈Ra → ²²²₈₆Rn + ⁴₂α
+      </div>
+
+      <h3>4.3.2 Beta radiation (⁰<sub>−1</sub>β)</h3>
+      <ul>
+        <li>Beta radiation emits beta particles (⁰<sub>−1</sub>β).</li>
+        <li>Beta particles are essentially electrons with zero mass and carries a nett charge of −1.</li>
+        <li>Beta decay occurs when a neutron changes into a proton and an electron:
+          <ul>
+            <li>proton remains in the nucleus.</li>
+            <li>electron is emitted.</li>
+          </ul>
+        </li>
+        <li>A thin sheet of aluminum foil can stop a beta particle.</li>
+      </ul>
+      <div class="figure">
+        <strong>Figure 4.2</strong> – The β-decay of iodine-131 to xenon-131.<br/>
+        ¹³¹₅₃I → ¹³¹₅₄Xe + ⁰<sub>−1</sub>β
+      </div>
+
+      <h3>4.3.3 Gamma radiation (⁰₀γ)</h3>
+      <ul>
+        <li>Gamma radiation emits gamma particles (⁰₀γ).</li>
+        <li>Gamma rays are high energy, short-wavelength radiation with no charge and no mass.
+          <ul>
+            <li>Highest energy form of electromagnetic radiation.</li>
+          </ul>
+        </li>
+        <li>Gamma decay results from wave energy being released from an unstable, high-energy nucleus.
+          <ul>
+            <li>Often, other kinds of radioactive decay will also release gamma radiation.</li>
+            <li>Uranium-238 undergoes alpha decay and also releases gamma rays.</li>
+          </ul>
+        </li>
+        <li>It takes thick blocks of lead or concrete to stop gamma rays.</li>
+      </ul>
+      <div class="figure">
+        <strong>Figure 4.3</strong> – High energy γ-radiation from carbon-12.<br/>
+        ¹²₆C → ¹²₆C + γ
+      </div>
+
+      <div class="figure">
+        <strong>Figure 4.4</strong> – Relative penetrating power of alpha (α), beta (β) and gamma radiation (γ).
+      </div>
+
+      <h3>4.4 Nuclear equations for radioactive decay</h3>
+      <ul>
+        <li>Nuclear equations are used to show changes in the nucleus of radioisotopes.</li>
+        <li>Rules for writing equations for nuclear reactions:
+          <ol type="a">
+            <li>The sum of the mass numbers is conserved.
+              <ul><li>The sum of large numbers must be equal on both sides.</li></ul>
+            </li>
+            <li>The sum of the charges (given by atomic number) is conserved.
+              <ul><li>The sum of small numbers must be equal on both sides.</li></ul>
+            </li>
+          </ol>
+        </li>
+      </ul>
+      <div class="figure">
+        <strong>Figure 4.5</strong><br/>
+        ⁴₂He + ¹⁴₇N → ¹⁷₈O + ¹₁H
+      </div>
+    </section>
+
+    <!-- CLASS 5 -->
+    <section id="class-5">
+      <h2><span class="tag">Class #5</span>Half-Life (λ) and Radiometric Dating</h2>
+
+      <h3>5.1 Isotopes and mass number</h3>
+      <ul>
+        <li>Isotopes are atoms of the same element, with different mass numbers due to a different number of neutrons (n<sup>0</sup>) in the nucleus.
+          <ul>
+            <li>Mass number refers to the sum of protons and neutrons.</li>
+            <li>Isotopes have the same atomic number (p<sup>+</sup>), but with a different number of neutrons (n<sup>0</sup>), isotopes have different mass numbers (p<sup>+</sup> + n<sup>0</sup>).</li>
+          </ul>
+        </li>
+        <li>Isotopes of an element have the same symbol and same atomic number.</li>
+        <li>Relative atomic mass (A<sub>R</sub>) = proportional average of the mass numbers for different isotopes of an element.</li>
+      </ul>
+
+      <h4>Example – Boron</h4>
+      <ul>
+        <li>Consider the relative atomic mass of boron = 10.8</li>
+        <li>Given: 19.9% of boron atoms have 5 protons + 5 neutrons and 80.1% have 5 protons + 6 neutrons.</li>
+        <li>∴ 19.9% have a mass number of 10, and 80.1% have a mass number of 11.</li>
+      </ul>
+      <span class="eq">(19.9/100 × 10) + (80.1/100 × 11) = 10.8</span>
+
+      <h3>5.1.1 Representing isotopes</h3>
+      <ul>
+        <li>Isotopes are written using standard atomic notation:
+          <ul>
+            <li>chemical symbol</li>
+            <li>atomic number (Z)</li>
+            <li>mass number (A)</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>5.2 Rates of radioactive decay and half-life (λ)</h3>
+      <ul>
+        <li>Half-life (λ) is a measure of the time taken for half the original amount of parent radioisotope to decay to a stable daughter isotope.
+          <ul>
+            <li>Parent isotope refers to the original radioisotope.</li>
+            <li>Daughter isotope refers to the product formed from radioactive decay.</li>
+          </ul>
+        </li>
+        <li>Half-life can be accurately determined for different radioisotopes and it remains consistent and reliable.
+          <ul>
+            <li>Specific isotopes have specific and constant rates of radioactive decay.</li>
+            <li>Therefore λ is considered to be constant.</li>
+            <li>Strontium-90 has a half-life of 29 years:
+              <ul>
+                <li>10 g of strontium-90 today (λ = 0) will be 5 g in 29 years (λ = 1) and 2.5 g in 58 years (λ = 2).</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <span class="eq">m<sub>final</sub> = m<sub>initial</sub> / 2<sup>n</sup>, where n = number of half-lives (λ)</span>
+      <div class="figure">Figure 5.1 – The exponential decay curve for strontium-90 (λ = 29 years) through four half-lives.</div>
+
+      <h3>5.2.1 Common isotope pairs</h3>
+      <ul>
+        <li>Radioisotopes decay to form predictable daughter isotopes.
+          <ul>
+            <li>These parent–daughter combinations are called isotope pairs.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Table 5.2 – Half-life (λ) of common isotope pairs and their effective dating range</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Parent</th>
+            <th>Daughter</th>
+            <th>Half-life of parent (years)</th>
+            <th>Effective dating range (years)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>carbon-14</td><td>nitrogen-14</td><td>5730</td><td>up to 50 000</td></tr>
+          <tr><td>uranium-235</td><td>lead-207</td><td>710 million</td><td>&gt; 10 million</td></tr>
+          <tr><td>potassium-40</td><td>argon-40</td><td>1.3 billion</td><td>10 000 to 3 billion</td></tr>
+          <tr><td>uranium-238</td><td>lead-206</td><td>4.5 billion</td><td>&gt; 10 million</td></tr>
+          <tr><td>thorium-235</td><td>lead-208</td><td>14 billion</td><td>&gt; 10 million</td></tr>
+          <tr><td>rubidium-87</td><td>strontium-87</td><td>47 billion</td><td>&gt; 10 million</td></tr>
+        </tbody>
+      </table>
+
+      <ul>
+        <li>Some radioisotopes require a single step to decay into a stable daughter isotope while others decay over many steps before reaching a stable nuclear configuration.
+          <ul>
+            <li>carbon-14 decays into nitrogen-14 in 1 step.</li>
+            <li>thorium-235 decays into lead-208 in 10 steps.</li>
+            <li>uranium-238 decays into lead-206 in 14 steps.</li>
+          </ul>
+        </li>
+      </ul>
+      <div class="figure">Figure 5.2 – Uranium-238 decays to lead-206 in a series of 14 steps that involve alpha- and beta-decay.</div>
+    </section>
+
+ </div>
+</body>
+</html>
+
