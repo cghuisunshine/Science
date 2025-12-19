@@ -254,6 +254,62 @@
     summary::-webkit-details-marker{display:none}
     details[open] summary{border-bottom:1px solid var(--line); background: rgba(255,255,255,.03)}
     .details-body{padding: 10px 12px 12px}
+    details.videos{
+      border-color: rgba(126,240,194,.35);
+      background: rgba(126,240,194,.06);
+    }
+    details.videos summary{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    details.videos summary::before{
+      content:"▶";
+      width: 22px;
+      height: 22px;
+      display:inline-grid;
+      place-items:center;
+      border-radius: 7px;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(126,240,194,.25);
+      color: var(--accent2);
+      font-size: 11px;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+    details.videos[open] summary::before{content:"▾";}
+    details.videos .details-body li{margin: 10px 0}
+    details.videos .details-body a{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(122,162,255,.30);
+      background: rgba(122,162,255,.10);
+      color: var(--ink);
+      text-decoration:none;
+    }
+    details.videos .details-body a::before{
+      content:"Play";
+      display:inline-block;
+      font-size: 11px;
+      letter-spacing:.02em;
+      color: var(--accent2);
+      border: 1px solid rgba(126,240,194,.25);
+      background: rgba(126,240,194,.10);
+      padding: 1px 7px;
+      border-radius: 999px;
+      line-height: 1.4;
+    }
+    details.videos .details-body a:hover{
+      background: rgba(122,162,255,.16);
+      border-color: rgba(122,162,255,.50);
+    }
+    details.videos .details-body a:focus-visible{
+      outline: 2px solid rgba(126,240,194,.70);
+      outline-offset: 2px;
+    }
     .hr{
       height:1px; background: var(--line);
       margin: 18px 0;
@@ -426,7 +482,7 @@
         <h3>Unit 1 — Science as a Way of Knowing (Weeks 1–2)</h3>
         <p><strong>Unit Goal:</strong> Students understand that science is a <strong>process</strong> for building explanations using evidence.</p>
 
-        <details>
+        <details class="videos">
           <summary>Suggested videos (optional prep/review)</summary>
           <div class="details-body">
             <ul>
@@ -643,7 +699,7 @@
         <h3>Unit 2 — Biology: Genes &amp; Diversity (Weeks 3–6)</h3>
         <p><strong>Big Idea:</strong> Genes are the foundation for the diversity of living things.</p>
 
-        <details>
+        <details class="videos">
           <summary>Suggested videos (optional prep/review)</summary>
           <div class="details-body">
             <ul>
@@ -835,7 +891,7 @@
         <h3>Unit 3 — Chemistry: Matter &amp; Energy (Weeks 7–10)</h3>
         <p><strong>Big Idea:</strong> Chemical processes require energy as atoms are rearranged.</p>
 
-        <details>
+        <details class="videos">
           <summary>Suggested videos (optional prep/review)</summary>
           <div class="details-body">
             <ul>
@@ -955,7 +1011,7 @@
         <h3>Unit 4 — Physics: Energy &amp; Environment (Weeks 11–14)</h3>
         <p><strong>Big Idea:</strong> Energy is conserved, and its transformation can affect the environment.</p>
 
-        <details>
+        <details class="videos">
           <summary>Suggested videos (optional prep/review)</summary>
           <div class="details-body">
             <ul>
@@ -1052,7 +1108,7 @@
         <h3>Unit 5 — Space Science: The Universe (Weeks 15–17)</h3>
         <p><strong>Big Idea:</strong> The formation of the universe can be explained by the Big Bang Theory.</p>
 
-        <details>
+        <details class="videos">
           <summary>Suggested videos (optional prep/review)</summary>
           <div class="details-body">
             <ul>
@@ -1121,7 +1177,7 @@
         <h3>Unit 6 — Synthesis &amp; Inquiry (Week 18)</h3>
         <p><strong>Final goal:</strong> Students connect ideas across biology, chemistry, physics, and space science using evidence and scientific reasoning.</p>
 
-        <details>
+        <details class="videos">
           <summary>Suggested videos (optional prep/review)</summary>
           <div class="details-body">
             <ul>
