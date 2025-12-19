@@ -111,6 +111,20 @@
       color:var(--accent);
       margin-right:8px;
     }
+    .answer{
+      margin:10px 0 0;
+      border:1px solid rgba(255,210,124,.35);
+      border-radius:12px;
+      padding:10px 12px;
+      background:rgba(255,210,124,.06);
+      color:var(--text);
+    }
+    .circled{
+      display:inline-block;
+      padding:1px 10px;
+      border:2px solid var(--accent2);
+      border-radius:999px;
+    }
   </style>
 </head>
 
@@ -189,15 +203,24 @@
       <h4>Action Quick Check</h4>
       <p>Circle the numbers that are in proper scientific notation:</p>
       <ul>
-        <li>6.02 × 10<sup>23</sup></li>
+        <li><span class="circled">6.02 × 10<sup>23</sup></span></li>
         <li>67.2 × 10<sup>3</sup></li>
-        <li>5.45 × 10<sup>−2</sup></li>
+        <li><span class="circled">5.45 × 10<sup>−2</sup></span></li>
         <li>545 × 10<sup>−4</sup></li>
         <li>0.45 × 10<sup>3</sup></li>
         <li>5012</li>
         <li>10<sup>6</sup></li>
-        <li>3.1415926535 × 10<sup>12</sup></li>
+        <li><span class="circled">3.1415926535 × 10<sup>12</sup></span></li>
       </ul>
+      <div class="answer">
+        <p><strong>Answer:</strong> Proper scientific notation requires a number of the form a × 10<sup>n</sup> where 1 ≤ a &lt; 10 and n is an integer.</p>
+        <p>Circle:</p>
+        <ul>
+          <li>6.02 × 10<sup>23</sup></li>
+          <li>5.45 × 10<sup>−2</sup></li>
+          <li>3.1415926535 × 10<sup>12</sup></li>
+        </ul>
+      </div>
 
       <h3>1.1 Writing in decimal notation</h3>
       <p>To go from scientific to decimal notation:</p>
@@ -811,4 +834,3 @@
  </div>
 </body>
 </html>
-
