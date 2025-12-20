@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Heat & Specific Heat Capacity — Extracted Notes + Solutions</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#111a33;
+      --ink:#eaf0ff;
+      --muted:#b7c3e6;
+      --accent:#7aa2ff;
+      --accent2:#7dffcf;
+      --warn:#ffd36e;
+      --line:rgba(234,240,255,.12);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      background: radial-gradient(1200px 800px at 20% 0%, rgba(122,162,255,.15), transparent 55%),
+                  radial-gradient(1000px 700px at 90% 10%, rgba(125,255,207,.10), transparent 55%),
+                  var(--bg);
+      color:var(--ink);
+      line-height:1.55;
+    }
+    header{padding:28px 18px 10px; max-width:1100px; margin:0 auto;}
+    h1{margin:0 0 10px; font-size: clamp(1.6rem, 2.2vw + 1rem, 2.6rem); letter-spacing:.2px;}
+    .subtitle{color:var(--muted); margin:0 0 18px; max-width: 75ch;}
+    nav{display:flex; flex-wrap:wrap; gap:10px; margin: 10px 0 0;}
+    nav a{
+      text-decoration:none; color:var(--ink);
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      padding:8px 10px; border-radius:999px; font-size:.92rem;
+    }
+    nav a:hover{border-color:rgba(122,162,255,.5)}
+    main{max-width:1100px; margin:0 auto; padding: 12px 18px 48px; display:grid; gap:14px;}
+    section.card{
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:16px 16px 14px;
+      overflow:hidden;
+    }
+    h2{margin:0 0 10px; font-size:1.35rem;}
+    h3{margin:16px 0 8px; font-size:1.1rem; color: var(--accent2);}
+    p{margin: 8px 0}
+    ul{margin: 8px 0 8px 18px}
+    li{margin: 6px 0}
+    .grid{display:grid; grid-template-columns: 1fr; gap:12px;}
+    @media (min-width: 980px){ .grid.two{ grid-template-columns: 1fr 1fr; } }
+    .pill{
+      display:inline-block; font-size:.85rem; padding:3px 10px; border-radius:999px;
+      border:1px solid var(--line); color:var(--muted); margin-left:8px; vertical-align:middle;
+    }
+    .equation{
+      font-family:var(--mono);
+      background: rgba(0,0,0,.25);
+      border:1px solid var(--line);
+      padding:10px 12px;
+      border-radius:12px;
+      overflow:auto;
+      margin:10px 0;
+      white-space: pre-wrap;
+    }
+    .kbd{
+      font-family:var(--mono); font-size:.92rem;
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      padding:2px 6px; border-radius:8px;
+    }
+    table{
+      width:100%; border-collapse:collapse; margin:10px 0 0;
+      border-radius:12px; border:1px solid var(--line); overflow:hidden;
+    }
+    th, td{ text-align:left; padding:10px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+    th{ color: var(--muted); font-weight:600; background: rgba(255,255,255,.04); width: 42%; }
+    tr:last-child td, tr:last-child th{border-bottom:none}
+    .note{
+      border-left: 4px solid var(--accent);
+      padding: 10px 12px;
+      background: rgba(122,162,255,.08);
+      border-radius: 12px;
+      margin: 10px 0;
+      color: var(--ink);
+    }
+    .warn{ border-left-color: var(--warn); background: rgba(255,211,110,.10); }
+    .answer{ border-left-color: var(--accent2); background: rgba(125,255,207,.08); }
+    .muted{color:var(--muted)}
+    .hr{height:1px; background: var(--line); margin: 14px 0;}
+    .small{font-size:.95rem}
+    footer{max-width:1100px; margin:0 auto; padding: 0 18px 40px; color: var(--muted); font-size: .95rem;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Heat & Specific Heat Capacity — Extracted Notes + Solved Problems</h1>
+    <p class="subtitle">
+      Single-page study sheet compiled from your photos: clean extraction + step-by-step solutions
+      using <span class="kbd">Q = mcΔT</span>, power, and efficiency.
+    </p>
+    <nav>
+      <a href="#extract">Extracted Content</a>
+      <a href="#kettle">Kettle Lab Sheet</a>
+      <a href="#action">Action Worksheet (Extract + Solve)</a>
+      <a href="#problems">Problems (4–9)</a>
+      <a href="#answers">Answer Key</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ===================== EXTRACT ===================== -->
+    <section id="extract" class="card">
+      <h2>Extracted Content <span class="pill">Typed & Organized</span></h2>
+
+      <h3>Class #7 — Heat and Specific Heat Capacity (C)</h3>
+
+      <h3>7.1 Specific heat capacity</h3>
+      <ul>
+        <li><b>Specific heat capacity (C)</b> is the amount of energy required to increase the temperature of <b>1 kg</b> of a substance by <b>1°C</b> (or 1 K).</li>
+        <li>The coefficient <b>C is constant</b> for specific substances; values have been established through experimentation.</li>
+        <li>Specific heat capacity of water: approximately <b>4180 J/kg·°C</b> (or <b>4.18 J/g·°C</b>) <span class="muted">(not necessary to memorize)</span></li>
+      </ul>
+
+      <h3>7.2 Heat (Q) in terms of specific heat capacity (C)</h3>
+      <p>The amount of heat energy required to raise the temperature of a specific material is:</p>
+      <div class="equation">Q = m C ΔT</div>
+
+      <p><b>Symbols & units</b></p>
+      <ul>
+        <li><b>Q</b> = heat energy (J)</li>
+        <li><b>m</b> = mass
+          <ul>
+            <li>use <b>grams</b> if C is in J/g·°C</li>
+            <li>use <b>kilograms</b> if C is in J/kg·°C</li>
+          </ul>
+        </li>
+        <li><b>C</b> = specific heat capacity (J/g·°C or J/kg·°C)</li>
+        <li><b>ΔT</b> = T<sub>final</sub> − T<sub>initial</sub> (°C or K)</li>
+      </ul>
+
+      <div class="note">
+        <b>Concept:</b> If the same heat <b>Q</b> is added, the substance with <b>lower C</b> has a <b>larger temperature increase</b>.
+      </div>
+    </section>
+
+    <!-- ===================== KETTLE LAB ===================== -->
+    <section id="kettle" class="card">
+      <h2>Kettle Sheet — Work, Energy, Heat, Power & Efficiency</h2>
+      <p class="muted small">
+        We use specific heat capacity to calculate energy used to boil water and the efficiency of the process.
+      </p>
+
+      <h3>1) Identify two mechanisms by which thermal energy is transferred to heat the water</h3>
+      <ul>
+        <li><b>Conduction</b> (hot element → kettle base/body → water)</li>
+        <li><b>Convection</b> (circulating water currents spread heat through the water)</li>
+      </ul>
+      <div class="note warn">
+        <b>Note:</b> Radiation can occur too, but kettles mainly rely on conduction + convection for heating water.
+      </div>
+
+      <h3>Data Table (as on the sheet)</h3>
+      <table>
+        <tr><th>mass of water (1 litre = 1 kg)</th><td>(to be measured)</td></tr>
+        <tr><th>initial temperature (°C)</th><td>(to be measured)</td></tr>
+        <tr><th>final temperature (°C)</th><td>(to be measured)</td></tr>
+        <tr><th>change in temperature (Δ°C)</th><td>ΔT = T<sub>final</sub> − T<sub>initial</sub></td></tr>
+        <tr><th>time taken (seconds)</th><td>(to be measured)</td></tr>
+        <tr><th>specific capacity of water (C)</th><td><b>4180 J/kg·°C</b></td></tr>
+        <tr><th>heat energy absorbed (J)</th><td><span class="kbd">Q = mcΔT</span></td></tr>
+        <tr><th>kettle power rating (Watt)</th><td>(from kettle label)</td></tr>
+        <tr><th>energy transferred (J)</th><td><span class="kbd">P = W/Δt</span> ⇒ <span class="kbd">W = PΔt</span></td></tr>
+        <tr><th>energy efficiency</th><td>% = (heat absorbed / energy transferred) × 100%</td></tr>
+      </table>
+    </section>
+
+    <!-- ===================== ACTION WORKSHEET (NEW: EXTRACT + SOLVE) ===================== -->
+    <section id="action" class="card">
+      <h2>Action Worksheet — Extract + Solve <span class="pill">From the photo you sent</span></h2>
+
+      <h3>Extracted Questions</h3>
+      <ol>
+        <li><b>The temperature of 335 g of water</b> changed from <b>24.5°C</b> to <b>26.4°C</b>. How much heat did this sample absorb?</li>
+        <li>How much heat has to be removed from <b>0.225 kg of water</b> to lower its temperature from <b>25°C</b> to <b>10°C</b>?</li>
+        <li><b>1 kg of water at 25°C</b> absorbs <b>309 kJ</b> of thermal energy from a <b>2 kW</b> heating element.
+          <ol type="a">
+            <li>What is its final temperature?</li>
+            <li>How much electrical energy does the heating element consume if it operates at an overall efficiency of <b>82%</b>?</li>
+            <li>How long does it take for the heating element to heat the water?</li>
+          </ol>
+        </li>
+      </ol>
+
+      <div class="hr"></div>
+
+      <h3>Solutions</h3>
+
+      <div class="grid two">
+        <div>
+          <h3>1) 335 g water: 24.5°C → 26.4°C</h3>
+          <div class="equation">Use: Q = m C ΔT
+
+m = 335 g
+C(water) = 4.18 J/g·°C
+ΔT = 26.4 − 24.5 = 1.9 °C
+
+Q = (335)(4.18)(1.9)
+Q ≈ 2660 J</div>
+          <div class="note answer"><b>Answer:</b> Q ≈ <b>2.66 × 10<sup>3</sup> J</b> (absorbed)</div>
+        </div>
+
+        <div>
+          <h3>2) 0.225 kg water: 25°C → 10°C</h3>
+          <div class="equation">Use: Q = m C ΔT
+
+m = 0.225 kg
+C(water) = 4180 J/kg·°C
+ΔT = 10 − 25 = −15 °C
+
+Q = (0.225)(4180)(−15)
+Q ≈ −14,100 J</div>
+          <div class="note answer"><b>Answer:</b> Q ≈ <b>−1.41 × 10<sup>4</sup> J</b> (heat removed)</div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div>
+        <h3>3) 1 kg water at 25°C absorbs 309 kJ from a 2 kW heater</h3>
+
+        <h3>(a) Final temperature</h3>
+        <div class="equation">Q = 309 kJ = 309,000 J
+m = 1 kg
+C(water) = 4180 J/kg·°C
+
+ΔT = Q/(mC) = 309,000 / (1×4180) ≈ 74.0 °C
+Tfinal = 25 + 74.0 ≈ 99.0 °C</div>
+        <div class="note answer"><b>Answer:</b> T<sub>final</sub> ≈ <b>99°C</b></div>
+
+        <h3>(b) Electrical energy consumed (82% efficient)</h3>
+        <div class="equation">Efficiency = (useful energy)/(input energy)
+
+Input energy:
+E_in = Q / 0.82
+E_in = 309,000 / 0.82 ≈ 3.77 × 10^5 J</div>
+        <div class="note answer"><b>Answer:</b> E ≈ <b>3.77 × 10<sup>5</sup> J</b></div>
+
+        <h3>(c) Time required (2 kW = 2000 W)</h3>
+        <div class="equation">Power P = E_in / t  →  t = E_in / P
+
+t = (3.77 × 10^5) / 2000
+t ≈ 189 s  ≈ 3.15 min</div>
+        <div class="note answer"><b>Answer:</b> t ≈ <b>189 s</b> (≈ <b>3.1 min</b>)</div>
+      </div>
+    </section>
+
+    <!-- ===================== PROBLEMS 4-9 ===================== -->
+    <section id="problems" class="card">
+      <h2>Other Problems & Solutions (4–9)</h2>
+
+      <div class="grid two">
+        <div>
+          <h3>Q4 — Silicon</h3>
+          <p><b>Question:</b> What is the specific heat of silicon if it takes 192 J to raise the temperature of 45 g of Si by 6°C?</p>
+          <div class="equation">C = Q / (m ΔT)
+C = 192 / (45 × 6)
+C = 0.711 J/g·°C</div>
+          <div class="note answer"><b>Answer:</b> C ≈ <b>0.711 J/g·°C</b></div>
+        </div>
+
+        <div>
+          <h3>Q6 — Lead</h3>
+          <p><b>Question:</b> What is the specific heat of lead if 96 J raises 75 g by 10°C?</p>
+          <div class="equation">C = Q / (m ΔT)
+C = 96 / (75 × 10)
+C = 0.128 J/g·°C</div>
+          <div class="note answer"><b>Answer:</b> C ≈ <b>0.128 J/g·°C</b></div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="grid two">
+        <div>
+          <h3>Q5 — Coca-Cola (assume water)</h3>
+          <p><b>Question:</b> Assuming Coca-Cola has the same specific heat as water, find heat given off when 340 g cools from 25°C to 3°C.</p>
+          <div class="equation">ΔT = 3 − 25 = −22 °C
+Q = m C ΔT
+Q = (340 g)(4.18 J/g·°C)(−22 °C)
+Q = −31,300 J</div>
+          <div class="note answer"><b>Answer:</b> <b>31.3 kJ released</b> (Q is negative because heat leaves the soda)</div>
+        </div>
+
+        <div>
+          <h3>Q7 — Metal in water (calorimetry)</h3>
+          <p><b>Question:</b> 75 g water at 24°C + 26 g metal at 82.25°C. Final temp 28.34°C. Find metal’s specific heat.</p>
+          <div class="equation">Heat gained by water = heat lost by metal
+
+Qwater = (75)(4.18)(28.34 − 24) = 1360 J
+
+Qmetal = (26)(c)(82.25 − 28.34)
+      = (26)(c)(53.91) = 1402.7 c
+
+1360 = 1402.7 c
+c = 0.97 J/g·°C</div>
+          <div class="note answer"><b>Answer:</b> c ≈ <b>0.97 J/g·°C</b></div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div>
+        <h3>Q8 — Kettle electrical energy with efficiency</h3>
+        <p><b>Question:</b> How much electrical energy is required to heat 1.5 L of water from 5°C to 100°C if the kettle operates at 78% efficiency?</p>
+        <div class="equation">m = 1.5 kg
+C = 4180 J/kg·°C
+ΔT = 95 °C
+efficiency = 0.78
+
+Q = m C ΔT = (1.5)(4180)(95) = 595,650 J
+E = Q/eff = 595,650/0.78 = 7.64 × 10^5 J</div>
+        <div class="note answer"><b>Answer:</b> E ≈ <b>7.64 × 10<sup>5</sup> J</b></div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div>
+        <h3>Q9 — Nuclear fission heating water</h3>
+        <div class="equation">¹₀n + ²³⁵₉₂U → ⁹²₃₆Kr + ¹⁴¹₅₆Ba + 3 ¹₀n + 1.95 × 10¹⁰ kJ</div>
+
+        <p>A reactor operates at <b>64% overall efficiency</b> and circulates <b>50 megalitres of water</b>.</p>
+
+        <h3>Q9(a) Final temperature after fission of 235 g U-235 (starting at 2°C)</h3>
+        <div class="equation">Useful Q = 0.64 × 1.95×10^10 kJ = 1.248×10^10 kJ
+= 1.248×10^13 J
+
+m = 50 megalitres ≈ 5.0×10^7 kg
+C = 4180 J/kg·°C
+
+ΔT = Q/(mC) ≈ 59.7 °C
+Tf = 2 + 59.7 = 61.7 °C</div>
+        <div class="note answer"><b>Answer:</b> T<sub>final</sub> ≈ <b>61.7°C</b></div>
+
+        <h3>Q9(b) Mass of U-235 needed to raise water to 100°C</h3>
+        <div class="equation">ΔT needed = 98 °C
+
+Qrequired = mCΔT
+= (5.0×10^7)(4180)(98) ≈ 2.05×10^13 J
+
+235 g U-235 gives 1.248×10^13 J (useful)
+mU = (Qrequired / 1.248×10^13) × 235 g ≈ 386 g</div>
+        <div class="note answer"><b>Answer:</b> m(U-235) ≈ <b>386 g</b></div>
+
+        <h3>Q9(c) What happens to ΔT if…</h3>
+        <div class="equation">ΔT = Q/(mC)
+
+i) Double U-235 → Q doubles → ΔT doubles
+ii) Half the water mass → m halves → ΔT doubles</div>
+
+        <h3>Q9(d) Why water is effective for transferring large thermal energy</h3>
+        <ul>
+          <li>Water has a <b>high specific heat capacity</b>, so it can absorb/release lots of energy with only a small temperature change.</li>
+          <li>It can carry large heat loads and supports <b>convection currents</b>, improving heat transfer.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===================== ANSWER KEY ===================== -->
+    <section id="answers" class="card">
+      <h2>Answer Key (Quick)</h2>
+
+      <table>
+        <tr><th>Kettle heat transfer mechanisms</th><td>Conduction + Convection (radiation minor/possible)</td></tr>
+        <tr><th>Action #1</th><td><b>2.66 × 10<sup>3</sup> J</b></td></tr>
+        <tr><th>Action #2</th><td><b>−1.41 × 10<sup>4</sup> J</b> (removed)</td></tr>
+        <tr><th>Action #3(a)</th><td><b>99°C</b></td></tr>
+        <tr><th>Action #3(b)</th><td><b>3.77 × 10<sup>5</sup> J</b></td></tr>
+        <tr><th>Action #3(c)</th><td><b>189 s</b> (≈ 3.1 min)</td></tr>
+        <tr><th>Q4 (Silicon) specific heat</th><td><b>0.711 J/g·°C</b></td></tr>
+        <tr><th>Q5 (Coke ~ water) heat released</th><td><b>31.3 kJ released</b> (Q = −31,300 J)</td></tr>
+        <tr><th>Q6 (Lead) specific heat</th><td><b>0.128 J/g·°C</b></td></tr>
+        <tr><th>Q7 (Metal) specific heat</th><td><b>0.97 J/g·°C</b></td></tr>
+        <tr><th>Q8 (78% eff.) electrical energy</th><td><b>7.64 × 10<sup>5</sup> J</b></td></tr>
+        <tr><th>Q9(a) final water temperature</th><td><b>61.7°C</b></td></tr>
+        <tr><th>Q9(b) U-235 needed to reach 100°C</th><td><b>386 g</b></td></tr>
+        <tr><th>Q9(c) effect on ΔT</th><td>Double U-235 → ΔT doubles; Half water mass → ΔT doubles</td></tr>
+      </table>
+
+      <div class="note">
+        <b>Unit tip:</b> Use <span class="kbd">4.18 J/g·°C</span> when mass is in grams, and
+        <span class="kbd">4180 J/kg·°C</span> when mass is in kilograms.
+      </div>
+    </section>
+  </main>
+
+/body>
+</html>
+
