@@ -646,14 +646,15 @@
       return { term: term || null, q: q ?? null };
     }
 
-    function setRoute({ term, q }) {
+    function setRoute({ term, q }, { replace = false } = {}) {
       const params = new URLSearchParams();
       if (term) params.set("term", term);
       if (q) params.set("q", q);
       const next = params.toString();
       const nextHash = next ? ("#" + next) : "";
       if (nextHash === location.hash) return;
-      history.replaceState(null, "", nextHash);
+      if (replace) history.replaceState(null, "", nextHash);
+      else history.pushState(null, "", nextHash);
     }
 
     function showListView() {
@@ -951,11 +952,11 @@
     elQ.addEventListener("input", () => {
       const { term } = parseRoute();
       if (term) {
-        setRoute({ term: null, q: elQ.value });
+        setRoute({ term: null, q: elQ.value }, { replace: true });
         renderRoute();
         return;
       }
-      setRoute({ term: null, q: elQ.value });
+      setRoute({ term: null, q: elQ.value }, { replace: true });
       renderRoute();
     });
 
@@ -979,7 +980,7 @@
 
     elBtnBack.addEventListener("click", () => {
       const { q } = parseRoute();
-      setRoute({ term: null, q: q || elQ.value });
+      setRoute({ term: null, q: q || elQ.value }, { replace: true });
       renderRoute();
     });
 
@@ -1013,6 +1014,43 @@
         renderRoute();
       }
     });
+
+    // Tap/click edges like a Kindle reader (term page view only).
+    window.addEventListener("click", (e) => {
+      if (e.defaultPrevented) return;
+      if (e.button !== 0) return;
+
+      const { term, q } = parseRoute();
+      if (!term) return;
+
+      const target = e.target;
+      const ignore = target && target.closest ? target.closest("input, textarea, select, button, a, summary") : null;
+      if (ignore) return;
+
+      const sel = window.getSelection && window.getSelection();
+      if (sel && sel.type === "Range") return;
+
+      const vw = Math.max(1, window.innerWidth || document.documentElement.clientWidth || 1);
+      const edge = Math.min(140, Math.max(56, Math.round(vw * 0.18)));
+      const x = e.clientX;
+      if (!(x <= edge || x >= (vw - edge))) return;
+
+      const key = String(term).toLowerCase();
+      const idx = grouped.findIndex((x) => x.key === key);
+      if (idx < 0) return;
+
+      if (x <= edge) {
+        const prev = idx > 0 ? grouped[idx - 1] : null;
+        if (!prev) return;
+        setRoute({ term: prev.key, q });
+        renderRoute();
+      } else {
+        const next = idx < grouped.length - 1 ? grouped[idx + 1] : null;
+        if (!next) return;
+        setRoute({ term: next.key, q });
+        renderRoute();
+      }
+    }, { capture: true });
 
     // Swipe navigation (mobile): left = next, right = prev.
     (() => {
