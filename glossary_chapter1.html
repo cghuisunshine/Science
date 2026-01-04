@@ -650,10 +650,12 @@
       if (term) params.set("term", term);
       if (q) params.set("q", q);
       const next = params.toString();
-      const nextHash = next ? ("#" + next) : "";
-      if (nextHash === location.hash) return;
-      if (replace) history.replaceState(null, "", nextHash);
-      else history.pushState(null, "", nextHash);
+      const baseUrl = location.pathname + location.search;
+      const nextUrl = next ? (baseUrl + "#" + next) : baseUrl;
+      const currentUrl = location.pathname + location.search + location.hash;
+      if (nextUrl === currentUrl) return;
+      if (replace) history.replaceState(null, "", nextUrl);
+      else history.pushState(null, "", nextUrl);
     }
 
     function showListView() {
