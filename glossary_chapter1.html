@@ -601,6 +601,15 @@
       return out.join("\n");
     }
 
+    async function copyExplanationForTermKey(termKey) {
+      const g = groupedByKey.get(String(termKey || "").toLowerCase());
+      if (!g) return false;
+      const text = explanationToPlainText(Array.from(g.notes || []));
+      const ok = await copyTextToClipboard(text);
+      setStatus(ok ? `<span class="badge">Copied explanation</span>` : `<span class="badge danger">Copy failed</span>`);
+      return ok;
+    }
+
     async function copyTextToClipboard(text) {
       const s = String(text || "");
       if (!s) return false;
@@ -857,6 +866,14 @@
         renderRoute();
       });
 
+      const btnCopy = document.createElement("button");
+      btnCopy.className = "btn";
+      btnCopy.type = "button";
+      btnCopy.textContent = "Copy";
+      btnCopy.addEventListener("click", async () => {
+        await copyExplanationForTermKey(group.key);
+      });
+
       const firstOcc = group.occurrences[0] || {};
       const pdfLink = document.createElement("a");
       pdfLink.className = "btn";
@@ -866,6 +883,7 @@
       pdfLink.textContent = "Open in PDF";
       actions.appendChild(btnPrev);
       actions.appendChild(btnNext);
+      actions.appendChild(btnCopy);
       actions.appendChild(pdfLink);
 
       headInner.appendChild(titleWrap);
@@ -1125,13 +1143,49 @@
       const ignore = target && target.closest ? target.closest("input, textarea, select, button, a, summary") : null;
       if (ignore) return;
 
-      const g = groupedByKey.get(String(term).toLowerCase());
-      if (!g) return;
-
-      const text = explanationToPlainText(Array.from(g.notes || []));
-      const ok = await copyTextToClipboard(text);
-      setStatus(ok ? `<span class="badge">Copied explanation</span>` : `<span class="badge danger">Copy failed</span>`);
+      await copyExplanationForTermKey(term);
     });
+
+    // iOS Safari often doesn't fire `dblclick` reliably; support double-tap on the term page.
+    (() => {
+      let lastTapAt = 0;
+      let lastTapX = 0;
+      let lastTapY = 0;
+      elViewTerm.addEventListener("touchend", async (e) => {
+        if (e.defaultPrevented) return;
+        const { term } = parseRoute();
+        if (!term) return;
+
+        const target = e.target;
+        const ignore = target && target.closest ? target.closest("input, textarea, select, button, a, summary") : null;
+        if (ignore) return;
+
+        const t = (e.changedTouches && e.changedTouches[0]) || null;
+        if (!t) return;
+        const now = Date.now();
+        const dx = Math.abs(t.clientX - lastTapX);
+        const dy = Math.abs(t.clientY - lastTapY);
+        const dt = now - lastTapAt;
+
+        // Reset if this looks like a scroll/drag gesture.
+        if (dx > 28 || dy > 28) {
+          lastTapAt = now;
+          lastTapX = t.clientX;
+          lastTapY = t.clientY;
+          return;
+        }
+
+        if (dt > 0 && dt < 350) {
+          lastTapAt = 0;
+          e.preventDefault();
+          await copyExplanationForTermKey(term);
+        } else {
+          lastTapAt = now;
+          lastTapX = t.clientX;
+          lastTapY = t.clientY;
+        }
+      }, { passive: false });
+    })();
 
     // Swipe navigation (mobile): left = next, right = prev.
     (() => {
