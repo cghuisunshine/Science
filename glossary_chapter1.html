@@ -978,8 +978,8 @@
     });
 
     elBtnBack.addEventListener("click", () => {
-      const { q } = parseRoute();
-      setRoute({ term: null, q: q || elQ.value }, { replace: true });
+      // Always return to the full list (all items), like the "home" for this page.
+      setRoute({ term: null, q: null }, { replace: true });
       renderRoute();
     });
 
