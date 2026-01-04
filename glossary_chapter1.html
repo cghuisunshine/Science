@@ -570,6 +570,66 @@
       }
     }
 
+    function explanationToPlainText(notes) {
+      const out = [];
+      for (const note of (notes || [])) {
+        const raw = String(note || "").replace(/\r\n/g, "\n");
+        for (const line of raw.split("\n")) {
+          const t = line.trimEnd();
+          if (!t) { out.push(""); continue; }
+          // Drop image-only lines: ![alt](url)
+          if (/^!\[.*?\]\((https?:\/\/[^\s)]+)\)\s*$/.test(t)) continue;
+          // Convert links: [label](url) -> label (url)
+          let s = t.replace(/\[([^\]]+?)\]\((https?:\/\/[^\s)]+)\)/g, "$1 ($2)");
+          // Remove common markdown emphasis markers.
+          s = s.replace(/^#{1,6}\s+/, "");       // heading markers
+          s = s.replace(/^\s*[-*]\s+/, "• ");    // unordered list
+          s = s.replace(/^\s*\d+\.\s+/, "• ");   // ordered list -> bullet
+          s = s.replace(/`([^`]+?)`/g, "$1");
+          s = s.replace(/\*\*([^*]+?)\*\*/g, "$1");
+          s = s.replace(/\*([^*]+?)\*/g, "$1");
+          // Strip a tiny allowlist of inline HTML tags that appear in notes.
+          s = s.replace(/<\/?(strong|b|em|i)\s*>/gi, "");
+          s = s.replace(/<\s*br\s*\/?\s*>/gi, "");
+          out.push(s);
+        }
+        out.push("");
+      }
+      // Trim leading/trailing blank lines
+      while (out.length && out[0] === "") out.shift();
+      while (out.length && out[out.length - 1] === "") out.pop();
+      return out.join("\n");
+    }
+
+    async function copyTextToClipboard(text) {
+      const s = String(text || "");
+      if (!s) return false;
+      try {
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+          await navigator.clipboard.writeText(s);
+          return true;
+        }
+      } catch (_) {}
+
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = s;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.top = "-1000px";
+        ta.style.left = "-1000px";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, ta.value.length);
+        const ok = document.execCommand && document.execCommand("copy");
+        document.body.removeChild(ta);
+        return Boolean(ok);
+      } catch (_) {
+        return false;
+      }
+    }
+
     function linkToPdf(pdfUrl, pageLabel, pageIndex) {
       const base = pdfUrl || FALLBACK_PDF_PATH;
       const page = pageLabel && /^\d+$/.test(pageLabel) ? Number(pageLabel) : (Number.isFinite(pageIndex) ? pageIndex + 1 : null);
@@ -1020,6 +1080,7 @@
     window.addEventListener("click", (e) => {
       if (e.defaultPrevented) return;
       if (e.button !== 0) return;
+      if (typeof e.detail === "number" && e.detail > 1) return; // don't navigate on double-click
 
       const { term, q } = parseRoute();
       if (!term) return;
@@ -1052,6 +1113,25 @@
         renderRoute();
       }
     }, { capture: true });
+
+    // Double-click copies the explanation text (term page view only).
+    window.addEventListener("dblclick", async (e) => {
+      if (e.defaultPrevented) return;
+
+      const { term } = parseRoute();
+      if (!term) return;
+
+      const target = e.target;
+      const ignore = target && target.closest ? target.closest("input, textarea, select, button, a, summary") : null;
+      if (ignore) return;
+
+      const g = groupedByKey.get(String(term).toLowerCase());
+      if (!g) return;
+
+      const text = explanationToPlainText(Array.from(g.notes || []));
+      const ok = await copyTextToClipboard(text);
+      setStatus(ok ? `<span class="badge">Copied explanation</span>` : `<span class="badge danger">Copy failed</span>`);
+    });
 
     // Swipe navigation (mobile): left = next, right = prev.
     (() => {
