@@ -267,7 +267,6 @@
           <input id="q" class="input" type="search" placeholder="Search terms (e.g., mutualism, niche, canopy)..." autocomplete="off" />
           <div id="status" class="small" style="margin-top:6px;"></div>
         </div>
-        <button id="btnReload" class="btn" type="button">Reload JSON</button>
         <label class="btn" for="fileInput" style="cursor:pointer;">
           Load JSON file
           <input id="fileInput" type="file" accept=".json,application/json" style="display:none;" />
@@ -1037,10 +1036,6 @@
       }
       setRoute({ term: null, q: elQ.value }, { replace: true });
       renderRoute();
-    });
-
-    document.getElementById("btnReload").addEventListener("click", () => {
-      tryAutoLoad();
     });
 
     elFileInput.addEventListener("change", async () => {
