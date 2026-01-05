@@ -40,6 +40,45 @@
     }
     header h1{margin:0 0 6px; font-size:22px;}
     header p{margin:0; color:var(--muted); font-size:13px;}
+    .search{
+      margin-top:12px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .input{
+      flex: 1 1 320px;
+      min-width: 220px;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.04);
+      color: var(--ink);
+      font-size: 14px;
+      outline:none;
+    }
+    .input:focus{
+      border-color: rgba(122,162,255,.55);
+      box-shadow: 0 0 0 3px rgba(122,162,255,.18);
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 11px;
+      border:1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.04);
+      color: var(--ink);
+      font-size: 13px;
+      cursor:pointer;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:hover{ background: rgba(255,255,255,.07); }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; }
+    .hint{color:var(--muted); font-size:12px;}
     .card{
       border:1px solid var(--line);
       border-radius: var(--radius);
@@ -61,6 +100,36 @@
     .item:hover{border-color:var(--line); background:rgba(255,255,255,.04);}
     .name{font-weight:650;}
     .file{color:var(--muted); font-size:12px; white-space:nowrap;}
+    .results{margin-top:14px;}
+    .result{
+      display:block;
+      padding:10px 12px;
+      border-radius: 14px;
+      border:1px solid transparent;
+    }
+    .result:hover{border-color:var(--line); background:rgba(255,255,255,.04);}
+    .resultTop{display:flex; align-items:baseline; justify-content:space-between; gap:10px;}
+    .snippet{margin-top:6px; color:var(--muted); font-size:13px;}
+    mark{
+      background: rgba(126,240,194,.18);
+      color: var(--ink);
+      padding: 0 2px;
+      border-radius: 4px;
+    }
+    .callout{
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      color: var(--ink);
+    }
   </style>
 </head>
 <body>
@@ -68,9 +137,18 @@
     <header>
       <h1>Glossary</h1>
       <p>Quick links to glossary pages in this folder. <a href="index.html">Back to index</a></p>
+      <div class="search">
+        <input id="q" class="input" type="search" placeholder="Search inside all linked glossary pages…" autocomplete="off" spellcheck="false" />
+        <button id="clear" class="btn" type="button" disabled>Clear</button>
+        <span id="status" class="hint"></span>
+      </div>
+      <div id="callout" class="callout" hidden></div>
     </header>
 
     <main class="card">
+      <section id="results" class="results" hidden>
+        <ul id="resultList"></ul>
+      </section>
       <ul>
         <li>
           <a class="item" href="glossary_chapter1.html">
@@ -87,5 +165,199 @@
       </ul>
     </main>
   </div>
+
+  <script>
+    (function () {
+      const input = document.getElementById('q');
+      const clearBtn = document.getElementById('clear');
+      const status = document.getElementById('status');
+      const resultsWrap = document.getElementById('results');
+      const resultsList = document.getElementById('resultList');
+      const callout = document.getElementById('callout');
+
+      const links = Array.from(document.querySelectorAll('main a.item'))
+        .map((a) => ({
+          href: a.getAttribute('href'),
+          label: a.querySelector('.name')?.textContent?.trim() || a.textContent.trim(),
+          file: a.querySelector('.file')?.textContent?.trim() || a.getAttribute('href')
+        }))
+        .filter((x) => x.href && x.href.toLowerCase().endsWith('.html'));
+
+      const cache = new Map(); // href -> { ok, text, title }
+      let lastQueryId = 0;
+      let debounceTimer = null;
+
+      function escapeHtml(s) {
+        return s.replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      }
+
+      function normalize(s) {
+        return (s || '')
+          .toLowerCase()
+          .replace(/\s+/g, ' ')
+          .trim();
+      }
+
+      function tokensFromQuery(q) {
+        return normalize(q).split(' ').filter(Boolean).slice(0, 8);
+      }
+
+      function setStatus(msg) {
+        status.textContent = msg || '';
+      }
+
+      function showCallout(html) {
+        callout.innerHTML = html;
+        callout.hidden = false;
+      }
+
+      function hideCallout() {
+        callout.hidden = true;
+        callout.innerHTML = '';
+      }
+
+      async function loadDoc(href) {
+        if (cache.has(href)) return cache.get(href);
+
+        try {
+          const res = await fetch(href, { cache: 'force-cache' });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const html = await res.text();
+          const doc = new DOMParser().parseFromString(html, 'text/html');
+          const title = (doc.querySelector('title')?.textContent || href).trim();
+          const text = normalize(doc.body ? doc.body.textContent : doc.textContent);
+          const entry = { ok: true, href, title, text };
+          cache.set(href, entry);
+          return entry;
+        } catch (err) {
+          const entry = { ok: false, href, title: href, text: '' };
+          cache.set(href, entry);
+          throw err;
+        }
+      }
+
+      function highlightSnippet(snippet, tokens) {
+        let out = escapeHtml(snippet);
+        for (const t of tokens) {
+          if (!t) continue;
+          const re = new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'ig');
+          out = out.replace(re, (m) => '<mark>' + m + '</mark>');
+        }
+        return out;
+      }
+
+      function makeSnippet(text, tokens) {
+        const raw = text || '';
+        if (!raw) return '';
+
+        let bestIndex = -1;
+        for (const t of tokens) {
+          const idx = raw.indexOf(t);
+          if (idx !== -1 && (bestIndex === -1 || idx < bestIndex)) bestIndex = idx;
+        }
+        if (bestIndex === -1) return '';
+
+        const radius = 70;
+        const start = Math.max(0, bestIndex - radius);
+        const end = Math.min(raw.length, bestIndex + radius);
+        const prefix = start > 0 ? '…' : '';
+        const suffix = end < raw.length ? '…' : '';
+        const snippet = prefix + raw.slice(start, end) + suffix;
+        return snippet;
+      }
+
+      function renderResults(matches, tokens) {
+        resultsList.innerHTML = '';
+        if (!matches.length) {
+          resultsList.innerHTML = '<li class="hint">No matches.</li>';
+          return;
+        }
+
+        const frag = document.createDocumentFragment();
+        for (const m of matches) {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.className = 'result';
+          a.href = m.href;
+
+          const top = document.createElement('div');
+          top.className = 'resultTop';
+          top.innerHTML = '<span class="name">' + escapeHtml(m.label) + '</span>' +
+                          '<span class="file">' + escapeHtml(m.file) + '</span>';
+
+          const snip = document.createElement('div');
+          snip.className = 'snippet';
+          const snippet = makeSnippet(m.text, tokens);
+          snip.innerHTML = highlightSnippet(snippet || 'Match found in page.', tokens);
+
+          a.appendChild(top);
+          a.appendChild(snip);
+          li.appendChild(a);
+          frag.appendChild(li);
+        }
+        resultsList.appendChild(frag);
+      }
+
+      async function searchEverywhere(query) {
+        const qid = ++lastQueryId;
+        const tokens = tokensFromQuery(query);
+        clearBtn.disabled = !query;
+
+        if (!tokens.length) {
+          resultsWrap.hidden = true;
+          setStatus('');
+          hideCallout();
+          return;
+        }
+
+        resultsWrap.hidden = false;
+        hideCallout();
+        setStatus('Loading pages…');
+
+        const loaded = [];
+        let loadErrors = 0;
+
+        for (let i = 0; i < links.length; i++) {
+          if (qid !== lastQueryId) return;
+          const link = links[i];
+          setStatus('Loading ' + (i + 1) + '/' + links.length + '…');
+          try {
+            const doc = await loadDoc(link.href);
+            loaded.push({ ...link, ...doc });
+          } catch {
+            loadErrors++;
+          }
+        }
+
+        if (qid !== lastQueryId) return;
+
+        if (loadErrors) {
+          showCallout(
+            'If search shows errors, open this folder with a local web server (browser security blocks cross-file reads). ' +
+            'Example: <code>python3 -m http.server 8000</code> then open <code>http://localhost:8000/glossary.html</code>.'
+          );
+        }
+
+        setStatus('Searching…');
+        const matches = loaded.filter((d) => d.ok && tokens.every((t) => d.text.includes(t)));
+        renderResults(matches, tokens);
+        setStatus(matches.length + ' page(s) matched');
+      }
+
+      input.addEventListener('input', () => {
+        const q = input.value;
+        if (debounceTimer) clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => searchEverywhere(q), 160);
+      });
+
+      clearBtn.addEventListener('click', () => {
+        input.value = '';
+        input.focus();
+        searchEverywhere('');
+      });
+
+      if (links.length) setStatus('Searches ' + links.length + ' linked page(s)');
+    })();
+  </script>
 </body>
 </html>
