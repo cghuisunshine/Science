@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BC Science Connections 10 — Split PDFs</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#0f1733;
+      --ink:#e9eefc;
+      --muted:#b9c2e6;
+      --line:rgba(255,255,255,.12);
+      --accent:#7aa2ff;
+      --shadow: 0 12px 34px rgba(0,0,0,.35);
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --radius:16px;
+      --max: 980px;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% 0%, rgba(122,162,255,.18), transparent 60%),
+        radial-gradient(900px 600px at 90% 10%, rgba(126,240,194,.10), transparent 55%),
+        var(--bg);
+      line-height:1.55;
+    }
+    a{ color:var(--accent); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 22px 16px 54px;
+    }
+    header{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.03);
+      box-shadow: var(--shadow);
+      padding: 16px 16px 14px;
+    }
+    h1{ margin:0 0 8px; font-size: 20px; line-height:1.2; }
+    .sub{ color: var(--muted); font-size: 13px; }
+    .bar{
+      margin-top: 12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    input[type="search"]{
+      flex: 1 1 320px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--ink);
+      outline: none;
+    }
+    input[type="search"]::placeholder{ color: rgba(185,194,230,.75); }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--ink);
+      cursor: pointer;
+      user-select:none;
+    }
+    .btn:hover{ background: rgba(255,255,255,.07); }
+    main{
+      margin-top: 14px;
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.03);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    section{
+      border-top:1px solid var(--line);
+      padding: 14px 16px 8px;
+    }
+    section:first-child{ border-top:0; }
+    h2{
+      margin:0 0 10px;
+      font-size: 15px;
+      letter-spacing: .01em;
+    }
+    ul{
+      list-style: none;
+      padding: 0;
+      margin: 0 0 10px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    @media (min-width: 760px){
+      ul{ grid-template-columns: 1fr 1fr; }
+    }
+    li a{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      background: rgba(255,255,255,.02);
+      color: var(--ink);
+    }
+    li a:hover{
+      background: rgba(255,255,255,.04);
+      border-color: var(--line);
+      text-decoration:none;
+    }
+    .name{ font-weight: 600; }
+    .file{ color: var(--muted); font-size: 12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .hidden{ display:none !important; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>BC Science Connections 10 — Split PDFs</h1>
+      <div class="sub">Bookmark-split files from <code>BC_Science_Connections_10.pdf</code>. Use search to filter.</div>
+      <div class="bar">
+        <input id="q" type="search" placeholder="Search (e.g., Unit 3, Topic 2.4, glossary)..." aria-label="Search PDFs" />
+        <button id="clear" class="btn" type="button">Clear</button>
+      </div>
+    </header>
+
+    <main id="toc">
+      <section>
+        <h2>Overview</h2>
+        <ul>
+          <li><a href="./01_Overview_PDF_decrypted.pdf"><span class="name">Overview</span><span class="file">01_Overview_PDF_decrypted.pdf</span></a></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Unit 1</h2>
+        <ul>
+          <li><a href="./02_Unit_1_Overview_decrypted.pdf"><span class="name">Unit 1 Overview</span><span class="file">02_Unit_1_Overview_decrypted.pdf</span></a></li>
+          <li><a href="./03_Topic_1.1_PDF_decrypted.pdf"><span class="name">Topic 1.1</span><span class="file">03_Topic_1.1_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./04_Topic_1.2_PDF_decrypted.pdf"><span class="name">Topic 1.2</span><span class="file">04_Topic_1.2_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./05_Topic_1.3_PDF_decrypted.pdf"><span class="name">Topic 1.3</span><span class="file">05_Topic_1.3_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./06_Topic_1.4_PDF_decrypted.pdf"><span class="name">Topic 1.4</span><span class="file">06_Topic_1.4_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./07_Unit_1_Wrap_Up_decrypted.pdf"><span class="name">Unit 1 Wrap Up</span><span class="file">07_Unit_1_Wrap_Up_decrypted.pdf</span></a></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Unit 2</h2>
+        <ul>
+          <li><a href="./08_Unit_2_Overview_decrypted.pdf"><span class="name">Unit 2 Overview</span><span class="file">08_Unit_2_Overview_decrypted.pdf</span></a></li>
+          <li><a href="./09_Topic_2.1_PDF_decrypted.pdf"><span class="name">Topic 2.1</span><span class="file">09_Topic_2.1_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./10_Topic_2.2_PDF_decrypted.pdf"><span class="name">Topic 2.2</span><span class="file">10_Topic_2.2_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./11_Topic_2.3_PDF_decrypted.pdf"><span class="name">Topic 2.3</span><span class="file">11_Topic_2.3_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./12_Topic_2.4_PDF_decrypted.pdf"><span class="name">Topic 2.4</span><span class="file">12_Topic_2.4_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./13_Unit_2_Wrap_Up_decrypted.pdf"><span class="name">Unit 2 Wrap Up</span><span class="file">13_Unit_2_Wrap_Up_decrypted.pdf</span></a></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Unit 3</h2>
+        <ul>
+          <li><a href="./14_Unit_3_Overview_decrypted.pdf"><span class="name">Unit 3 Overview</span><span class="file">14_Unit_3_Overview_decrypted.pdf</span></a></li>
+          <li><a href="./15_Topic_3.1_PDF_decrypted.pdf"><span class="name">Topic 3.1</span><span class="file">15_Topic_3.1_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./16_Topic_3.2_PDF_decrypted.pdf"><span class="name">Topic 3.2</span><span class="file">16_Topic_3.2_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./17_Topic_3.3_PDF_decrypted.pdf"><span class="name">Topic 3.3</span><span class="file">17_Topic_3.3_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./18_Topic_3.4_PDF_decrypted.pdf"><span class="name">Topic 3.4</span><span class="file">18_Topic_3.4_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./19_Unit_3_Wrap_Up_decrypted.pdf"><span class="name">Unit 3 Wrap Up</span><span class="file">19_Unit_3_Wrap_Up_decrypted.pdf</span></a></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Unit 4</h2>
+        <ul>
+          <li><a href="./20_Unit_4_Overview_decrypted.pdf"><span class="name">Unit 4 Overview</span><span class="file">20_Unit_4_Overview_decrypted.pdf</span></a></li>
+          <li><a href="./21_Topic_4.1_PDF_decrypted.pdf"><span class="name">Topic 4.1</span><span class="file">21_Topic_4.1_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./22_Topic_4.2_PDF_decrypted.pdf"><span class="name">Topic 4.2</span><span class="file">22_Topic_4.2_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./23_Topic_4.3_PDF_decrypted.pdf"><span class="name">Topic 4.3</span><span class="file">23_Topic_4.3_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./24_Topic_4.4_PDF_decrypted.pdf"><span class="name">Topic 4.4</span><span class="file">24_Topic_4.4_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./25_Unit_4_Wrap_Up_decrypted.pdf"><span class="name">Unit 4 Wrap Up</span><span class="file">25_Unit_4_Wrap_Up_decrypted.pdf</span></a></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Reference</h2>
+        <ul>
+          <li><a href="./26_Appendices_PDF_decrypted.pdf"><span class="name">Appendices</span><span class="file">26_Appendices_PDF_decrypted.pdf</span></a></li>
+          <li><a href="./27_Glossary_Index_and_Credits_PDF_decrypted.pdf"><span class="name">Glossary, Index and Credits</span><span class="file">27_Glossary_Index_and_Credits_PDF_decrypted.pdf</span></a></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const q = document.getElementById('q');
+    const clear = document.getElementById('clear');
+    const links = Array.from(document.querySelectorAll('#toc a'));
+
+    function applyFilter() {
+      const query = q.value.trim().toLowerCase();
+      for (const link of links) {
+        const text = (link.innerText || link.textContent || '').toLowerCase();
+        link.closest('li').classList.toggle('hidden', query !== '' && !text.includes(query));
+      }
+      for (const section of document.querySelectorAll('#toc section')) {
+        const visible = Array.from(section.querySelectorAll('li')).some(li => !li.classList.contains('hidden'));
+        section.classList.toggle('hidden', !visible);
+      }
+    }
+
+    q.addEventListener('input', applyFilter);
+    clear.addEventListener('click', () => { q.value = ''; applyFilter(); q.focus(); });
+  </script>
+</body>
+</html>
