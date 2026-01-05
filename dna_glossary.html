@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Science 10 DNA Flashcards (EN / 中文)</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#121c32;
+      --card2:#0f1830;
+      --text:#e8eefc;
+      --muted:#a9b7dd;
+      --accent:#7aa2ff;
+      --border:rgba(255,255,255,.12);
+      --shadow: 0 14px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "PingFang SC","Microsoft YaHei", sans-serif;
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(122,162,255,.18), transparent 60%),
+                  radial-gradient(900px 500px at 80% 30%, rgba(123,255,211,.10), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+    .app{
+      width:min(980px, 100%);
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:18px;
+    }
+    @media (max-width: 900px){
+      .app{grid-template-columns:1fr}
+    }
+    header{
+      grid-column:1/-1;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+    }
+    h1{
+      font-size:20px;
+      margin:0;
+      letter-spacing:.2px;
+    }
+    .sub{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:6px;
+      line-height:1.3;
+    }
+    .panel{
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:14px;
+    }
+
+    /* Flashcard */
+    .stage{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .cardWrap{
+      perspective: 1200px;
+      height: 420px;
+    }
+    .card{
+      width:100%;
+      height:100%;
+      position:relative;
+      transform-style:preserve-3d;
+      transition:transform .55s cubic-bezier(.2,.8,.2,1);
+      border-radius: var(--radius);
+      cursor:pointer;
+      outline:none;
+    }
+    .card:focus{box-shadow:0 0 0 3px rgba(122,162,255,.35), var(--shadow)}
+    .card.flipped{transform: rotateY(180deg)}
+    .face{
+      position:absolute;
+      inset:0;
+      padding:18px;
+      border-radius: var(--radius);
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      backface-visibility:hidden;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      overflow:hidden;
+    }
+    .back{
+      transform: rotateY(180deg);
+      background: linear-gradient(180deg, rgba(122,162,255,.12), rgba(255,255,255,.02));
+    }
+    .chipRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .chip{
+      font-size:12px;
+      color:var(--muted);
+      padding:6px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:rgba(0,0,0,.18);
+      user-select:none;
+    }
+    .hint{
+      color:var(--muted);
+      font-size:12px;
+      user-select:none;
+    }
+    .q{
+      font-size:18px;
+      font-weight:700;
+      line-height:1.25;
+      margin-top:4px;
+    }
+    .q .zh{
+      display:block;
+      margin-top:8px;
+      font-weight:650;
+      color:rgba(232,238,252,.92);
+    }
+    .aTitle{
+      font-size:12px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+    }
+    .a{
+      font-size:16px;
+      line-height:1.4;
+      font-weight:650;
+    }
+    .exp{
+      margin-top:8px;
+      color:rgba(232,238,252,.88);
+      line-height:1.55;
+      font-size:14px;
+    }
+    .exp .label{
+      color:var(--muted);
+      font-weight:700;
+      letter-spacing:.04em;
+    }
+    .split{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:6px;
+    }
+    @media (max-width: 520px){
+      .split{grid-template-columns:1fr}
+      .cardWrap{height: 520px;}
+    }
+    .langBlock{
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:rgba(0,0,0,.16);
+      overflow:auto;
+    }
+    .langBlock h3{
+      margin:0 0 6px 0;
+      font-size:12px;
+      letter-spacing:.12em;
+      color:var(--muted);
+      text-transform:uppercase;
+    }
+    .langBlock .big{
+      font-weight:750;
+      font-size:15px;
+      line-height:1.4;
+      margin-bottom:8px;
+    }
+    .langBlock .small{
+      font-size:13px;
+      line-height:1.55;
+      color:rgba(232,238,252,.86);
+    }
+
+    /* Controls */
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    button, select, input[type="text"]{
+      background:rgba(0,0,0,.22);
+      color:var(--text);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:13px;
+      outline:none;
+    }
+    button{cursor:pointer}
+    button:hover{border-color: rgba(122,162,255,.45)}
+    button:active{transform: translateY(1px)}
+    select{cursor:pointer}
+    .wide{
+      width: 100%;
+    }
+    .progress{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      color:var(--muted);
+      font-size:13px;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .bar{
+      width:160px;
+      height:10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.22);
+      overflow:hidden;
+    }
+    .fill{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(122,162,255,.9), rgba(123,255,211,.7));
+    }
+
+    /* List panel */
+    .listPanel{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      min-height: 420px;
+    }
+    .topTools{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .list{
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
+      background:rgba(0,0,0,.16);
+      flex:1;
+      min-height: 240px;
+    }
+    .row{
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      cursor:pointer;
+    }
+    .row:last-child{border-bottom:none}
+    .row:hover{background:rgba(122,162,255,.08)}
+    .row .t{
+      font-weight:700;
+      font-size:13px;
+    }
+    .row .z{
+      color:var(--muted);
+      font-size:12px;
+    }
+    .row .idx{
+      color:var(--muted);
+      font-size:12px;
+      padding:4px 8px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      background:rgba(0,0,0,.18);
+      user-select:none;
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px;
+      color:rgba(232,238,252,.9);
+      padding:2px 6px;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:8px;
+      background:rgba(0,0,0,.28);
+    }
+    .footerTips{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+    a.smallLink{
+      color: rgba(122,162,255,.95);
+      text-decoration:none;
+    }
+    a.smallLink:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>Science 10 — DNA Flashcards (English / 中文)</h1>
+        <div class="sub">
+          Click the card to flip. Keyboard: <span class="kbd">Space</span> flip · <span class="kbd">←</span>/<span class="kbd">→</span> prev/next · <span class="kbd">S</span> shuffle
+        </div>
+      </div>
+      <div class="progress">
+        <div id="counter">1 / 1</div>
+        <div class="bar" aria-hidden="true"><div class="fill" id="fill"></div></div>
+      </div>
+    </header>
+
+    <!-- Flashcard panel -->
+    <section class="panel stage">
+      <div class="controls">
+        <div class="btnRow">
+          <button id="prevBtn" title="Previous (←)">◀ Prev</button>
+          <button id="flipBtn" title="Flip (Space)">Flip</button>
+          <button id="nextBtn" title="Next (→)">Next ▶</button>
+          <button id="shuffleBtn" title="Shuffle (S)">Shuffle</button>
+        </div>
+
+        <div class="btnRow">
+          <select id="displayMode" title="Display mode">
+            <option value="both" selected>Show EN + 中文</option>
+            <option value="en">English only</option>
+            <option value="zh">中文 only</option>
+          </select>
+          <button id="resetBtn" title="Reset order">Reset</button>
+        </div>
+      </div>
+
+      <div class="cardWrap">
+        <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard">
+          <!-- Front (Question) -->
+          <div class="face front">
+            <div class="chipRow">
+              <div class="chip" id="chipFront">Question</div>
+              <div class="hint">Click to flip</div>
+            </div>
+
+            <div class="q" id="qText"></div>
+
+            <div class="footerTips">
+              Tip: Try answering out loud before flipping. Then explain it in your own words.
+            </div>
+          </div>
+
+          <!-- Back (Answer + Explanation) -->
+          <div class="face back">
+            <div class="chipRow">
+              <div class="chip" id="chipBack">Answer + Explanation</div>
+              <div class="hint">Click to flip back</div>
+            </div>
+
+            <div class="split" id="backSplit">
+              <div class="langBlock" id="enBlock">
+                <h3>English</h3>
+                <div class="big" id="aEn"></div>
+                <div class="small" id="expEn"></div>
+              </div>
+
+              <div class="langBlock" id="zhBlock">
+                <h3>中文</h3>
+                <div class="big" id="aZh"></div>
+                <div class="small" id="expZh"></div>
+              </div>
+            </div>
+
+            <div class="footerTips">
+              Mastery check: Can you give a real-life example, then connect it back to DNA structure/function?
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- List / search panel -->
+    <aside class="panel listPanel">
+      <div class="topTools">
+        <input id="search" class="wide" type="text" placeholder="Search terms (e.g., DNA, allele, 染色体, 复制)..." />
+      </div>
+
+      <div class="list" id="list"></div>
+
+      <div class="footerTips">
+        You can click any item in the list to jump to that card.<br/>
+        Want to add more cards (e.g., from your worksheet questions)? Paste them and I’ll extend this set.
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    // Flashcards dataset (EN / 中文)
+    // Format: term + definition + explanation
+    const CARDS = [
+      {
+        en_term:"DNA",
+        en_def:"A molecule that stores genetic information.",
+        en_exp:"DNA contains instructions that tell cells how to build proteins and control growth, development, and function.",
+        zh_term:"DNA（脱氧核糖核酸）",
+        zh_def:"储存遗传信息的分子。",
+        zh_exp:"DNA包含“指令”，指导细胞制造蛋白质，并影响生长、发育与细胞功能。"
+      },
+      {
+        en_term:"RNA",
+        en_def:"A molecule that helps use DNA’s instructions to make proteins.",
+        en_exp:"RNA copies genetic information from DNA and helps assemble proteins in the cell.",
+        zh_term:"RNA（核糖核酸）",
+        zh_def:"帮助执行DNA指令、参与蛋白质合成的分子。",
+        zh_exp:"RNA可以从DNA复制信息，并在细胞中参与蛋白质的组装过程。"
+      },
+      {
+        en_term:"Nucleic acid",
+        en_def:"A large molecule made of nucleotides (DNA or RNA).",
+        en_exp:"Nucleic acids store and transmit genetic information in living things.",
+        zh_term:"核酸",
+        zh_def:"由核苷酸组成的大分子（DNA或RNA）。",
+        zh_exp:"核酸负责储存与传递遗传信息。"
+      },
+      {
+        en_term:"Nucleotide",
+        en_def:"The basic building block of DNA and RNA.",
+        en_exp:"Each nucleotide has a phosphate group, a sugar, and a nitrogenous base.",
+        zh_term:"核苷酸",
+        zh_def:"DNA和RNA的基本单位。",
+        zh_exp:"每个核苷酸由磷酸基、糖和含氮碱基组成。"
+      },
+      {
+        en_term:"Phosphate group",
+        en_def:"A component of a nucleotide that forms part of DNA’s backbone.",
+        en_exp:"Phosphate alternates with sugar to make the sugar-phosphate backbone on the sides of the DNA ladder.",
+        zh_term:"磷酸基",
+        zh_def:"核苷酸的一部分，构成DNA骨架的一部分。",
+        zh_exp:"磷酸基与糖交替连接，形成DNA“糖-磷酸骨架”。"
+      },
+      {
+        en_term:"Sugar (deoxyribose)",
+        en_def:"The sugar in DNA nucleotides; part of the DNA backbone.",
+        en_exp:"Sugar links to phosphate groups and bases, helping build the DNA strand structure.",
+        zh_term:"糖（脱氧核糖）",
+        zh_def:"DNA核苷酸中的糖，构成骨架的一部分。",
+        zh_exp:"糖与磷酸基、碱基连接，帮助形成DNA链结构。"
+      },
+      {
+        en_term:"Nitrogenous base",
+        en_def:"The part of a nucleotide that carries genetic information (A, T, C, G in DNA).",
+        en_exp:"The order (sequence) of bases encodes instructions for making proteins.",
+        zh_term:"含氮碱基",
+        zh_def:"核苷酸中携带遗传信息的部分（DNA中为A、T、C、G）。",
+        zh_exp:"碱基的排列顺序（序列）编码形成蛋白质的指令。"
+      },
+      {
+        en_term:"Adenine (A)",
+        en_def:"A DNA base that pairs with thymine (T).",
+        en_exp:"Base-pair rules keep DNA copying accurate during replication.",
+        zh_term:"腺嘌呤（A）",
+        zh_def:"DNA中的一种碱基，与胸腺嘧啶（T）配对。",
+        zh_exp:"配对规则帮助DNA复制时保持准确性。"
+      },
+      {
+        en_term:"Thymine (T)",
+        en_def:"A DNA base that pairs with adenine (A).",
+        en_exp:"A–T pairing is one of the two complementary base pairs in DNA.",
+        zh_term:"胸腺嘧啶（T）",
+        zh_def:"DNA中的一种碱基，与腺嘌呤（A）配对。",
+        zh_exp:"A–T是DNA互补配对之一。"
+      },
+      {
+        en_term:"Cytosine (C)",
+        en_def:"A DNA base that pairs with guanine (G).",
+        en_exp:"C–G pairing forms the other complementary base pair in DNA.",
+        zh_term:"胞嘧啶（C）",
+        zh_def:"DNA中的一种碱基，与鸟嘌呤（G）配对。",
+        zh_exp:"C–G是DNA另一组互补配对。"
+      },
+      {
+        en_term:"Guanine (G)",
+        en_def:"A DNA base that pairs with cytosine (C).",
+        en_exp:"Complementary pairing supports accurate DNA replication and stable structure.",
+        zh_term:"鸟嘌呤（G）",
+        zh_def:"DNA中的一种碱基，与胞嘧啶（C）配对。",
+        zh_exp:"互补配对有助于复制准确并维持结构稳定。"
+      },
+      {
+        en_term:"Complementary bases",
+        en_def:"Bases that pair in a specific way: A–T and G–C.",
+        en_exp:"This rule allows one strand to act as a template to build the other strand.",
+        zh_term:"互补碱基",
+        zh_def:"按固定规则配对的碱基：A–T，G–C。",
+        zh_exp:"规则使一条链能作为模板，合成另一条互补链。"
+      },
+      {
+        en_term:"Base pair",
+        en_def:"Two complementary bases bonded together across DNA strands.",
+        en_exp:"Base pairs form the ‘rungs’ of the DNA ladder.",
+        zh_term:"碱基对",
+        zh_def:"两条DNA链之间互补配对的两个碱基。",
+        zh_exp:"碱基对形成DNA“梯子”的横档。"
+      },
+      {
+        en_term:"Hydrogen bond",
+        en_def:"A weak bond that holds base pairs together between DNA strands.",
+        en_exp:"Hydrogen bonds are strong enough to hold DNA together but weak enough to unzip during replication.",
+        zh_term:"氢键",
+        zh_def:"连接两条DNA链碱基对的较弱化学键。",
+        zh_exp:"氢键既能稳定DNA结构，也能在复制时被“解开”。"
+      },
+      {
+        en_term:"Double helix",
+        en_def:"The twisted ladder shape of DNA made of two strands.",
+        en_exp:"The sugar-phosphate backbones form the sides, and base pairs form the rungs.",
+        zh_term:"双螺旋",
+        zh_def:"由两条链扭转形成的DNA“螺旋梯”。",
+        zh_exp:"糖-磷酸骨架是两侧，碱基对是横档。"
+      },
+      {
+        en_term:"Genetic information",
+        en_def:"Instructions encoded in DNA base sequences that determine traits and cell functions.",
+        en_exp:"Cells read these instructions to make proteins, which shape organism structure and function.",
+        zh_term:"遗传信息",
+        zh_def:"编码在DNA碱基序列中的指令，决定性状与细胞功能。",
+        zh_exp:"细胞读取这些指令制造蛋白质，从而影响结构与功能。"
+      },
+      {
+        en_term:"Genome",
+        en_def:"The complete DNA sequence of an organism.",
+        en_exp:"In humans, the genome is distributed across 46 chromosomes in most body cells.",
+        zh_term:"基因组",
+        zh_def:"一个生物体全部的DNA序列。",
+        zh_exp:"人类基因组分布在多数体细胞的46条染色体中。"
+      },
+      {
+        en_term:"Protein",
+        en_def:"A molecule made of amino acids that performs many cell functions.",
+        en_exp:"Proteins build structures and control processes; DNA’s instructions ultimately lead to protein production.",
+        zh_term:"蛋白质",
+        zh_def:"由氨基酸组成、承担多种细胞功能的分子。",
+        zh_exp:"蛋白质构成结构并调控过程；DNA指令最终用于制造蛋白质。"
+      },
+      {
+        en_term:"Amino acid",
+        en_def:"A building block of proteins.",
+        en_exp:"The order of amino acids determines a protein’s shape and function.",
+        zh_term:"氨基酸",
+        zh_def:"组成蛋白质的基本单位。",
+        zh_exp:"氨基酸排列顺序决定蛋白质结构与功能。"
+      },
+      {
+        en_term:"Enzyme",
+        en_def:"A protein that helps chemical reactions happen faster in cells.",
+        en_exp:"During gene expression, enzymes help copy DNA into RNA (transcription).",
+        zh_term:"酶",
+        zh_def:"加速细胞内化学反应的蛋白质。",
+        zh_exp:"在基因表达中，酶帮助把DNA信息复制到RNA（转录）。"
+      },
+      {
+        en_term:"DNA replication",
+        en_def:"The process of making an exact copy of DNA.",
+        en_exp:"Replication happens once per cell cycle before division; each new DNA has one original strand and one new strand.",
+        zh_term:"DNA复制",
+        zh_def:"把DNA精确复制一份的过程。",
+        zh_exp:"复制在分裂前进行；新DNA通常含一条旧链和一条新链（半保留复制）。"
+      },
+      {
+        en_term:"Template strand",
+        en_def:"The original DNA strand used to build a complementary new strand.",
+        en_exp:"Base-pair rules (A–T, G–C) guide which nucleotides are added.",
+        zh_term:"模板链",
+        zh_def:"作为“参照”的原始DNA链，用来合成互补新链。",
+        zh_exp:"互补配对规则决定要添加哪些核苷酸。"
+      },
+      {
+        en_term:"Daughter strand",
+        en_def:"A newly built DNA strand produced during replication.",
+        en_exp:"Each daughter strand is complementary to its template strand.",
+        zh_term:"子链（新链）",
+        zh_def:"DNA复制过程中合成的新DNA链。",
+        zh_exp:"子链与模板链互补。"
+      },
+      {
+        en_term:"Cell cycle",
+        en_def:"The series of stages a cell goes through to grow and divide.",
+        en_exp:"DNA replication occurs during the cycle before cell division so each new cell gets the same DNA.",
+        zh_term:"细胞周期",
+        zh_def:"细胞生长并分裂所经历的一系列阶段。",
+        zh_exp:"DNA复制在分裂前发生，确保子细胞获得相同遗传信息。"
+      },
+      {
+        en_term:"Transcription",
+        en_def:"Copying a gene’s DNA sequence into an RNA sequence.",
+        en_exp:"This produces an RNA copy that carries instructions for protein building.",
+        zh_term:"转录",
+        zh_def:"把基因的DNA序列复制成RNA序列。",
+        zh_exp:"转录生成RNA拷贝，携带制造蛋白质的指令。"
+      },
+      {
+        en_term:"Translation",
+        en_def:"Using RNA instructions to assemble amino acids into a protein.",
+        en_exp:"The RNA base sequence determines the amino acid order in the protein.",
+        zh_term:"翻译（蛋白质合成阶段）",
+        zh_def:"根据RNA指令把氨基酸按顺序组装成蛋白质。",
+        zh_exp:"RNA序列决定蛋白质中氨基酸的排列顺序。"
+      },
+      {
+        en_term:"Chromatin",
+        en_def:"DNA in a loose, uncondensed form in the nucleus (most of the cell cycle).",
+        en_exp:"Chromatin allows DNA to fit and be accessible for reading/copying.",
+        zh_term:"染色质",
+        zh_def:"细胞核内较松散的DNA形态（多见于细胞周期的大部分时间）。",
+        zh_exp:"染色质既能让DNA装入细胞核，也更便于被读取与复制。"
+      },
+      {
+        en_term:"Chromosome",
+        en_def:"A highly condensed form of DNA visible during cell division.",
+        en_exp:"Chromosomes carry many genes; humans have 46 chromosomes in most body cells.",
+        zh_term:"染色体",
+        zh_def:"细胞分裂时可见的高度凝缩DNA结构。",
+        zh_exp:"染色体携带许多基因；人类体细胞通常有46条染色体。"
+      },
+      {
+        en_term:"Gene",
+        en_def:"A section of DNA that contains instructions for a trait (often by coding for proteins).",
+        en_exp:"When a cell needs a protein, it accesses the gene’s base sequence to make RNA, then protein.",
+        zh_term:"基因",
+        zh_def:"DNA上的一段序列，包含控制性状的指令（常通过编码蛋白质实现）。",
+        zh_exp:"细胞需要某种蛋白质时，会读取相关基因序列，先转录成RNA，再翻译成蛋白质。"
+      },
+      {
+        en_term:"Allele",
+        en_def:"Different forms of the same gene.",
+        en_exp:"Alleles can produce differences in traits (e.g., straight vs. curly hair).",
+        zh_term:"等位基因",
+        zh_def:"同一基因的不同形式。",
+        zh_exp:"不同等位基因会造成性状差异（如直发与卷发）。"
+      },
+      {
+        en_term:"Homologous chromosomes",
+        en_def:"A pair of chromosomes with the same genes in the same locations (one from each parent).",
+        en_exp:"They are similar but not identical; they may carry different alleles of the same genes.",
+        zh_term:"同源染色体",
+        zh_def:"一对具有相同基因位置的染色体（分别来自父母）。",
+        zh_exp:"同源染色体相似但不完全相同，可能携带不同等位基因。"
+      },
+      {
+        en_term:"Autosomes",
+        en_def:"Chromosomes that are not sex chromosomes.",
+        en_exp:"Humans have 22 pairs of autosomes (pairs 1–22 in a karyotype).",
+        zh_term:"常染色体",
+        zh_def:"除性染色体之外的染色体。",
+        zh_exp:"人类有22对常染色体（核型图中编号1–22）。"
+      },
+      {
+        en_term:"Sex chromosomes (X and Y)",
+        en_def:"Chromosomes that help determine biological sex.",
+        en_exp:"Typically XX = genetic female; XY = genetic male (as described in many school biology contexts).",
+        zh_term:"性染色体（X与Y）",
+        zh_def:"决定生物性别相关特征的染色体。",
+        zh_exp:"一般教材表述为：XX为遗传女性，XY为遗传男性（学校生物学常用表述）。"
+      },
+      {
+        en_term:"Karyotype",
+        en_def:"A photograph/arrangement of chromosomes in pairs for analysis.",
+        en_exp:"Chromosomes are sorted by size; autosomes are 1–22 and sex chromosomes are X/Y.",
+        zh_term:"核型（核型图）",
+        zh_def:"把染色体配对并排列用于观察分析的图片/图谱。",
+        zh_exp:"通常按长度排列；常染色体编号1–22，性染色体标为X/Y。"
+      },
+      {
+        en_term:"Interphase",
+        en_def:"A stage of the cell cycle when the cell grows and DNA is in chromatin form.",
+        en_exp:"DNA replication occurs during interphase before the cell divides.",
+        zh_term:"间期",
+        zh_def:"细胞周期中细胞生长阶段，DNA多以染色质形态存在。",
+        zh_exp:"DNA复制通常发生在间期（分裂前）。"
+      },
+      {
+        en_term:"Mitosis",
+        en_def:"A process where one cell divides to produce two genetically identical body cells.",
+        en_exp:"During mitosis, chromatin condenses into chromosomes so DNA can be separated accurately.",
+        zh_term:"有丝分裂",
+        zh_def:"一个细胞分裂形成两个遗传信息相同的体细胞的过程。",
+        zh_exp:"分裂时染色质凝缩成染色体，便于准确分配DNA。"
+      },
+      {
+        en_term:"Metaphase",
+        en_def:"A stage of mitosis when chromosomes line up and are easiest to see.",
+        en_exp:"Karyotypes are often prepared by stopping cell division in metaphase and staining chromosomes.",
+        zh_term:"中期",
+        zh_def:"有丝分裂中染色体排列在细胞中央、最清晰可见的阶段。",
+        zh_exp:"制作核型图常在中期阻止分裂并染色，以便观察染色体带型。"
+      },
+      {
+        en_term:"Central dogma (DNA → RNA → Protein)",
+        en_def:"The overall flow of genetic information in cells.",
+        en_exp:"DNA is transcribed into RNA, and RNA is translated into proteins that affect traits and functions.",
+        zh_term:"中心法则（DNA → RNA → 蛋白质）",
+        zh_def:"遗传信息在细胞内传递与表达的总体路径。",
+        zh_exp:"DNA先转录成RNA，RNA再翻译成蛋白质，从而影响性状与功能。"
+      }
+    ];
+
+    // State
+    let order = [...CARDS.keys()];
+    let idx = 0;
+    let flipped = false;
+    let displayMode = "both"; // both | en | zh
+
+    // Elements
+    const cardEl = document.getElementById("card");
+    const qText = document.getElementById("qText");
+    const aEn = document.getElementById("aEn");
+    const expEn = document.getElementById("expEn");
+    const aZh = document.getElementById("aZh");
+    const expZh = document.getElementById("expZh");
+    const counter = document.getElementById("counter");
+    const fill = document.getElementById("fill");
+
+    const enBlock = document.getElementById("enBlock");
+    const zhBlock = document.getElementById("zhBlock");
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const flipBtn = document.getElementById("flipBtn");
+    const shuffleBtn = document.getElementById("shuffleBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const displaySelect = document.getElementById("displayMode");
+
+    const listEl = document.getElementById("list");
+    const searchEl = document.getElementById("search");
+
+    function clampIndex(){
+      if (idx < 0) idx = order.length - 1;
+      if (idx >= order.length) idx = 0;
+    }
+
+    function currentCard(){
+      return CARDS[ order[idx] ];
+    }
+
+    function setFlipped(v){
+      flipped = v;
+      cardEl.classList.toggle("flipped", flipped);
+    }
+
+    function render(){
+      const c = currentCard();
+      // Front question
+      const qEn = `What is ${c.en_term}?`;
+      const qZh = `什么是 ${c.zh_term}？`;
+
+      if (displayMode === "en"){
+        qText.innerHTML = `${escapeHTML(qEn)}`;
+      } else if (displayMode === "zh"){
+        qText.innerHTML = `<span class="zh">${escapeHTML(qZh)}</span>`;
+      } else {
+        qText.innerHTML = `${escapeHTML(qEn)}<span class="zh">${escapeHTML(qZh)}</span>`;
+      }
+
+      // Back answer/explanation
+      aEn.textContent = c.en_def;
+      expEn.innerHTML = `<span class="label">Explanation: </span>${escapeHTML(c.en_exp)}`;
+
+      aZh.textContent = c.zh_def;
+      expZh.innerHTML = `<span class="label">解释： </span>${escapeHTML(c.zh_exp)}`;
+
+      // show/hide language blocks
+      enBlock.style.display = (displayMode === "zh") ? "none" : "block";
+      zhBlock.style.display = (displayMode === "en") ? "none" : "block";
+
+      // progress
+      counter.textContent = `${idx + 1} / ${order.length}`;
+      fill.style.width = `${((idx + 1) / order.length) * 100}%`;
+
+      // always show front when changing cards
+      setFlipped(false);
+
+      // rebuild list highlight
+      renderList(searchEl.value.trim());
+    }
+
+    function next(){
+      idx++;
+      clampIndex();
+      render();
+    }
+    function prev(){
+      idx--;
+      clampIndex();
+      render();
+    }
+    function flip(){
+      setFlipped(!flipped);
+    }
+
+    function shuffle(){
+      // Fisher-Yates shuffle of order
+      for (let i = order.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+      }
+      idx = 0;
+      render();
+    }
+
+    function resetOrder(){
+      order = [...CARDS.keys()];
+      idx = 0;
+      render();
+    }
+
+    function escapeHTML(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // List panel
+    function renderList(query=""){
+      const q = query.toLowerCase();
+      const items = [];
+
+      for (let i = 0; i < order.length; i++){
+        const c = CARDS[order[i]];
+        const hay = `${c.en_term} ${c.en_def} ${c.en_exp} ${c.zh_term} ${c.zh_def} ${c.zh_exp}`.toLowerCase();
+        if (!q || hay.includes(q)){
+          items.push({pos:i, card:c});
+        }
+      }
+
+      listEl.innerHTML = items.map(({pos, card}) => {
+        const active = (pos === idx);
+        return `
+          <div class="row" data-pos="${pos}" style="${active ? 'background: rgba(122,162,255,.14);' : ''}">
+            <div>
+              <div class="t">${escapeHTML(card.en_term)}</div>
+              <div class="z">${escapeHTML(card.zh_term)}</div>
+            </div>
+            <div class="idx">${pos+1}</div>
+          </div>
+        `;
+      }).join("");
+
+      // attach handlers
+      [...listEl.querySelectorAll(".row")].forEach(el => {
+        el.addEventListener("click", () => {
+          idx = Number(el.dataset.pos);
+          render();
+        });
+      });
+    }
+
+    // Events
+    cardEl.addEventListener("click", flip);
+    cardEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") flip();
+    });
+
+    prevBtn.addEventListener("click", prev);
+    nextBtn.addEventListener("click", next);
+    flipBtn.addEventListener("click", flip);
+    shuffleBtn.addEventListener("click", shuffle);
+    resetBtn.addEventListener("click", resetOrder);
+
+    displaySelect.addEventListener("change", (e) => {
+      displayMode = e.target.value;
+      render();
+    });
+
+    searchEl.addEventListener("input", (e) => renderList(e.target.value.trim()));
+
+    // Keyboard shortcuts
+    window.addEventListener("keydown", (e) => {
+      // avoid interfering when typing
+      const tag = (document.activeElement && document.activeElement.tagName) || "";
+      const typing = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+      if (typing && e.key !== "Escape") return;
+
+      if (e.key === "ArrowRight") next();
+      else if (e.key === "ArrowLeft") prev();
+      else if (e.key === " "){ e.preventDefault(); flip(); }
+      else if (e.key.toLowerCase() === "s") shuffle();
+      else if (e.key === "Escape") { searchEl.value = ""; renderList(""); }
+    });
+
+    // Init
+    renderList("");
+    render();
+  </script>
+</body>
+</html>
+
