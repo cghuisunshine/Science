@@ -16,29 +16,42 @@
       --shadow: 0 14px 40px rgba(0,0,0,.35);
       --radius: 18px;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "PingFang SC","Microsoft YaHei", sans-serif;
+	    *{box-sizing:border-box}
+	    html, body{height:100%}
+		    body{
+	      margin:0;
+	      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "PingFang SC","Microsoft YaHei", sans-serif;
       background: radial-gradient(1200px 600px at 20% 10%, rgba(122,162,255,.18), transparent 60%),
                   radial-gradient(900px 500px at 80% 30%, rgba(123,255,211,.10), transparent 60%),
                   var(--bg);
       color:var(--text);
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-    }
-    .app{
-      width:min(980px, 100%);
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap:18px;
-    }
-    @media (max-width: 900px){
-      .app{grid-template-columns:1fr}
-    }
+	      min-height:100vh;
+	      display:flex;
+	      align-items:flex-start;
+	      justify-content:center;
+	      padding:24px;
+	      overflow:hidden;
+	    }
+	    .app{
+	      width:min(980px, 100%);
+	      display:grid;
+	      grid-template-columns: 1.1fr .9fr;
+	      grid-template-rows: auto 1fr;
+	      gap:18px;
+	      height: calc(100vh - 48px);
+	      align-items:stretch;
+	    }
+			    @media (max-width: 900px){
+			      body{overflow:hidden}
+			      .app{
+			        display:flex;
+			        flex-direction:column;
+			        height: calc(100vh - 48px);
+			      }
+			      .stage{position:static; top:auto; align-self:stretch}
+			      .cardWrap{height: clamp(260px, 38vh, 420px)}
+			      .listPanel{flex:1; min-height:0}
+			    }
     header{
       grid-column:1/-1;
       display:flex;
@@ -57,24 +70,28 @@
       margin-top:6px;
       line-height:1.3;
     }
-    .panel{
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding:14px;
-    }
+	    .panel{
+	      background: rgba(18,28,50,.96);
+	      border:1px solid var(--border);
+	      border-radius: var(--radius);
+	      box-shadow: var(--shadow);
+	      padding:14px;
+	    }
 
     /* Flashcard */
-    .stage{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-    .cardWrap{
-      perspective: 1200px;
-      height: 420px;
-    }
+	    .stage{
+	      display:flex;
+	      flex-direction:column;
+	      gap:12px;
+	      position:sticky;
+	      top:24px;
+	      align-self:start;
+	      z-index:2;
+	    }
+	    .cardWrap{
+	      perspective: 1200px;
+	      height: clamp(320px, 52vh, 520px);
+	    }
     .card{
       width:100%;
       height:100%;
@@ -87,23 +104,23 @@
     }
     .card:focus{box-shadow:0 0 0 3px rgba(122,162,255,.35), var(--shadow)}
     .card.flipped{transform: rotateY(180deg)}
-    .face{
+	    .face{
       position:absolute;
       inset:0;
       padding:18px;
       border-radius: var(--radius);
       border:1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-      backface-visibility:hidden;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      overflow:hidden;
-    }
-    .back{
-      transform: rotateY(180deg);
-      background: linear-gradient(180deg, rgba(122,162,255,.12), rgba(255,255,255,.02));
-    }
+	      background: linear-gradient(180deg, rgba(18,28,50,.98), rgba(15,24,48,.98));
+	      backface-visibility:hidden;
+	      display:flex;
+	      flex-direction:column;
+	      gap:12px;
+	      overflow:hidden;
+	    }
+	    .back{
+	      transform: rotateY(180deg);
+	      background: linear-gradient(180deg, rgba(30,50,96,.92), rgba(15,24,48,.98));
+	    }
     .chipRow{
       display:flex;
       align-items:center;
@@ -246,26 +263,31 @@
       background: linear-gradient(90deg, rgba(122,162,255,.9), rgba(123,255,211,.7));
     }
 
-    /* List panel */
-    .listPanel{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      min-height: 420px;
-    }
-    .topTools{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .list{
-      border:1px solid var(--border);
-      border-radius:14px;
-      overflow:hidden;
-      background:rgba(0,0,0,.16);
-      flex:1;
-      min-height: 240px;
-    }
+	    /* List panel */
+	    .listPanel{
+	      display:flex;
+	      flex-direction:column;
+	      gap:12px;
+	      height:100%;
+	      min-height:0;
+	    }
+	    .topTools{
+	      display:flex;
+	      gap:10px;
+	      flex-wrap:wrap;
+	    }
+	    .listWrap{
+	      border:1px solid var(--border);
+	      border-radius:14px;
+	      overflow:auto;
+	      background:rgba(0,0,0,.16);
+	      flex:1;
+	      min-height:0;
+	      overscroll-behavior: contain;
+	    }
+	    .list{
+	      min-height:0;
+	    }
     .row{
       padding:10px 12px;
       border-bottom:1px solid rgba(255,255,255,.06);
@@ -395,25 +417,27 @@
       </div>
     </section>
 
-    <!-- List / search panel -->
-    <aside class="panel listPanel">
-      <div class="topTools">
-        <input id="search" class="wide" type="text" placeholder="Search terms (e.g., DNA, allele, 染色体, 复制)..." />
-      </div>
+	    <!-- List / search panel -->
+	    <aside class="panel listPanel">
+	      <div class="topTools">
+	        <input id="search" class="wide" type="text" placeholder="Search terms (e.g., DNA, allele, 染色体, 复制)..." />
+	      </div>
 
-      <div class="list" id="list"></div>
+	      <div class="listWrap">
+	        <div class="list" id="list"></div>
+	      </div>
 
-      <div class="footerTips">
-        You can click any item in the list to jump to that card.<br/>
-        Want to add more cards (e.g., from your worksheet questions)? Paste them and I’ll extend this set.
-      </div>
-    </aside>
+	      <div class="footerTips">
+	        You can click any item in the list to jump to that card.<br/>
+	        Want to add more cards (e.g., from your worksheet questions)? Paste them and I’ll extend this set.
+	      </div>
+	    </aside>
   </div>
 
   <script>
-    // Flashcards dataset (EN / 中文)
-    // Format: term + definition + explanation
-    const CARDS = [
+	    // Flashcards dataset (EN / 中文)
+	    // Format: term + definition + explanation
+	    const CARDS = [
       {
         en_term:"DNA",
         en_def:"A molecule that stores genetic information.",
@@ -720,11 +744,1072 @@
       }
     ];
 
-    // State
-    let order = [...CARDS.keys()];
-    let idx = 0;
-    let flipped = false;
-    let displayMode = "both"; // both | en | zh
+	    // Extra cards (from cards.json)
+	    const EXTRA_CARDS = [
+      {
+        en_term:"biosphere",
+        en_def:"The biosphere is all the parts of Earth where life exists.",
+        en_exp:"In simple terms: Biosphere = all life on Earth + where that life can survive.",
+        zh_term:"biosphere（生物圈）",
+        zh_def:"生物圈是指地球上一切生命存在的总体， 包括所有生物以及它们能够生存的环境。",
+        zh_exp:"简单说：生物圈 = 地球上所有生命 + 生命活动的空间。"
+      },
+      {
+        en_term:"Tundra",
+        en_def:"Tundra is a cold, treeless biome found in the far north of the Earth and at high mountain elevations.",
+        en_exp:"In simple terms: Very cold + very short growing season + no trees.",
+        zh_term:"Tundra（苔原）",
+        zh_def:"苔原是一种寒冷、几乎没有树木的生物群系。",
+        zh_exp:"简单说：苔原是一种寒冷、无树、具有永久冻土、生长季极短的生物群系。"
+      },
+      {
+        en_term:"ferns",
+        en_def:"Ferns are vascular plants that do not produce flowers or seeds.",
+        en_exp:"Ferns are vascular plants that do not produce flowers or seeds. Instead, they reproduce using spores. Ferns are among the oldest groups of land plants, appearing hundreds of millions of years ago—long before flowering plants.",
+        zh_term:"ferns（蕨类植物）",
+        zh_def:"蕨类植物是一类有维管组织、但不开花、不结果实的植物。",
+        zh_exp:"蕨类植物是一类有维管组织、但不开花、不结果实的植物。 它们通过孢子繁殖，而不是种子。 蕨类植物非常古老，在恐龙出现之前就已经存在。"
+      },
+      {
+        en_term:"slugs",
+        en_def:"Slugs are soft-bodied land mollusks, closely related to snails.",
+        en_exp:"Slugs are soft-bodied land mollusks, closely related to snails. Unlike snails, they do not have a visible external shell. Some species still possess a small internal shell plate, hidden beneath the mantle.",
+        zh_term:"slugs（蛞蝓）",
+        zh_def:"蛞蝓是一种陆生软体动物，和蜗牛同属腹足纲。",
+        zh_exp:"蛞蝓是一种陆生软体动物，和蜗牛同属腹足纲。 与蜗牛不同的是，蛞蝓没有明显的外壳，但很多种类仍保留着退化的内壳，藏在外套膜下面。"
+      },
+      {
+        en_term:"Boreal",
+        en_def:"Boreal refers to the boreal forest, also called the taiga—a vast cold, northern biome that stretches across Canada, Alaska, Scandinavia, and Siberia.",
+        en_exp:"Boreal refers to the boreal forest, also called the taiga—a vast cold, northern biome that stretches across Canada, Alaska, Scandinavia, and Siberia. It lies south of the Arctic tundra and north of temperate forests.",
+        zh_term:"Boreal（北方针叶林/泰加林）",
+        zh_def:"Boreal 指的是北方针叶林生物群系，也叫 泰加林（taiga）。",
+        zh_exp:"冬季漫长而寒冷 夏季短暂而凉爽 降水量不高，多以降雪形式出现 土壤贫瘠、偏酸性，部分地区有永久冻土"
+      },
+      {
+        en_term:"Caribou",
+        en_def:"Caribou is the common name for a large, hoofed, deer-like animal in the species Rangifer tarandus.",
+        en_exp:"Caribou is the common name for a large, hoofed, deer-like animal in the species Rangifer tarandus. In many parts of the world, the same species is called reindeer.",
+        zh_term:"Caribou（野生种群）",
+        zh_def:"Caribou 指一种生活在寒带/亚寒带的大型鹿科动物，中文常译为： 北美驯鹿 / 北美驯鹿（野生型） / 卡里布驯鹿（不同资料翻译略有差异） 它和 “reindeer（驯鹿）” …",
+        zh_exp:"Caribou 指一种生活在寒带/亚寒带的大型鹿科动物，中文常译为： 北美驯鹿 / 北美驯鹿（野生型） / 卡里布驯鹿（不同资料翻译略有差异）"
+      },
+      {
+        en_term:"hares",
+        en_def:"Hares is the plural of hare — a type of wild mammal that looks similar to a rabbit.",
+        en_exp:"Hares is the plural of hare — a type of wild mammal that looks similar to a rabbit. So the excerpt is simply naming the animal: “hares” = more than one hare.",
+        zh_term:"hares（野兔）",
+        zh_def:"hares 是 hare（野兔） 的 复数形式，表示 不止一只野兔。",
+        zh_exp:"hares 是 hare（野兔） 的 复数形式，表示 不止一只野兔。 所以这段摘录只有一个词，本身就是在说：“野兔们 / 多只野兔”。"
+      },
+      {
+        en_term:"topsoil",
+        en_def:"Topsoil is the uppermost layer of soil, rich in organic matter and nutrients, where most plant roots grow and biological activity occurs.",
+        en_exp:"Topsoil is where most roots grow and where soil organisms are most active, helping recycle nutrients.",
+        zh_term:"topsoil（表土）",
+        zh_def:"表土是土壤最上层、富含有机质和养分的一层。",
+        zh_exp:"表土通常含腐殖质和大量微生物，是植物根系与土壤生物活动最集中的地方。"
+      },
+      {
+        en_term:"camouflages",
+        en_def:"Camouflages is the third-person singular form of the verb camouflage.",
+        en_exp:"In simple terms: Subject + camouflages + object + (environment).",
+        zh_term:"camouflages（伪装）",
+        zh_def:"camouflages 是动词 camouflage（伪装） 的 第三人称单数形式。",
+        zh_exp:"简单说：主语 + camouflages + 宾语 + 环境。"
+      },
+      {
+        en_term:"Reptiles",
+        en_def:"Reptiles is the plural noun referring to animals in the class Reptilia.",
+        en_exp:"In simple terms: reptiles = snakes, lizards, turtles, crocodiles, and their relatives.",
+        zh_term:"Reptiles（爬行动物纲（Reptilia））",
+        zh_def:"Reptiles 是 爬行动物 的复数形式，指 爬行动物纲（Reptilia） 的动物。",
+        zh_exp:"简单说：reptiles = 蛇、蜥蜴、龟、鳄鱼等动物。"
+      },
+      {
+        en_term:"spruce",
+        en_def:"Spruce is a noun referring to a type of evergreen coniferous tree in the genus Picea.",
+        en_exp:"In simple terms: spruce = a tall evergreen tree with sharp needles and hanging cones.",
+        zh_term:"spruce（云杉）",
+        zh_def:"spruce 是一个名词，指 云杉，一种常见的 常绿针叶树，属于 云杉属（Picea）。",
+        zh_exp:"简单来说： spruce = 云杉，一种高大的常绿针叶树。"
+      },
+      {
+        en_term:"waxy",
+        en_def:"Waxy is an adjective meaning like wax or covered with wax.",
+        en_exp:"In simple terms: waxy = having a wax-like surface or quality.",
+        zh_term:"waxy",
+        zh_def:"waxy 是一个形容词，意思是 像蜡一样的 / 有蜡质的 / 覆盖着蜡的。",
+        zh_exp:"简单说：waxy = 蜡状的、蜡质的。"
+      },
+      {
+        en_term:"birch",
+        en_def:"Birch is a noun referring to a type of deciduous tree in the genus Betula.",
+        en_exp:"In simple terms: birch = a deciduous tree with pale bark that sheds its leaves seasonally.",
+        zh_term:"birch（桦树）",
+        zh_def:"birch 是一个名词，指 桦树（桦木），属于 桦木属（Betula），是一种常见的 落叶乔木，在加拿大非常普遍。",
+        zh_exp:"简单说：birch = 桦树，一种树皮浅色、会季节性落叶的树。"
+      },
+      {
+        en_term:"blue jays",
+        en_def:"Blue jays is the plural noun of blue jay, a medium-sized songbird native to North America.",
+        en_exp:"In simple terms: blue jays = bright blue birds known for loud calls and high intelligence.",
+        zh_term:"blue jays（蓝松鸦）",
+        zh_def:"blue jays 是 blue jay（蓝松鸦） 的复数形式，指一种生活在 北美 的鸟类，以 鲜艳的蓝色羽毛 和 吵闹、聪明 而著名。",
+        zh_exp:"简单说：blue jays = 蓝松鸦，蓝色、聪明、声音很大的鸟。"
+      },
+      {
+        en_term:"breakage",
+        en_def:"Breakage is a noun that refers to the act, process, or result of breaking.",
+        en_exp:"In simple terms: breakage = the damage or loss caused by something breaking.",
+        zh_term:"breakage（破损、断裂、损坏）",
+        zh_def:"breakage 是一个名词，指 破损、断裂、损坏，强调 由于“断裂”而造成的结果或损失。",
+        zh_exp:"简单说：breakage = 因断裂造成的损坏。"
+      },
+      {
+        en_term:"chipmunks",
+        en_def:"Chipmunks is the plural noun of chipmunk.",
+        en_exp:"In simple terms: chipmunks = small striped rodents that store food in their cheeks.",
+        zh_term:"chipmunks（花栗鼠）",
+        zh_def:"chipmunks 是 chipmunk 的复数形式，指 花栗鼠，是一种体型很小、背部有明显条纹的啮齿动物。",
+        zh_exp:"简单说：chipmunks = 花栗鼠，小型、有条纹、会囤食物的动物。"
+      },
+      {
+        en_term:"cougars",
+        en_def:"Cougars is the plural noun of cougar.",
+        en_exp:"In simple terms: cougars = large wild cats that are powerful predators.",
+        zh_term:"cougars（美洲狮）",
+        zh_def:"cougars 是 cougar 的复数形式，指 美洲狮（也常称为 山狮 / 美洲豹猫 / puma，不同地区叫法不同）。",
+        zh_exp:"简单说：cougars = 美洲狮，一种大型野生猫科动物。"
+      },
+      {
+        en_term:"mosses",
+        en_def:"Mosses is the plural noun of moss.",
+        en_exp:"In simple terms: mosses = tiny green plants that grow in damp places and reproduce by spores.",
+        zh_term:"mosses（苔藓植物）",
+        zh_def:"mosses 是 moss（苔藓） 的复数形式，指 苔藓植物。",
+        zh_exp:"简单说：mosses = 苔藓植物。"
+      },
+      {
+        en_term:"shed",
+        en_def:"To shed means to let something fall off, drop, or be removed naturally, often as part of a normal process.",
+        en_exp:"Shed can be both a verb and a noun, with related but different meanings.",
+        zh_term:"shed（小棚子 / 储物间）",
+        zh_def:"shed 既可以是动词，也可以是名词。",
+        zh_exp:"shed 的意思是：自然脱落、脱去、摆脱，通常指一个自然或周期性过程。"
+      },
+      {
+        en_term:"skunks",
+        en_def:"Skunks is the plural noun of skunk.",
+        en_exp:"In simple terms: skunks = animals famous for their black-and-white coloring and strong defensive smell.",
+        zh_term:"skunks（臭鼬）",
+        zh_def:"skunks 是 skunk（臭鼬） 的复数形式，指 臭鼬 这种哺乳动物。",
+        zh_exp:"简单说：skunks = 臭鼬，多为黑白相间、以臭味防身的动物。"
+      },
+      {
+        en_term:"beaks",
+        en_def:"Beaks is the plural noun of beak.",
+        en_exp:"Beaks is the plural noun of beak. A beak is the hard, pointed mouthpart of birds (and some other animals) used for eating, grasping, grooming, building nests, and defense.",
+        zh_term:"beaks（喙）",
+        zh_def:"喙 是鸟类坚硬的口器，用于 进食、抓取、整理羽毛、筑巢、防御 等。",
+        zh_exp:"beaks 是 beak（喙） 的复数形式。 喙 是鸟类坚硬的口器，用于 进食、抓取、整理羽毛、筑巢、防御 等。"
+      },
+      {
+        en_term:"draped",
+        en_def:"Draped is the past tense / past participle of the verb drape.",
+        en_exp:"Draped is the past tense / past participle of the verb drape. It means hung loosely or laid over something so that it falls naturally in folds.",
+        zh_term:"draped",
+        zh_def:"draped 是动词 drape 的 过去式/过去分词，意思是： 松散地垂挂、披着、覆盖在……之上，通常是 自然下垂的状态。",
+        zh_exp:"“雪 披在 树枝上。” “苔藓 垂挂在 岩石上。”"
+      },
+      {
+        en_term:"Ferns",
+        en_def:"Ferns is the plural noun of fern.",
+        en_exp:"Ferns is the plural noun of fern. It refers to a group of non-flowering, seedless plants that reproduce by spores, not seeds.",
+        zh_term:"Ferns（蕨类植物）",
+        zh_def:"Ferns 是 fern（蕨类植物） 的复数形式，指 蕨类植物。",
+        zh_exp:"Ferns 是 fern（蕨类植物） 的复数形式，指 蕨类植物。 蕨类 不开花、不结果、不结种子，而是通过 孢子 繁殖。"
+      },
+      {
+        en_term:"lichens",
+        en_def:"Lichens is the plural noun of lichen.",
+        en_exp:"Lichens is the plural noun of lichen. Lichens are not single organisms; they are a partnership (symbiosis) between:",
+        zh_term:"lichens（地衣）",
+        zh_def:"地衣不是单一生物，而是由 真菌 + 藻类（或蓝藻） 共同组成的 共生体。",
+        zh_exp:"lichens 是 lichen（地衣） 的复数形式。 地衣不是单一生物，而是由 真菌 + 藻类（或蓝藻） 共同组成的 共生体。"
+      },
+      {
+        en_term:"Mosses",
+        en_def:"Mosses is the plural noun of moss.",
+        en_exp:"Mosses is the plural noun of moss. It refers to a group of small, non-vascular plants (called bryophytes) that do not produce flowers or seeds and instead reproduce by spores.",
+        zh_term:"Mosses（苔藓植物）",
+        zh_def:"Mosses 是 moss（苔藓） 的复数形式，指 苔藓植物。",
+        zh_exp:"Mosses 是 moss（苔藓） 的复数形式，指 苔藓植物。 苔藓是 非维管植物，不开花、不结种子，通过 孢子繁殖。"
+      },
+      {
+        en_term:"Sitka spruce",
+        en_def:"Sitka spruce is a large evergreen coniferous tree (Picea sitchensis) native to the Pacific Northwest coast of North America—from Alaska down through British Columbia to California.",
+        en_exp:"In simple terms: Sitka spruce = a very tall coastal evergreen tree common in wet, cool climates.",
+        zh_term:"Sitka spruce（西加云杉）",
+        zh_def:"Sitka spruce 指 西加云杉（学名 Picea sitchensis），是一种生长在 北美太平洋沿岸 的 大型常绿针叶树。",
+        zh_exp:"简单说：Sitka spruce = 太平洋沿岸常见的高大云杉树。"
+      },
+      {
+        en_term:"sticky",
+        en_def:"Sticky is an adjective describing something that clings, adheres, or sticks to other things when touched.",
+        en_exp:"Sticky is an adjective describing something that clings, adheres, or sticks to other things when touched. It usually involves a tacky or glue-like surface.",
+        zh_term:"sticky",
+        zh_def:"sticky 是一个形容词，意思是 黏的、粘的、容易粘住东西的。",
+        zh_exp:"容易粘住 其他物体 触感发黏 不容易分开 有时会 留下黏性残留物"
+      },
+      {
+        en_term:"tree bark",
+        en_def:"Tree bark is the outer protective covering of a tree’s trunk, branches, and roots.",
+        en_exp:"Tree bark is the outer protective covering of a tree’s trunk, branches, and roots. It is not wood; it’s the layer outside the wood that shields the tree from harm.",
+        zh_term:"tree bark（树皮）",
+        zh_def:"树皮为生态系统提供： 昆虫、苔藓、地衣的 生境 小动物的 藏身处 提高森林 生物多样性 如果只看到 tree bark，通常是： 图片说明 科学词汇 生态系统描述的一部分 tree…",
+        zh_exp:"tree bark 指 树皮，是覆盖在树干、树枝和根部最外层的组织。"
+      },
+      {
+        en_term:"acacia",
+        en_def:"Acacia is a noun referring to a group of trees and shrubs in the genus Acacia (pea/legume family).",
+        en_exp:"Acacia is a noun referring to a group of trees and shrubs in the genus Acacia (pea/legume family). They are especially common in Australia, Africa, and tropical–subtropical regions.",
+        zh_term:"acacia（金合欢）",
+        zh_def:"acacia 指 金合欢，是一类生长在 热带和亚热带地区 的 乔木或灌木，属于 豆科植物。",
+        zh_exp:"简单说： acacia = 金合欢，一种耐旱、常带刺的树或灌木"
+      },
+      {
+        en_term:"asters",
+        en_def:"Asters is the plural noun of aster.",
+        en_exp:"Asters is the plural noun of aster. It refers to a group of wildflower plants in the daisy family (Asteraceae), known for their star-shaped flowers.",
+        zh_term:"asters（紫菀）",
+        zh_def:"asters 是 aster（紫菀） 的复数形式，指一类 野生开花植物，属于 菊科。",
+        zh_exp:"“aster” 一词源自希腊语，意思是 “星星”，形容花朵呈放射状。"
+      },
+      {
+        en_term:"burrow",
+        en_def:"Noun: a hole or tunnel dug in the ground by an animal Verb: to dig or move into the ground to make such a hole In simple terms: burrow = an underground home or tunnel made by animals A burrow is an underground space used by animals for: Shelter Protection from predators Temperature control (cool in summer, warm in winter) Raising young Food storage (in some species) Examples: “The gopher lives in a burrow.",
+        en_exp:"Burrow can be both a noun and a verb.",
+        zh_term:"burrow（洞穴）",
+        zh_def:"burrow 既可以作 名词，也可以作 动词。",
+        zh_exp:"名词： 动物在地下挖出的 洞穴 / 地道 动词： 挖洞、钻入地下"
+      },
+      {
+        en_term:"cheetahs",
+        en_def:"Cheetahs is the plural noun of cheetah.",
+        en_exp:"Cheetahs is the plural noun of cheetah. It refers to a species of large wild cat best known as the fastest land animal.",
+        zh_term:"cheetahs（猎豹）",
+        zh_def:"猎豹是 陆地上速度最快的动物。",
+        zh_exp:"cheetahs 是 cheetah（猎豹） 的复数形式。 猎豹是 陆地上速度最快的动物。"
+      },
+      {
+        en_term:"clover",
+        en_def:"Clover is a noun referring to a group of low-growing flowering plants in the genus Trifolium (pea/legume family).",
+        en_exp:"In simple terms: Note: A four-leaf clover is rare and traditionally considered lucky.",
+        zh_term:"clover（三叶草）",
+        zh_def:"三叶草主要是 虫媒花： 吸引 蜜蜂 等昆虫 有 花蜜 花粉 黏性强，适合昆虫传播 固氮作用：根瘤菌把空气中的氮转化为植物可用形式，提。",
+        zh_exp:"简单说：四叶草 属于基因突变，较罕见，常被视为幸运象征。"
+      },
+      {
+        en_term:"coyotes",
+        en_def:"Coyotes is the plural noun of coyote.",
+        en_exp:"Coyotes is the plural noun of coyote. Coyotes are medium-sized wild canines (Canis latrans) native to North America and closely related to wolves and dogs.",
+        zh_term:"coyotes（郊狼）",
+        zh_def:"郊狼是一种 野生犬科动物，原产于 北美，与狼和狗有亲缘关系。",
+        zh_exp:"coyotes 是 coyote（郊狼） 的复数形式。 郊狼是一种 野生犬科动物，原产于 北美，与狼和狗有亲缘关系。"
+      },
+      {
+        en_term:"goldenrod",
+        en_def:"Goldenrod is a noun referring to a group of wildflower plants in the genus Solidago.",
+        en_exp:"Goldenrod is a noun referring to a group of wildflower plants in the genus Solidago. They are named for their bright golden-yellow flowers arranged in clusters on tall stems.",
+        zh_term:"goldenrod（一枝黄花）",
+        zh_def:"goldenrod 指 一枝黄花，是一类常见的 野生开花植物，学名属 Solidago。",
+        zh_exp:"花朵： 许多小黄花组成穗状或羽状花序 植株： 茎直立，通常较高 花期： 夏末到 秋季 生境： 草地、林缘、路边"
+      },
+      {
+        en_term:"gophers",
+        en_def:"Gophers is the plural noun of gopher.",
+        en_exp:"Gophers is the plural noun of gopher. In biology, it usually refers to small burrowing rodents, especially pocket gophers, known for living underground and pushing up soil mounds.",
+        zh_term:"gophers（地鼠 / 囊地鼠）",
+        zh_def:"gophers 是 gopher（地鼠 / 囊地鼠） 的复数形式，指一类 善于挖洞、长期生活在地下的啮齿动物。",
+        zh_exp:"简单说： gophers = 生活在地下、会挖洞的地鼠"
+      },
+      {
+        en_term:"grazing",
+        en_def:"Grazing is a noun and also the -ing form of the verb “graze.",
+        en_exp:"Grazing is a noun and also the -ing form of the verb “graze.” It refers to the act of animals feeding on grasses and other low-growing plants.",
+        zh_term:"grazing（放牧、吃草）",
+        zh_def:"grazing 指 放牧、吃草，是动物在草地上 啃食草类和低矮植物 的行为。",
+        zh_exp:"简单说：动物取食速度超过植物再生速度。"
+      },
+      {
+        en_term:"kangaroos",
+        en_def:"Kangaroos is the plural noun of kangaroo.",
+        en_exp:"Kangaroos is the plural noun of kangaroo. Kangaroos are large marsupial mammals native to Australia, famous for hopping on powerful hind legs and for carrying their young in a pouch.",
+        zh_term:"kangaroos（袋鼠）",
+        zh_def:"袋鼠是 澳大利亚特有的大型有袋类哺乳动物，以 跳跃行走 和 育儿袋 著称。",
+        zh_exp:"kangaroos 是 kangaroo（袋鼠） 的复数形式。 袋鼠是 澳大利亚特有的大型有袋类哺乳动物，以 跳跃行走 和 育儿袋 著称。"
+      },
+      {
+        en_term:"leopards",
+        en_def:"Leopards is the plural noun of leopard.",
+        en_exp:"Leopards is the plural noun of leopard. Leopards are large wild cats known for their spotted coats, stealth, and adaptability.",
+        zh_term:"leopards（豹子）",
+        zh_def:"豹子是一种 大型猫科动物，以 斑点花纹、隐蔽性强、适应能力高 而著名。",
+        zh_exp:"leopards 是 leopard（豹子） 的复数形式。 豹子是一种 大型猫科动物，以 斑点花纹、隐蔽性强、适应能力高 而著名。"
+      },
+      {
+        en_term:"prairie",
+        en_def:"A prairie is a type of large, open grassland with few or no trees, found mainly in central North America.",
+        en_exp:"A prairie is a type of large, open grassland with few or no trees, found mainly in central North America. The land is usually flat or gently rolling and covered mostly by grasses and wildflowers.",
+        zh_term:"prairie（大草原）",
+        zh_def:"prairie 指 大草原，是一种 以草类为主、几乎没有树木 的开阔地形。",
+        zh_exp:"prairie 指 大草原，是一种 以草类为主、几乎没有树木 的开阔地形，主要分布在 北美中部。"
+      },
+      {
+        en_term:"Pronghorn antelope",
+        en_def:"The pronghorn antelope (often called simply pronghorn) is a hoofed mammal native to North America.",
+        en_exp:"Below is a thorough explanation of “Pronghorn antelope” with appropriate pictures, in both English and Chinese, suitable for Science / Biology / Ecology / Biomes (Grasslands).",
+        zh_term:"Pronghorn antelope（叉角羚）",
+        zh_def:"叉角羚是一种原产于北美洲的有蹄类哺乳动物。",
+        zh_exp:"简单说：叉角羚是一种北美特有、以惊人速度著称的哺乳动物。"
+      },
+      {
+        en_term:"wind- and insect-pollinated wildflowers",
+        en_def:"In simple terms: wind- and insect-pollinated wildflowers = wildflowers that rely on wind or insects to transfer pollen Pollination is the transfer of pollen from the male parts of a flower (anthers) to the female parts (stigma).",
+        en_exp:"This phrase describes wildflowers (naturally growing flowering plants) that are pollinated in two different ways:",
+        zh_term:"wind- and insect-pollinated wildflowers（核心概念）",
+        zh_def:"这个短语指的是 野生开花植物（野花），它们通过 两种方式之一 完成授粉： 风媒授粉（wind-pollinated）：靠风传播花粉 虫。",
+        zh_exp:"这个短语指的是 野生开花植物（野花），它们通过 两种方式之一 完成授粉："
+      },
+      {
+        en_term:"canopy",
+        en_def:"A canopy is the upper layer formed by the tops of trees or plants, where leaves and branches overlap to create a kind of roof over what is below.",
+        en_exp:"In simple terms: canopy = the leafy “ceiling” at the top of a forest or plant community",
+        zh_term:"canopy（树冠层）",
+        zh_def:"canopy 指 树冠层，是由树木顶部的 枝叶相互覆盖 形成的 上层结构，像一顶“绿色屋顶”。",
+        zh_exp:"简单说：从上方看，树冠遮住地面的百分比。"
+      },
+      {
+        en_term:"jaguars",
+        en_def:"Jaguars is the plural noun of jaguar.",
+        en_exp:"Jaguars is the plural noun of jaguar. Jaguars are large wild cats native to the Americas, especially Central and South American rainforests. They are the largest big cat in the Americas.",
+        zh_term:"jaguars（美洲豹）",
+        zh_def:"美洲豹是 美洲体型最大的猫科动物，主要生活在 中美洲和南美洲。",
+        zh_exp:"jaguars 是 jaguar（美洲豹） 的复数形式。 美洲豹是 美洲体型最大的猫科动物，主要生活在 中美洲和南美洲。"
+      },
+      {
+        en_term:"orchids",
+        en_def:"Orchids is the plural noun of orchid.",
+        en_exp:"Orchids is the plural noun of orchid. It refers to plants in the orchid family (Orchidaceae)—one of the largest and most diverse plant families on Earth. Orchids are flowering plants known for their complex, often beautiful flowers.",
+        zh_term:"orchids（兰花）",
+        zh_def:"orchids 是 orchid（兰花） 的复数形式，指 兰科植物。",
+        zh_exp:"orchids 是 orchid（兰花） 的复数形式，指 兰科植物。 兰科是 地球上物种最多的植物科之一，以 结构复杂、形态多样的花朵 著称。"
+      },
+      {
+        en_term:"three-toed sloth",
+        en_def:"A three-toed sloth is a slow-moving tree-dwelling mammal found in Central and South American rainforests.",
+        en_exp:"A three-toed sloth is a slow-moving tree-dwelling mammal found in Central and South American rainforests. The name comes from the fact that it has three toes on each limb.",
+        zh_term:"three-toed sloth（三趾树懒）",
+        zh_def:"three-toed sloth 指 三趾树懒，是一种生活在 中美洲和南美洲热带雨林 的 树栖哺乳动物，因 每只脚有三根脚趾 而得名。",
+        zh_exp:"简单说：注意：两种树懒的后肢都是三趾。"
+      },
+      {
+        en_term:"toucans",
+        en_def:"Toucans is the plural noun of toucan.",
+        en_exp:"Toucans is the plural noun of toucan. Toucans are tropical birds best known for their very large, colorful beaks and their life in rainforest canopies.",
+        zh_term:"toucans（巨嘴鸟）",
+        zh_def:"巨嘴鸟是一类生活在 中南美洲热带雨林 的鸟类，以 巨大而鲜艳的喙 闻名。",
+        zh_exp:"toucans 是 toucan（巨嘴鸟） 的复数形式。 巨嘴鸟是一类生活在 中南美洲热带雨林 的鸟类，以 巨大而鲜艳的喙 闻名。"
+      },
+      {
+        en_term:"Tropic of Capricorn",
+        en_def:"The Tropic of Capricorn is an imaginary line of latitude at about 23.",
+        en_exp:"The Tropic of Capricorn is an imaginary line of latitude at about 23.5° south of the Equator. It marks the southernmost point on Earth where the Sun can be directly overhead (at noon) during the year.",
+        zh_term:"Tropic of Capricorn",
+        zh_def:"Tropic of Capricorn 中文叫 南回归线，是一条位于 南纬约 23.5° 的 假想纬线。",
+        zh_exp:"Tropic of Capricorn 中文叫 南回归线，是一条位于 南纬约 23.5° 的 假想纬线。 它表示 太阳一年中能够直射到达的最南界线。"
+      },
+      {
+        en_term:"Tropic ofCancer",
+        en_def:"The Tropic of Cancer is an imaginary line of latitude located at about 23.",
+        en_exp:"The Tropic of Cancer is an imaginary line of latitude located at about 23.5° north of the Equator. It marks the northernmost point on Earth where the Sun can be directly overhead (at noon) during the year.",
+        zh_term:"Tropic ofCancer",
+        zh_def:"Tropic of Cancer 中文叫 北回归线，是一条位于 北纬约 23.5° 的 假想纬线。",
+        zh_exp:"Tropic of Cancer 中文叫 北回归线，是一条位于 北纬约 23.5° 的 假想纬线。 它表示 太阳一年中能够直射到达的最北界线。"
+      },
+      {
+        en_term:"understorey",
+        en_def:"Understorey (British/Canadian spelling; understory in American English) is the layer of vegetation that grows beneath the forest canopy but above the forest floor.",
+        en_exp:"In simple terms: understorey = the middle plant layer under the tree canopy",
+        zh_term:"understorey（位于森林树冠层之下、林地层之上的植被层）",
+        zh_def:"林下层： 为鸟类、小型哺乳动物和昆虫提供 栖息地 提供 食物来源（果实、叶片、昆虫） 减少 水土流失 是森林 更新和演替 的关键区域 森林通常分为： 1. 树冠层（canopy） …",
+        zh_exp:"understorey（英式/加式拼写，美式为 understory）指 位于森林树冠层之下、林地层之上的植被层，中文常称 林下层 / 下木层。"
+      },
+      {
+        en_term:"Vines",
+        en_def:"Vines is the plural noun of vine.",
+        en_exp:"Vines is the plural noun of vine. It refers to plants with long, flexible stems that climb, trail, or spread rather than standing upright on their own.",
+        zh_term:"Vines（茎细长、柔软，不能独立直立生长）",
+        zh_def:"vines 是 vine（藤蔓植物） 的复数形式，指 茎细长、柔软，不能独立直立生长，而是 攀爬或蔓延生长 的植物。",
+        zh_exp:"缠绕（茎绕着支撑物转） 卷须（细长结构抓住支撑物） 钩刺 气生根（贴附在树皮或墙面）"
+      },
+      {
+        en_term:"sagebrush",
+        en_def:"Sagebrush is a woody shrub that grows mainly in dry regions of western North America.",
+        en_exp:"Sagebrush is a woody shrub that grows mainly in dry regions of western North America. It is best known for its gray-green leaves, strong smell, and ability to survive with very little water.",
+        zh_term:"sagebrush（蒿类灌木）",
+        zh_def:"sagebrush 指 蒿类灌木，是一种生长在 北美西部干旱或半干旱地区 的植物。",
+        zh_exp:"叶子小而灰绿，有时呈银灰色 气味浓烈（揉碎后明显） 植株不高，多为灌木 根系发达，能在干旱环境中吸水"
+      },
+      {
+        en_term:"scales",
+        en_def:"Scales are small, flat, overlapping plates that cover the skin of certain animals—most commonly reptiles and fish.",
+        en_exp:"Scales are small, flat, overlapping plates that cover the skin of certain animals—most commonly reptiles and fish. They form a protective outer layer.",
+        zh_term:"scales（覆盖在某些动物皮肤表面的鳞片）",
+        zh_def:"scales 指 覆盖在某些动物皮肤表面的鳞片，常见于 爬行动物和鱼类。",
+        zh_exp:"由 角蛋白 构成 干燥、坚韧 防止 水分流失 会定期 蜕皮"
+      },
+      {
+        en_term:"spines",
+        en_def:"Spines are sharp, stiff, pointed structures found on some plants (and animals).",
+        en_exp:"Spines are sharp, stiff, pointed structures found on some plants (and animals). In plant biology, spines are modified leaves that have changed shape to become hard and pointed.",
+        zh_term:"spines（植物或动物身上的尖刺状结构）",
+        zh_def:"在植物学中，spines 是由叶子演变而来的结构。",
+        zh_exp:"spines 指 植物或动物身上的尖刺状结构。 在植物学中，spines 是由叶子演变而来的结构。"
+      },
+      {
+        en_term:"Spiny cacti",
+        en_def:"Spiny cacti refers to cactus plants that are covered with spines (sharp, needle-like structures).",
+        en_exp:"cacti = plural of cactus* spiny = having many sharp points (spines)",
+        zh_term:"Spiny cacti（长满尖刺的仙人掌）",
+        zh_def:"cacti = 仙人掌（复数） spiny = 有刺的、多刺的 简单说： spiny cacti = 多刺的仙人掌 刺是 由叶子演变而来 的 不是枝条或树刺 表面积小，有助于减少水分流失 刺是对 干旱环境 的重要适应： 1. 减少水分蒸发 2. 防止动物啃食（仙人掌体内水分多） 3. 遮阴降温 4. 帮助收集露水或雾气 肉质茎储水 蜡质表皮 减少蒸发 浅而广的根系 快速吸水 沙漠和半干旱地区 多。",
+        zh_exp:"cacti = 仙人掌（复数） spiny = 有刺的、多刺的"
+      },
+      {
+        en_term:"Antarctica",
+        en_def:"Antarctica is the southernmost continent on Earth, centered on the South Pole.",
+        en_exp:"Antarctica is the southernmost continent on Earth, centered on the South Pole. It is almost entirely covered by a thick ice sheet and is the coldest, driest, and windiest continent.",
+        zh_term:"Antarctica（南极洲）",
+        zh_def:"Antarctica 中文称 南极洲，是地球 最南端的大陆，以 南极点 为中心，几乎完全被 厚厚的冰层 覆盖。",
+        zh_exp:"简单说： 南极洲 = 地球最寒冷、最干燥的冰冻大陆"
+      },
+      {
+        en_term:"seals",
+        en_def:"Seals is the plural noun of seal.",
+        en_exp:"Seals is the plural noun of seal. Seals are marine mammals that live mainly in cold and temperate oceans and are adapted for life both in water and on land/ice.",
+        zh_term:"seals（海豹）",
+        zh_def:"海豹是 海洋哺乳动物，适应在 水中游泳，也会在 陆地或冰面 上休息。",
+        zh_exp:"seals 是 seal（海豹） 的复数形式。 海豹是 海洋哺乳动物，适应在 水中游泳，也会在 陆地或冰面 上休息。"
+      },
+      {
+        en_term:"walruses",
+        en_def:"Walruses is the plural noun of walrus.",
+        en_exp:"Walruses is the plural noun of walrus. Walruses are large marine mammals that live in Arctic and sub-Arctic regions, easily recognized by their long tusks, thick wrinkled skin, and whiskered snouts.",
+        zh_term:"walruses",
+        zh_def:"walruses 是 walrus（海象） 的复数形式。",
+        zh_exp:"walruses 是 walrus（海象） 的复数形式。 海象是一种生活在 北极及其附近海域 的 大型海洋哺乳动物，以 长獠牙和胡须 闻名。"
+      },
+      {
+        en_term:"arid",
+        en_def:"Arid is an adjective that describes a place or climate that is extremely dry, with very little rainfall.",
+        en_exp:"In simple terms: arid = very dry",
+        zh_term:"arid（干旱）",
+        zh_def:"arid 是一个 形容词，表示 极度干旱的、降水非常少的。",
+        zh_exp:"| 英文 | 中文 | | --------- | ------ | | arid | 干旱 | | semi-arid | 半干旱 | | humid | 潮湿 | | tropical | 热带（多雨） |"
+      },
+      {
+        en_term:"hitchhikers",
+        en_def:"Hitchhikers is the plural noun of hitchhiker.",
+        en_exp:"In simple terms: “The hitchhikers were trying to get to the next town.”.",
+        zh_term:"hitchhikers（搭便车者）",
+        zh_def:"hitchhikers 是 hitchhiker（搭便车者） 的复数形式。",
+        zh_exp:"简单说：那些搭便车的人想去下一个城市。"
+      },
+      {
+        en_term:"microbial",
+        en_def:"Microbial is an adjective that describes anything related to microbes (microorganisms)—organisms that are too small to be seen with the naked eye.",
+        en_exp:"In simple terms: ⚠️ Note: Viruses are often discussed with microbes, but they are not considered living organisms in the strict biological sense.",
+        zh_term:"microbial",
+        zh_def:"microbial 是一个 形容词，表示 与微生物有关的。",
+        zh_exp:"简单说：微生物分解把养分重新送回土壤。"
+      },
+      {
+        en_term:"spores",
+        en_def:"Spores are tiny reproductive units produced by certain organisms—such as fungi, ferns, mosses, algae, and some bacteria—that can grow into a new organism without fertilization.",
+        en_exp:"In simple terms: spores = microscopic “seeds” that spread and grow into new life",
+        zh_term:"spores（孢子）",
+        zh_def:"spores 指 孢子，是某些生物（如 真菌、蕨类、苔藓、藻类 等）产生的 微小繁殖单位，不需要受精 就能发育成新个体。",
+        zh_exp:"非常小，肉眼通常看不见 很轻，容易随风、水传播 耐环境，能忍受干旱、寒冷等 数量巨大，提高存活概率"
+      },
+      {
+        en_term:"staghorn",
+        en_def:"Staghorn is a descriptive adjective (and sometimes part of a noun) meaning shaped like the antlers (horns) of a stag (male deer)—that is, branching, forked, and spreading.",
+        en_exp:"In simple terms: staghorn = shaped like deer antlers",
+        zh_term:"staghorn（形状像雄鹿鹿角的）",
+        zh_def:"staghorn 指 形状像雄鹿鹿角的，特点是 分叉、多枝、向外展开。",
+        zh_exp:"作 形容词：staghorn fern 强调 形态特征，不是物种行为"
+      },
+      {
+        en_term:"windborne",
+        en_def:"Windborne (also written wind-borne) is an adjective meaning carried or transported by the wind.",
+        en_exp:"In simple terms: “Many plants rely on windborne seeds for dispersal.”.",
+        zh_term:"windborne",
+        zh_def:"windborne（也可写作 wind-borne）是一个 形容词，意思是 被风携带的 / 由风传播的。",
+        zh_exp:"简单说：许多植物依靠 随风传播的种子 扩散。"
+      },
+      {
+        en_term:"piles",
+        en_def:"Piles is the plural noun of pile.",
+        en_exp:"Piles is the plural noun of pile. It means heaps or stacks of things placed one on top of another. It can also be the plural of the verb to pile, meaning to gather or stack things together.",
+        zh_term:"piles（堆）",
+        zh_def:"piles 是 pile（堆） 的复数形式，意思是 一堆一堆的东西，由许多物体 聚集、堆放在一起。",
+        zh_exp:"一堆落叶 覆盖了地面 河岸边有 沙堆 雪在路边堆成 一堆一堆"
+      },
+      {
+        en_term:"sedimentation",
+        en_def:"Sedimentation is a process in which solid particles (called sediment) settle out of a fluid (water or air) and accumulate at the bottom or on surfaces due to gravity.",
+        en_exp:"In simple terms: Key idea: Slower movement → more sedimentation.",
+        zh_term:"sedimentation（沉积作用 / 沉淀作用）",
+        zh_def:"sedimentation 指 沉积作用 / 沉淀作用，是指 悬浮在水或空气中的固体颗粒 因 重力作用 而 下沉并堆积 的过程。",
+        zh_exp:"简单说： sedimentation = 颗粒沉下来并堆积"
+      },
+      {
+        en_term:"boreal",
+        en_def:"Boreal is an adjective meaning related to the north or northern regions.",
+        en_exp:"In simple terms: “Canada has one of the world’s largest boreal forests.”.",
+        zh_term:"boreal（北方针叶林（泰加林））",
+        zh_def:"boreal 是一个 形容词，意思是 北方的、寒带的，常用来描述 高纬度、寒冷地区。",
+        zh_exp:"简单说：加拿大拥有广阔的 北方针叶林（boreal forest）。"
+      },
+      {
+        en_term:"landforms",
+        en_def:"Landforms are natural physical features of the Earth’s surface.",
+        en_exp:"In simple terms: Key idea: Landforms are always changing, but usually very slowly.",
+        zh_term:"landforms（地貌）",
+        zh_def:"landforms 指 地貌，也就是 地球表面自然形成的各种地形形态。",
+        zh_exp:"山地（mountains） 丘陵（hills） 平原（plains） 高原（plateaus） 山谷（valleys） 峡谷（canyons） 三角洲（deltas） 沙漠（deserts） 海岸地貌（coasts）"
+      },
+      {
+        en_term:"salamander",
+        en_def:"A salamander is a type of amphibian—a cold-blooded vertebrate that typically lives partly in water and partly on land.",
+        en_exp:"A salamander is a type of amphibian—a cold-blooded vertebrate that typically lives partly in water and partly on land. Salamanders usually look like small lizards, but they are not reptiles.",
+        zh_term:"salamander（蝾螈）",
+        zh_def:"salamander 指 蝾螈，是一类 两栖动物，一生通常在 水域和陆地之间 活动。",
+        zh_exp:"简单说： salamander = 生活在潮湿环境中的两栖动物"
+      },
+      {
+        en_term:"sculpin",
+        en_def:"A sculpin is a small, bottom-dwelling fish found in cold freshwater streams and coastal marine waters, especially in the Northern Hemisphere.",
+        en_exp:"A sculpin is a small, bottom-dwelling fish found in cold freshwater streams and coastal marine waters, especially in the Northern Hemisphere. It belongs to a group of fishes known for their broad, flattened heads and excellent camouflage.",
+        zh_term:"sculpin（杜父鱼）",
+        zh_def:"sculpin 指 杜父鱼，是一类 生活在水底的小型鱼类，常见于 寒冷、清澈的溪流 或 近海岩石区。",
+        zh_exp:"简单说： sculpin = 生活在水底、善于伪装的小鱼"
+      },
+      {
+        en_term:"gulping",
+        en_def:"Gulping is the -ing form of the verb “to gulp.",
+        en_exp:"In simple terms: “He was gulping water after the run.”.",
+        zh_term:"gulping（缺氧反应）",
+        zh_def:"gulping 是动词 gulp（大口吞咽） 的现在分词形式，意思是 快速、大口地吞咽，通常带有 急迫感。",
+        zh_exp:"简单说：“他跑完步后在 大口喝水。”。"
+      },
+      {
+        en_term:"invertebrates",
+        en_def:"Invertebrates are animals that do not have a backbone (spine).",
+        en_exp:"Invertebrates are animals that do not have a backbone (spine). The word comes from:",
+        zh_term:"invertebrates（无脊椎动物）",
+        zh_def:"invertebrates 指 无脊椎动物，也就是 没有脊椎骨（脊柱） 的动物。",
+        zh_exp:"简单说： invertebrates = 没有脊椎的动物"
+      },
+      {
+        en_term:"commensalism",
+        en_def:"Commensalism is a type of ecological relationship between two different species in which: One species benefits (+) The other species is neither helped nor harmed (0) It is commonly summarized as (+ / 0).",
+        en_exp:"Below is a thorough, bilingual explanation of commensalism, now including appropriate visual examples to make the idea concrete and easy to remember.",
+        zh_term:"commensalism（它）",
+        zh_def:"它是共生（symbiosis）的一种类型。",
+        zh_exp:"共栖（commensalism） 是指两种不同物种之间的一种关系："
+      },
+      {
+        en_term:"mutualism",
+        en_def:"Mutualism is a type of ecological relationship between two different species in which: Both species benefit It is written as (+ / +) Mutualism is one major form of symbiosis (close, long-term interactions between species).",
+        en_exp:"Mutualism is a type of ecological relationship between two different species in which:",
+        zh_term:"mutualism（它）",
+        zh_def:"互利共生（mutualism） 是指两种不同物种之间的一种关系： 双方都受益 用符号表示为 （+ / +） 它是共生（symbiosis）中最“对等”的一种关系。",
+        zh_exp:"互利共生（mutualism） 是指两种不同物种之间的一种关系："
+      },
+      {
+        en_term:"parasitism",
+        en_def:"Parasitism is a type of ecological relationship between two different species in which: One species benefits (+) → the parasite The other species is harmed (−) → the host It is commonly written as (+ / −).",
+        en_exp:"Parasitism is a type of ecological relationship between two different species in which:",
+        zh_term:"parasitism（但本质上）",
+        zh_def:"寄生（parasitism） 是指两种不同物种之间的一种关系： 一方受益（寄生者，+） 另一方受害（宿主，−） 通常表示为 （+ / −）。",
+        zh_exp:"寄生（parasitism） 是指两种不同物种之间的一种关系："
+      },
+      {
+        en_term:"anchored",
+        en_def:"Anchored means firmly fixed in place so that something does not move or drift.",
+        en_exp:"It comes from the noun anchor (a heavy object used to hold a ship in place).",
+        zh_term:"anchored（固定的 / 锚定的）",
+        zh_def:"Anchored 指的是： 被牢牢固定在某处，不会随意移动。",
+        zh_exp:"简单说：anchored = 像船下了锚一样，不再乱动。"
+      },
+      {
+        en_term:"anemone",
+        en_def:"In biology, an anemone usually refers to a sea anemone — a marine invertebrate animal that lives attached to rocks, coral, or the sea floor.",
+        en_exp:"Although it looks like a flower, a sea anemone is not a plant. It is an animal, closely related to jellyfish and corals.",
+        zh_term:"anemone（海葵）",
+        zh_def:"海葵具有： 圆柱形身体 顶部一个口 围绕口的一圈触手 触手上有刺细胞（能释放毒素） 1. 猎物接触触手 2. 刺细胞释放毒素使猎物麻痹 3. 触手把猎物送入口中 4. 在体腔内消化…",
+        zh_exp:"简单说：海葵不是植物，而是动物。"
+      },
+      {
+        en_term:"Barnacles",
+        en_def:"Barnacles are small marine animals that live attached permanently to hard surfaces such as: rocks ship hulls docks whales, turtles, and other sea animals Although they look like shells, barnacles are animals, not plants—and not mollusks.",
+        en_exp:"Barnacles are small marine animals that live attached permanently to hard surfaces such as:",
+        zh_term:"Barnacles（藤壶）",
+        zh_def:"藤壶 是一种生活在海洋中的小型动物， 会永久附着在坚硬表面上，比如： 岩石 船底 码头 鲸鱼、海龟等海洋动物 外形像贝壳，但： 藤壶是动物，不是植物，也不是贝类。",
+        zh_exp:"简单说：藤壶是动物，不是植物，也不是贝类。"
+      },
+      {
+        en_term:"candy-striped",
+        en_def:"A candy-striped pattern usually has: Clear, repeating stripes High contrast colors Often red + white, but sometimes other bright combinations Stripes that may be straight, curved, or spiraled The key idea is that the pattern looks sweet-like, decorative, and eye-catching.",
+        en_exp:"Candy-striped describes a pattern of alternating, brightly colored stripes, most commonly red and white, like those on a candy cane.",
+        zh_term:"candy-striped（糖果条纹的）",
+        zh_def:"Candy-striped 指一种像糖果一样的条纹图案， 最常见的是红白相间，类似拐杖糖的花纹。",
+        zh_exp:"这种虾有红白相间的糖果条纹。* 她戴着一条糖果条纹的围巾。*"
+      },
+      {
+        en_term:"crimson",
+        en_def:"Crimson is a deep, rich red color with a slight bluish or purplish tone.",
+        en_exp:"In simple terms: Her face turned crimson with anger.",
+        zh_term:"crimson（深红色 / 绯红色）",
+        zh_def:"Crimson 指一种深而浓烈的红色， 通常带一点蓝色或紫色调。",
+        zh_exp:"red：亮红 crimson：深红、浓烈 maroon：暗红、偏棕"
+      },
+      {
+        en_term:"epiphyte",
+        en_def:"An epiphyte is a plant that grows on another plant (usually a tree) for physical support only, not for nutrients.",
+        en_exp:"The epiphyte uses the host plant as a platform The host plant is not harmed Nutrients and water come from rain, air, dust, and debris, not from the host",
+        zh_term:"epiphyte（附生植物）",
+        zh_def:"附生植物是指生长在其他植物上、 只借助支撑、不吸取养分的植物。",
+        zh_exp:"附生植物把树当作“支架” 不伤害宿主植物 水分和养分来自雨水、空气、灰尘和有机碎屑"
+      },
+      {
+        en_term:"Queen Charlotte Sound",
+        en_def:"Queen Charlotte Sound is a large body of ocean water on the Pacific coast of Canada, in the province of British Columbia.",
+        en_exp:"Between the mainland coast of British Columbia and Haida Gwaii South of Hecate Strait North of Vancouver Island",
+        zh_term:"Queen Charlotte Sound（夏洛特女王湾）",
+        zh_def:"夏洛特女王湾 是位于加拿大不列颠哥伦比亚省西海岸的一片太平洋海域。",
+        zh_exp:"海达瓜依群岛（Haida Gwaii） 与 BC 大陆海岸之间 赫卡特海峡（Hecate Strait）以南 温哥华岛以北"
+      },
+      {
+        en_term:"symbiosis",
+        en_def:"Symbiosis is a close, long-term biological relationship between two different species that live in direct contact or very close association.",
+        en_exp:"In simple terms: Quick rule for exams:.",
+        zh_term:"symbiosis（指的）",
+        zh_def:"共生 指的是： 两种不同物种之间形成的长期、紧密的生物学关系。",
+        zh_exp:"简单说：先判断是不是共生 → 再判断是哪一类共生。"
+      },
+      {
+        en_term:"Symbiotic",
+        en_def:"The word symbiotic is an adjective (it describes a relationship).",
+        en_exp:"In simple terms: If two species live closely together for a long time → it’s symbiotic,.",
+        zh_term:"Symbiotic（共生的）",
+        zh_def:"Symbiotic 指的是： 两种不同物种之间形成的、长期而紧密的关系。",
+        zh_exp:"简单说：先判断是不是共生 → 再判断是哪一类共生。"
+      },
+      {
+        en_term:"bullhorn",
+        en_def:"A bullhorn is a handheld loudspeaker, also called a megaphone, used to amplify a person’s voice so it can be heard clearly over long distances or by large crowds.",
+        en_exp:"Despite the name, it has nothing to do with bulls 🐂. The word comes from its horn-like shape and powerful sound.",
+        zh_term:"bullhorn（扩音器 / 喇叭）",
+        zh_def:"Bullhorn 是一种手持式扩音器， 用于把人的声音放大，让远处或人群中的人能清楚听见。",
+        zh_exp:"虽然叫 bullhorn（牛角）， 但只是因为形状像角、声音大，和牛无关。"
+      },
+      {
+        en_term:"bumblebees",
+        en_def:"Bumblebees are large, fuzzy bees belonging to the genus Bombus.",
+        en_exp:"Bumblebees are large, fuzzy bees belonging to the genus Bombus. They are important pollinators, especially in cool or cloudy climates where other bees are less active.",
+        zh_term:"bumblebees（熊蜂 / 大黄蜂）",
+        zh_def:"熊蜂是一种体型较大、毛茸茸的蜜蜂，属于 Bombus 属。",
+        zh_exp:"熊蜂是一种体型较大、毛茸茸的蜜蜂，属于 Bombus 属。 它们是非常重要的传粉者，尤其适合在低温、阴天环境中工作。"
+      },
+      {
+        en_term:"Moth-pollinated",
+        en_def:"Moth-pollinated describes flowers that are pollinated mainly by moths rather than by bees, butterflies, birds, or wind.",
+        en_exp:"This type of pollination usually happens at night and is a form of biotic pollination (done by animals).",
+        zh_term:"Moth-pollinated（蛾类传粉的）",
+        zh_def:"蛾类传粉的 指的是： 主要依靠蛾（而不是蜜蜂或蝴蝶）来完成传粉的花。",
+        zh_exp:"颜色浅或白色（夜间更显眼） 夜间香味浓烈 花筒细长 夜间开放 花蜜丰富，位置较深"
+      },
+      {
+        en_term:"nectar",
+        en_def:"Nectar is a sweet liquid produced by many flowering plants.",
+        en_exp:"Nectar is a sweet liquid produced by many flowering plants. Its main purpose is to attract pollinators such as bees, butterflies, moths, birds, and bats.",
+        zh_term:"nectar（花蜜）",
+        zh_def:"花蜜是许多开花植物产生的一种甜液体， 主要作用是吸引传粉者。",
+        zh_exp:"花蜜由蜜腺（nectaries）分泌，位置可能在："
+      },
+      {
+        en_term:"pollinators",
+        en_def:"Pollinators are animals (or sometimes natural forces) that transfer pollen from the male parts of a plant (anthers) to the female parts (stigma), allowing fertilization to occur.",
+        en_exp:"In simple terms: When animals do the job → biotic pollination.",
+        zh_term:"pollinators（传粉者）",
+        zh_def:"传粉者是指把花粉从雄蕊传到雌蕊、 从而使植物能够完成受精并结果的生物或自然力量。",
+        zh_exp:"1. 传粉者为获取花蜜或花粉进入花朵 2. 花粉附着在身体上 3. 传粉者飞到另一朵花 4. 花粉落到柱头 5. 植物完成受精，形成种子和果实"
+      },
+      {
+        en_term:"seedlings",
+        en_def:"Seedlings are very young plants that have just grown from seeds.",
+        en_exp:"In simple terms: Seed → germination → seedling → mature plant.",
+        zh_term:"seedlings（幼苗）",
+        zh_def:"幼苗是指刚从种子萌发出来的植物幼体， 处于植物生命的最早阶段。",
+        zh_exp:"简单说：种子 → 发芽 → 幼苗 → 成熟植物。"
+      },
+      {
+        en_term:"Snapdragon",
+        en_def:"A snapdragon is a flowering plant in the genus Antirrhinum.",
+        en_exp:"A snapdragon is a flowering plant in the genus Antirrhinum. It is best known for its dragon-shaped flowers that appear to “open and close” when gently squeezed.",
+        zh_term:"Snapdragon（金鱼草）",
+        zh_def:"金鱼草是一种开花植物，学名 Antirrhinum。",
+        zh_exp:"金鱼草是一种开花植物，学名 Antirrhinum。 因花朵形状像龙嘴，被挤压时会“张嘴、合嘴”，因此得名 snapdragon。"
+      },
+      {
+        en_term:"spurs",
+        en_def:"In botany, spurs are long, narrow, tube-like extensions of a flower that usually contain nectar.",
+        en_exp:"In simple terms: a nectar straw built into the flower.",
+        zh_term:"spurs（花距）",
+        zh_def:"在植物学中，花距是指： 花朵上细长的管状延伸结构， 通常用来储存花蜜。",
+        zh_exp:"简单说：花距 = 花朵自带的“吸管”。"
+      },
+      {
+        en_term:"thorns",
+        en_def:"Thorns are sharp, rigid, pointed structures on plants that serve mainly as defense against animals that might eat them.",
+        en_exp:"They can pierce skin and discourage grazing or browsing.",
+        zh_term:"thorns（刺）",
+        zh_def:"刺是植物上的坚硬、尖锐结构， 主要作用是防止动物啃食。",
+        zh_exp:"简单说：刺防吃，针防旱，皮刺容易掰。"
+      },
+      {
+        en_term:"wasps",
+        en_def:"Wasps are insects that belong to the order Hymenoptera, the same group as bees and ants.",
+        en_exp:"Wasps are insects that belong to the order Hymenoptera, the same group as bees and ants. They are known for their slender bodies, narrow waists, and, in many species, a stinger.",
+        zh_term:"wasps（黄蜂 / 胡蜂）",
+        zh_def:"黄蜂 是一种昆虫，属于膜翅目， 和蜜蜂、蚂蚁是近亲。",
+        zh_exp:"黄蜂蜇人是为了防御 多数黄蜂可以多次蜇人 受到惊扰时攻击性更强"
+      },
+      {
+        en_term:"Ancylostoma caninum",
+        en_def:"Ancylostoma caninum is a species of hookworm that primarily parasitizes dogs.",
+        en_exp:"Ancylostoma caninum is a species of hookworm that primarily parasitizes dogs. It is a parasitic roundworm (nematode) that lives in the small intestine of its host.",
+        zh_term:"Ancylostoma caninum（犬钩虫）",
+        zh_def:"犬钩虫是一种寄生线虫， 主要寄生在狗的小肠中。",
+        zh_exp:"1. 成虫在狗肠道内产卵 2. 虫卵随粪便排出 3. 在土壤中孵化成幼虫 4. 幼虫通过："
+      },
+      {
+        en_term:"brood",
+        en_def:"Brood refers to a group of young animals that are: born or hatched at the same time, and cared for together by a parent (or parents).",
+        en_exp:"Brood refers to a group of young animals that are:",
+        zh_term:"brood（同窝幼体 / 一窝幼仔）",
+        zh_def:"Brood 指的是： 同一次繁殖中出生或孵化的幼体 并且由同一亲代抚养 可以指： 一窝雏鸟 一窝昆虫幼体 一次孵化出的后代 表示“一窝孩子”： 一窝小鸟 一窝小鸭 一批昆虫幼虫 表…",
+        zh_exp:"| 词汇 | 含义 | | ------------- | -------- | | brood | 同一次繁殖的幼体 | | offspring | 后代（泛指） | | litter | 哺乳动物一胎 | | clutch | 一窝蛋 |"
+      },
+      {
+        en_term:"Cowbirds",
+        en_def:"Cowbirds are a group of songbirds best known for their unusual reproductive strategy called brood parasitism.",
+        en_exp:"Instead of building their own nests and raising their own young, cowbirds:",
+        zh_term:"Cowbirds（牛鹂）",
+        zh_def:"牛鹂是一类鸣禽， 最著名的特点是它们采用巢寄生（育雏寄生）的繁殖方式。",
+        zh_exp:"长期迁徙使筑巢变得困难， 于是演化出了巢寄生行为。"
+      },
+      {
+        en_term:"feces",
+        en_def:"Feces (also called stool, poop, or excrement) are solid or semi-solid waste that leave the body through the digestive system.",
+        en_exp:"They are what remains after food has been digested and nutrients have been absorbed.",
+        zh_term:"feces（粪便）",
+        zh_def:"粪便是指食物经过消化吸收后， 人体或动物排出的固体或半固体废物。",
+        zh_exp:"简单说：feces = 消化后的排泄物，也是疾病传播的重要媒介。"
+      },
+      {
+        en_term:"filaments",
+        en_def:"Filaments are very thin, thread-like structures.",
+        en_exp:"In simple terms: long, slender, hair-like strands.",
+        zh_term:"filaments（丝状结构）",
+        zh_def:"Filaments 指的是细长、像线一样的结构。",
+        zh_exp:"简单说：又细又长，像头发或丝线。"
+      },
+      {
+        en_term:"hookworm",
+        en_def:"A hookworm is a parasitic roundworm (nematode) that lives in the small intestine of humans or animals.",
+        en_exp:"A hookworm is a parasitic roundworm (nematode) that lives in the small intestine of humans or animals. It gets its name from the hook-shaped mouthparts it uses to attach to the intestinal wall.",
+        zh_term:"hookworm（钩虫）",
+        zh_def:"钩虫是一种寄生线虫， 生活在人或动物的小肠中。",
+        zh_exp:"钩虫需要宿主长期存活， 因此通常造成慢性损害，而不是立即致命。"
+      },
+      {
+        en_term:"intestine",
+        en_def:"The intestine is a long, tube-like organ in the digestive system.",
+        en_exp:"The intestine is a long, tube-like organ in the digestive system. Its main jobs are to:",
+        zh_term:"intestine（肠道）",
+        zh_def:"肠道是消化系统中一条又长又弯的管状器官， 主要功能是： 继续消化食物 吸收营养和水分 形成并排出粪便 它连接胃和肛门。",
+        zh_exp:"肠道是消化系统中一条又长又弯的管状器官， 主要功能是："
+      },
+      {
+        en_term:"lodgepole",
+        en_def:"Lodgepole usually refers to the lodgepole pine, a type of coniferous tree common in western North America.",
+        en_exp:"When people say “lodgepole forest” or “lodgepole”, they almost always mean lodgepole pine trees, not a building or pole.",
+        zh_term:"lodgepole（扭叶松 / 杆松）",
+        zh_def:"在生态和地理中，lodgepole 通常指 扭叶松（lodgepole pine）， 是一种生长在北美西部的针叶树。",
+        zh_exp:"简单说：lodgepole pine = 直、耐火、火后再生。"
+      },
+      {
+        en_term:"Rafflesia arnoldii.",
+        en_def:"Rafflesia arnoldii is a rare parasitic flowering plant famous for producing the largest single flower in the world.",
+        en_exp:"Native to Sumatra and Borneo (Southeast Asia) Produces one massive flower, up to 1 meter wide Known for its strong smell of rotting meat",
+        zh_term:"Rafflesia arnoldii.（大王花）",
+        zh_def:"大王花是一种极其罕见的寄生开花植物， 以拥有世界上最大的单朵花而闻名。",
+        zh_exp:"原产于苏门答腊和婆罗洲 花直径可达1 米 有明显的腐肉气味"
+      },
+      {
+        en_term:"strands",
+        en_def:"Strands are long, thin, thread-like pieces that are separate but often part of a whole.",
+        en_exp:"In simple terms: The parasite spreads through thin strands inside the host.",
+        zh_term:"strands（细条 / 丝状物）",
+        zh_def:"Strands 指的是： 细长、像线一样的一条一条的结构， 通常是整体中的一部分。",
+        zh_exp:"简单说：寄生植物通过细丝状结构扩散。"
+      },
+      {
+        en_term:"tetrastigma",
+        en_def:"Tetrastigma is a genus of tropical climbing vines in the grape family (Vitaceae).",
+        en_exp:"Tetrastigma is a genus of tropical climbing vines in the grape family (Vitaceae). They grow mainly in Southeast Asian rainforests and are adapted to warm, humid environments.",
+        zh_term:"tetrastigma（它最著名的原因）",
+        zh_def:"它最著名的原因是： 👉 它是大王花（Rafflesia arnoldii）唯一的寄主植物。",
+        zh_exp:"简单说：Tetrastigma = 宿主藤本。"
+      },
+      {
+        en_term:"vine",
+        en_def:"A vine is a plant with long, flexible stems that cannot support itself upright.",
+        en_exp:"In simple terms: All parasitic hosts here are vines, but not all vines are parasitic.",
+        zh_term:"vine（藤本植物 / 藤蔓）",
+        zh_def:"藤本植物是指： 茎细长、柔软，不能独立直立生长的植物。",
+        zh_exp:"简单说：藤蔓靠“借力向上”，不是吸养分生存。"
+      },
+      {
+        en_term:"vireos",
+        en_def:"Vireos are small songbirds belonging to the bird family Vireonidae.",
+        en_exp:"Vireos are small songbirds belonging to the bird family Vireonidae. They are known for their:",
+        zh_term:"vireos（绿鹃鵙 / 绿鹃雀）",
+        zh_def:"Vireos 是一类小型鸣禽，属于 Vireonidae 科。",
+        zh_exp:"反复不停的鸣唱 绿色或橄榄色羽毛 喜欢生活在树林和森林中"
+      },
+      {
+        en_term:"habitat",
+        en_def:"A habitat is the natural place or environment where an organism lives.",
+        en_exp:"In simple terms: A habitat is an organism’s home.",
+        zh_term:"habitat（栖息地）",
+        zh_def:"栖息地是指生物自然生活的环境或地点。",
+        zh_exp:"简单说：栖息地 = 生物的“家”。"
+      },
+      {
+        en_term:"herons",
+        en_def:"Herons are large wading birds that live near water and feed mainly on fish and other aquatic animals.",
+        en_exp:"In simple terms: Top or mid-level predators in wetland ecosystems.",
+        zh_term:"herons（苍鹭）",
+        zh_def:"苍鹭是一类生活在水域附近的大型涉禽， 主要以鱼类和水生动物为食。",
+        zh_exp:"简单说：湿地生态系统中的捕食者。"
+      },
+      {
+        en_term:"Niches",
+        en_def:"This is the competitive exclusion principle: One species will outcompete the other Or they will divide resources and form different niches Example: Different bird species eating insects at different tree heights Species may divide: Food (seeds vs insects) Space (canopy vs ground) Time (day vs night) This allows biodiversity to exist.",
+        en_exp:"In simple terms: Habitat = address.",
+        zh_term:"Niches（生态位指的）",
+        zh_def:"生态位指的是一个物种在生态系统中的“角色”或“功能”。",
+        zh_exp:"简单说：这个物种如何生存、如何与环境和其他生物互动。"
+      },
+      {
+        en_term:"albatrosses",
+        en_def:"Albatrosses are very large seabirds that live mainly over the open oceans, especially in the Southern Ocean and the North Pacific.",
+        en_exp:"They are famous for their enormous wingspans—the largest of any living bird.",
+        zh_term:"albatrosses（信天翁）",
+        zh_def:"信天翁是一类体型极大的海鸟， 主要生活在远洋海域，尤其是南大洋和北太平洋。",
+        zh_exp:"简单说：信天翁 = 超长翅膀 + 远洋滑翔大师。"
+      },
+      {
+        en_term:"elk",
+        en_def:"An elk is a large deer species native to North America and eastern Asia.",
+        en_exp:"An elk is a large deer species native to North America and eastern Asia. In North America, “elk” usually refers to wapiti (Cervus canadensis).",
+        zh_term:"elk（麋鹿 / 美洲赤鹿）",
+        zh_def:"在北美，elk 通常指 美洲赤鹿（wapiti）， 是一种体型巨大的鹿科动物。",
+        zh_exp:"体型巨大：雄性可重达 300 公斤以上 鹿角：只有雄鹿有，每年脱落再生 颜色：棕褐色身体，臀部颜色较浅 叫声：繁殖季节雄鹿会发出响亮的吼叫声（bugle）"
+      },
+      {
+        en_term:"expends",
+        en_def:"Expends is the third-person singular form of the verb expend.",
+        en_exp:"In simple terms: expend = use (something) for a purpose.",
+        zh_term:"expends（能量消耗）",
+        zh_def:"expends 是动词 expend 的第三人称单数形式，意思是： 👉 消耗、花费、用掉（能量、时间、精力、资源等） 通常用于有限资源： 消耗能量： 动物在捕猎时消耗能量。",
+        zh_exp:"简单说：expend = 把有限的东西用掉。"
+      },
+      {
+        en_term:"knapweed",
+        en_def:"Knapweed is the common name for a group of flowering plants (mainly in the genus Centaurea) that are native to Europe but have become invasive weeds in many other parts of the world, including Canada and the United States.",
+        en_exp:"The most well-known invasive types include:",
+        zh_term:"knapweed（矢车菊类杂草）",
+        zh_def:"Knapweed 之所以危险，是因为它： 抢占本地植物生存空间 释放抑制其他植物生长的化学物质 降低生物多样性 破坏草原和野生动物栖息地 主要靠种子 单株可产生大量种子 种子可通过…",
+        zh_exp:"简单说：Knapweed = 外来入侵杂草 + 抢占生态位。"
+      },
+      {
+        en_term:"pelicans",
+        en_def:"Pelicans are large water birds known for their long bills and distinctive throat pouches (gular pouches).",
+        en_exp:"Pelicans are large water birds known for their long bills and distinctive throat pouches (gular pouches). They live near oceans, lakes, rivers, and wetlands and are specialized fish eaters.",
+        zh_term:"pelicans（鹈鹕）",
+        zh_def:"鹈鹕是一种体型很大的水鸟， 以超长的嘴和可伸展的喉囊而闻名。",
+        zh_exp:"很长的喙 巨大的喉囊（用来捞鱼） 蹼足，适合游泳 宽大的翅膀，适合滑翔飞行"
+      },
+      {
+        en_term:"pterosaur",
+        en_def:"A pterosaur is a group of extinct flying reptiles that lived during the age of dinosaurs (the Mesozoic Era, about 230–66 million years ago).",
+        en_exp:"❌ Pterosaurs are not dinosaurs ❌ They are not birds ✅ They are a separate group of reptiles that evolved true powered flight",
+        zh_term:"pterosaur（翼龙）",
+        zh_def:"翼龙是一类已经灭绝的会飞的爬行动物， 生活在恐龙时代（中生代，约2.3亿–6600万年前）。",
+        zh_exp:"❌ 翼龙不是恐龙 ❌ 翼龙不是鸟 ✅ 翼龙是独立演化出飞行能力的爬行动物"
+      },
+      {
+        en_term:"rangeland",
+        en_def:"Rangeland refers to large natural or semi-natural open lands that are not cultivated (not farmed) but are used mainly for grazing livestock and supporting wildlife.",
+        en_exp:"Rangelands include areas dominated by:",
+        zh_term:"rangeland（牧场地 / 放牧地）",
+        zh_def:"Rangeland 指的是天然或半天然的开阔土地， 不用于种植农作物，主要用于放牧牲畜和维持野生动物生境。",
+        zh_exp:"草原 稀树草原 灌木地 半干旱平原 开阔林地 高山草甸"
+      },
+      {
+        en_term:"canine",
+        en_def:"canine species → dogs, wolves, coyotes, foxes canine tooth → a sharp, pointed tooth A canine is a type of tooth—the long, pointed tooth located between the incisors and premolars.",
+        en_exp:"In simple terms: Incisors → Canines → Premolars → Molars.",
+        zh_term:"canine（犬的 / 犬齿）",
+        zh_def:"canine species：犬科动物 canine tooth：犬齿 Canine 指的是一种牙齿——犬齿。",
+        zh_exp:"简单说：门齿 → 犬齿 → 前臼齿 → 臼齿。"
+      },
+      {
+        en_term:"clams",
+        en_def:"Clams are the plural of clam.",
+        en_exp:"Below is a thorough explanation of “clams” with appropriate pictures, in both English and Chinese, suitable for biology / ecology study.",
+        zh_term:"clams（蛤蜊）",
+        zh_def:"clams 是 clam（蛤 / 蛤蜊） 的复数形式。",
+        zh_exp:"简单说：蛤蜊是埋在沙泥中的双壳动物，通过过滤水中的微小生物来进食。"
+      },
+      {
+        en_term:"cougar",
+        en_def:"A cougar is a large wild cat native to the Americas.",
+        en_exp:"A cougar is a large wild cat native to the Americas. It is one of the most widespread land mammals in the Western Hemisphere.",
+        zh_term:"cougar（美洲狮 / 山狮）",
+        zh_def:"美洲狮是一种。",
+        zh_exp:"美洲狮是一种分布在美洲大陆的大型猫科动物， 是西半球分布最广的陆生哺乳动物之一。"
+      },
+      {
+        en_term:"fangs",
+        en_def:"Fangs are long, sharp, pointed teeth found in certain animals, especially predators.",
+        en_exp:"Fangs are long, sharp, pointed teeth found in certain animals, especially predators. They are used mainly to:",
+        zh_term:"fangs（尖牙 / 獠牙）",
+        zh_def:"尖牙是某些动物具有的细长、锋利的牙齿， 主要用于： 刺穿猎物 牢牢咬住 注入毒液（部分动物） 杀死或制服猎物 蛇类：用来注入毒。",
+        zh_exp:"简单说：fangs = 为捕猎而生的“武器型牙齿”。"
+      },
+      {
+        en_term:"monarch",
+        en_def:"In biology, monarch usually refers to the monarch butterfly (Danaus plexippus).",
+        en_exp:"Below is a thorough explanation of “monarch” (monarch butterfly) with appropriate pictures, in both English and Chinese, suitable for Science / Biology / Ecology / Evolution topics.",
+        zh_term:"monarch（帝王蝶）",
+        zh_def:"帝王蝶因以下特点而闻名： 橙黑相间的翅膀 对捕食者有毒 极其壮观的长距离迁徙 从图片可见： 翅膀为橙色，翅脉为黑色 翅缘有白色斑点 后翅没有黑色横线（这是与副王蝶的重要区别） 雌雄…",
+        zh_exp:"简单说：帝王蝶是一种有毒、颜色鲜艳、以长距离迁徙著称的蝴蝶。"
+      },
+      {
+        en_term:"Porcupines",
+        en_def:"Porcupines are medium- to large-sized rodents best known for their sharp defensive quills that cover much of their body.",
+        en_exp:"They are not aggressive animals, but they are very well protected.",
+        zh_term:"Porcupines（豪猪）",
+        zh_def:"豪猪是一种啮齿类动物， 最显著的特征是覆盖全身的尖刺（硬毛）。",
+        zh_exp:"简单说：豪猪不打人，刺替它说话。"
+      },
+      {
+        en_term:"stick bugs",
+        en_def:"Stick bugs are insects that look like twigs or small branches.",
+        en_exp:"Below is a thorough explanation of “stick bugs” with appropriate pictures, in both English and Chinese, suitable for biology / ecology study.",
+        zh_term:"stick bugs（竹节虫 / 枝拟虫）",
+        zh_def:"stick bugs 是一种外形极像树枝或细枝的昆虫。",
+        zh_exp:"简单说：竹节虫是一种通过“长得像树枝”来生存的昆虫。"
+      },
+      {
+        en_term:"twigs",
+        en_def:"Twigs is the plural of twig.",
+        en_exp:"Below is a thorough explanation of “twigs” with appropriate pictures, in both English and Chinese, suitable for biology / ecology / reading-comprehension contexts.",
+        zh_term:"twigs（细枝 / 嫩枝）",
+        zh_def:"twigs 是 twig（细枝、嫩枝） 的复数形式。",
+        zh_exp:"简单说：细枝是树木末端最细、最新生长的枝条，是新叶和新花生长的地方。"
+      },
+      {
+        en_term:"viceroy butterfly",
+        en_def:"The viceroy butterfly is a North American butterfly well known for looking very similar to the monarch butterfly.",
+        en_exp:"Below is a thorough explanation of “viceroy butterfly” with appropriate pictures, in both English and Chinese, suitable for biology, ecology, and evolution (mimicry) topics.",
+        zh_term:"viceroy butterfly（副王蝶）",
+        zh_def:"副王蝶是一种。",
+        zh_exp:"简单说：副王蝶通过模仿有毒蝴蝶的外形来提高生存率。"
+      },
+      {
+        en_term:"lynx",
+        en_def:"A lynx is a medium-sized wild cat found in cold and temperate regions of the Northern Hemisphere.",
+        en_exp:"Below is a thorough explanation of “lynx” with appropriate pictures, in both English and Chinese, suitable for Science / Biology / Ecology / Food Web topics.",
+        zh_term:"lynx（猞猁）",
+        zh_def:"猞猁是一种中等体型的野生猫科动物，生活在北半球寒冷或温带地区。",
+        zh_exp:"简单说：猞猁是一种适应寒冷环境、长有耳簇和“雪鞋脚掌”的野生猫科动物。"
+      },
+      {
+        en_term:"snowshoehare",
+        en_def:"A snowshoe hare is a large hare that lives in cold, snowy regions, especially in boreal forests of North America.",
+        en_exp:"Below is a thorough explanation of “snowshoe hare” with appropriate pictures, in both English and Chinese, suitable for Science / Biology / Ecology / Food Web study.",
+        zh_term:"snowshoehare（雪鞋兔）",
+        zh_def:"雪鞋兔是一种生活在寒冷多雪地区的大型兔类。",
+        zh_exp:"简单说：雪鞋兔是一种适应寒冷环境、脚大如雪鞋、会随季节变色的兔类。"
+      },
+      {
+        en_term:"erosion",
+        en_def:"Erosion is the process by which soil, rock, or sediment is worn away and moved from one place to another by natural forces.",
+        en_exp:"In simple terms: Weathering = breaking material down.",
+        zh_term:"erosion（侵蚀 / 侵蚀作用）",
+        zh_def:"侵蚀指的是： 👉 土壤、岩石或沉积物被磨损并被搬运到别处的过程。",
+        zh_exp:"简单说：侵蚀是风、水、冰或重力把风化后的物质搬走的过程。"
+      },
+      {
+        en_term:"moose",
+        en_def:"A moose is the largest member of the deer family (Cervidae).",
+        en_exp:"Below is a thorough explanation of “moose” with appropriate pictures, in both English and Chinese, suitable for Science / Biology / Ecology / Food Web topics.",
+        zh_term:"moose（驼鹿 / 麋鹿）",
+        zh_def:"驼鹿是鹿科中体型最大的动物，主要生活在寒冷的北方地区，尤其是寒带森林。",
+        zh_exp:"简单说：驼鹿是最大的鹿类，适应寒冷森林和湿地环境。"
+      },
+      {
+        en_term:"garter",
+        en_def:"In biology, “garter” most commonly refers to a garter snake.",
+        en_exp:"Below is a thorough explanation of “garter” (as in garter snake) with appropriate pictures, in both English and Chinese, suitable for Science / Biology / Ecology.",
+        zh_term:"garter（通常指 garter snake，袜带蛇）",
+        zh_def:"袜带蛇是： 无毒蛇类 体型较小到中等 广泛。",
+        zh_exp:"简单说：袜带蛇是一种常见于北美、无毒且有条纹的蛇类。"
+      },
+      {
+        en_term:"newt",
+        en_def:"A newt is a type of amphibian, closely related to salamanders.",
+        en_exp:"Below is a thorough explanation of “newt” with appropriate pictures, in both English and Chinese, suitable for Science / Biology / Ecology / Life Cycles.",
+        zh_term:"newt（蝾螈）",
+        zh_def:"蝾螈是一种两栖动物，与蝾螈类/鲵类（salamanders）关系密切。",
+        zh_exp:"简单说：蝾螈是一种既能在水中又能在陆地生活、并具有再生能力的两栖动物。"
+      }
+	    ];
+	    CARDS.push(...EXTRA_CARDS);
+
+	    // State
+	    let order = [...CARDS.keys()];
+	    let idx = 0;
+	    let flipped = false;
+	    let displayMode = "both"; // both | en | zh
 
     // Elements
     const cardEl = document.getElementById("card");
@@ -906,10 +1991,9 @@
       else if (e.key === "Escape") { searchEl.value = ""; renderList(""); }
     });
 
-    // Init
-    renderList("");
-    render();
-  </script>
-</body>
-</html>
-
+	    // Init
+	    renderList("");
+	    render();
+	  </script>
+	</body>
+	</html>
