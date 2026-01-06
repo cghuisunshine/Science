@@ -1962,11 +1962,20 @@
 	    // Events
 	    let suppressClick = false;
 
-	    cardEl.addEventListener("click", () => {
+	    cardEl.addEventListener("click", (e) => {
 	      if (suppressClick){
 	        suppressClick = false;
 	        return;
 	      }
+
+	      // Kindle-like navigation: tap left/right edge for prev/next.
+	      const rect = cardEl.getBoundingClientRect();
+	      const edge = Math.min(90, Math.max(44, rect.width * 0.22));
+	      const x = (typeof e.clientX === "number") ? (e.clientX - rect.left) : (rect.width / 2);
+
+	      if (x <= edge) { prev(); return; }
+	      if (x >= rect.width - edge) { next(); return; }
+
 	      flip();
 	    });
 	    cardEl.addEventListener("keydown", (e) => {
