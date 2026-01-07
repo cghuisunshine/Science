@@ -104,13 +104,29 @@
       background:rgba(10,15,34,.55);
     }
     .q .label{
+      width:100%;
       display:flex;
       align-items:center;
       gap:8px;
       font-weight:700;
       margin:0 0 6px;
       font-size:14px;
+      list-style:none;
+      background:transparent;
+      border:0;
+      padding:0;
+      color:inherit;
+      text-align:left;
+      cursor:pointer;
+      font-family:inherit;
     }
+    .q .label:focus-visible{
+      outline:2px solid rgba(122,162,255,.65);
+      outline-offset:4px;
+      border-radius:10px;
+    }
+    .q .label::-webkit-details-marker{display:none}
+    .q .label::marker{content:""}
     .pill{
       display:inline-block;
       padding:2px 8px;
@@ -123,6 +139,7 @@
     }
     .ans{margin:0; color:#f2f4ff; font-size:14px}
     .explain{margin:8px 0 0; color:var(--muted); font-size:13px}
+    .q[open] .ans + .ans{margin-top:6px}
     footer{
       max-width:1200px;
       margin:0 auto;
@@ -163,42 +180,42 @@
         <h2>Answers (Questions 1–6)</h2>
         <div class="body">
           <div class="qa">
-            <div class="q">
-              <p class="label"><span class="pill">1</span> Rank (smallest → biggest)</p>
+            <details class="q">
+              <summary class="label"><span class="pill">1</span> Rank (smallest → biggest)</summary>
               <p class="ans">Nucleotide → Gene → DNA → Chromosome → Nucleus → Cell</p>
-            </div>
+            </details>
 
-            <div class="q">
-              <p class="label"><span class="pill">2</span> Where does DNA replication take place?</p>
+            <details class="q">
+              <summary class="label"><span class="pill">2</span> Where does DNA replication take place?</summary>
               <p class="ans">In the nucleus.</p>
-            </div>
+            </details>
 
-            <div class="q">
-              <p class="label"><span class="pill">3</span> When does DNA replication take place?</p>
+            <details class="q">
+              <summary class="label"><span class="pill">3</span> When does DNA replication take place?</summary>
               <p class="ans">During S phase of interphase (before cell division).</p>
-            </div>
+            </details>
 
-            <div class="q">
-              <p class="label"><span class="pill">4</span> Complementary base sequence</p>
+            <details class="q">
+              <summary class="label"><span class="pill">4</span> Complementary base sequence</summary>
               <p class="ans"><strong>Given:</strong> G-A-C-T-T-A-C-G-T-A-C-C</p>
               <p class="ans"><strong>Complement:</strong> C-T-G-A-A-T-G-C-A-T-G-G</p>
               <p class="explain">Base-pair rules: A↔T, C↔G.</p>
-            </div>
+            </details>
 
-            <div class="q">
-              <p class="label"><span class="pill">5</span> Result of DNA replication</p>
+            <details class="q">
+              <summary class="label"><span class="pill">5</span> Result of DNA replication</summary>
               <p class="ans">
                 Two identical DNA molecules. Each new DNA has one original (parent) strand and one new strand
                 (semi-conservative replication).
               </p>
-            </div>
+            </details>
 
-            <div class="q">
-              <p class="label"><span class="pill">6</span> Book analogy</p>
+            <details class="q">
+              <summary class="label"><span class="pill">6</span> Book analogy</summary>
               <p class="ans"><strong>a)</strong> Chapters = Chromosomes</p>
               <p class="ans"><strong>b)</strong> Sentences = Genes</p>
               <p class="ans"><strong>c)</strong> Letters = Bases (A, T, C, G)</p>
-            </div>
+            </details>
           </div>
         </div>
       </div>
@@ -227,48 +244,48 @@
         <h2>Answers (Questions 7–8)</h2>
         <div class="body">
           <div class="qa">
-            <div class="q">
-              <p class="label"><span class="pill">7a</span> Name of Molecule X</p>
+            <details class="q">
+              <summary class="label"><span class="pill">7a</span> Name of Molecule X</summary>
               <p class="ans">DNA (Deoxyribonucleic acid)</p>
-            </div>
+            </details>
 
-            <div class="q">
-              <p class="label"><span class="pill">7b</span> Name of Molecule Y</p>
+            <details class="q">
+              <summary class="label"><span class="pill">7b</span> Name of Molecule Y</summary>
               <p class="ans">RNA (messenger RNA / mRNA)</p>
-            </div>
+            </details>
 
-            <div class="q">
-              <p class="label"><span class="pill">7c</span> Name of Molecule Z</p>
+            <details class="q">
+              <summary class="label"><span class="pill">7c</span> Name of Molecule Z</summary>
               <p class="ans">Protein</p>
-            </div>
+            </details>
 
-            <div class="q">
-              <p class="label"><span class="pill">7d</span> Function of Molecule X</p>
+            <details class="q">
+              <summary class="label"><span class="pill">7d</span> Function of Molecule X</summary>
               <p class="ans">Stores genetic information (instructions) that control traits, growth, and development.</p>
-            </div>
+            </details>
 
-            <div class="q">
-              <p class="label"><span class="pill">7e</span> Function of Molecule Y</p>
+            <details class="q">
+              <summary class="label"><span class="pill">7e</span> Function of Molecule Y</summary>
               <p class="ans">Carries instructions from DNA to the ribosome where proteins are made.</p>
-            </div>
+            </details>
 
-            <div class="q">
-              <p class="label"><span class="pill">7f</span> Function of Molecule Z</p>
+            <details class="q">
+              <summary class="label"><span class="pill">7f</span> Function of Molecule Z</summary>
               <p class="ans">Proteins build structures and control reactions (enzymes/hormones), producing traits and functions.</p>
-            </div>
+            </details>
 
-            <div class="q">
-              <p class="label"><span class="pill">8</span> How are genes involved in producing proteins?</p>
+            <details class="q">
+              <summary class="label"><span class="pill">8</span> How are genes involved in producing proteins?</summary>
               <p class="ans">
                 Genes are sections of DNA that contain instructions for making specific proteins.
                 A gene is transcribed into RNA, and the RNA is translated into a protein.
               </p>
-            </div>
+            </details>
 
-            <div class="q">
-              <p class="label"><span class="pill">Extra</span> Quick summary</p>
+            <details class="q">
+              <summary class="label"><span class="pill">Extra</span> Quick summary</summary>
               <p class="ans">DNA → RNA → Protein</p>
-            </div>
+            </details>
           </div>
         </div>
       </div>
@@ -276,8 +293,7 @@
   </main>
 
   <footer>
-    If you want, I can add “click-to-reveal answers” (interactive study mode) or a print-friendly layout.
+    Click a question to reveal its answer (click again to hide).
   </footer>
 </body>
 </html>
-
