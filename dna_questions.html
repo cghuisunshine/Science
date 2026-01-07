@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DNA Replication Worksheet (Q1–Q8) — Image + Answers</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#121a33;
+      --ink:#e9ecff;
+      --muted:#b7c0ffcc;
+      --line:#2a3566;
+      --accent:#7aa2ff;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:linear-gradient(180deg,var(--bg),#070a14);
+      color:var(--ink);
+      line-height:1.45;
+    }
+    header{
+      padding:24px 16px 8px;
+      max-width:1200px;
+      margin:0 auto;
+    }
+    h1{
+      margin:0 0 6px;
+      font-size:clamp(18px,2.2vw,26px);
+      letter-spacing:.2px;
+    }
+    .sub{color:var(--muted); margin:0 0 10px; font-size:14px}
+
+    main{
+      max-width:1200px;
+      margin:0 auto;
+      padding:16px;
+      display:grid;
+      gap:16px;
+    }
+
+    .panel{
+      display:grid;
+      gap:16px;
+      grid-template-columns: 1.1fr .9fr;
+      align-items:start;
+    }
+    @media (max-width: 950px){
+      .panel{grid-template-columns:1fr}
+    }
+
+    .card{
+      background:rgba(18,26,51,.92);
+      border:1px solid var(--line);
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+    }
+    .card h2{
+      margin:0;
+      padding:14px 16px;
+      font-size:16px;
+      border-bottom:1px solid var(--line);
+      color:#f1f4ff;
+    }
+    .card .body{padding:14px 16px}
+
+    .imgwrap{
+      background:#0a0f22;
+      border-bottom:1px solid var(--line);
+      padding:10px;
+    }
+    img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.06);
+      background:#fff;
+    }
+
+    .note{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:10px;
+    }
+    code.inline{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: .95em;
+      color:#d7ddff;
+      background:rgba(122,162,255,.12);
+      border:1px solid rgba(122,162,255,.25);
+      padding:2px 6px;
+      border-radius:8px;
+    }
+
+    .qa{display:grid; gap:10px}
+    .q{
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:rgba(10,15,34,.55);
+    }
+    .q .label{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-weight:700;
+      margin:0 0 6px;
+      font-size:14px;
+    }
+    .pill{
+      display:inline-block;
+      padding:2px 8px;
+      border-radius:999px;
+      font-size:12px;
+      color:#0b1020;
+      background:var(--accent);
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .ans{margin:0; color:#f2f4ff; font-size:14px}
+    .explain{margin:8px 0 0; color:var(--muted); font-size:13px}
+    footer{
+      max-width:1200px;
+      margin:0 auto;
+      padding:8px 16px 22px;
+      color:var(--muted);
+      font-size:12px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>DNA Replication Worksheet (Q1–Q8)</h1>
+    <p class="sub">Each worksheet image is paired with the answers on the same page.</p>
+  </header>
+
+  <main>
+    <!-- ===================== Q1–Q6 ===================== -->
+    <section class="panel" aria-label="Questions 1 to 6">
+      <div class="card" aria-label="Worksheet image Q1 to Q6">
+        <h2>Input Image (Questions 1–6)</h2>
+        <div class="imgwrap">
+          <!-- Put the image file in the same folder as this HTML OR update src -->
+          <img
+            src="dna_q1.png"
+            alt="DNA Replication worksheet questions 1 to 6"
+          />
+        </div>
+        <div class="body">
+          <div class="note">
+            If the image doesn’t display, confirm the file name matches exactly or update
+            <code class="inline">src="..."</code>.
+          </div>
+        </div>
+      </div>
+
+      <div class="card" aria-label="Answers Q1 to Q6">
+        <h2>Answers (Questions 1–6)</h2>
+        <div class="body">
+          <div class="qa">
+            <div class="q">
+              <p class="label"><span class="pill">1</span> Rank (smallest → biggest)</p>
+              <p class="ans">Nucleotide → Gene → DNA → Chromosome → Nucleus → Cell</p>
+            </div>
+
+            <div class="q">
+              <p class="label"><span class="pill">2</span> Where does DNA replication take place?</p>
+              <p class="ans">In the nucleus.</p>
+            </div>
+
+            <div class="q">
+              <p class="label"><span class="pill">3</span> When does DNA replication take place?</p>
+              <p class="ans">During S phase of interphase (before cell division).</p>
+            </div>
+
+            <div class="q">
+              <p class="label"><span class="pill">4</span> Complementary base sequence</p>
+              <p class="ans"><strong>Given:</strong> G-A-C-T-T-A-C-G-T-A-C-C</p>
+              <p class="ans"><strong>Complement:</strong> C-T-G-A-A-T-G-C-A-T-G-G</p>
+              <p class="explain">Base-pair rules: A↔T, C↔G.</p>
+            </div>
+
+            <div class="q">
+              <p class="label"><span class="pill">5</span> Result of DNA replication</p>
+              <p class="ans">
+                Two identical DNA molecules. Each new DNA has one original (parent) strand and one new strand
+                (semi-conservative replication).
+              </p>
+            </div>
+
+            <div class="q">
+              <p class="label"><span class="pill">6</span> Book analogy</p>
+              <p class="ans"><strong>a)</strong> Chapters = Chromosomes</p>
+              <p class="ans"><strong>b)</strong> Sentences = Genes</p>
+              <p class="ans"><strong>c)</strong> Letters = Bases (A, T, C, G)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Q7–Q8 ===================== -->
+    <section class="panel" aria-label="Questions 7 to 8">
+      <div class="card" aria-label="Worksheet image Q7 to Q8">
+        <h2>Input Image (Questions 7–8)</h2>
+        <div class="imgwrap">
+          <!-- Put the image file in the same folder as this HTML OR update src -->
+          <img
+            src="dna_q2.png"
+            alt="DNA to RNA to protein worksheet questions 7 to 8"
+          />
+        </div>
+        <div class="body">
+          <div class="note">
+            If the image doesn’t display, confirm the file name matches exactly or update
+            <code class="inline">src="..."</code>.
+          </div>
+        </div>
+      </div>
+
+      <div class="card" aria-label="Answers Q7 to Q8">
+        <h2>Answers (Questions 7–8)</h2>
+        <div class="body">
+          <div class="qa">
+            <div class="q">
+              <p class="label"><span class="pill">7a</span> Name of Molecule X</p>
+              <p class="ans">DNA (Deoxyribonucleic acid)</p>
+            </div>
+
+            <div class="q">
+              <p class="label"><span class="pill">7b</span> Name of Molecule Y</p>
+              <p class="ans">RNA (messenger RNA / mRNA)</p>
+            </div>
+
+            <div class="q">
+              <p class="label"><span class="pill">7c</span> Name of Molecule Z</p>
+              <p class="ans">Protein</p>
+            </div>
+
+            <div class="q">
+              <p class="label"><span class="pill">7d</span> Function of Molecule X</p>
+              <p class="ans">Stores genetic information (instructions) that control traits, growth, and development.</p>
+            </div>
+
+            <div class="q">
+              <p class="label"><span class="pill">7e</span> Function of Molecule Y</p>
+              <p class="ans">Carries instructions from DNA to the ribosome where proteins are made.</p>
+            </div>
+
+            <div class="q">
+              <p class="label"><span class="pill">7f</span> Function of Molecule Z</p>
+              <p class="ans">Proteins build structures and control reactions (enzymes/hormones), producing traits and functions.</p>
+            </div>
+
+            <div class="q">
+              <p class="label"><span class="pill">8</span> How are genes involved in producing proteins?</p>
+              <p class="ans">
+                Genes are sections of DNA that contain instructions for making specific proteins.
+                A gene is transcribed into RNA, and the RNA is translated into a protein.
+              </p>
+            </div>
+
+            <div class="q">
+              <p class="label"><span class="pill">Extra</span> Quick summary</p>
+              <p class="ans">DNA → RNA → Protein</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    If you want, I can add “click-to-reveal answers” (interactive study mode) or a print-friendly layout.
+  </footer>
+</body>
+</html>
+
