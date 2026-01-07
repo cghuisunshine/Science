@@ -747,11 +747,242 @@
         zh_def:"遗传信息在细胞内传递与表达的总体路径。",
         zh_exp:"DNA先转录成RNA，RNA再翻译成蛋白质，从而影响性状与功能。"
       }
-    ];
+	    ];
 
-	    // Extra cards (from cards.json)
+	    // Extra cards (from 2026-01-06-02_Unit_1_Overview_cards.json)
 	    const EXTRA_CARDS = [
-     
+	      {
+	        en_term:"Unity",
+	        en_def:"1) What “unity” means (core idea) Unity means everything works together as a whole.",
+	        en_exp:"1) What “unity” means (core idea) Unity means everything works together as a whole. Different parts may vary, but they feel connected, consistent, and purposeful, not random or chaotic.",
+	        zh_term:"Unity（统一性）",
+	        zh_def:"1）什么是“统一性（Unity）” 统一性指的是：各个部分共同组成一个整体。",
+	        zh_exp:"1）什么是“统一性（Unity）” 统一性指的是：各个部分共同组成一个整体。 虽然每个部分可能不同，但它们之间相互联系、协调一致。"
+	      },
+	      {
+	        en_term:"microbes",
+	        en_def:"",
+	        en_exp:"",
+	        zh_term:"microbes",
+	        zh_def:"",
+	        zh_exp:""
+	      },
+	      {
+	        en_term:"Habitat",
+	        en_def:"A habitat is the natural place where an organism lives.",
+	        en_exp:"1) What “habitat” means (core definition) A habitat is the natural place where an organism lives. It provides everything the organism needs to survive, grow, and reproduce, including: Food Water Shelter Space Suitable conditions (temperature, light, moisture) In short: Habitat = an organism’s home in nature.",
+	        zh_term:"Habitat（栖息地）",
+	        zh_def:"1）什么是“栖息地（Habitat）” 栖息地是指生物自然生活的地方。",
+	        zh_exp:"1）什么是“栖息地（Habitat）” 栖息地是指生物自然生活的地方。 它为生物提供生存所需的一切条件，包括： 食物 水 庇护所 活动空间 合适的环境条件（温度、光照、湿度等） 一句话： 👉 栖息地 = 生物在自然界中的“家” 2）栖息地的组成 栖息地由生物因素和非生物因素共同构成。"
+	      },
+	      {
+	        en_term:"Double helix",
+	        en_def:"A double helix is the three-dimensional shape of DNA.",
+	        en_exp:"1) What “double helix” means A double helix is the three-dimensional shape of DNA. It consists of two long strands that coil around each other, forming a twisted ladder.",
+	        zh_term:"Double helix（双螺旋）",
+	        zh_def:"1）什么是“双螺旋” 双螺旋（double helix）是 DNA 的三维空间结构。",
+	        zh_exp:"1）什么是“双螺旋” 双螺旋（double helix）是 DNA 的三维空间结构。 它由 两条长链 相互缠绕，形成一个扭曲的梯子状结构。"
+	      },
+	      {
+	        en_term:"Stumbling",
+	        en_def:"1) Literal meaning (physical) Stumbling literally means losing balance while walking—often because your foot hits an obstacle (a rock, step, root), causing you to almost fall or take awkward steps.",
+	        en_exp:"1) Literal meaning (physical) Stumbling literally means losing balance while walking—often because your foot hits an obstacle (a rock, step, root), causing you to almost fall or take awkward steps. Example: He stumbled on the uneven pavement.",
+	        zh_term:"Stumbling（绊倒／磕磕绊绊）",
+	        zh_def:"1）字面意思（身体动作） stumbling 的本意是走路时被绊到、失去平衡，可能差点摔倒，但不一定真的摔倒。",
+	        zh_exp:"1）字面意思（身体动作） stumbling 的本意是走路时被绊到、失去平衡，可能差点摔倒，但不一定真的摔倒。 例句：他在不平的路面上绊了一下。"
+	      },
+	      {
+	        en_term:"Organism",
+	        en_def:"An organism is any individual living thing.",
+	        en_exp:"In simple terms: 👉 Organism = one living individual 2) What makes something an organism (characteristics of life) To be considered an organism, it must show most or all of these traits: Made of one or more cells Uses en…",
+	        zh_term:"Organism（生物体）",
+	        zh_def:"1）什么是“生物体（Organism）” 生物体指的是单个、完整的生命个体。",
+	        zh_exp:"1）什么是“生物体（Organism）” 生物体指的是单个、完整的生命个体。 它可以非常微小（如细菌），也可以非常巨大（如树或鲸鱼），但它必须能独立完成生命活动。"
+	      },
+	      {
+	        en_term:"DNA",
+	        en_def:"1) What DNA is (core idea) DNA (deoxyribonucleic acid) is the molecule that stores genetic information in almost all living organisms.",
+	        en_exp:"1) What DNA is (core idea) DNA (deoxyribonucleic acid) is the molecule that stores genetic information in almost all living organisms. It contains the instructions that tell cells how to grow, function, and reproduce.",
+	        zh_term:"DNA（脱氧核糖核酸）",
+	        zh_def:"1）什么是 DNA（核心概念） DNA（脱氧核糖核酸）是储存遗传信息的分子，几乎存在于所有生物体中。",
+	        zh_exp:"1）什么是 DNA（核心概念） DNA（脱氧核糖核酸）是储存遗传信息的分子，几乎存在于所有生物体中。 它包含指导细胞生长、运作和繁殖的全部信息。"
+	      },
+	      {
+	        en_term:"Gene",
+	        en_def:"A gene is a specific segment of DNA that contains the instructions to make a functional product—usually a protein, or sometimes a functional RNA molecule.",
+	        en_exp:"In simple terms: 👉 Gene = a section of DNA that gives one instruction 2) What genes do (function) Genes carry the instructions for building proteins (or functional RNA). Proteins do most of the work in cells: Enzymes c…",
+	        zh_term:"Gene（基因）",
+	        zh_def:"1）什么是基因（Gene） 基因是 DNA 上的一段特定序列，包含制造某种功能产物的指令。",
+	        zh_exp:"1）什么是基因（Gene） 基因是 DNA 上的一段特定序列，包含制造某种功能产物的指令。 大多数情况下基因指导合成蛋白质，有时也指导合成具有功能的 RNA。"
+	      },
+	      {
+	        en_term:"Ethical",
+	        en_def:"Ethical describes actions, decisions, or rules that follow moral principles—what is considered right, fair, and responsible.",
+	        en_exp:"In simple terms: 👉 Ethical = doing the right thing, not just what is legal 2) Ethical vs legal (important difference) Legal = allowed by law Ethical = morally right (may go beyond the law) Example: A company can legally …",
+	        zh_term:"Ethical（伦理的／道德的）",
+	        zh_def:"1）什么是“伦理的 / 道德的（Ethical）” ethical 指的是：行为、决定或规则符合道德原则，是公平、负责、尊重他人的。",
+	        zh_exp:"1）什么是“伦理的 / 道德的（Ethical）” ethical 指的是：行为、决定或规则符合道德原则，是公平、负责、尊重他人的。 一句话： 👉 伦理的 = 做正确的事，而不只是合法的事 2) Ethics 与 Morals 的区别（常考） Ethics（伦理）：社会或职业制定的规则与标准 Morals（道德）：个人内心的对错判断 例子： 医生遵守的是职业伦理 个人遵循的是道德信念 3）什么样的行为是伦理的 通常包括： 公平 尊重他人权利与尊严 承担后果 诚实 不伤害他人 4）伦理判断的常见问题 判断是否符合伦理时，常问： 是否会对他人造成伤害或利益？"
+	      },
+	      {
+	        en_term:"Inherited traits",
+	        en_def:"1) What “inherited traits” means Inherited traits are characteristics passed from parents to offspring through genes.",
+	        en_exp:"In simple terms: 👉 Inherited traits = traits you are born with because of your genes 2) How inherited traits are passed on Traits are controlled by genes Genes are inherited in pairs (one from each parent) Different ver…",
+	        zh_term:"Inherited traits（遗传性状）",
+	        zh_def:"1）什么是“遗传性状” 遗传性状是指通过基因从父母传给子女的特征。",
+	        zh_exp:"1）什么是“遗传性状” 遗传性状是指通过基因从父母传给子女的特征。 这些特征由 DNA 控制，在受精时就已经确定。"
+	      },
+	      {
+	        en_term:"Punnett square",
+	        en_def:"A Punnett square is a diagram used to predict the possible genetic outcomes of a cross between two parents.",
+	        en_exp:"In simple terms: 👉 Punnett square = a tool to predict inherited traits 2) Why Punnett squares are used Punnett squares help us: Understand inheritance patterns Predict offspring traits Calculate genetic probabilities Vi…",
+	        zh_term:"Punnett square（潘尼特方格）",
+	        zh_def:"1）什么是潘尼特方格（Punnett square） 潘尼特方格是一种用来预测父母杂交后代遗传结果的表格图示。",
+	        zh_exp:"1）什么是潘尼特方格（Punnett square） 潘尼特方格是一种用来预测父母杂交后代遗传结果的表格图示。 它可以显示： 父母可能传递的等位基因 后代所有可能的基因组合 每种结果出现的概率 一句话： 👉 潘尼特方格 = 预测遗传性状的工具 2）潘尼特方格有什么用 潘尼特方格可以帮助我们： 理解遗传规律 预测后代性状 计算遗传概率 区分显性与隐性 是中学遗传学的核心工具。"
+	      },
+	      {
+	        en_term:"Claims",
+	        en_def:"A claim is a statement that asserts something is true.",
+	        en_exp:"In simple terms: 👉 Claim = what you say is true 2) Claims vs facts vs opinions Claim: a statement that can be supported or challenged Regular exercise improves concentration.",
+	        zh_term:"Claims（主张／论断）",
+	        zh_def:"1）什么是“Claims（主张 / 论断）” Claim 指的是：一个认为某事为真的陈述。",
+	        zh_exp:"1）什么是“Claims（主张 / 论断）” Claim 指的是：一个认为某事为真的陈述。 它不是自动成立的事实，而是需要证据支持的观点。"
+	      },
+	      {
+	        en_term:"Perspectives",
+	        en_def:"1) What “perspectives” means (core idea) Perspectives are the ways people see, understand, or interpret a situation, issue, or event.",
+	        en_exp:"In simple terms: 👉 Perspectives = how different people see the same thing differently 2) Why perspectives differ People can have different perspectives because of: Personal experiences Cultural background Education and…",
+	        zh_term:"Perspectives（视角／观点）",
+	        zh_def:"1）什么是“Perspectives（视角 / 观点）” Perspectives 指的是人们看待、理解和解释事物的方式。",
+	        zh_exp:"1）什么是“Perspectives（视角 / 观点）” Perspectives 指的是人们看待、理解和解释事物的方式。 它受到个人的经历、文化、教育、价值观和身份角色影响。"
+	      },
+	      {
+	        en_term:"Reinforcement",
+	        en_def:"1) What “reinforcement” means (core idea) Reinforcement is anything that increases the likelihood that a behavior will happen again in the future.",
+	        en_exp:"In simple terms: 👉 Reinforcement = making a behavior more likely to repeat It is a key concept in learning, psychology, education, and animal training.",
+	        zh_term:"Reinforcement（强化）",
+	        zh_def:"1）什么是“强化（Reinforcement）” 强化是指：让某种行为在将来更容易再次发生的过程。",
+	        zh_exp:"1）什么是“强化（Reinforcement）” 强化是指：让某种行为在将来更容易再次发生的过程。 一句话： 👉 强化 = 增加某种行为再次出现的概率 这是心理学和学习理论中的核心概念。"
+	      },
+	      {
+	        en_term:"asexual",
+	        en_def:"",
+	        en_exp:"",
+	        zh_term:"asexual",
+	        zh_def:"",
+	        zh_exp:""
+	      },
+	      {
+	        en_term:"Eukaryotic",
+	        en_def:"1) What “eukaryotic” means (core definition) Eukaryotic describes cells or organisms whose cells have a true nucleus and membrane-bound organelles.",
+	        en_exp:"In simple terms: 👉 Eukaryotic = cells with a nucleus 2) Key features of eukaryotic cells Eukaryotic cells are characterized by: Nucleus DNA is enclosed inside a nuclear membrane Membrane-bound organelles, such as: Mitoc…",
+	        zh_term:"Eukaryotic（真核的／真核生物的）",
+	        zh_def:"1）什么是“真核的（Eukaryotic）” 真核的指的是：细胞内具有真正细胞核，并且有膜包裹的细胞器。",
+	        zh_exp:"1）什么是“真核的（Eukaryotic）” 真核的指的是：细胞内具有真正细胞核，并且有膜包裹的细胞器。 一句话： 👉 真核 = 有细胞核的细胞 2）真核细胞的主要特征 真核细胞具有以下特点： 细胞核 DNA 被核膜包裹 膜性细胞器，如： 线粒体（能量产生） 内质网 高尔基体 叶绿体（植物特有） 结构复杂、体积较大 DNA 为线性染色体 3）真核生物包括哪些 以下生物全部是真核生物： 动物 植物 真菌 原生生物 它们可以是： 单细胞 多细胞 4）真核 vs 原核（考试重点） | 项目 | 真核 | 原核 | | ---- | ----- | -- | | 细胞核 | 有 | 无 | | 细胞器 | 有 | 无 | | 复杂程度 |…"
+	      },
+	      {
+	        en_term:"Interphase",
+	        en_def:"1) What interphase is (core idea) Interphase is the longest stage of the cell cycle, when a cell is not dividing but is actively growing, copying DNA, and preparing for division.",
+	        en_exp:"In simple terms: 👉 Interphase = preparation time before cell division 2) The three parts of interphase Interphase has three sub-phases: A) G₁ phase (Gap 1) — growth Cell grows in size Makes proteins and organelles Perfo…",
+	        zh_term:"Interphase（间期）",
+	        zh_def:"1）什么是间期（Interphase） 间期是细胞周期中时间最长的阶段。",
+	        zh_exp:"1）什么是间期（Interphase） 间期是细胞周期中时间最长的阶段。 在这个阶段，细胞不进行分裂，而是在生长、复制 DNA，并为分裂做准备。"
+	      },
+	      {
+	        en_term:"Mitosis",
+	        en_def:"1) What mitosis is (core idea) Mitosis is the process by which a cell divides its nucleus to produce two genetically identical daughter cells.",
+	        en_exp:"In simple terms: 👉 Mitosis = making two identical cells 2) Where mitosis fits in the cell cycle Interphase: cell grows and copies DNA (G₁, S, G₂) Mitosis: nucleus divides Cytokinesis: cytoplasm divides (often taught tog…",
+	        zh_term:"Mitosis（有丝分裂）",
+	        zh_def:"1）什么是有丝分裂（Mitosis） 有丝分裂是细胞进行细胞核分裂的过程，最终形成 两个遗传信息完全相同的子细胞。",
+	        zh_exp:"1）什么是有丝分裂（Mitosis） 有丝分裂是细胞进行细胞核分裂的过程，最终形成 两个遗传信息完全相同的子细胞。 一句话： 👉 有丝分裂 = 产生两个完全相同的细胞 2）有丝分裂在细胞周期中的位置 间期：细胞生长并复制 DNA 有丝分裂：细胞核分裂 细胞质分裂：细胞质分开（通常与有丝分裂一起讲） ⚠️ DNA 复制发生在间期 S 期，不是有丝分裂中。"
+	      },
+	      {
+	        en_term:"Cytokinesis",
+	        en_def:"1) What cytokinesis is (core idea) Cytokinesis is the final step of cell division in which the cytoplasm splits, producing two separate daughter cells.",
+	        en_exp:"In simple terms: 👉 Cytokinesis = the cell actually splits into two It usually overlaps with or follows telophase of mitosis.",
+	        zh_term:"Cytokinesis（细胞质分裂）",
+	        zh_def:"1）什么是细胞质分裂（Cytokinesis） 细胞质分裂是细胞分裂的最后一步，指的是细胞质被分开，形成两个独立的子细胞。",
+	        zh_exp:"1）什么是细胞质分裂（Cytokinesis） 细胞质分裂是细胞分裂的最后一步，指的是细胞质被分开，形成两个独立的子细胞。 一句话： 👉 细胞质分裂 = 细胞真正分成两个 它通常发生在有丝分裂末期（末期）期间或之后。"
+	      },
+	      {
+	        en_term:"replicated",
+	        en_def:"",
+	        en_exp:"",
+	        zh_term:"replicated",
+	        zh_def:"",
+	        zh_exp:""
+	      },
+	      {
+	        en_term:"Chromosomes",
+	        en_def:"When a cell is dividing, chromatin condenses into visible chromosomes.",
+	        en_exp:"In simple terms: 👉 Chromosomes = organized DNA packages that carry genes 2) What chromosomes are made of Each chromosome consists of: DNA → genetic instructions Proteins (histones) → help coil and organize DNA DNA wraps…",
+	        zh_term:"Chromosomes（染色体）",
+	        zh_def:"1）什么是染色体（Chromosomes） 染色体是由 DNA 和蛋白质组成的结构，负责携带基因。",
+	        zh_exp:"1）什么是染色体（Chromosomes） 染色体是由 DNA 和蛋白质组成的结构，负责携带基因。 一句话： 👉 染色体 = DNA 的“打包形式”，用于携带遗传信息 2）染色体的组成 染色体由以下成分构成： DNA：遗传信息 蛋白质（组蛋白）：帮助 DNA 折叠和缠绕 DNA 缠绕蛋白质形成染色质，在细胞分裂时进一步压缩成染色体。"
+	      },
+	      {
+	        en_term:"Meiosis",
+	        en_def:"1) What meiosis is (core idea) Meiosis is a type of cell division that reduces the chromosome number by half, producing four genetically unique haploid cells (gametes).",
+	        en_exp:"In simple terms: 👉 Meiosis = making sex cells with half the chromosomes 2) Why meiosis is important Meiosis is essential for sexual reproduction because it: Produces gametes (sperm and egg) with half the chromosome number Maintains the species’ chromosome number after fertilization Creates genetic variation (diversity) 3) Where meiosis happens Meiosis happens in reproductive organs (gonads): Testes → make sperm Ovaries → make eggs 4) Two divisions: Meiosis I and Meiosis II Meiosis has two rounds of division, but DNA is copied only once beforehand (during interphase). A) Meiosis I: separates homologous chromosomes Homologous chromosomes (one from mom, one from dad) pair up and then separate This reduces chromosome number from 2n to n B) Meiosis II: separates sister chromatids Similar to mitosis Sister chromatids separate Produces four haploid cells 5) Main stages (simplified) Prophase I Chromosomes condense Homologous chromosomes pair up (synapsis) Crossing over occurs Metaphase I Homologous pairs line up at equator Anaphase I Homologous chromosomes separate Telophase I Two haploid cells form Prophase II, Metaphase II, Anaphase II, Telophase II Sister chromatids separate Final result: four haploid cells 6) Key differences: meiosis vs mitosis | Feature | Mitosis | Meiosis | | --- | --- | --- | | Purpose | growth/repair | gamete production | | Cells produced | 2 | 4 | | Genetic variation | no | yes | | Chromosome number | stays same | halves | 7) One-sentence summary Meiosis makes genetically different sex cells with half the chromosome number, allowing sexual reproduction and genetic diversity.",
+	        zh_term:"Meiosis（减数分裂）",
+	        zh_def:"1）什么是减数分裂（Meiosis） 减数分裂是一种特殊的细胞分裂方式，会把染色体数目减半，并产生四个遗传信息不同的单倍体细胞（配子）。",
+	        zh_exp:"1）什么是减数分裂（Meiosis） 减数分裂是一种特殊的细胞分裂方式，会把染色体数目减半，并产生四个遗传信息不同的单倍体细胞（配子）。 一句话： 👉 减数分裂 = 产生染色体减半的性细胞 2）为什么需要减数分裂 减数分裂对于有性生殖非常重要，因为它： 产生配子（精子、卵子），染色体减半 维持物种染色体数目稳定（受精后恢复2n） 产生遗传多样性（变异） 3）减数分裂发生在哪里 发生在生殖器官（性腺）： 睾丸 → 产生精子 卵巢 → 产生卵子 4）两次分裂：减Ⅰ和减Ⅱ 减数分裂有两次分裂，但 DNA 只在分裂前复制一次（间期 S 期）。 A) 减数分裂 I：分离同源染色体 同源染色体配对后分离 染色体数目减半（2n → n） B) 减数分裂 II：分离姐妹染色单体 类似有丝分裂 姐妹染色单体分开 最终产生 4 个单倍体细胞 5）主要阶段（简化） 前期 I：染色体浓缩，同源染色体配对，发生交叉互换 中期 I：同源染色体对排列在赤道板 后期 I：同源染色体分离 末期 I：形成两个单倍体细胞 前期 II/中期 II/后期 II/末期 II：姐妹染色单体分离 最终结果：4 个单倍体 6）减数分裂 vs 有丝分裂（考试重点） | 项目 | 有丝分裂 | 减数分裂 | | ---- | -------- | ---------- | | 目的 | 生长、修复 | 产生配子 | | 产生细胞数 | 2 | 4 | | 遗传差异 | 无 | 有 | | 染色体数目 | 保持不变 | 减半 | 7）一句话总结 减数分裂产生染色体减半且遗传不同的性细胞，使有性生殖成为可能并产生遗传多样性。"
+	      },
+	      {
+	        en_term:"Homologous",
+	        en_def:"1) What homologous means (core idea) Homologous means “similar in structure and function because of shared origin.”",
+	        en_exp:"In simple terms: 👉 Homologous = a matching pair (one from mom, one from dad) 2) Homologous chromosomes (most important in biology) In genetics, homologous chromosomes are pairs of chromosomes that: Have the same genes in the same order (loci) Carry genes for the same traits (e.g., eye color) One chromosome comes from the mother and the other from the father But they can have different versions of genes (alleles) Example: You have two chromosomes #1: One from mom, one from dad They both carry a gene for hair color, but one may have a “dark hair” allele and the other a “light hair” allele 3) Why homologous chromosomes matter They are essential for: Meiosis: homologous chromosomes pair up and separate (chromosome number halves) Crossing over: homologous chromosomes exchange segments, creating genetic variation Inherited traits: one allele from each parent is carried on homologous chromosomes 4) Homologous vs sister chromatids (common confusion) | Feature | Homologous chromosomes | Sister chromatids | | --- | --- | --- | | Origin | one from each parent | duplicated copy of one chromosome | | Same alleles? | not necessarily | yes (usually identical) | | Separate in… | Meiosis I | Mitosis and Meiosis II | 5) Homologous structures (evolution example) Homologous structures are body parts in different species that have a similar underlying structure because they evolved from a common ancestor. Example: Human arm, bat wing, whale flipper — different functions but similar bone pattern.",
+	        zh_term:"Homologous（同源的／同源染色体）",
+	        zh_def:"1）什么是同源的（Homologous） homologous 指的是“来源相同，因此结构和功能相似”。",
+	        zh_exp:"1）什么是同源的（Homologous） homologous 指的是“来源相同，因此结构和功能相似”。 一句话： 👉 同源 = 一对匹配的东西（来自父母各一份） 2）同源染色体（生物学最重要用法） 在遗传学中，同源染色体是指一对染色体，它们： 含有相同的基因（位点相同） 控制相同的性状（如眼睛颜色） 一条来自母方，一条来自父方 但等位基因可能不同（例如：一个是显性，一个是隐性） 例子： 你有两条 1 号染色体： 一条来自妈妈 一条来自爸爸 它们都带有“头发颜色”基因，但可能版本不同（alleles）。 3）为什么同源染色体重要 因为它们在： 减数分裂 I：同源染色体配对并分离，使染色体减半 交叉互换：同源染色体交换片段，产生遗传变异 遗传：每个性状通常来自父母各一份基因 4）同源染色体 vs 姐妹染色单体（易混点） | 项目 | 同源染色体 | 姐妹染色单体 | | ---- | ---------- | ----------- | | 来源 | 父母各一条 | 同一条染色体复制后形成 | | 等位基因相同吗？ | 不一定 | 通常相同 | | 分离发生在… | 减Ⅰ分裂 | 有丝分裂、减Ⅱ分裂 | 5）同源结构（进化举例） 同源结构指不同物种中结构相似的器官，是因为来自共同祖先。 例子： 人的手臂、蝙蝠的翅膀、鲸鱼的鳍 — 功能不同但骨骼结构相似。"
+	      },
+	      {
+	        en_term:"Crossing over",
+	        en_def:"1) What crossing over is Crossing over is the exchange of DNA segments between homologous chromosomes during meiosis.",
+	        en_exp:"In simple terms: 👉 Crossing over = DNA swapping between matching chromosomes 2) When crossing over happens Crossing over occurs during prophase I of meiosis, when homologous chromosomes pair up closely (synapsis) and form tetrads. 3) What exactly is exchanged Homologous chromosomes exchange corresponding segments between non-sister chromatids. This creates new combinations of alleles (gene versions). 4) Why crossing over matters (key points) Crossing over increases genetic variation. It ensures that gametes are genetically unique, which helps populations adapt and evolve. 5) Key vocabulary Chiasma (plural: chiasmata): the visible point where chromatids cross and exchange segments Recombinant chromosomes: chromosomes that now contain a mixture of maternal and paternal DNA 6) Simple example You have chromosome from mom with alleles: AB and from dad with alleles: ab After crossing over, you could get: Ab and aB This creates new allele combinations in gametes. 7) One-sentence summary Crossing over swaps DNA between homologous chromosomes during meiosis I, creating genetic diversity.",
+	        zh_term:"Crossing over（交叉互换）",
+	        zh_def:"1）什么是交叉互换（Crossing over） 交叉互换是指在减数分裂过程中，同源染色体之间交换 DNA 片段的现象。",
+	        zh_exp:"1）什么是交叉互换（Crossing over） 交叉互换是指在减数分裂过程中，同源染色体之间交换 DNA 片段的现象。 一句话： 👉 交叉互换 = 同源染色体之间“交换 DNA” 2）交叉互换发生在什么时候 发生在减数分裂前期 I（prophase I），此时： 同源染色体配对形成四分体（tetrad） 非姐妹染色单体紧密靠近 3）交换的是什么 交换的是同源染色体的非姐妹染色单体之间对应位置的 DNA 片段。 交换后会产生新的等位基因组合。 4）为什么交叉互换重要（考试重点） 增加遗传多样性：让配子更不一样 促进进化与适应：群体更容易适应环境变化 5）关键词 Chiasma（交叉点）：染色单体交叉并发生交换的位置 Recombinant chromosomes（重组染色体）：交换后混合了父母 DNA 的染色体 6）简单例子 母方染色体基因组合：AB 父方染色体基因组合：ab 发生交叉互换后可能产生： Ab 和 aB 产生新组合，增加遗传差异。 7）一句话总结 交叉互换发生在减数分裂前期 I，同源染色体交换 DNA 片段，从而产生遗传多样性。"
+	      },
+	      {
+	        en_term:"Zygote",
+	        en_def:"A zygote is the single cell formed when a sperm cell fuses with an egg cell during fertilization.",
+	        en_exp:"In simple terms: 👉 Zygote = the very first cell of a new organism 2) How a zygote is formed Sperm and egg are haploid (n), meaning they each carry half the chromosome number During fertilization, their nuclei merge The…",
+	        zh_term:"Zygote（合子 / 受精卵）",
+	        zh_def:"1）什么是合子（Zygote / 受精卵） 合子是精子与卵细胞结合后形成的第一个细胞，标志着一个新生命的开始。",
+	        zh_exp:"1）什么是合子（Zygote / 受精卵） 合子是精子与卵细胞结合后形成的第一个细胞，标志着一个新生命的开始。 一句话： 👉 合子 = 新个体的第一个细胞 2）合子的形成过程 精子和卵细胞都是单倍体（n） 各自只含一半染色体 受精时，细胞核融合 形成二倍体（2n）合子 人类例子： 精子：23 条染色体 卵子：23 条染色体 合子：46 条染色体 3）为什么合子很重要 合子： 拥有完整的遗传信息 DNA 组合独一无二 是生长、发育和分化的起点 所有体细胞都来源于合子的有丝分裂。"
+	      },
+	      {
+	        en_term:"Gamete",
+	        en_def:"A gamete is a sex cell used in sexual reproduction.",
+	        en_exp:"In simple terms: 👉 Gamete = a sex cell with half the chromosomes 2) Types of gametes There are two main types: Sperm (male gamete) Egg / ovum (female gamete) Key differences: Sperm → small, mobile, produced in large num…",
+	        zh_term:"Gamete（配子）",
+	        zh_def:"1）什么是配子（Gamete） 配子是用于有性生殖的性细胞。",
+	        zh_exp:"1）什么是配子（Gamete） 配子是用于有性生殖的性细胞。 它只含有一半的染色体数目，在受精时与另一配子结合形成合子。"
+	      },
+	      {
+	        en_term:"Haploid",
+	        en_def:"1) What haploid means (core definition) Haploid describes a cell that contains one complete set of chromosomes, written as n.",
+	        en_exp:"In simple terms: 👉 Haploid = one set of chromosomes 2) Haploid vs diploid (key comparison) Haploid (n) → one set of chromosomes Diploid (2n) → two sets of chromosomes (one from each parent) Example (humans): Haploid cel…",
+	        zh_term:"Haploid（单倍体）",
+	        zh_def:"1）什么是单倍体（Haploid） 单倍体指的是：细胞中只有一整套染色体，用 n 表示。",
+	        zh_exp:"1）什么是单倍体（Haploid） 单倍体指的是：细胞中只有一整套染色体，用 n 表示。 一句话： 👉 单倍体 = 只有一套染色体 2）单倍体 vs 二倍体（考试重点） 单倍体（n）：一套染色体 二倍体（2n）：两套染色体（父母各一套） 人类例子： 单倍体：23 条染色体 二倍体：46 条染色体 3）哪些细胞是单倍体 通常只有配子是单倍体： 精子 卵子 身体的其他细胞（体细胞）都是二倍体。"
+	      },
+	      {
+	        en_term:"Diploid",
+	        en_def:"1) What diploid means (core definition) Diploid describes a cell that contains two complete sets of chromosomes, written as 2n—one set inherited from each parent.",
+	        en_exp:"In simple terms: 👉 Diploid = two sets of chromosomes 2) Diploid vs haploid (key comparison) Diploid (2n): two sets of chromosomes Haploid (n): one set of chromosomes Example (humans): Diploid cells: 46 chromosomes (23 p…",
+	        zh_term:"Diploid（二倍体）",
+	        zh_def:"1）什么是二倍体（Diploid） 二倍体指的是：细胞中含有两整套染色体，用 2n 表示，其中一套来自父方，一套来自母方。",
+	        zh_exp:"1）什么是二倍体（Diploid） 二倍体指的是：细胞中含有两整套染色体，用 2n 表示，其中一套来自父方，一套来自母方。 一句话： 👉 二倍体 = 含两套染色体的细胞 2）二倍体 vs 单倍体（考试重点） 二倍体（2n）：两套染色体 单倍体（n）：一套染色体 人类例子： 二倍体细胞：46 条染色体 单倍体细胞（配子）：23 条染色体 3）哪些细胞是二倍体 体细胞（皮肤、肌肉、神经等） 合子（受精卵） ⚠️ 精子和卵子是单倍体，不是二倍体。"
+	      },
+	      {
+	        en_term:"Sperm",
+	        en_def:"1) What sperm is (core definition) Sperm is the male gamete (sex cell) used in sexual reproduction.",
+	        en_exp:"In simple terms: 👉 Sperm = male sex cell that carries DNA to the egg 2) Chromosome number Sperm cells are haploid (n) They contain half the normal number of chromosomes Example (humans): Sperm: 23 chromosomes Egg: 23 ch…",
+	        zh_term:"Sperm（精子）",
+	        zh_def:"1）什么是精子（Sperm） 精子是用于有性生殖的雄性配子。",
+	        zh_exp:"1）什么是精子（Sperm） 精子是用于有性生殖的雄性配子。 它的主要作用是将父方的遗传信息传递给卵细胞。"
+	      }
 	    ];
 	    CARDS.push(...EXTRA_CARDS);
 
