@@ -31,6 +31,34 @@
     section {
       margin-bottom: 2rem;
     }
+    .spread {
+      margin-bottom: 2rem;
+    }
+    .spread > section {
+      margin-bottom: 0;
+    }
+    @media (min-width: 960px) {
+      main {
+        max-width: 1200px;
+      }
+      .spread {
+        display: grid;
+        grid-template-columns: minmax(360px, 1.3fr) minmax(420px, 1fr);
+        gap: 1.25rem;
+        align-items: start;
+      }
+      .spread h2 {
+        margin-top: 0;
+      }
+      .spread .page-image {
+        position: sticky;
+        top: 1rem;
+      }
+      .spread .page-image img {
+        max-height: calc(100vh - 8rem);
+        object-fit: contain;
+      }
+    }
     h2 {
       border-bottom: 2px solid #eee;
       padding-bottom: 0.25rem;
@@ -55,9 +83,43 @@
       margin: 0 0 0.4rem;
       font-size: 1.05rem;
       color: #304f9b;
+      cursor: pointer;
+    }
+    .qa h3::after {
+      content: " ▸";
+      color: #777;
+      font-weight: 400;
+    }
+    .qa.is-open h3::after {
+      content: " ▾";
+    }
+    .qa h3:focus-visible {
+      outline: 3px solid rgba(48, 79, 155, 0.35);
+      outline-offset: 3px;
+      border-radius: 4px;
     }
     .qa p {
       margin: 0.2rem 0;
+    }
+    .qa .answer {
+      display: none;
+    }
+    .qa.is-open .answer {
+      display: block;
+    }
+    @media print {
+      .qa .answer {
+        display: block !important;
+      }
+      .spread {
+        display: block !important;
+      }
+      .spread .page-image {
+        position: static !important;
+      }
+      .spread .page-image img {
+        max-height: none !important;
+      }
     }
     ul {
       margin: 0.25rem 0 0.5rem 1.2rem;
@@ -79,17 +141,18 @@
   </header>
 
   <main>
-    <!-- PAGE 1 IMAGE -->
-    <section>
-      <h2>Textbook Page 1</h2>
-      <div class="page-image">
-        <img src="unit1-review-1.png" alt="Unit 1 Review page 1" />
-      </div>
-    </section>
+    <div class="spread">
+      <!-- PAGE 1 IMAGE -->
+      <section>
+        <h2>Textbook Page 1</h2>
+        <div class="page-image">
+          <img src="unit1-review-1.png" alt="Unit 1 Review page 1" />
+        </div>
+      </section>
 
-    <!-- ANSWERS 1–7 -->
-    <section>
-      <h2>Answers 1–7</h2>
+      <!-- ANSWERS 1–7 -->
+      <section>
+        <h2>Answers 1–7</h2>
 
       <div class="qa">
         <h3>1. DNA and different varieties of apples</h3>
@@ -166,19 +229,21 @@
         </ul>
         <p>So the ladder comparison is good for basic structure but does not show twisting, function, or dynamics.</p>
       </div>
-    </section>
+      </section>
+    </div>
 
-    <!-- PAGE 2 IMAGE -->
-    <section>
-      <h2>Textbook Page 2</h2>
-      <div class="page-image">
-        <img src="unit1-review-2.png" alt="Unit 1 Review page 2" />
-      </div>
-    </section>
+    <div class="spread">
+      <!-- PAGE 2 IMAGE -->
+      <section>
+        <h2>Textbook Page 2</h2>
+        <div class="page-image">
+          <img src="unit1-review-2.png" alt="Unit 1 Review page 2" />
+        </div>
+      </section>
 
-    <!-- ANSWERS 8–18 -->
-    <section>
-      <h2>Answers 8–18</h2>
+      <!-- ANSWERS 8–18 -->
+      <section>
+        <h2>Answers 8–18</h2>
 
       <div class="qa">
         <h3>8. Analogy for DNA, chromosomes, genes, and nucleotides</h3>
@@ -277,19 +342,21 @@
           <li>Economic and social fairness (access, patents).</li>
         </ul>
       </div>
-    </section>
+      </section>
+    </div>
 
-    <!-- PAGE 3 IMAGE -->
-    <section>
-      <h2>Textbook Page 3</h2>
-      <div class="page-image">
-        <img src="unit1-review-3.png" alt="Unit 1 Review page 3" />
-      </div>
-    </section>
+    <div class="spread">
+      <!-- PAGE 3 IMAGE -->
+      <section>
+        <h2>Textbook Page 3</h2>
+        <div class="page-image">
+          <img src="unit1-review-3.png" alt="Unit 1 Review page 3" />
+        </div>
+      </section>
 
-    <!-- ANSWERS 19–34 -->
-    <section>
-      <h2>Answers 19–34</h2>
+      <!-- ANSWERS 19–34 -->
+      <section>
+        <h2>Answers 19–34</h2>
 
       <div class="qa">
         <h3>19. Black × white true-breeding guinea pigs</h3>
@@ -426,19 +493,21 @@
         <h3>34. Adaptive radiation on islands</h3>
         <p><strong>Answer:</strong> You would expect more adaptive radiation on small, remote islands (like tiny Pacific islands) than on islands close to the mainland (like Vancouver Island). Remote islands are more isolated, have less gene flow, and many empty ecological niches. A colonizing species can evolve into many different species. Islands near the mainland receive more immigrants, so gene flow tends to slow or prevent speciation.</p>
       </div>
-    </section>
+      </section>
+    </div>
 
-    <!-- PAGE 4 IMAGE -->
-    <section>
-      <h2>Textbook Page 4</h2>
-      <div class="page-image">
-        <img src="unit1-review-4.png" alt="Unit 1 Review page 4" />
-      </div>
-    </section>
+    <div class="spread">
+      <!-- PAGE 4 IMAGE -->
+      <section>
+        <h2>Textbook Page 4</h2>
+        <div class="page-image">
+          <img src="unit1-review-4.png" alt="Unit 1 Review page 4" />
+        </div>
+      </section>
 
-    <!-- ANSWERS 35–41 -->
-    <section>
-      <h2>Answers 35–41</h2>
+      <!-- ANSWERS 35–41 -->
+      <section>
+        <h2>Answers 35–41</h2>
 
       <div class="qa">
         <h3>35. Finch study on Daphne Major (Geospiza fortis)</h3>
@@ -489,8 +558,45 @@
         <h3>41. Ancient DNA and Indigenous knowledge</h3>
         <p><strong>Answer:</strong> DNA from ancient bones can be compared with the DNA of living Indigenous people to show genetic links across thousands of years. When First Nations communities choose to share their DNA and stories, the results often support traditional histories about where their ancestors lived and migrated. This research brings together Western science and Indigenous knowledge by showing that different ways of knowing can describe the same past. It can strengthen cultural identity and support land claims, as long as the research is done respectfully, with community leadership, consent, and control over how results are used.</p>
       </div>
-    </section>
+      </section>
+    </div>
   </main>
+
+  <script>
+    (function () {
+      const qaBlocks = document.querySelectorAll(".qa");
+
+      for (const qa of qaBlocks) {
+        const heading = qa.querySelector("h3");
+        if (!heading) continue;
+
+        const answer = document.createElement("div");
+        answer.className = "answer";
+
+        while (heading.nextSibling) {
+          answer.appendChild(heading.nextSibling);
+        }
+
+        qa.appendChild(answer);
+
+        heading.setAttribute("tabindex", "0");
+        heading.setAttribute("role", "button");
+        heading.setAttribute("aria-expanded", "false");
+
+        const toggle = () => {
+          const isOpen = qa.classList.toggle("is-open");
+          heading.setAttribute("aria-expanded", String(isOpen));
+        };
+
+        heading.addEventListener("click", toggle);
+        heading.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            toggle();
+          }
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
-
