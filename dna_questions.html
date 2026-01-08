@@ -21,11 +21,44 @@
       color:var(--ink);
       line-height:1.45;
     }
-    header{
-      padding:24px 16px 8px;
-      max-width:1200px;
-      margin:0 auto;
-    }
+	    header{
+	      padding:24px 16px 8px;
+	      max-width:1200px;
+	      margin:0 auto;
+	    }
+	    .header-inner{
+	      display:flex;
+	      align-items:flex-start;
+	      justify-content:space-between;
+	      gap:12px;
+	    }
+	    .lang-controls{
+	      display:inline-flex;
+	      gap:8px;
+	      flex-wrap:wrap;
+	      justify-content:flex-end;
+	      padding-top:2px;
+	    }
+	    .lang-btn{
+	      border:1px solid var(--line);
+	      background:rgba(18,26,51,.7);
+	      color:var(--ink);
+	      padding:6px 10px;
+	      border-radius:10px;
+	      font-size:13px;
+	      cursor:pointer;
+	      user-select:none;
+	      font-family:inherit;
+	    }
+	    .lang-btn.is-active{
+	      background:rgba(122,162,255,.18);
+	      border-color:rgba(122,162,255,.6);
+	      font-weight:700;
+	    }
+	    .lang-btn:focus-visible{
+	      outline:2px solid rgba(122,162,255,.65);
+	      outline-offset:3px;
+	    }
     h1{
       margin:0 0 6px;
       font-size:clamp(18px,2.2vw,26px);
@@ -103,12 +136,12 @@
       border-radius:12px;
       background:rgba(10,15,34,.55);
     }
-    .q .label{
-      width:100%;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      font-weight:700;
+	    .q .label{
+	      width:100%;
+	      display:flex;
+	      align-items:center;
+	      gap:8px;
+	      font-weight:700;
       margin:0 0 6px;
       font-size:14px;
       list-style:none;
@@ -117,14 +150,26 @@
       padding:0;
       color:inherit;
       text-align:left;
-      cursor:pointer;
-      font-family:inherit;
-    }
-    .q .label:focus-visible{
-      outline:2px solid rgba(122,162,255,.65);
-      outline-offset:4px;
-      border-radius:10px;
-    }
+	      cursor:pointer;
+	      font-family:inherit;
+	    }
+	    .q .label-text{
+	      display:block;
+	      flex:1;
+	      min-width:0;
+	    }
+	    .q .label .zh-inline{
+	      display:none;
+	      margin-top:2px;
+	      font-weight:600;
+	      color:var(--muted);
+	      font-size:13px;
+	    }
+	    .q .label:focus-visible{
+	      outline:2px solid rgba(122,162,255,.65);
+	      outline-offset:4px;
+	      border-radius:10px;
+	    }
     .q .label::-webkit-details-marker{display:none}
     .q .label::marker{content:""}
     .pill{
@@ -137,24 +182,48 @@
       font-weight:800;
       letter-spacing:.2px;
     }
-    .ans{margin:0; color:#f2f4ff; font-size:14px}
-    .explain{margin:8px 0 0; color:var(--muted); font-size:13px}
-    .q[open] .ans + .ans{margin-top:6px}
-    footer{
-      max-width:1200px;
-      margin:0 auto;
-      padding:8px 16px 22px;
-      color:var(--muted);
-      font-size:12px;
-    }
+	    .ans{margin:0; color:#f2f4ff; font-size:14px}
+	    .explain{margin:8px 0 0; color:var(--muted); font-size:13px}
+	    .q[open] .ans + .ans{margin-top:6px}
+	    .zh-block,
+	    .zh-inline{
+	      display:none;
+	    }
+	    body.lang-bi .zh-block{
+	      display:block;
+	    }
+	    body.lang-bi .zh-inline{
+	      display:inline;
+	    }
+	    body.lang-bi .q .label .zh-inline{
+	      display:block;
+	    }
+	    footer{
+	      max-width:1200px;
+	      margin:0 auto;
+	      padding:8px 16px 22px;
+	      color:var(--muted);
+	      font-size:12px;
+	    }
   </style>
 </head>
 
-<body>
-  <header>
-    <h1>DNA Replication Worksheet (Q1–Q8)</h1>
-    <p class="sub">Each worksheet image is paired with the answers on the same page.</p>
-  </header>
+	<body>
+	  <header>
+	    <div class="header-inner">
+	      <div>
+	        <h1>DNA Replication Worksheet (Q1–Q8)</h1>
+	        <p class="sub">
+	          Each worksheet image is paired with the answers on the same page.
+	          <span class="zh-inline" lang="zh-Hans">每张题目图片都与同页答案配对显示。</span>
+	        </p>
+	      </div>
+	      <div class="lang-controls" role="group" aria-label="Language">
+	        <button type="button" class="lang-btn is-active" data-lang="en" aria-pressed="true">English</button>
+	        <button type="button" class="lang-btn" data-lang="bi" aria-pressed="false">English + 中文</button>
+	      </div>
+	    </div>
+	  </header>
 
   <main>
     <!-- ===================== Q1–Q6 ===================== -->
@@ -176,55 +245,70 @@
         </div>
       </div>
 
-      <div class="card" aria-label="Answers Q1 to Q6">
-        <h2>Answers (Questions 1–6)</h2>
-        <div class="body">
-          <div class="qa">
-            <details class="q">
-              <summary class="label"><span class="pill">1</span> Rank (smallest → biggest)</summary>
-              <p class="ans">Nucleotide → Gene → DNA → Chromosome → Nucleus → Cell</p>
-              <p class="explain">Explanation: Nucleotides are the building blocks; genes are sections of DNA; DNA coils into chromosomes; chromosomes are in the nucleus; the nucleus is inside the cell.</p>
-            </details>
+	      <div class="card" aria-label="Answers Q1 to Q6">
+	        <h2>Answers (Questions 1–6)</h2>
+	        <div class="body">
+	          <div class="qa">
+	            <details class="q">
+	              <summary class="label"><span class="pill">1</span> <span class="label-text">Rank (smallest → biggest)<span class="zh-inline" lang="zh-Hans">从小到大排序</span></span></summary>
+	              <p class="ans">Nucleotide → Gene → DNA → Chromosome → Nucleus → Cell</p>
+	              <p class="ans zh-block" lang="zh-Hans">核苷酸 → 基因 → DNA → 染色体 → 细胞核 → 细胞</p>
+	              <p class="explain">Explanation: Nucleotides are the building blocks; genes are sections of DNA; DNA coils into chromosomes; chromosomes are in the nucleus; the nucleus is inside the cell.</p>
+	              <p class="explain zh-block" lang="zh-Hans">解释：核苷酸是基本构件；基因是 DNA 的片段；DNA 盘绕形成染色体；染色体位于细胞核内；细胞核在细胞内部。</p>
+	            </details>
 
-            <details class="q">
-              <summary class="label"><span class="pill">2</span> Where does DNA replication take place?</summary>
-              <p class="ans">In the nucleus.</p>
-              <p class="explain">Explanation: In eukaryotic cells, DNA is stored in the nucleus, so it is copied there before the cell divides.</p>
-            </details>
+	            <details class="q">
+	              <summary class="label"><span class="pill">2</span> <span class="label-text">Where does DNA replication take place?<span class="zh-inline" lang="zh-Hans">DNA 复制发生在哪里？</span></span></summary>
+	              <p class="ans">In the nucleus.</p>
+	              <p class="ans zh-block" lang="zh-Hans">在细胞核中。</p>
+	              <p class="explain">Explanation: In eukaryotic cells, DNA is stored in the nucleus, so it is copied there before the cell divides.</p>
+	              <p class="explain zh-block" lang="zh-Hans">解释：在真核细胞中，DNA 储存在细胞核内，因此细胞分裂前会在细胞核中完成复制。</p>
+	            </details>
 
-            <details class="q">
-              <summary class="label"><span class="pill">3</span> When does DNA replication take place?</summary>
-              <p class="ans">During S phase of interphase (before cell division).</p>
-              <p class="explain">Explanation: The S (“synthesis”) phase is when the cell duplicates its DNA so each daughter cell can receive a complete set.</p>
-            </details>
+	            <details class="q">
+	              <summary class="label"><span class="pill">3</span> <span class="label-text">When does DNA replication take place?<span class="zh-inline" lang="zh-Hans">DNA 复制在什么时候发生？</span></span></summary>
+	              <p class="ans">During S phase of interphase (before cell division).</p>
+	              <p class="ans zh-block" lang="zh-Hans">在间期的 S 期（细胞分裂前）。</p>
+	              <p class="explain">Explanation: The S (“synthesis”) phase is when the cell duplicates its DNA so each daughter cell can receive a complete set.</p>
+	              <p class="explain zh-block" lang="zh-Hans">解释：S（“合成”）期是细胞复制 DNA 的阶段，以便每个子细胞都能获得完整的一套遗传信息。</p>
+	            </details>
 
-            <details class="q">
-              <summary class="label"><span class="pill">4</span> Complementary base sequence</summary>
-              <p class="ans"><strong>Given:</strong> G-A-C-T-T-A-C-G-T-A-C-C</p>
-              <p class="ans"><strong>Complement:</strong> C-T-G-A-A-T-G-C-A-T-G-G</p>
-              <p class="explain">Explanation: Use base-pair rules: A↔T, C↔G.</p>
-            </details>
+	            <details class="q">
+	              <summary class="label"><span class="pill">4</span> <span class="label-text">Complementary base sequence<span class="zh-inline" lang="zh-Hans">互补碱基序列</span></span></summary>
+	              <p class="ans"><strong>Given:</strong> G-A-C-T-T-A-C-G-T-A-C-C</p>
+	              <p class="ans"><strong>Complement:</strong> C-T-G-A-A-T-G-C-A-T-G-G</p>
+	              <p class="ans zh-block" lang="zh-Hans"><strong>已知：</strong>G-A-C-T-T-A-C-G-T-A-C-C</p>
+	              <p class="ans zh-block" lang="zh-Hans"><strong>互补链：</strong>C-T-G-A-A-T-G-C-A-T-G-G</p>
+	              <p class="explain">Explanation: Use base-pair rules: A↔T, C↔G.</p>
+	              <p class="explain zh-block" lang="zh-Hans">解释：使用碱基互补配对规则：A↔T，C↔G。</p>
+	            </details>
 
-            <details class="q">
-              <summary class="label"><span class="pill">5</span> Result of DNA replication</summary>
-              <p class="ans">
-                Two identical DNA molecules. Each new DNA has one original (parent) strand and one new strand
-                (semi-conservative replication).
-              </p>
-              <p class="explain">Explanation: Keeping one original strand helps the new strand be copied accurately using complementary base pairing.</p>
-            </details>
+	            <details class="q">
+	              <summary class="label"><span class="pill">5</span> <span class="label-text">Result of DNA replication<span class="zh-inline" lang="zh-Hans">DNA 复制的结果</span></span></summary>
+	              <p class="ans">
+	                Two identical DNA molecules. Each new DNA has one original (parent) strand and one new strand
+	                (semi-conservative replication).
+	              </p>
+	              <p class="ans zh-block" lang="zh-Hans">产生两条完全相同的 DNA 分子。每条新 DNA 都由一条原来的（亲代）链和一条新合成的链组成（半保留复制）。</p>
+	              <p class="explain">Explanation: Keeping one original strand helps the new strand be copied accurately using complementary base pairing.</p>
+	              <p class="explain zh-block" lang="zh-Hans">解释：保留一条原有链作为模板，利用互补配对规则可帮助新链更准确地复制。</p>
+	            </details>
 
-            <details class="q">
-              <summary class="label"><span class="pill">6</span> Book analogy</summary>
-              <p class="ans"><strong>a)</strong> Chapters = Chromosomes</p>
-              <p class="ans"><strong>b)</strong> Sentences = Genes</p>
-              <p class="ans"><strong>c)</strong> Letters = Bases (A, T, C, G)</p>
-              <p class="explain">Explanation: Large structures are made of smaller parts—letters make sentences, sentences make chapters; bases make genes, and genes are organized on chromosomes.</p>
-            </details>
-          </div>
-        </div>
-      </div>
-    </section>
+	            <details class="q">
+	              <summary class="label"><span class="pill">6</span> <span class="label-text">Book analogy<span class="zh-inline" lang="zh-Hans">书本类比</span></span></summary>
+	              <p class="ans"><strong>a)</strong> Chapters = Chromosomes</p>
+	              <p class="ans"><strong>b)</strong> Sentences = Genes</p>
+	              <p class="ans"><strong>c)</strong> Letters = Bases (A, T, C, G)</p>
+	              <p class="ans zh-block" lang="zh-Hans"><strong>a)</strong> 章节 = 染色体</p>
+	              <p class="ans zh-block" lang="zh-Hans"><strong>b)</strong> 句子 = 基因</p>
+	              <p class="ans zh-block" lang="zh-Hans"><strong>c)</strong> 字母 = 碱基（A、T、C、G）</p>
+	              <p class="explain">Explanation: Large structures are made of smaller parts—letters make sentences, sentences make chapters; bases make genes, and genes are organized on chromosomes.</p>
+	              <p class="explain zh-block" lang="zh-Hans">解释：大的结构由小的部分组成——字母组成句子，句子组成章节；碱基组成基因，基因组织在染色体上。</p>
+	            </details>
+	          </div>
+	        </div>
+	      </div>
+	    </section>
 
     <!-- ===================== Q7–Q8 ===================== -->
     <section class="panel" aria-label="Questions 7 to 8">
@@ -245,68 +329,118 @@
         </div>
       </div>
 
-      <div class="card" aria-label="Answers Q7 to Q8">
-        <h2>Answers (Questions 7–8)</h2>
-        <div class="body">
-          <div class="qa">
-            <details class="q">
-              <summary class="label"><span class="pill">7a</span> Name of Molecule X</summary>
-              <p class="ans">DNA (Deoxyribonucleic acid)</p>
-              <p class="explain">Explanation: DNA is the long-term information storage molecule in cells.</p>
-            </details>
+	      <div class="card" aria-label="Answers Q7 to Q8">
+	        <h2>Answers (Questions 7–8)</h2>
+	        <div class="body">
+	          <div class="qa">
+	            <details class="q">
+	              <summary class="label"><span class="pill">7a</span> <span class="label-text">Name of Molecule X<span class="zh-inline" lang="zh-Hans">分子 X 的名称</span></span></summary>
+	              <p class="ans">DNA (Deoxyribonucleic acid)</p>
+	              <p class="ans zh-block" lang="zh-Hans">DNA（脱氧核糖核酸）</p>
+	              <p class="explain">Explanation: DNA is the long-term information storage molecule in cells.</p>
+	              <p class="explain zh-block" lang="zh-Hans">解释：DNA 是细胞中长期储存遗传信息的分子。</p>
+	            </details>
 
-            <details class="q">
-              <summary class="label"><span class="pill">7b</span> Name of Molecule Y</summary>
-              <p class="ans">RNA (messenger RNA / mRNA)</p>
-              <p class="explain">Explanation: mRNA is a temporary copy of a gene that carries the message to where proteins are made.</p>
-            </details>
+	            <details class="q">
+	              <summary class="label"><span class="pill">7b</span> <span class="label-text">Name of Molecule Y<span class="zh-inline" lang="zh-Hans">分子 Y 的名称</span></span></summary>
+	              <p class="ans">RNA (messenger RNA / mRNA)</p>
+	              <p class="ans zh-block" lang="zh-Hans">RNA（信使 RNA / mRNA）</p>
+	              <p class="explain">Explanation: mRNA is a temporary copy of a gene that carries the message to where proteins are made.</p>
+	              <p class="explain zh-block" lang="zh-Hans">解释：mRNA 是基因的临时拷贝，把信息传递到合成蛋白质的地方。</p>
+	            </details>
 
-            <details class="q">
-              <summary class="label"><span class="pill">7c</span> Name of Molecule Z</summary>
-              <p class="ans">Protein</p>
-              <p class="explain">Explanation: Proteins are the final products of gene instructions and do most cellular jobs.</p>
-            </details>
+	            <details class="q">
+	              <summary class="label"><span class="pill">7c</span> <span class="label-text">Name of Molecule Z<span class="zh-inline" lang="zh-Hans">分子 Z 的名称</span></span></summary>
+	              <p class="ans">Protein</p>
+	              <p class="ans zh-block" lang="zh-Hans">蛋白质</p>
+	              <p class="explain">Explanation: Proteins are the final products of gene instructions and do most cellular jobs.</p>
+	              <p class="explain zh-block" lang="zh-Hans">解释：蛋白质是基因指令的最终产物，承担细胞中大多数功能。</p>
+	            </details>
 
-            <details class="q">
-              <summary class="label"><span class="pill">7d</span> Function of Molecule X</summary>
-              <p class="ans">Stores genetic information (instructions) that control traits, growth, and development.</p>
-              <p class="explain">Explanation: The order of DNA bases is a code that can be read to build specific proteins.</p>
-            </details>
+	            <details class="q">
+	              <summary class="label"><span class="pill">7d</span> <span class="label-text">Function of Molecule X<span class="zh-inline" lang="zh-Hans">分子 X 的功能</span></span></summary>
+	              <p class="ans">Stores genetic information (instructions) that control traits, growth, and development.</p>
+	              <p class="ans zh-block" lang="zh-Hans">储存遗传信息（指令），控制性状、生长与发育。</p>
+	              <p class="explain">Explanation: The order of DNA bases is a code that can be read to build specific proteins.</p>
+	              <p class="explain zh-block" lang="zh-Hans">解释：DNA 碱基的排列顺序是一种“编码”，可被读取用来合成特定蛋白质。</p>
+	            </details>
 
-            <details class="q">
-              <summary class="label"><span class="pill">7e</span> Function of Molecule Y</summary>
-              <p class="ans">Carries instructions from DNA to the ribosome where proteins are made.</p>
-              <p class="explain">Explanation: Ribosomes read mRNA codons to assemble amino acids in the correct order.</p>
-            </details>
+	            <details class="q">
+	              <summary class="label"><span class="pill">7e</span> <span class="label-text">Function of Molecule Y<span class="zh-inline" lang="zh-Hans">分子 Y 的功能</span></span></summary>
+	              <p class="ans">Carries instructions from DNA to the ribosome where proteins are made.</p>
+	              <p class="ans zh-block" lang="zh-Hans">把 DNA 的指令携带到核糖体，在那里合成蛋白质。</p>
+	              <p class="explain">Explanation: Ribosomes read mRNA codons to assemble amino acids in the correct order.</p>
+	              <p class="explain zh-block" lang="zh-Hans">解释：核糖体读取 mRNA 的密码子，按正确顺序连接氨基酸。</p>
+	            </details>
 
-            <details class="q">
-              <summary class="label"><span class="pill">7f</span> Function of Molecule Z</summary>
-              <p class="ans">Proteins build structures and control reactions (enzymes/hormones), producing traits and functions.</p>
-              <p class="explain">Explanation: A protein’s shape determines its function, such as catalyzing reactions (enzymes) or sending signals (some hormones).</p>
-            </details>
+	            <details class="q">
+	              <summary class="label"><span class="pill">7f</span> <span class="label-text">Function of Molecule Z<span class="zh-inline" lang="zh-Hans">分子 Z 的功能</span></span></summary>
+	              <p class="ans">Proteins build structures and control reactions (enzymes/hormones), producing traits and functions.</p>
+	              <p class="ans zh-block" lang="zh-Hans">蛋白质构建结构并控制反应（如酶/激素），从而产生各种性状与功能。</p>
+	              <p class="explain">Explanation: A protein’s shape determines its function, such as catalyzing reactions (enzymes) or sending signals (some hormones).</p>
+	              <p class="explain zh-block" lang="zh-Hans">解释：蛋白质的形状决定其功能，例如催化反应（酶）或传递信号（某些激素）。</p>
+	            </details>
 
-            <details class="q">
-              <summary class="label"><span class="pill">8</span> How are genes involved in producing proteins?</summary>
-              <p class="ans">
-                Genes are sections of DNA that contain instructions for making specific proteins.
-                A gene is transcribed into RNA, and the RNA is translated into a protein.
-              </p>
-              <p class="explain">Explanation: The gene’s base sequence determines the mRNA sequence, which determines the amino acid order and therefore the protein made.</p>
-            </details>
+	            <details class="q">
+	              <summary class="label"><span class="pill">8</span> <span class="label-text">How are genes involved in producing proteins?<span class="zh-inline" lang="zh-Hans">基因如何参与蛋白质的产生？</span></span></summary>
+	              <p class="ans">
+	                Genes are sections of DNA that contain instructions for making specific proteins.
+	                A gene is transcribed into RNA, and the RNA is translated into a protein.
+	              </p>
+	              <p class="ans zh-block" lang="zh-Hans">基因是 DNA 的片段，包含制造特定蛋白质的指令。基因先被转录成 RNA，再由 RNA 翻译成蛋白质。</p>
+	              <p class="explain">Explanation: The gene’s base sequence determines the mRNA sequence, which determines the amino acid order and therefore the protein made.</p>
+	              <p class="explain zh-block" lang="zh-Hans">解释：基因的碱基序列决定 mRNA 序列，mRNA 序列又决定氨基酸排列顺序，从而决定合成的蛋白质。</p>
+	            </details>
 
-            <details class="q">
-              <summary class="label"><span class="pill">Extra</span> Quick summary</summary>
-              <p class="ans">DNA → RNA → Protein</p>
-              <p class="explain">Explanation: This is the “central dogma” pathway for how genetic information becomes a trait.</p>
-            </details>
-          </div>
-        </div>
-      </div>
-    </section>
+	            <details class="q">
+	              <summary class="label"><span class="pill">Extra</span> <span class="label-text">Quick summary<span class="zh-inline" lang="zh-Hans">快速总结</span></span></summary>
+	              <p class="ans">DNA → RNA → Protein</p>
+	              <p class="ans zh-block" lang="zh-Hans">DNA → RNA → 蛋白质</p>
+	              <p class="explain">Explanation: This is the “central dogma” pathway for how genetic information becomes a trait.</p>
+	              <p class="explain zh-block" lang="zh-Hans">解释：这就是遗传信息如何变成性状的“中心法则”路径。</p>
+	            </details>
+	          </div>
+	        </div>
+	      </div>
+	    </section>
   </main>
 
-  <footer>
-    Click a question to reveal its answer (click again to hide).
-  </footer>
+	<footer>
+	    Click a question to reveal its answer (click again to hide).
+	    <span class="zh-inline" lang="zh-Hans">点击题目显示答案（再点一次可隐藏）。</span>
+	</footer>
+
+	<script>
+	  (function () {
+	    const LANG_STORAGE_KEY = "dnaQuestionsLang";
+	    const langButtons = Array.from(document.querySelectorAll(".lang-btn"));
+
+	    const setLanguage = (lang) => {
+	      const isBilingual = lang === "bi";
+	      document.body.classList.toggle("lang-bi", isBilingual);
+
+	      for (const btn of langButtons) {
+	        const active = btn.dataset.lang === lang;
+	        btn.classList.toggle("is-active", active);
+	        btn.setAttribute("aria-pressed", active ? "true" : "false");
+	      }
+
+	      try {
+	        localStorage.setItem(LANG_STORAGE_KEY, lang);
+	      } catch {}
+	    };
+
+	    try {
+	      const saved = localStorage.getItem(LANG_STORAGE_KEY);
+	      setLanguage(saved === "bi" ? "bi" : "en");
+	    } catch {
+	      setLanguage("en");
+	    }
+
+	    for (const btn of langButtons) {
+	      btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
+	    }
+	  })();
+	</script>
 </body>
 </html>
