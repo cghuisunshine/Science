@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Modelling Natural Selection – Berry & Bear Simulator</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 1.5rem;
+      max-width: 900px;
+      margin-inline: auto;
+      line-height: 1.5;
+    }
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 0.25rem;
+    }
+    h2 {
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+    .panel {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .flex > div {
+      flex: 1 1 180px;
+      min-width: 0;
+    }
+    label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+    input[type="number"], input[type="range"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.25rem 0.4rem;
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+    .small-note {
+      font-size: 0.8rem;
+      color: #666;
+    }
+    button {
+      padding: 0.4rem 0.8rem;
+      margin-right: 0.4rem;
+      margin-top: 0.4rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border-radius: 999px;
+      border: 1px solid #ccc;
+      background: #f7f7f7;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 0.4rem 0.5rem;
+      text-align: center;
+    }
+    th {
+      background: #f3f3f3;
+    }
+    #graphArea {
+      margin-top: 0.5rem;
+    }
+    .bar-wrapper {
+      display: flex;
+      height: 24px;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid #ccc;
+      margin-bottom: 0.25rem;
+    }
+    .bar-blue {
+      background: #4f8df5;
+      height: 100%;
+      transition: width 0.4s ease;
+    }
+    .bar-red {
+      background: #e55b5b;
+      height: 100%;
+      transition: width 0.4s ease;
+    }
+    .bar-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #444;
+    }
+    #log {
+      font-size: 0.85rem;
+      max-height: 180px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      padding: 0.4rem 0.6rem;
+      border-radius: 4px;
+      background: #fafafa;
+      white-space: pre-line;
+    }
+    @media (max-width: 600px) {
+      body {
+        padding: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Modelling Natural Selection</h1>
+  <div class="subtitle">
+    Berry & Bear Simulator – based on 20 berries per season, bears prefer blueberries, 4 berries per bear.
+  </div>
+
+  <div class="panel">
+    <h2>Game Setup</h2>
+    <div class="flex">
+      <div>
+        <label>Total berries per season</label>
+        <input id="totalBerries" type="number" value="20" min="1" max="200" />
+        <div class="small-note">Default: 20 (matches classroom activity)</div>
+      </div>
+      <div>
+        <label>Initial blueberries</label>
+        <input id="initialBlue" type="range" min="0" max="20" value="10" />
+        <div class="small-note">
+          Blueberries: <span id="blueCountDisplay">10</span> &nbsp;&middot;&nbsp;
+          Raspberries: <span id="redCountDisplay">10</span>
+        </div>
+      </div>
+      <div>
+        <label>Number of bears</label>
+        <input id="bearCount" type="number" value="4" min="1" max="10" />
+        <div class="small-note">
+          Each bear eats 4 berries (prefers blue).  
+          For the original lab, you can use 4 bears.
+        </div>
+      </div>
+      <div>
+        <label>Number of seasons</label>
+        <input id="maxSeasons" type="number" value="4" min="1" max="20" />
+        <div class="small-note">You can try more than 4 seasons to see long-term trends.</div>
+      </div>
+    </div>
+
+    <button id="btnReset">Start / Reset</button>
+    <button id="btnNextSeason" disabled>Run 1 Season</button>
+    <button id="btnRunAll" disabled>Run All Seasons</button>
+    <span class="small-note" id="seasonInfo"></span>
+  </div>
+
+  <div class="panel">
+    <h2>Population Table</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Season</th>
+          <th>Total Berries</th>
+          <th>Blueberries</th>
+          <th>Raspberries</th>
+        </tr>
+      </thead>
+      <tbody id="historyBody">
+        <!-- rows will be added here -->
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2>Current Season Graph</h2>
+    <div id="graphArea">
+      <div class="bar-wrapper">
+        <div class="bar-blue" id="barBlue" style="width: 50%;"></div>
+        <div class="bar-red" id="barRed" style="width: 50%;"></div>
+      </div>
+      <div class="bar-labels">
+        <span id="blueLabel">Blueberries: 10</span>
+        <span id="redLabel">Raspberries: 10</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>What the Bears Did (Log)</h2>
+    <div id="log">Press “Start / Reset” to begin.</div>
+  </div>
+
+  <script>
+    const totalInput = document.getElementById("totalBerries");
+    const initialBlueInput = document.getElementById("initialBlue");
+    const blueCountDisplay = document.getElementById("blueCountDisplay");
+    const redCountDisplay = document.getElementById("redCountDisplay");
+    const bearInput = document.getElementById("bearCount");
+    const maxSeasonsInput = document.getElementById("maxSeasons");
+
+    const btnReset = document.getElementById("btnReset");
+    const btnNextSeason = document.getElementById("btnNextSeason");
+    const btnRunAll = document.getElementById("btnRunAll");
+
+    const historyBody = document.getElementById("historyBody");
+    const seasonInfo = document.getElementById("seasonInfo");
+
+    const barBlue = document.getElementById("barBlue");
+    const barRed = document.getElementById("barRed");
+    const blueLabel = document.getElementById("blueLabel");
+    const redLabel = document.getElementById("redLabel");
+    const logDiv = document.getElementById("log");
+
+    let state = {
+      season: 0,
+      blue: 0,
+      red: 0,
+      maxSeasons: 4,
+      total: 20,
+      bears: 4,
+      history: []
+    };
+
+    function updateInitialDisplays() {
+      const total = parseInt(totalInput.value, 10) || 20;
+      let blue = parseInt(initialBlueInput.value, 10) || 0;
+      if (blue < 0) blue = 0;
+      if (blue > total) blue = total;
+      initialBlueInput.max = total;
+      const red = total - blue;
+      blueCountDisplay.textContent = blue;
+      redCountDisplay.textContent = red;
+    }
+
+    initialBlueInput.addEventListener("input", updateInitialDisplays);
+    totalInput.addEventListener("input", updateInitialDisplays);
+
+    function resetGame() {
+      const total = parseInt(totalInput.value, 10) || 20;
+      const bears = parseInt(bearInput.value, 10) || 4;
+      const maxSeasons = parseInt(maxSeasonsInput.value, 10) || 4;
+
+      let blue = parseInt(initialBlueInput.value, 10) || 0;
+      if (blue < 0) blue = 0;
+      if (blue > total) blue = total;
+      const red = total - blue;
+
+      state.total = total;
+      state.season = 1;
+      state.blue = blue;
+      state.red = red;
+      state.bears = bears;
+      state.maxSeasons = maxSeasons;
+      state.history = [];
+
+      historyBody.innerHTML = "";
+      logDiv.textContent = "";
+      seasonInfo.textContent = `Season 1 of ${state.maxSeasons}`;
+
+      addHistoryRow(state.season, state.total, state.blue, state.red);
+      updateGraph(state.blue, state.red);
+      appendLog(
+        `New simulation started.\nInitial berries → Blue: ${state.blue}, Red: ${state.red}, Total: ${state.total}\nBears: ${state.bears}, Seasons to run: ${state.maxSeasons}.`
+      );
+
+      btnNextSeason.disabled = false;
+      btnRunAll.disabled = false;
+    }
+
+    function addHistoryRow(season, total, blue, red) {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${season}</td>
+        <td>${total}</td>
+        <td>${blue}</td>
+        <td>${red}</td>
+      `;
+      historyBody.appendChild(row);
+      state.history.push({ season, total, blue, red });
+    }
+
+    function updateGraph(blue, red) {
+      const total = blue + red;
+      let bluePercent = total > 0 ? (blue / total) * 100 : 0;
+      let redPercent = total > 0 ? (red / total) * 100 : 0;
+      // avoid rounding issues
+      if (bluePercent + redPercent !== 100) {
+        redPercent = 100 - bluePercent;
+      }
+      barBlue.style.width = bluePercent + "%";
+      barRed.style.width = redPercent + "%";
+      blueLabel.textContent = `Blueberries: ${blue}`;
+      redLabel.textContent = `Raspberries: ${red}`;
+    }
+
+    function appendLog(text) {
+      logDiv.textContent += (logDiv.textContent ? "\n" : "") + text;
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    // Bears eat: each bear eats 4 berries, prefers blue over red.
+    function runOneSeason() {
+      if (state.season > state.maxSeasons) {
+        appendLog("All seasons already completed.");
+        return;
+      }
+
+      let blue = state.blue;
+      let red = state.red;
+      let total = blue + red;
+      const bears = state.bears;
+
+      appendLog(`\n=== Season ${state.season} ===`);
+      appendLog(`Start of season → Blue: ${blue}, Red: ${red}, Total: ${total}`);
+
+      for (let b = 1; b <= bears; b++) {
+        let toEat = 4;
+        if (blue + red === 0) {
+          appendLog(`Bear ${b} finds no berries to eat.`);
+          break;
+        }
+
+        let eatBlue = Math.min(toEat, blue);
+        blue -= eatBlue;
+        toEat -= eatBlue;
+
+        let eatRed = Math.min(toEat, red);
+        red -= eatRed;
+        toEat -= eatRed;
+
+        appendLog(
+          `Bear ${b} eats → Blue: ${eatBlue}, Red: ${eatRed}. Remaining → Blue: ${blue}, Red: ${red}.`
+        );
+
+        if (blue + red === 0) {
+          appendLog("All berries have been eaten this season!");
+          break;
+        }
+      }
+
+      const survivorsBlue = blue;
+      const survivorsRed = red;
+      const survivorsTotal = survivorsBlue + survivorsRed;
+
+      appendLog(
+        `After predation → Survivors → Blue: ${survivorsBlue}, Red: ${survivorsRed}, Total survivors: ${survivorsTotal}.`
+      );
+
+      let nextBlue = 0;
+      let nextRed = 0;
+
+      if (survivorsTotal === 0) {
+        appendLog(
+          "No berries survived, so the population is extinct. (You can press Start/Reset to try again.)"
+        );
+        state.blue = 0;
+        state.red = 0;
+        state.total = 0;
+        addHistoryRow(state.season, 0, 0, 0);
+        updateGraph(0, 0);
+        btnNextSeason.disabled = true;
+        btnRunAll.disabled = true;
+        seasonInfo.textContent = `Season ${state.season}: population extinct.`;
+        return;
+      } else {
+        // Reproduction step: keep total constant but keep the same proportions.
+        const targetTotal = state.total;
+        const fractionBlue = survivorsBlue / survivorsTotal;
+        nextBlue = Math.round(fractionBlue * targetTotal);
+        if (nextBlue < 0) nextBlue = 0;
+        if (nextBlue > targetTotal) nextBlue = targetTotal;
+        nextRed = targetTotal - nextBlue;
+
+        appendLog(
+          `Reproduction → Next season reset to ${targetTotal} berries, keeping similar ratio.\nNext season → Blue: ${nextBlue}, Red: ${nextRed}.`
+        );
+      }
+
+      addHistoryRow(state.season, nextBlue + nextRed, nextBlue, nextRed);
+      state.blue = nextBlue;
+      state.red = nextRed;
+      updateGraph(nextBlue, nextRed);
+
+      state.season += 1;
+
+      if (state.season > state.maxSeasons) {
+        seasonInfo.textContent = `Simulation finished at Season ${state.maxSeasons}.`;
+        btnNextSeason.disabled = true;
+        btnRunAll.disabled = true;
+      } else {
+        seasonInfo.textContent = `Season ${state.season} of ${state.maxSeasons}`;
+      }
+    }
+
+    function runAllSeasons() {
+      while (!btnNextSeason.disabled && state.season <= state.maxSeasons) {
+        runOneSeason();
+      }
+    }
+
+    btnReset.addEventListener("click", resetGame);
+    btnNextSeason.addEventListener("click", runOneSeason);
+    btnRunAll.addEventListener("click", runAllSeasons);
+
+    // Initialize displays on load
+    updateInitialDisplays();
+  </script>
+</body>
+</html>
