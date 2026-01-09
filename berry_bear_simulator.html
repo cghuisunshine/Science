@@ -172,7 +172,7 @@
 <body>
   <h1>Modelling Natural Selection</h1>
   <div class="subtitle">
-    Berry & Bear Simulator – based on 20 berries per season, bears prefer blueberries, 4 berries per bear.
+    Berry & Bear Simulator – based on 20 berries per season, bears prefer blueberries, 4 berries per bear (each surviving berry makes 5 for next season).
   </div>
 
   <div class="panel">
@@ -460,17 +460,32 @@
         seasonInfo.textContent = `Season ${state.season}: population extinct.`;
         return;
       } else {
-        // Reproduction step: keep total constant but keep the same proportions.
+        // Reproduction step:
+        // - Each surviving berry produces 5 new berries of the same colour.
+        // - If the class uses a fixed "total per season" (e.g., 20), treat that as a teacher-replenished carry capacity.
         const targetTotal = state.total;
-        const fractionBlue = survivorsBlue / survivorsTotal;
-        nextBlue = Math.round(fractionBlue * targetTotal);
-        if (nextBlue < 0) nextBlue = 0;
-        if (nextBlue > targetTotal) nextBlue = targetTotal;
-        nextRed = targetTotal - nextBlue;
 
-        appendLog(
-          `Reproduction → Next season reset to ${targetTotal} berries, keeping similar ratio.\nNext season → Blue: ${nextBlue}, Red: ${nextRed}.`
-        );
+        const producedBlue = survivorsBlue * 5;
+        const producedRed = survivorsRed * 5;
+        const producedTotal = producedBlue + producedRed;
+
+        if (producedTotal === targetTotal) {
+          nextBlue = producedBlue;
+          nextRed = producedRed;
+          appendLog(
+            `Reproduction → Each survivor makes 5.\nNext season → Blue: ${nextBlue}, Red: ${nextRed}, Total: ${producedTotal}.`
+          );
+        } else {
+          const fractionBlue = producedBlue / producedTotal;
+          nextBlue = Math.round(fractionBlue * targetTotal);
+          if (nextBlue < 0) nextBlue = 0;
+          if (nextBlue > targetTotal) nextBlue = targetTotal;
+          nextRed = targetTotal - nextBlue;
+
+          appendLog(
+            `Reproduction → Each survivor makes 5 (produced total: ${producedTotal}).\nTeacher replenishes/adjusts to ${targetTotal} berries, keeping similar ratio.\nNext season → Blue: ${nextBlue}, Red: ${nextRed}.`
+          );
+        }
       }
 
       addHistoryRow(state.season, nextBlue + nextRed, nextBlue, nextRed);
