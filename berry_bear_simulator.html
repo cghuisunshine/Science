@@ -120,6 +120,48 @@
       background: #fafafa;
       white-space: pre-line;
     }
+    .icon-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+      margin: 0.25rem 0 0.75rem;
+    }
+    .icon-card {
+      flex: 1 1 160px;
+      min-width: 0;
+      text-align: center;
+      padding: 0.5rem 0.5rem 0.6rem;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      background: #fcfcfc;
+    }
+    .icon-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 76px;
+      height: 76px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid #eee;
+      text-decoration: none;
+    }
+    .icon-link img {
+      width: 58px;
+      height: 58px;
+      display: block;
+    }
+    .icon-qty {
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin-top: 0.35rem;
+    }
+    .icon-name {
+      font-size: 0.85rem;
+      color: #444;
+      margin-top: 0.15rem;
+    }
     @media (max-width: 600px) {
       body {
         padding: 0.75rem;
@@ -189,6 +231,29 @@
 
   <div class="panel">
     <h2>Current Season Graph</h2>
+    <div class="icon-strip" aria-label="Current counts">
+      <div class="icon-card">
+        <a class="icon-link" href="assets/blueberry.svg" target="_blank" rel="noopener" title="Open blueberry image">
+          <img src="assets/blueberry.svg" alt="Blueberry" />
+        </a>
+        <div class="icon-qty" id="iconBlueQty">10</div>
+        <div class="icon-name">Blueberries</div>
+      </div>
+      <div class="icon-card">
+        <a class="icon-link" href="assets/raspberry.svg" target="_blank" rel="noopener" title="Open raspberry image">
+          <img src="assets/raspberry.svg" alt="Raspberry" />
+        </a>
+        <div class="icon-qty" id="iconRedQty">10</div>
+        <div class="icon-name">Raspberries</div>
+      </div>
+      <div class="icon-card">
+        <a class="icon-link" href="assets/bear.svg" target="_blank" rel="noopener" title="Open bear image">
+          <img src="assets/bear.svg" alt="Bear" />
+        </a>
+        <div class="icon-qty" id="iconBearQty">4</div>
+        <div class="icon-name">Bears</div>
+      </div>
+    </div>
     <div id="graphArea">
       <div class="bar-wrapper">
         <div class="bar-blue" id="barBlue" style="width: 50%;"></div>
@@ -226,8 +291,12 @@
     const blueLabel = document.getElementById("blueLabel");
     const redLabel = document.getElementById("redLabel");
     const logDiv = document.getElementById("log");
+    const iconBlueQty = document.getElementById("iconBlueQty");
+    const iconRedQty = document.getElementById("iconRedQty");
+    const iconBearQty = document.getElementById("iconBearQty");
 
     let state = {
+      started: false,
       season: 0,
       blue: 0,
       red: 0,
@@ -243,13 +312,21 @@
       if (blue < 0) blue = 0;
       if (blue > total) blue = total;
       initialBlueInput.max = total;
+      initialBlueInput.value = String(blue);
       const red = total - blue;
       blueCountDisplay.textContent = blue;
       redCountDisplay.textContent = red;
+
+      if (!state.started) {
+        iconBlueQty.textContent = blue;
+        iconRedQty.textContent = red;
+        iconBearQty.textContent = parseInt(bearInput.value, 10) || 4;
+      }
     }
 
     initialBlueInput.addEventListener("input", updateInitialDisplays);
     totalInput.addEventListener("input", updateInitialDisplays);
+    bearInput.addEventListener("input", updateInitialDisplays);
 
     function resetGame() {
       const total = parseInt(totalInput.value, 10) || 20;
@@ -262,6 +339,7 @@
       const red = total - blue;
 
       state.total = total;
+      state.started = true;
       state.season = 1;
       state.blue = blue;
       state.red = red;
@@ -275,6 +353,7 @@
 
       addHistoryRow(state.season, state.total, state.blue, state.red);
       updateGraph(state.blue, state.red);
+      iconBearQty.textContent = state.bears;
       appendLog(
         `New simulation started.\nInitial berries → Blue: ${state.blue}, Red: ${state.red}, Total: ${state.total}\nBears: ${state.bears}, Seasons to run: ${state.maxSeasons}.`
       );
@@ -307,6 +386,8 @@
       barRed.style.width = redPercent + "%";
       blueLabel.textContent = `Blueberries: ${blue}`;
       redLabel.textContent = `Raspberries: ${red}`;
+      iconBlueQty.textContent = blue;
+      iconRedQty.textContent = red;
     }
 
     function appendLog(text) {
