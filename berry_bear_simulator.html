@@ -31,6 +31,21 @@
       padding: 1rem;
       margin-bottom: 1rem;
     }
+    .graph-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+    .graph-grid .panel {
+      margin-bottom: 0;
+    }
+    .graph-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      min-width: 0;
+    }
     .flex {
       display: flex;
       flex-wrap: wrap;
@@ -122,6 +137,37 @@
       height: 280px;
       display: block;
     }
+    .anim-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    .fly-berry {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      transform: translate(-50%, -50%);
+      will-change: transform, opacity;
+      opacity: 1;
+      transition: transform 260ms ease, opacity 260ms ease;
+    }
+    .fly-berry img {
+      width: 22px;
+      height: 22px;
+      display: block;
+      filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.15));
+    }
+    .fly-berry .num {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: #111;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
     #log {
       font-size: 0.85rem;
       max-height: 180px;
@@ -179,21 +225,26 @@
         padding: 0.75rem;
       }
     }
+    @media (max-width: 900px) {
+      .graph-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
   <h1>Modelling Natural Selection</h1>
   <div class="subtitle">
-    Berry & Bear Simulator – based on 20 berries per season, bears prefer blueberries, 4 berries per bear (each surviving berry makes 5 for next season).
+    Berry & Bear Simulator – start with an initial number of berries, bears prefer blueberries, 4 berries per bear per season, each surviving berry makes 5 for next season (no total limit).
   </div>
 
   <div class="panel">
     <h2>Game Setup</h2>
     <div class="flex">
       <div>
-        <label>Total berries per season</label>
+        <label>Initial total berries</label>
         <input id="totalBerries" type="number" value="20" min="1" max="200" />
-        <div class="small-note">Default: 20 (matches classroom activity)</div>
+        <div class="small-note">Default: 20 (then berries can grow with no limit)</div>
       </div>
       <div>
         <label>Initial blueberries</label>
@@ -207,14 +258,14 @@
         <label>Number of bears</label>
         <input id="bearCount" type="number" value="4" min="1" max="10" />
         <div class="small-note">
-          Each bear eats 4 berries (prefers blue).  
+          Each bear eats 4 berries per season (prefers blue).  
           For the original lab, you can use 4 bears.
         </div>
       </div>
       <div>
         <label>Number of seasons</label>
-        <input id="maxSeasons" type="number" value="4" min="1" max="20" />
-        <div class="small-note">You can try more than 4 seasons to see long-term trends.</div>
+        <input id="maxSeasons" type="number" value="8" min="1" max="20" />
+        <div class="small-note">Default: 8 seasons (matches the Season Trend Graph).</div>
       </div>
     </div>
 
@@ -241,48 +292,54 @@
     </table>
   </div>
 
-  <div class="panel">
-    <h2>Current Season Graph</h2>
-    <div class="icon-strip" aria-label="Current counts">
-      <div class="icon-card">
-        <a class="icon-link" href="assets/blueberry.svg" target="_blank" rel="noopener" title="Open blueberry image">
-          <img src="assets/blueberry.svg" alt="Blueberry" />
-        </a>
-        <div class="icon-qty" id="iconBlueQty">10</div>
-        <div class="icon-name">Blueberries</div>
-      </div>
-      <div class="icon-card">
-        <a class="icon-link" href="assets/raspberry.svg" target="_blank" rel="noopener" title="Open raspberry image">
-          <img src="assets/raspberry.svg" alt="Raspberry" />
-        </a>
-        <div class="icon-qty" id="iconRedQty">10</div>
-        <div class="icon-name">Raspberries</div>
-      </div>
-      <div class="icon-card">
-        <a class="icon-link" href="assets/bear.svg" target="_blank" rel="noopener" title="Open bear image">
-          <img src="assets/bear.svg" alt="Bear" />
-        </a>
-        <div class="icon-qty" id="iconBearQty">4</div>
-        <div class="icon-name">Bears</div>
+  <div class="graph-grid" aria-label="Graphs">
+    <div class="graph-col">
+      <div class="panel">
+        <h2>Current Season Graph</h2>
+        <div class="icon-strip" aria-label="Current counts">
+          <div class="icon-card">
+            <a class="icon-link" href="assets/blueberry.svg" target="_blank" rel="noopener" title="Open blueberry image">
+              <img id="iconBlueImg" src="assets/blueberry.svg" alt="Blueberry" />
+            </a>
+            <div class="icon-qty" id="iconBlueQty">10</div>
+            <div class="icon-name">Blueberries</div>
+          </div>
+          <div class="icon-card">
+            <a class="icon-link" href="assets/raspberry.svg" target="_blank" rel="noopener" title="Open raspberry image">
+              <img id="iconRedImg" src="assets/raspberry.svg" alt="Raspberry" />
+            </a>
+            <div class="icon-qty" id="iconRedQty">10</div>
+            <div class="icon-name">Raspberries</div>
+          </div>
+          <div class="icon-card">
+            <a class="icon-link" href="assets/bear.svg" target="_blank" rel="noopener" title="Open bear image">
+              <img id="iconBearImg" src="assets/bear.svg" alt="Bear" />
+            </a>
+            <div class="icon-qty" id="iconBearQty">4</div>
+            <div class="icon-name">Bears</div>
+          </div>
+        </div>
+        <div id="graphArea">
+          <div class="bar-wrapper">
+            <div class="bar-blue" id="barBlue" style="width: 50%;"></div>
+            <div class="bar-red" id="barRed" style="width: 50%;"></div>
+          </div>
+          <div class="bar-labels">
+            <span id="blueLabel">Blueberries: 10</span>
+            <span id="redLabel">Raspberries: 10</span>
+          </div>
+        </div>
       </div>
     </div>
-    <div id="graphArea">
-      <div class="bar-wrapper">
-        <div class="bar-blue" id="barBlue" style="width: 50%;"></div>
-        <div class="bar-red" id="barRed" style="width: 50%;"></div>
-      </div>
-      <div class="bar-labels">
-        <span id="blueLabel">Blueberries: 10</span>
-        <span id="redLabel">Raspberries: 10</span>
-      </div>
-    </div>
-  </div>
 
-  <div class="panel">
-    <h2>Season Trend Graph</h2>
-    <div class="small-note">X-axis: season. Y-axis: number of berries (blueberries vs raspberries).</div>
-    <div class="trend-chart" aria-label="Berries by season graph">
-      <svg id="trendSvg" viewBox="0 0 760 300" role="img" aria-label="Blueberries and raspberries by season"></svg>
+    <div class="graph-col">
+      <div class="panel">
+        <h2>Season Trend Graph</h2>
+        <div class="small-note">X-axis: season. Y-axis: number of berries (blueberries vs raspberries).</div>
+        <div class="trend-chart" aria-label="Berries by season graph">
+          <svg id="trendSvg" viewBox="0 0 760 300" role="img" aria-label="Blueberries and raspberries by season"></svg>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -290,6 +347,8 @@
     <h2>What the Bears Did (Log)</h2>
     <div id="log">Press “Start / Reset” to begin.</div>
   </div>
+
+  <div id="animOverlay" class="anim-overlay" aria-hidden="true"></div>
 
   <script>
     const totalInput = document.getElementById("totalBerries");
@@ -314,18 +373,28 @@
     const iconBlueQty = document.getElementById("iconBlueQty");
     const iconRedQty = document.getElementById("iconRedQty");
     const iconBearQty = document.getElementById("iconBearQty");
+    const iconBlueImg = document.getElementById("iconBlueImg");
+    const iconRedImg = document.getElementById("iconRedImg");
+    const iconBearImg = document.getElementById("iconBearImg");
     const trendSvg = document.getElementById("trendSvg");
+    const animOverlay = document.getElementById("animOverlay");
+    const berriesPerBearPerSeason = 4;
 
     let state = {
       started: false,
       season: 0,
       blue: 0,
       red: 0,
-      maxSeasons: 4,
+      maxSeasons: 8,
       total: 20,
       bears: 4,
-      history: []
+      history: [],
+      animationRunning: false
     };
+
+    function sleep(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
 
     function niceCeil(value) {
       if (!Number.isFinite(value) || value <= 0) return 1;
@@ -353,40 +422,41 @@
       const innerWidth = vbWidth - margin.left - margin.right;
       const innerHeight = vbHeight - margin.top - margin.bottom;
 
-      const seasons = data.map((d) => d.season);
-      const xMin = Math.min(...seasons);
-      const xMax = Math.max(...seasons);
-
       const maxY = Math.max(1, ...data.flatMap((d) => [d.blue, d.red]));
       const yMax = niceCeil(maxY);
 
-      const xForSeason = (season) => {
-        if (xMax === xMin) return margin.left + innerWidth / 2;
-        return margin.left + ((season - xMin) / (xMax - xMin)) * innerWidth;
-      };
       const yForValue = (value) =>
         margin.top + innerHeight - (value / yMax) * innerHeight;
 
-      const pathForKey = (key) =>
-        data
-          .map((d, index) => {
-            const command = index === 0 ? "M" : "L";
-            const x = xForSeason(d.season);
-            const y = yForValue(d[key]);
-            return `${command} ${x.toFixed(2)} ${y.toFixed(2)}`;
-          })
-          .join(" ");
+      const maxShownSeasons = 8;
+      const seasons = Array.from({ length: maxShownSeasons }, (_, i) => i + 1);
+      const bySeason = new Map(data.map((d) => [d.season, d]));
+      const groupCount = seasons.length;
+      const groupWidth = groupCount > 0 ? innerWidth / groupCount : innerWidth;
+      const groupPadding = Math.min(14, Math.max(6, groupWidth * 0.12));
+      const barGap = Math.min(12, Math.max(6, groupWidth * 0.08));
+      const barWidth = Math.max(6, (groupWidth - groupPadding * 2 - barGap) / 2);
+      const bottomY = margin.top + innerHeight;
 
-      const pointsForKey = (key, color) =>
-        data
-          .map((d) => {
-            const x = xForSeason(d.season);
-            const y = yForValue(d[key]);
-            return `<circle cx="${x.toFixed(2)}" cy="${y.toFixed(
-              2
-            )}" r="3.5" fill="${color}" />`;
-          })
-          .join("");
+      const groupLeftForIndex = (index) => margin.left + index * groupWidth;
+      const blueXForIndex = (index) => groupLeftForIndex(index) + groupPadding;
+      const redXForIndex = (index) =>
+        blueXForIndex(index) + barWidth + barGap;
+      const centerXForIndex = (index) =>
+        groupLeftForIndex(index) + groupWidth / 2;
+
+      const barRect = (x, value, color, label) => {
+        const y = yForValue(value);
+        const h = Math.max(0, bottomY - y);
+        const rx = Math.min(6, Math.max(2, barWidth * 0.2));
+        return `<rect x="${x.toFixed(2)}" y="${y.toFixed(
+          2
+        )}" width="${barWidth.toFixed(2)}" height="${h.toFixed(
+          2
+        )}" rx="${rx}" fill="${color}">
+          <title>${label}: ${value}</title>
+        </rect>`;
+      };
 
       const yTickCount = 5;
       let yTicks = "";
@@ -406,16 +476,17 @@
       }
 
       let xTicks = "";
-      for (let s = xMin; s <= xMax; s++) {
-        const x = xForSeason(s);
-        xTicks += `<line x1="${x.toFixed(2)}" y1="${(
-          margin.top + innerHeight
-        ).toFixed(2)}" x2="${x.toFixed(2)}" y2="${(
-          margin.top + innerHeight + 6
-        ).toFixed(2)}" stroke="#888" />`;
-        xTicks += `<text x="${x.toFixed(2)}" y="${(
-          margin.top + innerHeight + 22
-        ).toFixed(2)}" text-anchor="middle" fill="#666" font-size="12">${s}</text>`;
+      for (let i = 0; i < seasons.length; i++) {
+        const s = seasons[i];
+        const x = centerXForIndex(i);
+        xTicks += `<line x1="${x.toFixed(2)}" y1="${bottomY.toFixed(
+          2
+        )}" x2="${x.toFixed(2)}" y2="${(bottomY + 6).toFixed(
+          2
+        )}" stroke="#888" />`;
+        xTicks += `<text x="${x.toFixed(2)}" y="${(bottomY + 22).toFixed(
+          2
+        )}" text-anchor="middle" fill="#666" font-size="12">${s}</text>`;
       }
 
       const axisX1 = margin.left;
@@ -429,6 +500,26 @@
       const legendX = vbWidth - margin.right - 180;
       const legendY = margin.top + 8;
 
+      let bars = "";
+      for (let i = 0; i < seasons.length; i++) {
+        const seasonNumber = seasons[i];
+        const d = bySeason.get(seasonNumber);
+        const blue = d ? d.blue : 0;
+        const red = d ? d.red : 0;
+        bars += barRect(
+          blueXForIndex(i),
+          blue,
+          blueColor,
+          `Season ${seasonNumber} Blueberries`
+        );
+        bars += barRect(
+          redXForIndex(i),
+          red,
+          redColor,
+          `Season ${seasonNumber} Raspberries`
+        );
+      }
+
       trendSvg.innerHTML = `
         <rect x="0" y="0" width="${vbWidth}" height="${vbHeight}" fill="white" />
         ${yTicks}
@@ -439,17 +530,76 @@
         <text x="${margin.left + innerWidth / 2}" y="${vbHeight - 12}" text-anchor="middle" fill="#333" font-size="14">Season</text>
         <text x="16" y="${margin.top + innerHeight / 2}" text-anchor="middle" fill="#333" font-size="14" transform="rotate(-90 16 ${margin.top + innerHeight / 2})">Berries</text>
 
-        <path d="${pathForKey("blue")}" fill="none" stroke="${blueColor}" stroke-width="3" />
-        <path d="${pathForKey("red")}" fill="none" stroke="${redColor}" stroke-width="3" />
-        ${pointsForKey("blue", blueColor)}
-        ${pointsForKey("red", redColor)}
+        ${bars}
 
         <rect x="${legendX}" y="${legendY - 12}" width="180" height="44" rx="8" fill="rgba(255,255,255,0.9)" stroke="rgba(0,0,0,0.08)" />
-        <line x1="${legendX + 14}" y1="${legendY}" x2="${legendX + 44}" y2="${legendY}" stroke="${blueColor}" stroke-width="3" />
+        <rect x="${legendX + 14}" y="${legendY - 7}" width="18" height="14" rx="3" fill="${blueColor}" />
         <text x="${legendX + 52}" y="${legendY + 4}" fill="#333" font-size="12">Blueberries</text>
-        <line x1="${legendX + 14}" y1="${legendY + 18}" x2="${legendX + 44}" y2="${legendY + 18}" stroke="${redColor}" stroke-width="3" />
+        <rect x="${legendX + 14}" y="${legendY + 11}" width="18" height="14" rx="3" fill="${redColor}" />
         <text x="${legendX + 52}" y="${legendY + 22}" fill="#333" font-size="12">Raspberries</text>
       `;
+    }
+
+    function clearOverlay() {
+      if (!animOverlay) return;
+      animOverlay.innerHTML = "";
+    }
+
+    async function tweenCounts(fromBlue, fromRed, toBlue, toRed, durationMs = 700) {
+      const start = performance.now();
+      const clamp01 = (t) => Math.max(0, Math.min(1, t));
+      const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+      return new Promise((resolve) => {
+        function frame(now) {
+          const t = clamp01((now - start) / durationMs);
+          const e = easeOutCubic(t);
+          const blue = Math.round(fromBlue + (toBlue - fromBlue) * e);
+          const red = Math.round(fromRed + (toRed - fromRed) * e);
+          updateGraph(blue, red);
+          if (t >= 1) resolve();
+          else requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      });
+    }
+
+    async function animateSeasonPassReproduction(survivorsBlue, survivorsRed, nextBlue, nextRed, nextTotal) {
+      appendLog(
+        `A season passes. Each berry left in your bag (not eaten by bears)\nproduces five new berries of the same colour,\nfor a total of ${nextTotal} for the next season.`
+      );
+      await sleep(300);
+      await tweenCounts(survivorsBlue, survivorsRed, nextBlue, nextRed, 800);
+      await sleep(120);
+    }
+
+    async function flyBerry(fromEl, toEl, berrySrc) {
+      if (!animOverlay || !fromEl || !toEl) return;
+      const fromRect = fromEl.getBoundingClientRect();
+      const toRect = toEl.getBoundingClientRect();
+      const startX = fromRect.left + fromRect.width / 2;
+      const startY = fromRect.top + fromRect.height / 2;
+      const endX = toRect.left + toRect.width / 2;
+      const endY = toRect.top + toRect.height / 2;
+
+      const dx = endX - startX;
+      const dy = endY - startY;
+
+      const node = document.createElement("div");
+      node.className = "fly-berry";
+      node.style.left = `${startX}px`;
+      node.style.top = `${startY}px`;
+      node.innerHTML = `<img src="${berrySrc}" alt="" /><div class="num">-1</div>`;
+      animOverlay.appendChild(node);
+
+      node.getBoundingClientRect();
+      requestAnimationFrame(() => {
+        node.style.transform = `translate(-50%, -50%) translate(${dx}px, ${dy}px) scale(0.85)`;
+        node.style.opacity = "0.15";
+      });
+
+      await sleep(280);
+      node.remove();
     }
 
     function updateInitialDisplays() {
@@ -466,7 +616,8 @@
       if (!state.started) {
         iconBlueQty.textContent = blue;
         iconRedQty.textContent = red;
-        iconBearQty.textContent = parseInt(bearInput.value, 10) || 4;
+        const previewBears = parseInt(bearInput.value, 10) || 4;
+        iconBearQty.textContent = previewBears;
       }
     }
 
@@ -492,11 +643,13 @@
       state.bears = bears;
       state.maxSeasons = maxSeasons;
       state.history = [];
+      state.animationRunning = false;
 
       historyBody.innerHTML = "";
       logDiv.textContent = "";
       seasonInfo.textContent = `Season 1 of ${state.maxSeasons}`;
       renderTrendGraph();
+      clearOverlay();
 
       addHistoryRow(state.season, state.total, state.blue, state.red);
       updateGraph(state.blue, state.red);
@@ -527,7 +680,7 @@
       let bluePercent = total > 0 ? (blue / total) * 100 : 0;
       let redPercent = total > 0 ? (red / total) * 100 : 0;
       // avoid rounding issues
-      if (bluePercent + redPercent !== 100) {
+      if (total > 0 && Math.abs(bluePercent + redPercent - 100) > 0.0001) {
         redPercent = 100 - bluePercent;
       }
       barBlue.style.width = bluePercent + "%";
@@ -543,48 +696,75 @@
       logDiv.scrollTop = logDiv.scrollHeight;
     }
 
-    // Bears eat: each bear eats 4 berries, prefers blue over red.
-    function runOneSeason() {
+    // Bears eat: each bear eats 4 berries per season, prefers blue over red.
+    async function runOneSeason(options = {}) {
+      const keepControlsDisabled = options.keepControlsDisabled === true;
+      if (!state.started) {
+        appendLog("Press “Start / Reset” to begin.");
+        return;
+      }
+      if (state.animationRunning) return;
       if (state.season > state.maxSeasons) {
         appendLog("All seasons already completed.");
         return;
       }
 
-      let blue = state.blue;
-      let red = state.red;
-      let total = blue + red;
-      const bears = state.bears;
+      state.animationRunning = true;
+      btnReset.disabled = true;
+      btnNextSeason.disabled = true;
+      btnRunAll.disabled = true;
 
-      appendLog(`\n=== Season ${state.season} ===`);
-      appendLog(`Start of season → Blue: ${blue}, Red: ${red}, Total: ${total}`);
+      try {
+        let blue = state.blue;
+        let red = state.red;
+        const bears = state.bears;
 
-      for (let b = 1; b <= bears; b++) {
-        let toEat = 4;
-        if (blue + red === 0) {
-          appendLog(`Bear ${b} finds no berries to eat.`);
-          break;
+        updateGraph(blue, red);
+
+        appendLog(`\n=== Season ${state.season} ===`);
+        appendLog(`Start of season → Blue: ${blue}, Red: ${red}, Total: ${blue + red}`);
+
+        for (let b = 1; b <= bears; b++) {
+          let toEat = berriesPerBearPerSeason;
+          let eatBlueTotal = 0;
+          let eatRedTotal = 0;
+
+          if (blue + red === 0) {
+            appendLog(`Bear ${b} finds no berries to eat.`);
+            break;
+          }
+
+          while (toEat > 0 && blue + red > 0) {
+            const eatBlue = blue > 0;
+            if (eatBlue) {
+              blue -= 1;
+              eatBlueTotal += 1;
+              await flyBerry(iconBlueImg, iconBearImg, "assets/blueberry.svg");
+            } else {
+              red -= 1;
+              eatRedTotal += 1;
+              await flyBerry(iconRedImg, iconBearImg, "assets/raspberry.svg");
+            }
+
+            toEat -= 1;
+            updateGraph(blue, red);
+            await sleep(60);
+          }
+
+          appendLog(
+            `Bear ${b} eats → Blue: ${eatBlueTotal}, Red: ${eatRedTotal}. Remaining → Blue: ${blue}, Red: ${red}.`
+          );
+
+          if (blue + red === 0) {
+            appendLog("All berries have been eaten this season!");
+            break;
+          }
+
+          await sleep(180);
         }
 
-        let eatBlue = Math.min(toEat, blue);
-        blue -= eatBlue;
-        toEat -= eatBlue;
-
-        let eatRed = Math.min(toEat, red);
-        red -= eatRed;
-        toEat -= eatRed;
-
-        appendLog(
-          `Bear ${b} eats → Blue: ${eatBlue}, Red: ${eatRed}. Remaining → Blue: ${blue}, Red: ${red}.`
-        );
-
-        if (blue + red === 0) {
-          appendLog("All berries have been eaten this season!");
-          break;
-        }
-      }
-
-      const survivorsBlue = blue;
-      const survivorsRed = red;
+        const survivorsBlue = blue;
+        const survivorsRed = red;
       const survivorsTotal = survivorsBlue + survivorsRed;
 
       appendLog(
@@ -603,64 +783,73 @@
         state.total = 0;
         addHistoryRow(state.season + 1, 0, 0, 0);
         updateGraph(0, 0);
-        btnNextSeason.disabled = true;
-        btnRunAll.disabled = true;
         seasonInfo.textContent = `Season ${state.season}: population extinct.`;
-        return;
       } else {
-        // Reproduction step:
+        // Reproduction step (no total limit):
         // - Each surviving berry produces 5 new berries of the same colour.
-        // - If the class uses a fixed "total per season" (e.g., 20), treat that as a teacher-replenished carry capacity.
-        const targetTotal = state.total;
-
         const producedBlue = survivorsBlue * 5;
         const producedRed = survivorsRed * 5;
         const producedTotal = producedBlue + producedRed;
 
-        if (producedTotal === targetTotal) {
-          nextBlue = producedBlue;
-          nextRed = producedRed;
-          appendLog(
-            `Reproduction → Each survivor makes 5.\nNext season → Blue: ${nextBlue}, Red: ${nextRed}, Total: ${producedTotal}.`
-          );
-        } else {
-          const fractionBlue = producedBlue / producedTotal;
-          nextBlue = Math.round(fractionBlue * targetTotal);
-          if (nextBlue < 0) nextBlue = 0;
-          if (nextBlue > targetTotal) nextBlue = targetTotal;
-          nextRed = targetTotal - nextBlue;
+        nextBlue = producedBlue;
+        nextRed = producedRed;
+        appendLog(
+          `Reproduction → Only berries left (not eaten) reproduce: each survivor makes 5.\nNext season → Blue: ${nextBlue}, Red: ${nextRed}, Total: ${producedTotal}.`
+        );
 
-          appendLog(
-            `Reproduction → Each survivor makes 5 (produced total: ${producedTotal}).\nTeacher replenishes/adjusts to ${targetTotal} berries, keeping similar ratio.\nNext season → Blue: ${nextBlue}, Red: ${nextRed}.`
-          );
+        await animateSeasonPassReproduction(survivorsBlue, survivorsRed, nextBlue, nextRed, producedTotal);
+        addHistoryRow(state.season + 1, producedTotal, nextBlue, nextRed);
+        state.blue = nextBlue;
+        state.red = nextRed;
+        state.total = producedTotal;
+        updateGraph(nextBlue, nextRed);
+
+        state.season += 1;
+
+	        if (state.season > state.maxSeasons) {
+	          seasonInfo.textContent = `Simulation finished at Season ${state.maxSeasons}.`;
+	        } else {
+	          seasonInfo.textContent = `Season ${state.season} of ${state.maxSeasons}`;
+	        }
+	      }
+	      } finally {
+	        state.animationRunning = false;
+	        if (!keepControlsDisabled) {
+	          btnReset.disabled = false;
+          if (state.total === 0 || state.season > state.maxSeasons) {
+            btnNextSeason.disabled = true;
+            btnRunAll.disabled = true;
+          } else {
+            btnNextSeason.disabled = false;
+            btnRunAll.disabled = false;
+          }
         }
-      }
-
-      addHistoryRow(state.season + 1, nextBlue + nextRed, nextBlue, nextRed);
-      state.blue = nextBlue;
-      state.red = nextRed;
-      updateGraph(nextBlue, nextRed);
-
-      state.season += 1;
-
-      if (state.season > state.maxSeasons) {
-        seasonInfo.textContent = `Simulation finished at Season ${state.maxSeasons}.`;
-        btnNextSeason.disabled = true;
-        btnRunAll.disabled = true;
-      } else {
-        seasonInfo.textContent = `Season ${state.season} of ${state.maxSeasons}`;
       }
     }
 
-    function runAllSeasons() {
-      while (!btnNextSeason.disabled && state.season <= state.maxSeasons) {
-        runOneSeason();
+    async function runAllSeasons() {
+      if (!state.started) {
+        appendLog("Press “Start / Reset” to begin.");
+        return;
       }
+      if (state.animationRunning) return;
+
+      btnReset.disabled = true;
+      btnNextSeason.disabled = true;
+      btnRunAll.disabled = true;
+
+      while (state.total !== 0 && state.season <= state.maxSeasons) {
+        await runOneSeason({ keepControlsDisabled: true });
+      }
+
+      btnReset.disabled = false;
+      btnNextSeason.disabled = state.total === 0 || state.season > state.maxSeasons;
+      btnRunAll.disabled = state.total === 0 || state.season > state.maxSeasons;
     }
 
     btnReset.addEventListener("click", resetGame);
-    btnNextSeason.addEventListener("click", runOneSeason);
-    btnRunAll.addEventListener("click", runAllSeasons);
+    btnNextSeason.addEventListener("click", () => runOneSeason());
+    btnRunAll.addEventListener("click", () => runAllSeasons());
 
     // Initialize displays on load
     updateInitialDisplays();
