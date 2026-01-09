@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Bear">
+  <defs>
+    <radialGradient id="f" cx="35%" cy="30%" r="80%">
+      <stop offset="0" stop-color="#d9a06f"/>
+      <stop offset="1" stop-color="#8a5127"/>
+    </radialGradient>
+  </defs>
+  <circle cx="36" cy="44" r="18" fill="#8a5127"/>
+  <circle cx="92" cy="44" r="18" fill="#8a5127"/>
+  <circle cx="36" cy="44" r="10" fill="#c98a58"/>
+  <circle cx="92" cy="44" r="10" fill="#c98a58"/>
+  <circle cx="64" cy="70" r="46" fill="url(#f)"/>
+  <circle cx="48" cy="66" r="6" fill="#1f1f1f"/>
+  <circle cx="80" cy="66" r="6" fill="#1f1f1f"/>
+  <path d="M64 76c-10 0-18 7-18 16 0 10 9 18 18 18s18-8 18-18c0-9-8-16-18-16Z" fill="#c98a58"/>
+  <path d="M64 78c-5 0-9 4-9 8 0 5 4 9 9 9s9-4 9-9c0-4-4-8-9-8Z" fill="#1f1f1f"/>
+  <path d="M58 96c2 3 4 5 6 5s4-2 6-5" fill="none" stroke="#1f1f1f" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="64" cy="70" r="46" fill="none" stroke="#5f3418" stroke-opacity="0.35" stroke-width="3"/>
+</svg>

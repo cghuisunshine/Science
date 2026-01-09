@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Blueberry">
+  <defs>
+    <radialGradient id="b" cx="38%" cy="32%" r="70%">
+      <stop offset="0" stop-color="#6aa4ff"/>
+      <stop offset="0.55" stop-color="#2f6dff"/>
+      <stop offset="1" stop-color="#1d3fb4"/>
+    </radialGradient>
+  </defs>
+  <circle cx="64" cy="72" r="44" fill="url(#b)"/>
+  <circle cx="48" cy="56" r="12" fill="#ffffff" opacity="0.22"/>
+  <path d="M64 18c-8 10-20 16-34 16 8 10 22 16 34 16 12 0 26-6 34-16-14 0-26-6-34-16Z" fill="#2f9e44"/>
+  <path d="M54 34c2 5 6 9 10 9 4 0 8-4 10-9-7 2-13 2-20 0Z" fill="#217a33"/>
+  <circle cx="64" cy="72" r="44" fill="none" stroke="#16308a" stroke-opacity="0.35" stroke-width="3"/>
+</svg>
