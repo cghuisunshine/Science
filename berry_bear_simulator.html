@@ -275,23 +275,6 @@
     <span class="small-note" id="seasonInfo"></span>
   </div>
 
-  <div class="panel">
-    <h2>Population Table</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Season</th>
-          <th>Total Berries</th>
-          <th>Blueberries</th>
-          <th>Raspberries</th>
-        </tr>
-      </thead>
-      <tbody id="historyBody">
-        <!-- rows will be added here -->
-      </tbody>
-    </table>
-  </div>
-
   <div class="graph-grid" aria-label="Graphs">
     <div class="graph-col">
       <div class="panel">
@@ -362,7 +345,6 @@
     const btnNextSeason = document.getElementById("btnNextSeason");
     const btnRunAll = document.getElementById("btnRunAll");
 
-    const historyBody = document.getElementById("historyBody");
     const seasonInfo = document.getElementById("seasonInfo");
 
     const barBlue = document.getElementById("barBlue");
@@ -645,7 +627,6 @@
       state.history = [];
       state.animationRunning = false;
 
-      historyBody.innerHTML = "";
       logDiv.textContent = "";
       seasonInfo.textContent = `Season 1 of ${state.maxSeasons}`;
       renderTrendGraph();
@@ -663,14 +644,6 @@
     }
 
     function addHistoryRow(season, total, blue, red) {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${season}</td>
-        <td>${total}</td>
-        <td>${blue}</td>
-        <td>${red}</td>
-      `;
-      historyBody.appendChild(row);
       state.history.push({ season, total, blue, red });
       renderTrendGraph();
     }
