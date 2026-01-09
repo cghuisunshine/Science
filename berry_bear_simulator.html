@@ -110,6 +110,18 @@
       font-size: 0.8rem;
       color: #444;
     }
+    .trend-chart {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 0.5rem;
+      background: linear-gradient(#fff, #fff) padding-box,
+        linear-gradient(180deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.02)) border-box;
+    }
+    #trendSvg {
+      width: 100%;
+      height: 280px;
+      display: block;
+    }
     #log {
       font-size: 0.85rem;
       max-height: 180px;
@@ -267,6 +279,14 @@
   </div>
 
   <div class="panel">
+    <h2>Season Trend Graph</h2>
+    <div class="small-note">X-axis: season. Y-axis: number of berries (blueberries vs raspberries).</div>
+    <div class="trend-chart" aria-label="Berries by season graph">
+      <svg id="trendSvg" viewBox="0 0 760 300" role="img" aria-label="Blueberries and raspberries by season"></svg>
+    </div>
+  </div>
+
+  <div class="panel">
     <h2>What the Bears Did (Log)</h2>
     <div id="log">Press “Start / Reset” to begin.</div>
   </div>
@@ -294,6 +314,7 @@
     const iconBlueQty = document.getElementById("iconBlueQty");
     const iconRedQty = document.getElementById("iconRedQty");
     const iconBearQty = document.getElementById("iconBearQty");
+    const trendSvg = document.getElementById("trendSvg");
 
     let state = {
       started: false,
@@ -305,6 +326,131 @@
       bears: 4,
       history: []
     };
+
+    function niceCeil(value) {
+      if (!Number.isFinite(value) || value <= 0) return 1;
+      if (value <= 10) return 10;
+      const pow10 = Math.pow(10, Math.floor(Math.log10(value)));
+      const normalized = value / pow10;
+      const nice =
+        normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10;
+      return nice * pow10;
+    }
+
+    function renderTrendGraph() {
+      if (!trendSvg) return;
+
+      const data = state.history;
+      if (!data.length) {
+        trendSvg.innerHTML =
+          '<text x="380" y="150" text-anchor="middle" fill="#777" font-size="16">Press “Start / Reset” to plot seasons.</text>';
+        return;
+      }
+
+      const vbWidth = 760;
+      const vbHeight = 300;
+      const margin = { top: 18, right: 20, bottom: 46, left: 56 };
+      const innerWidth = vbWidth - margin.left - margin.right;
+      const innerHeight = vbHeight - margin.top - margin.bottom;
+
+      const seasons = data.map((d) => d.season);
+      const xMin = Math.min(...seasons);
+      const xMax = Math.max(...seasons);
+
+      const maxY = Math.max(1, ...data.flatMap((d) => [d.blue, d.red]));
+      const yMax = niceCeil(maxY);
+
+      const xForSeason = (season) => {
+        if (xMax === xMin) return margin.left + innerWidth / 2;
+        return margin.left + ((season - xMin) / (xMax - xMin)) * innerWidth;
+      };
+      const yForValue = (value) =>
+        margin.top + innerHeight - (value / yMax) * innerHeight;
+
+      const pathForKey = (key) =>
+        data
+          .map((d, index) => {
+            const command = index === 0 ? "M" : "L";
+            const x = xForSeason(d.season);
+            const y = yForValue(d[key]);
+            return `${command} ${x.toFixed(2)} ${y.toFixed(2)}`;
+          })
+          .join(" ");
+
+      const pointsForKey = (key, color) =>
+        data
+          .map((d) => {
+            const x = xForSeason(d.season);
+            const y = yForValue(d[key]);
+            return `<circle cx="${x.toFixed(2)}" cy="${y.toFixed(
+              2
+            )}" r="3.5" fill="${color}" />`;
+          })
+          .join("");
+
+      const yTickCount = 5;
+      let yTicks = "";
+      for (let i = 0; i <= yTickCount; i++) {
+        const v = (yMax / yTickCount) * i;
+        const y = yForValue(v);
+        yTicks += `<line x1="${margin.left}" y1="${y.toFixed(
+          2
+        )}" x2="${(vbWidth - margin.right).toFixed(
+          2
+        )}" y2="${y.toFixed(2)}" stroke="rgba(0,0,0,0.08)" />`;
+        yTicks += `<text x="${margin.left - 10}" y="${(
+          y + 4
+        ).toFixed(2)}" text-anchor="end" fill="#666" font-size="12">${Math.round(
+          v
+        )}</text>`;
+      }
+
+      let xTicks = "";
+      for (let s = xMin; s <= xMax; s++) {
+        const x = xForSeason(s);
+        xTicks += `<line x1="${x.toFixed(2)}" y1="${(
+          margin.top + innerHeight
+        ).toFixed(2)}" x2="${x.toFixed(2)}" y2="${(
+          margin.top + innerHeight + 6
+        ).toFixed(2)}" stroke="#888" />`;
+        xTicks += `<text x="${x.toFixed(2)}" y="${(
+          margin.top + innerHeight + 22
+        ).toFixed(2)}" text-anchor="middle" fill="#666" font-size="12">${s}</text>`;
+      }
+
+      const axisX1 = margin.left;
+      const axisY1 = margin.top + innerHeight;
+      const axisX2 = vbWidth - margin.right;
+      const axisY2 = margin.top;
+
+      const blueColor = "#4f8df5";
+      const redColor = "#e55b5b";
+
+      const legendX = vbWidth - margin.right - 180;
+      const legendY = margin.top + 8;
+
+      trendSvg.innerHTML = `
+        <rect x="0" y="0" width="${vbWidth}" height="${vbHeight}" fill="white" />
+        ${yTicks}
+        <line x1="${axisX1}" y1="${axisY1}" x2="${axisX2}" y2="${axisY1}" stroke="#333" />
+        <line x1="${axisX1}" y1="${axisY1}" x2="${axisX1}" y2="${axisY2}" stroke="#333" />
+        ${xTicks}
+
+        <text x="${margin.left + innerWidth / 2}" y="${vbHeight - 12}" text-anchor="middle" fill="#333" font-size="14">Season</text>
+        <text x="16" y="${margin.top + innerHeight / 2}" text-anchor="middle" fill="#333" font-size="14" transform="rotate(-90 16 ${margin.top + innerHeight / 2})">Berries</text>
+
+        <path d="${pathForKey("blue")}" fill="none" stroke="${blueColor}" stroke-width="3" />
+        <path d="${pathForKey("red")}" fill="none" stroke="${redColor}" stroke-width="3" />
+        ${pointsForKey("blue", blueColor)}
+        ${pointsForKey("red", redColor)}
+
+        <rect x="${legendX}" y="${legendY - 12}" width="180" height="44" rx="8" fill="rgba(255,255,255,0.9)" stroke="rgba(0,0,0,0.08)" />
+        <line x1="${legendX + 14}" y1="${legendY}" x2="${legendX + 44}" y2="${legendY}" stroke="${blueColor}" stroke-width="3" />
+        <text x="${legendX + 52}" y="${legendY + 4}" fill="#333" font-size="12">Blueberries</text>
+        <line x1="${legendX + 14}" y1="${legendY + 18}" x2="${legendX + 44}" y2="${legendY + 18}" stroke="${redColor}" stroke-width="3" />
+        <text x="${legendX + 52}" y="${legendY + 22}" fill="#333" font-size="12">Raspberries</text>
+      `;
+    }
 
     function updateInitialDisplays() {
       const total = parseInt(totalInput.value, 10) || 20;
@@ -350,6 +496,7 @@
       historyBody.innerHTML = "";
       logDiv.textContent = "";
       seasonInfo.textContent = `Season 1 of ${state.maxSeasons}`;
+      renderTrendGraph();
 
       addHistoryRow(state.season, state.total, state.blue, state.red);
       updateGraph(state.blue, state.red);
@@ -372,6 +519,7 @@
       `;
       historyBody.appendChild(row);
       state.history.push({ season, total, blue, red });
+      renderTrendGraph();
     }
 
     function updateGraph(blue, red) {
@@ -453,7 +601,7 @@
         state.blue = 0;
         state.red = 0;
         state.total = 0;
-        addHistoryRow(state.season, 0, 0, 0);
+        addHistoryRow(state.season + 1, 0, 0, 0);
         updateGraph(0, 0);
         btnNextSeason.disabled = true;
         btnRunAll.disabled = true;
@@ -488,7 +636,7 @@
         }
       }
 
-      addHistoryRow(state.season, nextBlue + nextRed, nextBlue, nextRed);
+      addHistoryRow(state.season + 1, nextBlue + nextRed, nextBlue, nextRed);
       state.blue = nextBlue;
       state.red = nextRed;
       updateGraph(nextBlue, nextRed);
@@ -516,6 +664,7 @@
 
     // Initialize displays on load
     updateInitialDisplays();
+    renderTrendGraph();
   </script>
 </body>
 </html>
