@@ -256,6 +256,43 @@
       color: var(--text-muted);
     }
 
+    /* Video box */
+    .video-box {
+      margin-top: 12px;
+      background: rgba(2,6,23,0.55);
+      border: 1px solid rgba(148,163,184,0.22);
+      border-radius: var(--radius-lg);
+      padding: 10px 11px 9px;
+    }
+    .video-title {
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .video-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 6px;
+    }
+    .video-list a {
+      color: var(--text-main);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(56,189,248,0.35);
+    }
+    .video-list a:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(56,189,248,0.75);
+    }
+    .video-meta {
+      color: var(--text-muted);
+      font-size: 0.86rem;
+      margin-left: 6px;
+    }
+
     /* English / Chinese content blocks */
     .cn {
       display: none;
@@ -431,6 +468,31 @@
         DNA 是几乎所有生物用来储存遗传信息的通用分子。<strong>统一性</strong> 来自“大家都用 DNA”，
         <strong>多样性</strong> 则来自“每个物种、每个个体的 DNA 序列不同”，因此形态、性状和生态位也不同。
       </p>
+
+      <div class="video-box">
+        <div class="video-title">
+          <span class="ui-en">Suggested videos</span>
+          <span class="ui-cn">推荐视频</span>
+        </div>
+        <ul class="video-list">
+          <li>
+            <a href="https://www.youtube.com/watch?v=8m6hHRlKwxY&vl=en" target="_blank" rel="noopener noreferrer">
+              DNA, Chromosomes, Genes & Traits: Intro to Heredity (Amoeba Sisters)
+            </a>
+            <span class="video-meta">DNA→chromosomes→genes→traits</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=8kK2zwjRV0M" target="_blank" rel="noopener noreferrer">
+              DNA Structure and Replication (Crash Course Biology #10)
+            </a>
+            <span class="video-meta">big-picture unity & copying</span>
+          </li>
+        </ul>
+        <p class="cn small">
+          建议：先看“概览型”视频（DNA→染色体→基因→性状），再看 DNA 结构与复制，能更快理解“统一性与多样性”的逻辑。
+        </p>
+      </div>
+
       <div class="pill-row">
         <span class="pill">Unity · 统一性</span>
         <span class="pill">Diversity · 多样性</span>
@@ -464,6 +526,48 @@
       <p class="tagline en-block">
         DNA structure → chromosomes → replication → genetic variation → biodiversity.
       </p>
+
+      <div class="video-box">
+        <div class="video-title">
+          <span class="ui-en">Suggested videos</span>
+          <span class="ui-cn">推荐视频</span>
+        </div>
+        <ul class="video-list">
+          <li>
+            <a href="https://www.youtube.com/watch?v=8m6hHRlKwxY&vl=en" target="_blank" rel="noopener noreferrer">
+              DNA, Chromosomes, Genes & Traits: Intro to Heredity (Amoeba Sisters)
+            </a>
+            <span class="video-meta">DNA basics + chromosomes</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=c57rjL-30rs" target="_blank" rel="noopener noreferrer">
+              Chromosomes and Karyotypes (UPDATED) (Amoeba Sisters)
+            </a>
+            <span class="video-meta">chromatin → chromosomes → karyotype</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=Qqe4thU-os8" target="_blank" rel="noopener noreferrer">
+              DNA Replication (Updated) (Amoeba Sisters)
+            </a>
+            <span class="video-meta">helicase / polymerase / leading vs lagging</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=oefAI2x2CQM" target="_blank" rel="noopener noreferrer">
+              Protein Synthesis (Updated) (Amoeba Sisters)
+            </a>
+            <span class="video-meta">DNA→RNA→protein (transcription & translation)</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=8kK2zwjRV0M" target="_blank" rel="noopener noreferrer">
+              DNA Structure and Replication (Crash Course Biology #10)
+            </a>
+            <span class="video-meta">fast overview + structure</span>
+          </li>
+        </ul>
+        <p class="cn small">
+          观看顺序建议：先“DNA/染色体概览”→ 再“染色体与核型”→ 再“DNA 复制”→ 最后“蛋白质合成”。
+        </p>
+      </div>
 
       <div class="key-ideas">
         <div>
@@ -547,6 +651,54 @@
         Mendel’s peas → genes &amp; alleles → Punnett squares → dominance patterns → sex-linked traits.
       </p>
 
+      <div class="video-box">
+        <div class="video-title">
+          <span class="ui-en">Suggested videos</span>
+          <span class="ui-cn">推荐视频</span>
+        </div>
+        <ul class="video-list">
+          <li>
+            <a href="https://www.youtube.com/watch?v=qmwZjIibylQ" target="_blank" rel="noopener noreferrer">
+              Heredity (Crash Course Biology #9)
+            </a>
+            <span class="video-meta">genes, alleles, inheritance overview</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=pv3Kj0UjiLE" target="_blank" rel="noopener noreferrer">
+              Alleles and Genes (Amoeba Sisters)
+            </a>
+            <span class="video-meta">clear gene vs allele definitions</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=i-0rSv6oxSY" target="_blank" rel="noopener noreferrer">
+              Monohybrids and the Punnett Square (Amoeba Sisters)
+            </a>
+            <span class="video-meta">Punnett square practice</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=YJHGfbW55l0" target="_blank" rel="noopener noreferrer">
+              Incomplete Dominance, Codominance, Polygenic Traits & Epistasis (Amoeba Sisters)
+            </a>
+            <span class="video-meta">beyond simple dominance</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=dN9SZHO6Wjg" target="_blank" rel="noopener noreferrer">
+              Punnett Squares and Sex-Linked Traits (UPDATED) (Amoeba Sisters)
+            </a>
+            <span class="video-meta">X-linked Punnett squares</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=qCLmR9-YY7o" target="_blank" rel="noopener noreferrer">
+              Meiosis: Where the Sex Starts (Crash Course Biology #13)
+            </a>
+            <span class="video-meta">meiosis + why gametes carry one allele</span>
+          </li>
+        </ul>
+        <p class="cn small">
+          若要对应课堂练习：先看“Allele vs Gene”，再看“Punnett square（单性状）”，最后用“伴性遗传”视频练 X 连锁题。
+        </p>
+      </div>
+
       <div class="key-ideas">
         <div>
           <div class="key-title">
@@ -628,6 +780,42 @@
         Mutation creates variation; selection filters it; environments &amp; humans decide which traits persist.
       </p>
 
+      <div class="video-box">
+        <div class="video-title">
+          <span class="ui-en">Suggested videos</span>
+          <span class="ui-cn">推荐视频</span>
+        </div>
+        <ul class="video-list">
+          <li>
+            <a href="https://www.youtube.com/watch?v=aTftyFboC_M" target="_blank" rel="noopener noreferrer">
+              Natural Selection (Crash Course Biology #14)
+            </a>
+            <span class="video-meta">core principles</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=UjMn4oHfYL4" target="_blank" rel="noopener noreferrer">
+              Mechanisms that Increase Genetic Variation (Bozeman Science)
+            </a>
+            <span class="video-meta">variation sources → selection can act</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=WhFKPaRnTdQ" target="_blank" rel="noopener noreferrer">
+              Population Genetics: When Darwin Met Mendel (Crash Course Biology #18)
+            </a>
+            <span class="video-meta">allele frequencies & populations</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=qgTeDS2mNko" target="_blank" rel="noopener noreferrer">
+              Artificial Selection (Selective Breeding) (Bozeman Science)
+            </a>
+            <span class="video-meta">humans “choose” traits</span>
+          </li>
+        </ul>
+        <p class="cn small">
+          用“逻辑链”看：先弄清楚“变异从哪里来”（variation），再看“自然选择怎么筛选”（selection），最后到“种群层面如何变化”（population genetics）。
+        </p>
+      </div>
+
       <div class="key-ideas">
         <div>
           <div class="key-title">
@@ -707,6 +895,43 @@
       <p class="tagline en-block">
         From gene cloning and GMOs to gene therapy and stem cells: powerful tools, real benefits, real risks.
       </p>
+
+      <div class="video-box">
+        <div class="video-title">
+          <span class="ui-en">Suggested videos</span>
+          <span class="ui-cn">推荐视频</span>
+        </div>
+        <ul class="video-list">
+          <li>
+            <a href="https://www.youtube.com/watch?v=CDw4WPng2iE" target="_blank" rel="noopener noreferrer">
+              Genetic Engineering (Amoeba Sisters)
+            </a>
+            <span class="video-meta">intro to biotech tools & ideas</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=yYIZgS-L5Sc" target="_blank" rel="noopener noreferrer">
+              Molecular Biology (Bozeman Science)
+            </a>
+            <span class="video-meta">restriction enzymes, plasmids, PCR (overview)</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=OZyFX9megs8" target="_blank" rel="noopener noreferrer">
+              AP Biology Lab 6: Molecular Biology (Bozeman Science)
+            </a>
+            <span class="video-meta">transformation + gel electrophoresis</span>
+          </li>
+          <li>
+            <a href="https://www.khanacademy.org/science/ap-biology/gene-expression-and-regulation/biotechnology/v/the-polymerase-chain-reaction-pcr"
+               target="_blank" rel="noopener noreferrer">
+              PCR (Polymerase Chain Reaction) (Khan Academy)
+            </a>
+            <span class="video-meta">DNA copying for biotech</span>
+          </li>
+        </ul>
+        <p class="cn small">
+          如果你要做“实验室技能”导入：建议先看 PCR（为什么能复制特定片段），再看分子生物学/实验室流程（质粒转化、凝胶电泳）。
+        </p>
+      </div>
 
       <div class="key-ideas">
         <div>
@@ -802,6 +1027,42 @@
         学完本单元，你应该可以在四个层次之间自由切换思考：
         <strong>DNA → 基因 → 个体 → 种群与生态系统</strong>。
       </p>
+
+      <div class="video-box">
+        <div class="video-title">
+          <span class="ui-en">Unit review videos (fast recap)</span>
+          <span class="ui-cn">单元复习视频（快速回顾）</span>
+        </div>
+        <ul class="video-list">
+          <li>
+            <a href="https://www.youtube.com/watch?v=8kK2zwjRV0M" target="_blank" rel="noopener noreferrer">
+              DNA Structure and Replication (Crash Course Biology #10)
+            </a>
+            <span class="video-meta">DNA level</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=qmwZjIibylQ" target="_blank" rel="noopener noreferrer">
+              Heredity (Crash Course Biology #9)
+            </a>
+            <span class="video-meta">genes & individuals</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=aTftyFboC_M" target="_blank" rel="noopener noreferrer">
+              Natural Selection (Crash Course Biology #14)
+            </a>
+            <span class="video-meta">populations over time</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=CDw4WPng2iE" target="_blank" rel="noopener noreferrer">
+              Genetic Engineering (Amoeba Sisters)
+            </a>
+            <span class="video-meta">biotech & society</span>
+          </li>
+        </ul>
+        <p class="cn small">
+          复习策略：用 4 个视频对应 4 个层次（DNA / 基因与个体 / 种群进化 / 生物技术），再回到本页做概念图与问题反思。
+        </p>
+      </div>
 
       <div class="key-ideas">
         <div>
