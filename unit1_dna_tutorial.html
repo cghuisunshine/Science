@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en" data-lang-mode="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Unit 1 – DNA: Unity and Diversity of Life (EN / EN+中文 / 中文)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-alt: #020617;
+      --card-bg: #0b1220;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.15);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --shadow-soft: 0 18px 40px rgba(15,23,42,0.6);
+      --transition-fast: 0.18s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 45%, #000 100%);
+      color: var(--text-main);
+      line-height: 1.7;
+      padding: 24px 12px 40px;
+    }
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+    }
+
+    .unit-label {
+      font-size: 0.85rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 3vw, 2.4rem);
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      max-width: 46rem;
+    }
+
+    .top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      padding: 3px;
+      background: rgba(15,23,42,0.9);
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.86rem;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .lang-btn span.flag {
+      font-size: 1rem;
+    }
+
+    .lang-btn.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    nav {
+      margin-top: 18px;
+      padding: 10px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, rgba(15,23,42,0.95), rgba(8,47,73,0.85));
+      border: 1px solid rgba(148,163,184,0.18);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .nav-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .nav-links a {
+      font-size: 0.83rem;
+      text-decoration: none;
+      color: var(--text-muted);
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: rgba(15,23,42,0.7);
+      transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+      background: rgba(15,23,42,0.4);
+      border-color: rgba(148,163,184,0.5);
+      transform: translateY(-1px);
+    }
+
+    main {
+      margin-top: 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    section.unit-block {
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.08), rgba(15,23,42,0.96));
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148,163,184,0.2);
+      padding: 20px 18px 18px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    section.unit-block.compact {
+      padding: 18px 16px 16px;
+    }
+
+    .section-kicker {
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    section.unit-block h2 {
+      font-size: 1.35rem;
+      margin-bottom: 4px;
+    }
+
+    section.unit-block h3 {
+      font-size: 1.08rem;
+      margin: 14px 0 4px;
+    }
+
+    .tagline {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 6px 0 8px;
+    }
+
+    .pill {
+      font-size: 0.74rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      color: var(--text-muted);
+      background: rgba(15,23,42,0.8);
+    }
+
+    p {
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+
+    ul {
+      margin: 4px 0 8px 1.1rem;
+      font-size: 0.93rem;
+    }
+
+    li + li {
+      margin-top: 2px;
+    }
+
+    .key-ideas {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .key-ideas > div {
+      background: rgba(15,23,42,0.9);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(31,41,55,0.9);
+      padding: 10px 11px 9px;
+    }
+
+    .key-title {
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .key-terms {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .term {
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(55,65,81,0.9);
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    /* English / Chinese content blocks */
+    .cn {
+      display: none;
+      color: #bfdbfe;
+      font-size: 0.9rem;
+      margin-top: 2px;
+    }
+    .cn.small {
+      font-size: 0.82rem;
+    }
+
+    .en-block { }
+
+    /* UI bilingual spans */
+    .ui-cn {
+      display: none;
+      margin-left: 4px;
+    }
+
+    /* MODE RULES */
+    /* English only */
+    [data-lang-mode="en"] .cn {
+      display: none;
+    }
+    [data-lang-mode="en"] .en-block {
+      display: block;
+    }
+    [data-lang-mode="en"] .ui-en {
+      display: inline;
+    }
+    [data-lang-mode="en"] .ui-cn {
+      display: none;
+    }
+
+    /* English + Chinese */
+    [data-lang-mode="bilingual"] .cn {
+      display: block;
+    }
+    [data-lang-mode="bilingual"] .en-block {
+      display: block;
+    }
+    [data-lang-mode="bilingual"] .ui-en {
+      display: inline;
+    }
+    [data-lang-mode="bilingual"] .ui-cn {
+      display: inline;
+    }
+
+    /* Chinese only */
+    [data-lang-mode="zh"] .cn {
+      display: block;
+    }
+    [data-lang-mode="zh"] .en-block {
+      display: none;
+    }
+    [data-lang-mode="zh"] .ui-en {
+      display: none;
+    }
+    [data-lang-mode="zh"] .ui-cn {
+      display: inline;
+    }
+
+    .footer-note {
+      margin-top: 10px;
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 10px 32px;
+      }
+      .key-ideas {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      section.unit-block {
+        padding: 16px 14px 14px;
+      }
+      h1 {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="unit-label">
+      <span class="ui-en">Unit 1 · DNA &amp; Heredity</span>
+      <span class="ui-cn">单元 1 · DNA 与遗传</span>
+    </div>
+    <h1>
+      <span class="ui-en">DNA: Foundation of Unity and Diversity of Life</span>
+      <span class="ui-cn">DNA：生命统一性与多样性的基础</span>
+    </h1>
+    <p class="subtitle en-block">
+      This tutorial summarizes all of Unit 1 (Topics 1.1–1.4), with an option to view
+      <strong>English only</strong>, <strong>English + Chinese</strong>, or <strong>Chinese only</strong>.
+    </p>
+    <p class="subtitle cn small">
+      本页汇总整个单元 1（1.1–1.4），可以切换为「纯英文」「英中对照」或「仅中文」三种模式。
+    </p>
+
+    <div class="top-bar">
+      <div class="lang-switch" aria-label="Language mode switch">
+        <button class="lang-btn active" data-mode="en">
+          <span class="flag">🇬🇧</span>
+          <span>English</span>
+        </button>
+        <button class="lang-btn" data-mode="bilingual">
+          <span class="flag">🇬🇧🇨🇳</span>
+          <span>English + 中文</span>
+        </button>
+        <button class="lang-btn" data-mode="zh">
+          <span class="flag">🇨🇳</span>
+          <span>仅中文</span>
+        </button>
+      </div>
+
+      <nav>
+        <div class="nav-title">
+          <span class="ui-en">Jump to</span>
+          <span class="ui-cn">跳转到</span>
+        </div>
+        <div class="nav-links">
+          <a href="#overview">
+            <span class="ui-en">Essential Question</span>
+            <span class="ui-cn">核心问题</span>
+          </a>
+          <a href="#topic-11">
+            <span class="ui-en">Topic 1.1 · DNA &amp; Variation</span>
+            <span class="ui-cn">1.1 · DNA 与变异</span>
+          </a>
+          <a href="#topic-12">
+            <span class="ui-en">Topic 1.2 · Heredity</span>
+            <span class="ui-cn">1.2 · 遗传规律</span>
+          </a>
+          <a href="#topic-13">
+            <span class="ui-en">Topic 1.3 · Selection</span>
+            <span class="ui-cn">1.3 · 选择与进化</span>
+          </a>
+          <a href="#topic-14">
+            <span class="ui-en">Topic 1.4 · Biotechnology</span>
+            <span class="ui-cn">1.4 · 生物技术</span>
+          </a>
+          <a href="#wrap-up">
+            <span class="ui-en">Summary &amp; Review</span>
+            <span class="ui-cn">总结与复习</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Overview -->
+    <section class="unit-block" id="overview">
+      <div class="section-kicker">
+        <span class="ui-en">Essential Question</span>
+        <span class="ui-cn">核心问题</span>
+      </div>
+      <h2>
+        <span class="ui-en">How is DNA the foundation for unity and diversity of living things?</span>
+        <span class="ui-cn">为什么说 DNA 是生命统一性与多样性的基础？</span>
+      </h2>
+      <p class="en-block">
+        DNA is the universal molecule that stores hereditary information in almost all living things.
+        Because all organisms use DNA, we see <strong>unity</strong> in cellular processes; because DNA
+        sequences differ, we see <strong>diversity</strong> in traits, species, and ecosystems.
+      </p>
+      <p class="cn">
+        DNA 是几乎所有生物用来储存遗传信息的通用分子。<strong>统一性</strong> 来自“大家都用 DNA”，
+        <strong>多样性</strong> 则来自“每个物种、每个个体的 DNA 序列不同”，因此形态、性状和生态位也不同。
+      </p>
+      <div class="pill-row">
+        <span class="pill">Unity · 统一性</span>
+        <span class="pill">Diversity · 多样性</span>
+        <span class="pill">Hereditary Information · 遗传信息</span>
+      </div>
+      <p class="en-block">
+        Unit 1 builds this story step by step:
+      </p>
+      <ul class="en-block">
+        <li><strong>Topic 1.1</strong> – What DNA is and how it is organized into chromosomes.</li>
+        <li><strong>Topic 1.2</strong> – How genes and alleles are inherited from parents to offspring.</li>
+        <li><strong>Topic 1.3</strong> – How natural and artificial selection change populations over time.</li>
+        <li><strong>Topic 1.4</strong> – How humans can read, copy, and modify DNA using biotechnology.</li>
+      </ul>
+      <p class="cn small">
+        本单元按逻辑展开：1.1 讲 DNA 与染色体结构；1.2 讲基因如何遗传；
+        1.3 讲自然选择与人工选择如何改变种群；1.4 讲人类如何利用生物技术“读、改、用” DNA。
+      </p>
+    </section>
+
+    <!-- Topic 1.1 -->
+    <section class="unit-block" id="topic-11">
+      <div class="section-kicker">
+        <span class="ui-en">Topic 1.1</span>
+        <span class="ui-cn">1.1 主题</span>
+      </div>
+      <h2>
+        <span class="ui-en">How does an understanding of DNA help us investigate living things?</span>
+        <span class="ui-cn">理解 DNA 如何帮助我们研究生物？</span>
+      </h2>
+      <p class="tagline en-block">
+        DNA structure → chromosomes → replication → genetic variation → biodiversity.
+      </p>
+
+      <div class="key-ideas">
+        <div>
+          <div class="key-title">
+            <span class="ui-en">Key Ideas</span>
+            <span class="ui-cn">关键概念</span>
+          </div>
+          <ul class="en-block">
+            <li>DNA is a long molecule made of many nucleotides arranged in a specific order.</li>
+            <li>The double helix with complementary base pairing (A–T, C–G) allows DNA to be copied accurately.</li>
+            <li>DNA wraps around proteins to form chromatin and condenses into chromosomes.</li>
+            <li>Each chromosome carries many genes; different alleles lead to variation within a species.</li>
+            <li>Faithful DNA replication passes genetic information from cell to cell and from generation to generation.</li>
+          </ul>
+          <p class="cn small">
+            关键概念：DNA 是由许多核苷酸按特定顺序连接而成的长链分子；双螺旋+碱基互补配对
+            （A–T，C–G）保证复制的准确；DNA 缠绕蛋白形成染色质，并在分裂时压缩成染色体；
+            每条染色体上有许多基因，同一基因的不同等位基因导致种内差异；
+            精确的 DNA 复制让遗传信息在细胞和世代之间传递。
+          </p>
+        </div>
+        <div>
+          <div class="key-title">
+            <span class="ui-en">Key Terms</span>
+            <span class="ui-cn">重要术语</span>
+          </div>
+          <div class="key-terms">
+            <span class="term">DNA</span>
+            <span class="term">nucleotide</span>
+            <span class="term">nitrogenous base</span>
+            <span class="term">complementary bases</span>
+            <span class="term">chromatin</span>
+            <span class="term">chromosome</span>
+            <span class="term">gene</span>
+            <span class="term">allele</span>
+            <span class="term">homologous chromosome</span>
+            <span class="term">karyotype</span>
+            <span class="term">species</span>
+            <span class="term">population</span>
+          </div>
+          <p class="cn small">
+            重要术语：核苷酸、含氮碱基、互补碱基、染色质、染色体、基因、等位基因、
+            同源染色体、核型、物种、种群等。
+          </p>
+        </div>
+      </div>
+
+      <h3 class="en-block">From DNA to Chromosomes</h3>
+      <p class="en-block">
+        In human cells, about 2 metres of DNA are packed into a nucleus only a few micrometres across.
+        DNA coils around proteins, forming chromatin fibres that condense into visible chromosomes during cell division.
+      </p>
+      <p class="cn small">
+        人类每个细胞有大约 2 米长的 DNA，却被装进直径只有几微米的细胞核中。
+        DNA 缠绕在蛋白质上形成染色质纤维，在细胞分裂时进一步缠绕压缩成可见的染色体。
+      </p>
+
+      <h3 class="en-block">DNA Replication and Protein Construction</h3>
+      <p class="en-block">
+        Before a cell divides, DNA replicates so each daughter cell receives a complete genome.
+        Later, segments of DNA (genes) are transcribed and translated into proteins, which build cell structures
+        and carry out functions.
+      </p>
+      <p class="cn small">
+        细胞分裂前必须复制 DNA，让两个子细胞都得到一套完整基因组。
+        之后，基因先被转录成 RNA，再被翻译成蛋白质；蛋白质构成细胞结构，也执行大部分功能。
+      </p>
+    </section>
+
+    <!-- Topic 1.2 -->
+    <section class="unit-block" id="topic-12">
+      <div class="section-kicker">
+        <span class="ui-en">Topic 1.2</span>
+        <span class="ui-cn">1.2 主题</span>
+      </div>
+      <h2>
+        <span class="ui-en">How is hereditary information passed from one generation to the next?</span>
+        <span class="ui-cn">遗传信息是如何在世代之间传递的？</span>
+      </h2>
+      <p class="tagline en-block">
+        Mendel’s peas → genes &amp; alleles → Punnett squares → dominance patterns → sex-linked traits.
+      </p>
+
+      <div class="key-ideas">
+        <div>
+          <div class="key-title">
+            <span class="ui-en">Key Ideas</span>
+            <span class="ui-cn">关键概念</span>
+          </div>
+          <ul class="en-block">
+            <li>Genes are segments of DNA that code for traits; different versions are called alleles.</li>
+            <li>During meiosis, homologous chromosomes (and their alleles) separate, so each gamete gets one allele per gene.</li>
+            <li>Punnett squares model how alleles combine at fertilization and predict offspring ratios.</li>
+            <li>Dominance patterns include complete dominance, incomplete dominance, codominance, and sex-linked inheritance.</li>
+          </ul>
+          <p class="cn small">
+            关键概念：基因是决定性状的 DNA 片段，不同版本叫等位基因；
+            在减数分裂时，同源染色体分离，等位基因随之分开，每个配子只带其中一个；
+            用潘尼特（Punnett）方格可模拟受精时等位基因如何组合，并预测子代表型比例；
+            显性–隐性、不完全显性、共显性、伴性遗传等不同遗传方式，会产生不同家族谱型。
+          </p>
+        </div>
+        <div>
+          <div class="key-title">
+            <span class="ui-en">Key Terms</span>
+            <span class="ui-cn">重要术语</span>
+          </div>
+          <div class="key-terms">
+            <span class="term">genetics</span>
+            <span class="term">trait</span>
+            <span class="term">dominant</span>
+            <span class="term">recessive</span>
+            <span class="term">phenotype</span>
+            <span class="term">genotype</span>
+            <span class="term">homozygous</span>
+            <span class="term">heterozygous</span>
+            <span class="term">codominance</span>
+            <span class="term">incomplete dominance</span>
+            <span class="term">sex-linked trait</span>
+          </div>
+          <p class="cn small">
+            重要术语：遗传学、性状、显性、隐性、表现型、基因型、纯合、杂合、
+            共显性、不完全显性、伴性性状等。
+          </p>
+        </div>
+      </div>
+
+      <h3 class="en-block">Mendel’s Legacy</h3>
+      <p class="en-block">
+        Gregor Mendel’s pea plant experiments showed that traits are inherited as discrete units (genes) and
+        that some alleles mask others (dominant vs recessive). His classic 3:1 ratio in the F<sub>2</sub> generation
+        is the foundation of Mendelian genetics.
+      </p>
+      <p class="cn small">
+        孟德尔用豌豆做实验，提出“性状由离散单位（基因）控制”，且某些等位基因可掩盖另一个
+        （显性/隐性）。F₂ 代常见的 3:1 表型比例就是经典孟德尔遗传的体现。
+      </p>
+
+      <h3 class="en-block">Beyond Simple Dominance</h3>
+      <ul class="en-block">
+        <li><strong>Incomplete dominance</strong>: heterozygotes show an intermediate phenotype (e.g., red × white → pink flowers).</li>
+        <li><strong>Codominance</strong>: both alleles are fully expressed in the heterozygote (e.g., human AB blood type).</li>
+        <li><strong>Sex-linked inheritance</strong>: genes located on sex chromosomes, often X-linked traits such as colour blindness and hemophilia.</li>
+      </ul>
+      <p class="cn small">
+        不完全显性：杂合体表型介于两者之间（红花 × 白花 → 粉花）；共显性：两个等位基因在杂合体中都完全表现
+        （如人类 AB 血型）；伴性遗传：基因位于性染色体上（如 X 连锁的色盲与血友病）。
+      </p>
+    </section>
+
+    <!-- Topic 1.3 -->
+    <section class="unit-block" id="topic-13">
+      <div class="section-kicker">
+        <span class="ui-en">Topic 1.3</span>
+        <span class="ui-cn">1.3 主题</span>
+      </div>
+      <h2>
+        <span class="ui-en">How can natural and artificial selection influence changes in populations?</span>
+        <span class="ui-cn">自然选择和人工选择如何改变种群？</span>
+      </h2>
+      <p class="tagline en-block">
+        Mutation creates variation; selection filters it; environments &amp; humans decide which traits persist.
+      </p>
+
+      <div class="key-ideas">
+        <div>
+          <div class="key-title">
+            <span class="ui-en">Key Ideas</span>
+            <span class="ui-cn">关键概念</span>
+          </div>
+          <ul class="en-block">
+            <li>Random DNA mutations introduce new alleles into a population’s gene pool.</li>
+            <li>Natural selection favours individuals whose traits give a selective advantage in their environment.</li>
+            <li>Over many generations, selection can lead to adaptation and even speciation (new species).</li>
+            <li>Environmental changes and human activity (artificial selection, monoculture) strongly shape evolution.</li>
+          </ul>
+          <p class="cn small">
+            关键概念：随机突变为基因库提供新等位基因；自然选择偏爱在特定环境中“更适应”的个体，
+            使这些等位基因频率上升，从而形成适应甚至新物种；环境变化、人类的人工选择与单一作物
+            （单一栽培）都会改变进化方向。
+          </p>
+        </div>
+        <div>
+          <div class="key-title">
+            <span class="ui-en">Key Terms</span>
+            <span class="ui-cn">重要术语</span>
+          </div>
+          <div class="key-terms">
+            <span class="term">mutation</span>
+            <span class="term">mutagen</span>
+            <span class="term">carcinogen</span>
+            <span class="term">selective advantage</span>
+            <span class="term">natural selection</span>
+            <span class="term">adaptation</span>
+            <span class="term">adaptive radiation</span>
+            <span class="term">extinction</span>
+            <span class="term">artificial selection</span>
+            <span class="term">monoculture</span>
+          </div>
+          <p class="cn small">
+            重要术语：突变、诱变剂、致癌物、选择优势、自然选择、适应、
+            自适应辐射、灭绝、人工选择、单一栽培等。
+          </p>
+        </div>
+      </div>
+
+      <h3 class="en-block">Natural Selection in Action</h3>
+      <p class="en-block">
+        When environments change (drought, new predators, disease, climate shifts), individuals with
+        advantageous traits are more likely to survive and reproduce. Over time, allele frequencies shift,
+        leading to observable changes such as different beak sizes in finches or antibiotic resistance in bacteria.
+      </p>
+      <p class="cn small">
+        环境改变（干旱、天敌、疾病、气候变化）时，具有“有利性状”的个体生存和繁殖机会更大，
+        等位基因频率随之改变，长期累积就会看到种群在形态或行为上的演化，例如雀类喙的大小变化、
+        细菌的抗生素耐药性等。
+      </p>
+
+      <h3 class="en-block">Artificial Selection and Agriculture</h3>
+      <p class="en-block">
+        Humans deliberately select traits in crops and livestock—larger fruits, higher milk yield, specific coat colours.
+        While this can improve food production, extreme monoculture and reduced genetic diversity can increase
+        vulnerability to disease and climate stress.
+      </p>
+      <p class="cn small">
+        人类通过人工选择定向保留某些性状（果实更大、产奶更多、毛色特定等）。
+        这提高了产量，但过度单一栽培、基因多样性下降会使作物更容易在病害或气候压力下崩溃。
+      </p>
+    </section>
+
+    <!-- Topic 1.4 -->
+    <section class="unit-block" id="topic-14">
+      <div class="section-kicker">
+        <span class="ui-en">Topic 1.4</span>
+        <span class="ui-cn">1.4 主题</span>
+      </div>
+      <h2>
+        <span class="ui-en">How and why are the genes of organisms manipulated?</span>
+        <span class="ui-cn">人类如何以及为什么要操纵基因？</span>
+      </h2>
+      <p class="tagline en-block">
+        From gene cloning and GMOs to gene therapy and stem cells: powerful tools, real benefits, real risks.
+      </p>
+
+      <div class="key-ideas">
+        <div>
+          <div class="key-title">
+            <span class="ui-en">Key Ideas</span>
+            <span class="ui-cn">关键概念</span>
+          </div>
+          <ul class="en-block">
+            <li>Biotechnology uses living systems and DNA technology to produce useful products.</li>
+            <li>Gene cloning and recombinant DNA allow genes to be copied and expressed in new organisms.</li>
+            <li>Transgenic plants and animals can provide medicine, improved crops, or research models.</li>
+            <li>Reproductive technologies (AI, IVF) and gene therapy offer options for treating infertility and genetic disease.</li>
+            <li>All biotechnology raises environmental, social, and ethical questions that must be carefully evaluated.</li>
+          </ul>
+          <p class="cn small">
+            关键概念：生物技术利用活体系统和 DNA 技术来生产有用产物；基因克隆与重组 DNA
+            让基因可以在其他生物体内复制与表达；转基因植物和动物可用于药物、增产或科研模型；
+            人工授精、体外受精、基因治疗等技术为不孕症和遗传病提供新方案；
+            同时，生物技术也带来环境、社会和伦理方面的争议与风险。
+          </p>
+        </div>
+        <div>
+          <div class="key-title">
+            <span class="ui-en">Key Terms</span>
+            <span class="ui-cn">重要术语</span>
+          </div>
+          <div class="key-terms">
+            <span class="term">biotechnology</span>
+            <span class="term">cloning</span>
+            <span class="term">gene cloning</span>
+            <span class="term">recombinant DNA</span>
+            <span class="term">artificial insemination</span>
+            <span class="term">in vitro fertilization (IVF)</span>
+            <span class="term">gene therapy</span>
+          </div>
+          <p class="cn small">
+            重要术语：生物技术、克隆、基因克隆、重组 DNA、人工授精、
+            体外受精、基因治疗等。
+          </p>
+        </div>
+      </div>
+
+      <h3 class="en-block">Gene Cloning &amp; Transgenic Organisms</h3>
+      <p class="en-block">
+        In gene cloning, a gene of interest is inserted into a vector (often a bacterial plasmid) to make recombinant DNA.
+        Transformed cells copy the plasmid and express the gene, producing proteins such as human insulin or spider silk
+        in bacteria, plants, or animals.
+      </p>
+      <p class="cn small">
+        基因克隆通常把目标基因插入载体（如细菌质粒）形成重组 DNA，再让细胞摄取并复制。
+        这样，细胞就能大量生产目标蛋白，例如人胰岛素或“蜘蛛丝蛋白”等。
+      </p>
+
+      <h3 class="en-block">Medical Uses: Reproductive Technologies &amp; Gene Therapy</h3>
+      <ul class="en-block">
+        <li><strong>Artificial insemination</strong>: sperm is collected, concentrated, and introduced directly into the uterus.</li>
+        <li><strong>In vitro fertilization (IVF)</strong>: eggs and sperm meet in a lab dish; early embryos are transferred back to the uterus.</li>
+        <li><strong>Gene therapy</strong>: a “healthy” version of a gene is delivered to cells to compensate for a faulty version.</li>
+      </ul>
+      <p class="cn small">
+        人工授精：收集、浓缩精子后直接注入子宫；体外受精：在实验室中让卵子与精子结合，再将早期胚胎移回子宫；
+        基因治疗：把“健康版本”的基因送入细胞，用来替代或补偿缺陷基因。
+      </p>
+
+      <h3 class="en-block">Risks, Ethics, and Society</h3>
+      <p class="en-block">
+        Concerns include possible effects on ecosystems (superweeds, superbugs), long-term health impacts, unequal access
+        to treatments, and questions about who owns and controls genetic information. Ethical analysis is a core part of
+        learning about biotechnology.
+      </p>
+      <p class="cn small">
+        风险包括：转基因作物与野生种杂交产生“超级杂草/超级害虫”、长期食用安全性未知、
+        治疗资源分配不均，以及“谁有权使用和控制基因信息”等问题。
+        因此，伦理与社会讨论是学习生物技术不可缺少的一部分。
+      </p>
+    </section>
+
+    <!-- Wrap up -->
+    <section class="unit-block compact" id="wrap-up">
+      <div class="section-kicker">
+        <span class="ui-en">Unit Wrap-Up</span>
+        <span class="ui-cn">单元总结</span>
+      </div>
+      <h2>
+        <span class="ui-en">Review &amp; Big-Picture Connections</span>
+        <span class="ui-cn">复习与整体联系</span>
+      </h2>
+      <p class="en-block">
+        By the end of Unit 1 you should be able to move smoothly between four levels:
+        <strong>DNA → genes → individuals → populations &amp; ecosystems</strong>.
+      </p>
+      <p class="cn small">
+        学完本单元，你应该可以在四个层次之间自由切换思考：
+        <strong>DNA → 基因 → 个体 → 种群与生态系统</strong>。
+      </p>
+
+      <div class="key-ideas">
+        <div>
+          <div class="key-title">
+            <span class="ui-en">Concept Map Prompts</span>
+            <span class="ui-cn">概念图提示</span>
+          </div>
+          <ul class="en-block">
+            <li>Show how DNA structure supports accurate replication and protein production.</li>
+            <li>Connect meiosis, alleles, and Punnett squares to patterns of inheritance in families.</li>
+            <li>Link mutation and natural selection to adaptation, speciation, and extinction.</li>
+            <li>Compare natural selection with artificial selection in agriculture and breeding.</li>
+            <li>List benefits and risks of biotechnology, including GMOs and gene therapy.</li>
+          </ul>
+          <p class="cn small">
+            画一张概念图：DNA 结构如何保证复制与蛋白质合成；减数分裂、等位基因与潘尼特方格如何对应家族遗传模式；
+            突变与自然选择如何导致适应、新物种与灭绝；比较自然选择和人工选择；
+            列出生物技术（转基因、基因治疗等）的主要利弊。
+          </p>
+        </div>
+        <div>
+          <div class="key-title">
+            <span class="ui-en">Reflection Questions</span>
+            <span class="ui-cn">反思问题</span>
+          </div>
+          <ul class="en-block">
+            <li>Where do you see DNA-based technologies in everyday life (medicine, food, forensic science)?</li>
+            <li>Which biotechnology application do you feel most positive about? Why?</li>
+            <li>Which application worries you the most? What evidence would you want before supporting or opposing it?</li>
+            <li>How can combining Indigenous knowledge and Western science improve how we use genetics and conserve biodiversity?</li>
+          </ul>
+          <p class="cn small">
+            反思：在日常生活中，你在哪里看到与 DNA 有关的技术（医学、食品、法医等）？
+            你最支持哪一种生物技术？为什么？你最担心哪一种？在支持或反对之前，你希望看到哪些证据？
+            结合原住民知识与西方科学，如何更好地使用遗传学、保护生物多样性？
+          </p>
+        </div>
+      </div>
+
+      <p class="footer-note en-block">
+        Tip: Try <strong>English + 中文</strong> mode while learning new ideas, then switch to <strong>English</strong> or
+        <strong>仅中文</strong> for focused practice.
+      </p>
+      <p class="footer-note cn small">
+        建议：初学时用「英中对照」模式，熟悉后可以切换到「纯英文」或「仅中文」进行强化练习。
+      </p>
+    </section>
+  </main>
+</div>
+
+<script>
+  (function () {
+    const root = document.documentElement;
+    const buttons = document.querySelectorAll('.lang-btn');
+
+    function setMode(mode) {
+      root.setAttribute('data-lang-mode', mode);
+      buttons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+      });
+      try {
+        localStorage.setItem('unit1_lang_mode', mode);
+      } catch (_) {}
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setMode(btn.dataset.mode);
+      });
+    });
+
+    // Restore saved mode if available
+    try {
+      const saved = localStorage.getItem('unit1_lang_mode');
+      if (saved === 'bilingual' || saved === 'zh') {
+        setMode(saved);
+      }
+    } catch (_) {}
+  })();
+</script>
+</body>
+</html>
+
