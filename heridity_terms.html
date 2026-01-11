@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Science 10 Heridity Flashcards</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#121c32;
+      --card2:#0f1830;
+      --text:#e8eefc;
+      --muted:#a9b7dd;
+      --accent:#7aa2ff;
+      --border:rgba(255,255,255,.12);
+      --shadow: 0 14px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+	    *{box-sizing:border-box}
+	    html, body{height:100%}
+		    body{
+	      margin:0;
+	      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "PingFang SC","Microsoft YaHei", sans-serif;
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(122,162,255,.18), transparent 60%),
+                  radial-gradient(900px 500px at 80% 30%, rgba(123,255,211,.10), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+	      min-height:100vh;
+	      display:flex;
+	      align-items:flex-start;
+	      justify-content:center;
+	      padding:24px;
+	      overflow:hidden;
+	    }
+	    .app{
+	      width:min(980px, 100%);
+	      display:grid;
+	      grid-template-columns: 1.1fr .9fr;
+	      grid-template-rows: auto 1fr;
+	      gap:18px;
+	      height: calc(100vh - 48px);
+	      align-items:stretch;
+	    }
+			    @media (max-width: 900px){
+			      body{overflow:hidden}
+			      .app{
+			        display:flex;
+			        flex-direction:column;
+			        height: calc(100vh - 48px);
+			      }
+			      .stage{position:static; top:auto; align-self:stretch}
+			      .cardWrap{height: clamp(260px, 38vh, 420px)}
+			      .listPanel{flex:1; min-height:0}
+			    }
+    header{
+      grid-column:1/-1;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+    }
+    h1{
+      font-size:20px;
+      margin:0;
+      letter-spacing:.2px;
+    }
+    .sub{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:6px;
+      line-height:1.3;
+    }
+	    .panel{
+	      background: rgba(18,28,50,.96);
+	      border:1px solid var(--border);
+	      border-radius: var(--radius);
+	      box-shadow: var(--shadow);
+	      padding:14px;
+	    }
+
+    /* Flashcard */
+	    .stage{
+	      display:flex;
+	      flex-direction:column;
+	      gap:12px;
+	      position:sticky;
+	      top:24px;
+	      align-self:start;
+	      z-index:2;
+	    }
+	    .cardWrap{
+	      perspective: 1200px;
+	      height: clamp(320px, 52vh, 520px);
+	    }
+	    .card{
+	      width:100%;
+	      height:100%;
+	      position:relative;
+	      transform-style:preserve-3d;
+	      transition:transform .55s cubic-bezier(.2,.8,.2,1);
+	      border-radius: var(--radius);
+	      cursor:pointer;
+	      outline:none;
+	      touch-action: none;
+	    }
+    .card:focus{box-shadow:0 0 0 3px rgba(122,162,255,.35), var(--shadow)}
+    .card.flipped{transform: rotateY(180deg)}
+	    .face{
+      position:absolute;
+      inset:0;
+      padding:18px;
+      border-radius: var(--radius);
+      border:1px solid var(--border);
+	      background: linear-gradient(180deg, rgba(18,28,50,.98), rgba(15,24,48,.98));
+	      backface-visibility:hidden;
+	      display:flex;
+	      flex-direction:column;
+	      gap:12px;
+	      overflow:hidden;
+	    }
+	    .back{
+	      transform: rotateY(180deg);
+	      background: linear-gradient(180deg, rgba(30,50,96,.92), rgba(15,24,48,.98));
+	    }
+    .chipRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .chip{
+      font-size:12px;
+      color:var(--muted);
+      padding:6px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:rgba(0,0,0,.18);
+      user-select:none;
+    }
+    .hint{
+      color:var(--muted);
+      font-size:12px;
+      user-select:none;
+    }
+    .q{
+      font-size:18px;
+      font-weight:700;
+      line-height:1.25;
+      margin-top:4px;
+    }
+    .q .zh{
+      display:block;
+      margin-top:8px;
+      font-weight:650;
+      color:rgba(232,238,252,.92);
+    }
+    .aTitle{
+      font-size:12px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+    }
+    .a{
+      font-size:16px;
+      line-height:1.4;
+      font-weight:650;
+    }
+    .exp{
+      margin-top:8px;
+      color:rgba(232,238,252,.88);
+      line-height:1.55;
+      font-size:14px;
+    }
+    .exp .label{
+      color:var(--muted);
+      font-weight:700;
+      letter-spacing:.04em;
+    }
+    .split{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:6px;
+    }
+    @media (max-width: 520px){
+      .split{grid-template-columns:1fr}
+      .cardWrap{height: 520px;}
+    }
+    .langBlock{
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:rgba(0,0,0,.16);
+      overflow:auto;
+    }
+    .langBlock h3{
+      margin:0 0 6px 0;
+      font-size:12px;
+      letter-spacing:.12em;
+      color:var(--muted);
+      text-transform:uppercase;
+    }
+    .langBlock .big{
+      font-weight:750;
+      font-size:15px;
+      line-height:1.4;
+      margin-bottom:8px;
+    }
+    .langBlock .small{
+      font-size:13px;
+      line-height:1.55;
+      color:rgba(232,238,252,.86);
+    }
+
+    /* Controls */
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    button, select, input[type="text"]{
+      background:rgba(0,0,0,.22);
+      color:var(--text);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:13px;
+      outline:none;
+    }
+    input[type="text"].autofill{
+      color:var(--muted);
+      font-style: italic;
+    }
+    button{cursor:pointer}
+    button:hover{border-color: rgba(122,162,255,.45)}
+    button:active{transform: translateY(1px)}
+    select{cursor:pointer}
+    .wide{
+      width: 100%;
+    }
+    .progress{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      color:var(--muted);
+      font-size:13px;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .bar{
+      width:160px;
+      height:10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.22);
+      overflow:hidden;
+    }
+    .fill{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(122,162,255,.9), rgba(123,255,211,.7));
+    }
+
+	    /* List panel */
+	    .listPanel{
+	      display:flex;
+	      flex-direction:column;
+	      gap:12px;
+	      height:100%;
+	      min-height:0;
+	    }
+	    .topTools{
+	      display:flex;
+	      gap:10px;
+	      flex-wrap:wrap;
+	    }
+	    .listWrap{
+	      border:1px solid var(--border);
+	      border-radius:14px;
+	      overflow:auto;
+	      background:rgba(0,0,0,.16);
+	      flex:1;
+	      min-height:0;
+	      overscroll-behavior: contain;
+	    }
+	    .list{
+	      min-height:0;
+	    }
+    .row{
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      cursor:pointer;
+    }
+    .row:last-child{border-bottom:none}
+    .row:hover{background:rgba(122,162,255,.08)}
+    .row .t{
+      font-weight:700;
+      font-size:13px;
+    }
+    .row .z{
+      color:var(--muted);
+      font-size:12px;
+    }
+    .row .idx{
+      color:var(--muted);
+      font-size:12px;
+      padding:4px 8px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      background:rgba(0,0,0,.18);
+      user-select:none;
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px;
+      color:rgba(232,238,252,.9);
+      padding:2px 6px;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:8px;
+      background:rgba(0,0,0,.28);
+    }
+    .footerTips{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+    a.smallLink{
+      color: rgba(122,162,255,.95);
+      text-decoration:none;
+    }
+    a.smallLink:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>Science 10 — Heridity Flashcards</h1>
+        <div class="sub">
+          Click the card to flip. Keyboard: <span class="kbd">Space</span> flip · <span class="kbd">←</span>/<span class="kbd">→</span> prev/next · <span class="kbd">S</span> shuffle
+        </div>
+      </div>
+      <div class="progress">
+        <div id="counter">1 / 1</div>
+        <div class="bar" aria-hidden="true"><div class="fill" id="fill"></div></div>
+      </div>
+    </header>
+
+    <!-- Flashcard panel -->
+    <section class="panel stage">
+      <div class="controls">
+        <div class="btnRow">
+          <button id="prevBtn" title="Previous (←)">◀ Prev</button>
+          <button id="flipBtn" title="Flip (Space)">Flip</button>
+          <button id="nextBtn" title="Next (→)">Next ▶</button>
+          <button id="shuffleBtn" title="Shuffle (S)">Shuffle</button>
+        </div>
+
+        <div class="btnRow">
+          <select id="displayMode" title="Display mode">
+            <option value="both" selected>Show EN + 中文</option>
+            <option value="en">English only</option>
+            <option value="zh">中文 only</option>
+          </select>
+          <button id="resetBtn" title="Reset order">Reset</button>
+        </div>
+      </div>
+
+      <div class="cardWrap">
+        <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard">
+          <!-- Front (Question) -->
+          <div class="face front">
+            <div class="chipRow">
+              <div class="chip" id="chipFront">Question</div>
+              <div class="hint">Click to flip</div>
+            </div>
+
+            <div class="q" id="qText"></div>
+
+            <div class="footerTips">
+              Tip: Try answering out loud before flipping. Then explain it in your own words.
+            </div>
+          </div>
+
+          <!-- Back (Answer + Explanation) -->
+          <div class="face back">
+            <div class="chipRow">
+              <div class="chip" id="chipBack">Answer + Explanation</div>
+              <div class="hint">Click to flip back</div>
+            </div>
+
+            <div class="split" id="backSplit">
+              <div class="langBlock" id="enBlock">
+                <h3>English</h3>
+                <div class="big" id="aEn"></div>
+                <div class="small" id="expEn"></div>
+              </div>
+
+              <div class="langBlock" id="zhBlock">
+                <h3>中文</h3>
+                <div class="big" id="aZh"></div>
+                <div class="small" id="expZh"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+	    <!-- List / search panel -->
+	    <aside class="panel listPanel">
+	      <div class="topTools">
+	        <input id="search" class="wide" type="text" placeholder="Search terms (e.g., DNA, allele, 染色体, 复制)..." />
+	      </div>
+
+	      <div class="listWrap">
+	        <div class="list" id="list"></div>
+	      </div>
+
+	      <div class="footerTips">
+	        You can click any item in the list to jump to that card.<br/>
+	        Want to add more cards (e.g., from your worksheet questions)? Paste them and I’ll extend this set.
+	      </div>
+	    </aside>
+  </div>
+
+  <script>
+	    // Flashcards dataset (EN / 中文)
+	    // Format: term + definition + explanation
+	    const CARDS = [
+  {
+    "en_term": "genetics",
+    "en_def": "A field of biology that studies heredity, or the passing of traits from parents to offspring.",
+    "en_exp": "Genetics explains how characteristics such as flower colour or hair colour are inherited across generations.",
+    "zh_term": "遗传学（genetics）",
+    "zh_def": "研究遗传现象、即性状如何从父母传给子代的生物学分支。",
+    "zh_exp": "遗传学解释像花色、发色等性状如何代代相传。"
+  },
+  {
+    "en_term": "heredity",
+    "en_def": "The passing of traits from parents to offspring.",
+    "en_exp": "Heredity is the reason offspring tend to resemble their biological parents.",
+    "zh_term": "遗传（heredity）",
+    "zh_def": "性状从亲代传递给子代的过程。",
+    "zh_exp": "因为遗传，子女在许多特征上会和父母相似。"
+  },
+  {
+    "en_term": "trait",
+    "en_def": "An inherited characteristic, such as eye colour or hair colour.",
+    "en_exp": "Traits like seed colour in pea plants or the ability to taste bitterness are controlled by genes.",
+    "zh_term": "性状（trait）",
+    "zh_def": "一种可遗传的特征，如眼睛颜色、头发颜色等。",
+    "zh_exp": "豌豆的种子颜色、是否能尝出苦味，都是由基因控制的性状。"
+  },
+  {
+    "en_term": "characteristic",
+    "en_def": "A feature or quality of an organism that can be observed; it may be determined by genes.",
+    "en_exp": "Hairline shape and flower colour are characteristics that can be inherited.",
+    "zh_term": "特征（characteristic）",
+    "zh_def": "生物体具有的某种可观察的性质，通常由基因决定。",
+    "zh_exp": "额发线形状、花的颜色等都属于可遗传的特征。"
+  },
+  {
+    "en_term": "gene",
+    "en_def": "A unit of heredity made of DNA that provides instructions for a trait.",
+    "en_exp": "Different versions of the same gene, called alleles, lead to different trait forms such as purple or white flowers.",
+    "zh_term": "基因（gene）",
+    "zh_def": "由DNA组成、携带某种性状遗传信息的单位。",
+    "zh_exp": "同一基因的不同形式（等位基因）可以决定紫花或白花等不同性状。"
+  },
+  {
+    "en_term": "allele",
+    "en_def": "Different versions of the same gene that may produce different forms of a trait.",
+    "en_exp": "For pea flower colour, one allele codes for purple and another for white.",
+    "zh_term": "等位基因（allele）",
+    "zh_def": "位于同源染色体相同位置、控制同一性状的基因的不同形式。",
+    "zh_exp": "例如花色基因可以有紫花等位基因和白花等位基因。"
+  },
+  {
+    "en_term": "allele pair",
+    "en_def": "The two alleles for a given gene that an organism carries on a pair of homologous chromosomes.",
+    "en_exp": "In a diploid organism, each trait is typically controlled by an allele pair, one from each parent.",
+    "zh_term": "等位基因对（allele pair）",
+    "zh_def": "二倍体生物在同源染色体上针对某一基因所具有的两个等位基因。",
+    "zh_exp": "一个性状通常由一对等位基因决定，分别来自父本和母本。"
+  },
+  {
+    "en_term": "chromosome",
+    "en_def": "A structure made of DNA and proteins that carries genetic information.",
+    "en_exp": "Chromosomes occur in pairs in diploid cells and separate during meiosis.",
+    "zh_term": "染色体（chromosome）",
+    "zh_def": "由DNA和蛋白质组成、携带遗传信息的线状结构。",
+    "zh_exp": "在二倍体细胞中，染色体成对存在，并在减数分裂时分离。"
+  },
+  {
+    "en_term": "homologous chromosomes",
+    "en_def": "Pairs of chromosomes that have the same size, shape, and genes at the same locations.",
+    "en_exp": "Homologous chromosomes separate during meiosis so that gametes receive only one from each pair.",
+    "zh_term": "同源染色体（homologous chromosomes）",
+    "zh_def": "在形态和大小上相同、并在相同位置上携带相同基因的一对染色体。",
+    "zh_exp": "减数分裂时，同源染色体分离，使配子只得到每对中的一条。"
+  },
+  {
+    "en_term": "meiosis",
+    "en_def": "A type of cell division that reduces the chromosome number by half and produces gametes.",
+    "en_exp": "During meiosis, homologous chromosomes and the alleles they carry are separated into different gametes.",
+    "zh_term": "减数分裂（meiosis）",
+    "zh_def": "使染色体数目减半并产生配子的细胞分裂方式。",
+    "zh_exp": "在减数分裂中，同源染色体及其上的等位基因被分到不同的配子中。"
+  },
+  {
+    "en_term": "gamete",
+    "en_def": "A reproductive cell, such as a sperm or egg, that carries one allele for each gene.",
+    "en_exp": "Male and female gametes combine during fertilization to form a diploid zygote.",
+    "zh_term": "配子（gamete）",
+    "zh_def": "具有单倍体染色体组的生殖细胞，如精子或卵细胞。",
+    "zh_exp": "雄性配子和雌性配子在受精时结合，形成二倍体受精卵。"
+  },
+  {
+    "en_term": "male gamete",
+    "en_def": "The gamete produced by the genetic male, such as pollen or sperm.",
+    "en_exp": "In pea plants, the male gamete in pollen can fertilize the egg in a flower.",
+    "zh_term": "雄性配子（male gamete）",
+    "zh_def": "由遗传学上的雄性产生的配子，如花粉或精子。",
+    "zh_exp": "在豌豆中，花粉中的雄性配子可以授精花内的卵细胞。"
+  },
+  {
+    "en_term": "female gamete",
+    "en_def": "The gamete produced by the genetic female, such as an egg cell.",
+    "en_exp": "In flowers, the female gamete is located in the ovule within the female reproductive organ.",
+    "zh_term": "雌性配子（female gamete）",
+    "zh_def": "由遗传学上的雌性产生的配子，如卵细胞。",
+    "zh_exp": "在花中，雌性配子位于雌蕊子房中的胚珠内。"
+  },
+  {
+    "en_term": "fertilization",
+    "en_def": "The process in which a male gamete and a female gamete unite.",
+    "en_exp": "Fertilization combines genetic material from both parents and forms a diploid cell.",
+    "zh_term": "受精（fertilization）",
+    "zh_def": "雄性配子与雌性配子结合形成新细胞的过程。",
+    "zh_exp": "受精将来自双亲的遗传物质结合起来，形成二倍体受精卵。"
+  },
+  {
+    "en_term": "diploid cell",
+    "en_def": "A cell that has two sets of chromosomes, one from each parent.",
+    "en_exp": "The zygote formed after fertilization is a diploid cell.",
+    "zh_term": "二倍体细胞（diploid cell）",
+    "zh_def": "含有两套染色体（每套来自一个亲本）的细胞。",
+    "zh_exp": "受精后形成的受精卵就是二倍体细胞。"
+  },
+  {
+    "en_term": "zygote",
+    "en_def": "The diploid cell that forms when a male and female gamete fuse at fertilization.",
+    "en_exp": "A zygote receives one set of chromosomes from the biological mother and one from the biological father.",
+    "zh_term": "受精卵（zygote）",
+    "zh_def": "由雄性配子和雌性配子结合形成的二倍体细胞。",
+    "zh_exp": "受精卵含有来自父亲和母亲的两套染色体。"
+  },
+  {
+    "en_term": "biological mother",
+    "en_def": "The genetic female parent who contributes one set of chromosomes to the offspring.",
+    "en_exp": "Half of the offspring’s alleles come from the biological mother.",
+    "zh_term": "生物学母亲（biological mother）",
+    "zh_def": "将自己的染色体组之一遗传给后代的雌性亲本。",
+    "zh_exp": "后代的一半等位基因来自生物学母亲。"
+  },
+  {
+    "en_term": "biological father",
+    "en_def": "The genetic male parent who contributes one set of chromosomes to the offspring.",
+    "en_exp": "Half of the offspring’s alleles come from the biological father.",
+    "zh_term": "生物学父亲（biological father）",
+    "zh_def": "将自己的染色体组之一遗传给后代的雄性亲本。",
+    "zh_exp": "后代的一半等位基因来自生物学父亲。"
+  },
+  {
+    "en_term": "genetic material",
+    "en_def": "Molecules such as DNA that carry hereditary information.",
+    "en_exp": "During fertilization, genetic material from both parents combines in the zygote.",
+    "zh_term": "遗传物质（genetic material）",
+    "zh_def": "携带遗传信息的分子，如DNA。",
+    "zh_exp": "在受精过程中，来自父母的遗传物质在受精卵中结合。"
+  },
+  {
+    "en_term": "true-breeding plant",
+    "en_def": "A plant that consistently produces offspring with only one form of a trait when self-fertilized.",
+    "en_exp": "Mendel used true-breeding pea plants so that purple-flowered plants always gave only purple offspring when self-pollinated.",
+    "zh_term": "真纯种植物（true-breeding plant）",
+    "zh_def": "自花受精时稳定地产生同一种性状后代的植物。",
+    "zh_exp": "孟德尔用真纯种紫花和真纯种白花豌豆来研究花色遗传。"
+  },
+  {
+    "en_term": "sexual reproduction",
+    "en_def": "Reproduction that involves the fusion of gametes from two parents.",
+    "en_exp": "Pea plants reproduce by sexual reproduction, even though they often self-pollinate.",
+    "zh_term": "有性生殖（sexual reproduction）",
+    "zh_def": "通过两个亲本的配子结合产生后代的生殖方式。",
+    "zh_exp": "豌豆通过有性生殖繁殖，虽然它们常常进行自花授粉。"
+  },
+  {
+    "en_term": "self-pollination",
+    "en_def": "Pollination in which a male gamete within a flower fertilizes a female gamete in the same flower.",
+    "en_exp": "True-breeding pea plants often self-pollinate, so they produce genetically similar offspring.",
+    "zh_term": "自花授粉（self-pollination）",
+    "zh_def": "同一朵花中的雄性配子授予本花的雌性配子的过程。",
+    "zh_exp": "真纯种豌豆通常自花授粉，因此后代性状稳定。"
+  },
+  {
+    "en_term": "cross-pollination",
+    "en_def": "Pollination in which a male gamete from one flower fertilizes a female gamete of a different plant.",
+    "en_exp": "Mendel manually cross-pollinated plants to control which traits were combined in the offspring.",
+    "zh_term": "异花授粉（cross-pollination）",
+    "zh_def": "一株植物的雄性配子授予另一株植物花内雌性配子的过程。",
+    "zh_exp": "孟德尔通过人为异花授粉来控制亲本性状的组合。"
+  },
+  {
+    "en_term": "offspring",
+    "en_def": "The individuals produced by reproduction from parent organisms.",
+    "en_exp": "Mendel counted thousands of offspring plants to analyze inheritance patterns.",
+    "zh_term": "后代（offspring）",
+    "zh_def": "由亲本繁殖产生的新个体。",
+    "zh_exp": "孟德尔统计了大量豌豆后代来分析性状的遗传规律。"
+  },
+  {
+    "en_term": "law of segregation",
+    "en_def": "A law stating that alleles for each inherited trait separate from each other during gamete formation, so each gamete carries only one allele for each trait.",
+    "en_exp": "The law of segregation explains why offspring receive one allele from each parent and show 3:1 ratios in certain crosses.",
+    "zh_term": "分离定律（law of segregation）",
+    "zh_def": "指等位基因在形成配子时彼此分离，使每个配子只携带该性状的一种等位基因的遗传定律。",
+    "zh_exp": "分离定律解释了后代从父母各获得一个等位基因，并在F2中出现3:1分离比。"
+  },
+  {
+    "en_term": "dominant",
+    "en_def": "The allele or trait that is expressed regardless of the identity of the other allele for the characteristic.",
+    "en_exp": "In Mendel’s pea plants, the allele for purple flowers is dominant over the allele for white flowers.",
+    "zh_term": "显性（dominant）",
+    "zh_def": "无论另一等位基因为何，只要存在就会在表现型上表达的等位基因或性状。",
+    "zh_exp": "在豌豆中，紫花等位基因对白花等位基因是显性的。"
+  },
+  {
+    "en_term": "recessive",
+    "en_def": "The allele or trait that is expressed only when two copies are present; its expression is hidden or suppressed if the dominant allele is present.",
+    "en_exp": "White flowers in Mendel’s pea plants are recessive and appear only in plants with two recessive alleles.",
+    "zh_term": "隐性（recessive）",
+    "zh_def": "只有在两个隐性等位基因同时存在时才在表现型上表达的等位基因或性状。",
+    "zh_exp": "白花是隐性性状，只有基因型为bb时才会表现。"
+  },
+  {
+    "en_term": "phenotype",
+    "en_def": "The physical description or observable expression of an organism’s trait.",
+    "en_exp": "Purple flowers, white flowers, or pink flowers are all phenotypes of flower colour.",
+    "zh_term": "表现型（phenotype）",
+    "zh_def": "生物体性状在形态、结构或功能上的可观察表现。",
+    "zh_exp": "如紫花、白花或粉花都属于花色的不同表现型。"
+  },
+  {
+    "en_term": "genotype",
+    "en_def": "The specific combination of alleles an organism has for a trait.",
+    "en_exp": "For pea flower colour, BB, Bb, and bb are different genotypes.",
+    "zh_term": "基因型（genotype）",
+    "zh_def": "生物体在某一性状上所具有的等位基因组合。",
+    "zh_exp": "如豌豆花色基因型可以是BB、Bb或bb。"
+  },
+  {
+    "en_term": "homozygous",
+    "en_def": "An organism with two of the same alleles for a particular trait.",
+    "en_exp": "A plant with genotype BB or bb for flower colour is homozygous.",
+    "zh_term": "纯合（homozygous）",
+    "zh_def": "在某一性状上具有两个相同等位基因的状态。",
+    "zh_exp": "基因型为BB或bb的个体在该性状上是纯合的。"
+  },
+  {
+    "en_term": "homozygous dominant",
+    "en_def": "Having two dominant alleles for a trait.",
+    "en_exp": "A pea plant with genotype BB for purple flowers is homozygous dominant.",
+    "zh_term": "显性纯合（homozygous dominant）",
+    "zh_def": "某性状上带有两个显性等位基因的基因型。",
+    "zh_exp": "紫花豌豆若基因型为BB，则为显性纯合。"
+  },
+  {
+    "en_term": "homozygous recessive",
+    "en_def": "Having two recessive alleles for a trait.",
+    "en_exp": "A pea plant with genotype bb for white flowers is homozygous recessive.",
+    "zh_term": "隐性纯合（homozygous recessive）",
+    "zh_def": "某性状上带有两个隐性等位基因的基因型。",
+    "zh_exp": "白花豌豆若基因型为bb，则为隐性纯合。"
+  },
+  {
+    "en_term": "heterozygous",
+    "en_def": "An organism with two different alleles for a particular trait.",
+    "en_exp": "A plant with genotype Bb for flower colour is heterozygous.",
+    "zh_term": "杂合（heterozygous）",
+    "zh_def": "在某一性状上具有两个不同等位基因的状态。",
+    "zh_exp": "基因型为Bb的个体在该性状上是杂合的。"
+  },
+  {
+    "en_term": "genetic cross",
+    "en_def": "Any deliberate breeding between a genetic male and a genetic female to study inheritance.",
+    "en_exp": "Mendel’s experiments used genetic crosses between pea plants with different traits.",
+    "zh_term": "遗传杂交（genetic cross）",
+    "zh_def": "为研究性状遗传而进行的雌雄个体之间的交配。",
+    "zh_exp": "孟德尔通过不同豌豆品种之间的杂交来研究遗传。"
+  },
+  {
+    "en_term": "monohybrid cross",
+    "en_def": "A genetic cross that focuses on the inheritance of one trait between parents that differ in that trait.",
+    "en_exp": "Crossing purple-flowered and white-flowered plants to study only flower colour is a monohybrid cross.",
+    "zh_term": "单因子杂交（monohybrid cross）",
+    "zh_def": "只研究一对相对性状遗传情况的杂交。",
+    "zh_exp": "例如只研究花色遗传的紫花×白花杂交就是单因子杂交。"
+  },
+  {
+    "en_term": "hybrid",
+    "en_def": "The offspring of parents that have different traits.",
+    "en_exp": "The F1 plants from crossing true-breeding purple and white flowers are hybrids for flower colour.",
+    "zh_term": "杂种（hybrid）",
+    "zh_def": "由在某性状上不同的亲本杂交所得的后代。",
+    "zh_exp": "真纯种紫花与真纯种白花豌豆杂交得到的F1就是花色性状上的杂种。"
+  },
+  {
+    "en_term": "Punnett square",
+    "en_def": "A grid used to show the possible genotypes of offspring based on the genotypes of the parents.",
+    "en_exp": "A Punnett square can predict that half the offspring will be Bb and half will be bb in a certain cross.",
+    "zh_term": "潘尼特方格（Punnett square）",
+    "zh_def": "根据亲本基因型推算后代可能基因型的一种方格图。",
+    "zh_exp": "利用潘尼特方格可以预测不同基因型后代出现的频率。"
+  },
+  {
+    "en_term": "phenotypic ratio",
+    "en_def": "The ratio of different phenotypes that appear in offspring.",
+    "en_exp": "In a monohybrid cross with complete dominance, the phenotypic ratio in F2 is often about 3:1.",
+    "zh_term": "表现型比例（phenotypic ratio）",
+    "zh_def": "后代表现型之间的数量比。",
+    "zh_exp": "在典型单因子杂交F2中，显性：隐性表现型常为约3:1。"
+  },
+  {
+    "en_term": "F1 generation",
+    "en_def": "The first generation of offspring from a cross between two parental (true-breeding) organisms.",
+    "en_exp": "Mendel called the offspring of true-breeding purple and white plants the F1 generation.",
+    "zh_term": "F1代（第一代子代）",
+    "zh_def": "由亲本（P代）杂交所产生的第一代后代。",
+    "zh_exp": "真纯种紫花与真纯种白花豌豆杂交所得的后代为F1代。"
+  },
+  {
+    "en_term": "F2 generation",
+    "en_def": "The second generation of offspring produced when F1 individuals are crossed or self-fertilized.",
+    "en_exp": "In Mendel’s experiments, the F2 generation showed a 3:1 ratio of purple to white flowers.",
+    "zh_term": "F2代（第二代子代）",
+    "zh_def": "由F1个体相互杂交或自交产生的第二代后代。",
+    "zh_exp": "在孟德尔的实验中，F2代紫花与白花的数目比约为3:1。"
+  },
+  {
+    "en_term": "codominance",
+    "en_def": "The condition in which both alleles for a trait are equally expressed in a heterozygote; both alleles are dominant.",
+    "en_exp": "Roan cattle show codominance: red and white hairs are both fully expressed.",
+    "zh_term": "共显性（codominance）",
+    "zh_def": "在杂合个体中两种等位基因都能完全而同时表达的遗传现象。",
+    "zh_exp": "玫点牛身上同时出现红毛和白毛，就是共显性的例子。"
+  },
+  {
+    "en_term": "roan",
+    "en_def": "An animal coat pattern in which two hair colours, such as red and white, are both fully expressed and intermingled.",
+    "en_exp": "A roan bull has both red hairs and white hairs because of codominant alleles for coat colour.",
+    "zh_term": "杂毛（玫点毛，roan）",
+    "zh_def": "动物毛色中两种颜色（如红与白）同时完全表现并相互混杂的花纹。",
+    "zh_exp": "玫点牛身上红毛和白毛交错出现，是共显性导致的杂毛现象。"
+  },
+  {
+    "en_term": "incomplete dominance",
+    "en_def": "A condition in which neither allele for a gene completely conceals the presence of the other, resulting in an intermediate expression of a trait.",
+    "en_exp": "In four o’clock plants, red flowers crossed with white flowers produce pink offspring, an intermediate phenotype.",
+    "zh_term": "不完全显性（incomplete dominance）",
+    "zh_def": "两种等位基因互不完全掩盖对方，从而产生介于双亲之间的中间型表现。",
+    "zh_exp": "紫茉莉红花与白花杂交产生粉红花，就是不完全显性的例子。"
+  },
+  {
+    "en_term": "sex-linked trait",
+    "en_def": "A trait controlled by genes on sex chromosomes.",
+    "en_exp": "Red-green colour vision deficiency and hemophilia are examples of sex-linked traits.",
+    "zh_term": "性连锁性状（sex-linked trait）",
+    "zh_def": "由性染色体上的基因所控制的性状。",
+    "zh_exp": "红绿色觉缺陷和血友病都是性连锁性状的例子。"
+  },
+  {
+    "en_term": "X-linked trait",
+    "en_def": "A trait controlled by genes located on the X chromosome.",
+    "en_exp": "Red-green colour vision deficiency is a recessive X-linked trait and occurs more often in males.",
+    "zh_term": "X连锁性状（X-linked trait）",
+    "zh_def": "由X染色体上的基因所控制的性状。",
+    "zh_exp": "红绿色觉缺陷是隐性X连锁性状，因此在男性中更常见。"
+  },
+  {
+    "en_term": "X chromosome",
+    "en_def": "A sex chromosome that both genetic males and genetic females can carry; females have two X chromosomes and males have one.",
+    "en_exp": "Genes for some traits, such as colour vision, are located on the X chromosome.",
+    "zh_term": "X染色体（X chromosome）",
+    "zh_def": "性染色体之一，雌性一般有两条X染色体，雄性有一条X和一条Y染色体。",
+    "zh_exp": "像色觉等部分性状的基因位于X染色体上。"
+  },
+  {
+    "en_term": "Y chromosome",
+    "en_def": "A sex chromosome found only in genetic males.",
+    "en_exp": "A male has one X and one Y chromosome, while a female has two X chromosomes.",
+    "zh_term": "Y染色体（Y chromosome）",
+    "zh_def": "仅存在于遗传学上的雄性中的性染色体。",
+    "zh_exp": "人类男性为XY，女性为XX，其中Y染色体决定雄性特征。"
+  },
+  {
+    "en_term": "red-green colour vision deficiency",
+    "en_def": "A recessive X-linked trait in which individuals have difficulty distinguishing between red and green.",
+    "en_exp": "Because it is X-linked, red-green colour vision deficiency is rare in females but more common in males.",
+    "zh_term": "红绿色觉缺陷（red-green colour vision deficiency）",
+    "zh_def": "一种隐性X连锁性状，患者难以区分红色与绿色。",
+    "zh_exp": "由于该性状为X连锁隐性，所以在男性中发生率较高，在女性中较少见。"
+  },
+  {
+    "en_term": "carrier",
+    "en_def": "An individual who has one copy of a recessive allele that is not expressed in the phenotype but can be passed on to offspring.",
+    "en_exp": "A female with one normal allele and one allele for colour vision deficiency is a carrier but usually has normal vision.",
+    "zh_term": "携带者（carrier）",
+    "zh_def": "带有一个隐性等位基因但表现型正常、可将该等位基因传给后代的个体。",
+    "zh_exp": "在X连锁隐性遗传中，一些女性虽然视力正常，但可以携带并传递致病基因。"
+  },
+  {
+    "en_term": "pedigree",
+    "en_def": "A type of flowchart that uses symbols to show patterns of relationships and traits in a family over many generations.",
+    "en_exp": "The pedigree of Queen Victoria’s family shows how hemophilia, a recessive X-linked disorder, was inherited.",
+    "zh_term": "家系图（pedigree）",
+    "zh_def": "用符号表示家族成员及其性状在多代中传递情况的图表。",
+    "zh_exp": "通过家系图可以追踪血友病等遗传病在家族中的传递。"
+  },
+  {
+    "en_term": "hemophilia",
+    "en_def": "A recessive X-linked disorder in which blood does not clot properly.",
+    "en_exp": "People with hemophilia may bleed excessively from injuries because their blood fails to clot.",
+    "zh_term": "血友病（hemophilia）",
+    "zh_def": "一种隐性X连锁遗传病，患者血液凝固功能不良。",
+    "zh_exp": "血友病患者受伤后可能因血液难以凝固而出现严重出血。"
+  },
+  {
+    "en_term": "sickle cell anemia",
+    "en_def": "A genetic disorder caused by a specific allele of the gene for hemoglobin that produces sickle-shaped red blood cells.",
+    "en_exp": "People who are homozygous for the sickle cell allele have sickle cell anemia and can suffer from blocked blood vessels and tissue damage.",
+    "zh_term": "镰刀型贫血（sickle cell anemia）",
+    "zh_def": "由血红蛋白基因特定等位基因引起的一种遗传病，红细胞呈镰刀状。",
+    "zh_exp": "隐性纯合个体会患镰刀型贫血，镰刀状红细胞易堵塞血管并造成组织损伤。"
+  },
+  {
+    "en_term": "sickle cell trait",
+    "en_def": "The condition of being heterozygous for the sickle cell allele, having some normal and some sickled red blood cells.",
+    "en_exp": "Individuals with the sickle cell trait rarely show severe symptoms and are more resistant to malaria.",
+    "zh_term": "镰刀型贫血携带状态（sickle cell trait）",
+    "zh_def": "指在镰刀型贫血基因上为杂合子，既有正常红细胞也有部分镰刀状红细胞的情况。",
+    "zh_exp": "具有镰刀型贫血携带状态的人通常症状较轻，同时对疟疾更具抵抗力。"
+  },
+  {
+    "en_term": "hemoglobin",
+    "en_def": "A protein in red blood cells that carries oxygen in the blood.",
+    "en_exp": "The sickle cell allele produces an abnormal hemoglobin that changes the shape of red blood cells.",
+    "zh_term": "血红蛋白（hemoglobin）",
+    "zh_def": "红细胞中负责运输氧气的蛋白质。",
+    "zh_exp": "镰刀型贫血患者的血红蛋白结构异常，导致红细胞变形。"
+  },
+  {
+    "en_term": "red blood cell",
+    "en_def": "A type of blood cell that transports oxygen using hemoglobin.",
+    "en_exp": "In sickle cell anemia, many red blood cells are C-shaped and cannot move easily through small blood vessels.",
+    "zh_term": "红细胞（red blood cell）",
+    "zh_def": "血液中负责携带氧气的细胞，主要含有血红蛋白。",
+    "zh_exp": "在镰刀型贫血中，一些红细胞变成镰刀形，难以通过细小血管。"
+  },
+  {
+    "en_term": "malaria",
+    "en_def": "A life-threatening disease caused by a parasite transmitted to humans through mosquito bites.",
+    "en_exp": "The sickle cell trait provides resistance to malaria in some regions where the disease is common.",
+    "zh_term": "疟疾（malaria）",
+    "zh_def": "一种由寄生虫经蚊子叮咬传播的严重疾病。",
+    "zh_exp": "在疟疾高发地区，携带镰刀型贫血基因的人对疟疾有一定抵抗力。"
+  },
+  {
+    "en_term": "parasite",
+    "en_def": "An organism that lives in or on another organism and may cause disease.",
+    "en_exp": "The malaria parasite infects the liver and red blood cells of humans.",
+    "zh_term": "寄生虫（parasite）",
+    "zh_def": "生活在其他生物体内或体表并从中获益、可能引起疾病的生物。",
+    "zh_exp": "疟原虫是引起疟疾的寄生虫，会感染肝脏和红细胞。"
+  },
+  {
+    "en_term": "genetic disease",
+    "en_def": "A disease caused by abnormal genes or alleles.",
+    "en_exp": "Sickle cell anemia is an example of a genetic disease studied in the context of codominance and natural selection.",
+    "zh_term": "遗传疾病（genetic disease）",
+    "zh_def": "由于基因或等位基因异常而引起的疾病。",
+    "zh_exp": "镰刀型贫血就是教材中介绍的一种典型遗传疾病。"
+  },
+  {
+    "en_term": "ABO blood type",
+    "en_def": "A human blood group system controlled by a single gene with three common alleles: I^A, I^B, and i.",
+    "en_exp": "In the ABO system, I^A and I^B are codominant and i is recessive, producing blood types A, B, AB, and O.",
+    "zh_term": "ABO血型（ABO blood type）",
+    "zh_def": "由一个具有三个常见等位基因（I^A、I^B、i）的基因控制的人类血型系统。",
+    "zh_exp": "在ABO系统中，I^A与I^B呈共显性，i为隐性，因此产生A、B、AB和O四种血型。"
+  },
+  {
+    "en_term": "genomics",
+    "en_def": "The study of genomes, including the sequencing and analysis of DNA.",
+    "en_exp": "The Silent Genomes Project mentioned in the text aims to include Indigenous Canadians in genomics research.",
+    "zh_term": "基因组学（genomics）",
+    "zh_def": "对基因组进行测序和分析的学科。",
+    "zh_exp": "文中提到的“Silent Genomes Project”就是一项与基因组学相关的研究计划。"
+  },
+  {
+    "en_term": "genome",
+    "en_def": "The complete set of DNA, including all genes, in an organism.",
+    "en_exp": "Comparing DNA sequences in a patient’s genome to a reference helps identify disease-causing changes.",
+    "zh_term": "基因组（genome）",
+    "zh_def": "一个生物体内全部遗传物质（所有DNA）的总和。",
+    "zh_exp": "通过比较患者基因组与参考基因组的DNA序列，可以寻找导致遗传病的变化。"
+  },
+  {
+    "en_term": "ear of corn",
+    "en_def": "The part of a corn plant that bears kernels, each kernel being a separate offspring with its own genetics.",
+    "en_exp": "In the corn genetics investigation, each kernel is treated as one offspring for counting phenotypes.",
+    "zh_term": "玉米穗（ear of corn）",
+    "zh_def": "玉米植株上结有许多籽粒的部分，每一粒籽实都是一个具有独立遗传组合的后代。",
+    "zh_exp": "在玉米遗传实验中，穗上的每颗籽粒都被视为一个用于统计性状的后代个体。"
+  },
+  {
+    "en_term": "kernel (corn kernel)",
+    "en_def": "An individual seed on an ear of corn that represents one offspring in genetic studies.",
+    "en_exp": "Counting purple and yellow kernels allows students to determine phenotypic ratios in the F2 generation.",
+    "zh_term": "玉米粒（kernel）",
+    "zh_def": "玉米穗上的单个籽粒，在遗传学实验中代表一个后代个体。",
+    "zh_exp": "通过统计紫色和黄色玉米粒的数量，可以求出F2代的表现型比例。"
+  }
+];
+
+	    // State
+	    let order = [...CARDS.keys()];
+	    let idx = 0;
+	    let flipped = false;
+	    let displayMode = "both"; // both | en | zh
+
+    // Elements
+    const cardEl = document.getElementById("card");
+    const qText = document.getElementById("qText");
+    const aEn = document.getElementById("aEn");
+    const expEn = document.getElementById("expEn");
+    const aZh = document.getElementById("aZh");
+    const expZh = document.getElementById("expZh");
+    const counter = document.getElementById("counter");
+    const fill = document.getElementById("fill");
+
+    const enBlock = document.getElementById("enBlock");
+    const zhBlock = document.getElementById("zhBlock");
+
+	    const prevBtn = document.getElementById("prevBtn");
+	    const nextBtn = document.getElementById("nextBtn");
+	    const flipBtn = document.getElementById("flipBtn");
+	    const shuffleBtn = document.getElementById("shuffleBtn");
+	    const resetBtn = document.getElementById("resetBtn");
+	    const displaySelect = document.getElementById("displayMode");
+
+    const listEl = document.getElementById("list");
+    const searchEl = document.getElementById("search");
+    const listWrapEl = document.querySelector(".listWrap");
+
+    // Search state:
+    // - userQuery drives filtering
+    // - autoScrollTerm is only shown in the input when not actively searching
+    let userQuery = "";
+    let autoScrollTerm = "";
+
+    function setAutoScrollTerm(term){
+      autoScrollTerm = term || "";
+      if (userQuery) return; // don't override active searches
+      if (document.activeElement === searchEl) return; // don't fight the cursor
+      searchEl.value = autoScrollTerm;
+      searchEl.classList.toggle("autofill", Boolean(autoScrollTerm));
+    }
+
+    function termForPos(pos){
+      const cardIndex = order[pos];
+      const card = CARDS[cardIndex];
+      return card ? card.en_term : "";
+    }
+
+    function getTopVisiblePos(){
+      const rows = listEl.querySelectorAll(".row");
+      if (!rows.length) return null;
+      const scrollTop = listWrapEl.scrollTop;
+      for (let i = 0; i < rows.length; i++){
+        const row = rows[i];
+        const top = row.offsetTop;
+        const bottom = top + row.offsetHeight;
+        if (bottom > scrollTop + 1) return Number(row.dataset.pos);
+      }
+      return Number(rows[rows.length - 1].dataset.pos);
+    }
+
+    function getBottomVisiblePos(){
+      const rows = listEl.querySelectorAll(".row");
+      if (!rows.length) return null;
+      const viewBottom = listWrapEl.scrollTop + listWrapEl.clientHeight;
+      for (let i = rows.length - 1; i >= 0; i--){
+        const row = rows[i];
+        const top = row.offsetTop;
+        if (top < viewBottom - 1) return Number(row.dataset.pos);
+      }
+      return Number(rows[0].dataset.pos);
+    }
+
+    let lastTopPos = null;
+    let lastBottomPos = null;
+    let lastScrollTop = 0;
+    let scrollRaf = null;
+
+    function syncListScrollState({ seedAutoTerm = false } = {}){
+      lastTopPos = getTopVisiblePos();
+      lastBottomPos = getBottomVisiblePos();
+      lastScrollTop = listWrapEl.scrollTop;
+      if (seedAutoTerm && lastTopPos != null) setAutoScrollTerm(termForPos(lastTopPos));
+    }
+
+    function clampIndex(){
+      if (idx < 0) idx = order.length - 1;
+      if (idx >= order.length) idx = 0;
+    }
+
+    function currentCard(){
+      return CARDS[ order[idx] ];
+    }
+
+    function setFlipped(v){
+      flipped = v;
+      cardEl.classList.toggle("flipped", flipped);
+    }
+
+    function render(){
+      const c = currentCard();
+      // Front question
+      const qEn = `What is ${c.en_term}?`;
+      const qZh = `什么是 ${c.zh_term}？`;
+
+      if (displayMode === "en"){
+        qText.innerHTML = `${escapeHTML(qEn)}`;
+      } else if (displayMode === "zh"){
+        qText.innerHTML = `<span class="zh">${escapeHTML(qZh)}</span>`;
+      } else {
+        qText.innerHTML = `${escapeHTML(qEn)}<span class="zh">${escapeHTML(qZh)}</span>`;
+      }
+
+      // Back answer/explanation
+      aEn.textContent = c.en_def;
+      expEn.innerHTML = `<span class="label">Explanation: </span>${escapeHTML(c.en_exp)}`;
+
+      aZh.textContent = c.zh_def;
+      expZh.innerHTML = `<span class="label">解释： </span>${escapeHTML(c.zh_exp)}`;
+
+      // show/hide language blocks
+      enBlock.style.display = (displayMode === "zh") ? "none" : "block";
+      zhBlock.style.display = (displayMode === "en") ? "none" : "block";
+
+      // progress
+      counter.textContent = `${idx + 1} / ${order.length}`;
+      fill.style.width = `${((idx + 1) / order.length) * 100}%`;
+
+      // always show front when changing cards
+      setFlipped(false);
+
+      // rebuild list highlight
+      renderList(userQuery);
+    }
+
+    function next(){
+      idx++;
+      clampIndex();
+      render();
+    }
+    function prev(){
+      idx--;
+      clampIndex();
+      render();
+    }
+    function flip(){
+      setFlipped(!flipped);
+    }
+
+    function shuffle(){
+      // Fisher-Yates shuffle of order
+      for (let i = order.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+      }
+      idx = 0;
+      render();
+    }
+
+    function resetOrder(){
+      order = [...CARDS.keys()];
+      idx = 0;
+      render();
+    }
+
+    function escapeHTML(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // List panel
+    function renderList(query=""){
+      const q = query.toLowerCase();
+      const items = [];
+
+      for (let i = 0; i < order.length; i++){
+        const c = CARDS[order[i]];
+        const hay = `${c.en_term} ${c.en_def} ${c.en_exp} ${c.zh_term} ${c.zh_def} ${c.zh_exp}`.toLowerCase();
+        if (!q || hay.includes(q)){
+          items.push({pos:i, card:c});
+        }
+      }
+
+      listEl.innerHTML = items.map(({pos, card}) => {
+        const active = (pos === idx);
+        return `
+          <div class="row" data-pos="${pos}" style="${active ? 'background: rgba(122,162,255,.14);' : ''}">
+            <div>
+              <div class="t">${escapeHTML(card.en_term)}</div>
+              <div class="z">${escapeHTML(card.zh_term)}</div>
+            </div>
+            <div class="idx">${pos+1}</div>
+          </div>
+        `;
+      }).join("");
+
+      // attach handlers
+      [...listEl.querySelectorAll(".row")].forEach(el => {
+        el.addEventListener("click", () => {
+          idx = Number(el.dataset.pos);
+          render();
+        });
+      });
+
+      // If list contents changed (search/filter), re-sync scroll tracking.
+      // Keep the currently displayed autofill term if the user is searching.
+      syncListScrollState();
+    }
+
+	    // Events
+	    let suppressClick = false;
+
+	    cardEl.addEventListener("click", (e) => {
+	      if (suppressClick){
+	        suppressClick = false;
+	        return;
+	      }
+
+	      // Kindle-like navigation: tap left/right edge for prev/next.
+	      const rect = cardEl.getBoundingClientRect();
+	      const edge = Math.min(90, Math.max(44, rect.width * 0.22));
+	      const x = (typeof e.clientX === "number") ? (e.clientX - rect.left) : (rect.width / 2);
+
+	      if (x <= edge) { prev(); return; }
+	      if (x >= rect.width - edge) { next(); return; }
+
+	      flip();
+	    });
+	    cardEl.addEventListener("keydown", (e) => {
+	      if (e.key === "Enter") flip();
+	    });
+
+    prevBtn.addEventListener("click", prev);
+    nextBtn.addEventListener("click", next);
+    flipBtn.addEventListener("click", flip);
+    shuffleBtn.addEventListener("click", shuffle);
+    resetBtn.addEventListener("click", resetOrder);
+
+    displaySelect.addEventListener("change", (e) => {
+      displayMode = e.target.value;
+      render();
+    });
+
+	    searchEl.addEventListener("input", (e) => {
+        userQuery = e.target.value.trim();
+        searchEl.classList.toggle("autofill", !userQuery && Boolean(autoScrollTerm) && document.activeElement !== searchEl);
+        renderList(userQuery);
+      });
+
+      searchEl.addEventListener("focus", () => {
+        searchEl.classList.remove("autofill");
+        searchEl.value = userQuery;
+      });
+      searchEl.addEventListener("blur", () => {
+        if (!userQuery && autoScrollTerm) setAutoScrollTerm(autoScrollTerm);
+      });
+
+      // When scrolling the list, show the last term that just scrolled out of view.
+      listWrapEl.addEventListener("scroll", () => {
+        if (scrollRaf) return;
+        scrollRaf = requestAnimationFrame(() => {
+          scrollRaf = null;
+
+          const newTop = getTopVisiblePos();
+          const newBottom = getBottomVisiblePos();
+          const st = listWrapEl.scrollTop;
+          const direction = st > lastScrollTop ? "down" : (st < lastScrollTop ? "up" : "still");
+
+          if (direction === "down" && lastTopPos != null && newTop != null && newTop !== lastTopPos){
+            setAutoScrollTerm(termForPos(lastTopPos));
+          } else if (direction === "up" && lastBottomPos != null && newBottom != null && newBottom !== lastBottomPos){
+            setAutoScrollTerm(termForPos(lastBottomPos));
+          }
+
+          lastTopPos = newTop;
+          lastBottomPos = newBottom;
+          lastScrollTop = st;
+        });
+      }, { passive: true });
+
+	    // Mobile swipe: swipe up/down for next/prev.
+	    // Attach only to the card so the term list can still scroll normally.
+	    let swipe = null;
+	    const SWIPE_MIN_PX = 44;
+	    const SWIPE_MAX_MS = 700;
+
+	    function onSwipeStart(clientX, clientY){
+	      swipe = { x: clientX, y: clientY, t: performance.now() };
+	    }
+	    function onSwipeEnd(clientX, clientY){
+	      if (!swipe) return;
+	      const dt = performance.now() - swipe.t;
+	      const dx = clientX - swipe.x;
+	      const dy = clientY - swipe.y;
+	      swipe = null;
+
+	      if (dt > SWIPE_MAX_MS) return;
+	      if (Math.abs(dy) < SWIPE_MIN_PX) return;
+	      if (Math.abs(dy) < Math.abs(dx) * 1.2) return; // mostly vertical
+
+	      suppressClick = true;
+	      if (dy < 0) next();
+	      else prev();
+	    }
+
+	    // Pointer events (modern browsers)
+	    cardEl.addEventListener("pointerdown", (e) => {
+	      if (e.pointerType === "mouse") return;
+	      onSwipeStart(e.clientX, e.clientY);
+	    }, { passive: true });
+	    cardEl.addEventListener("pointerup", (e) => {
+	      if (e.pointerType === "mouse") return;
+	      onSwipeEnd(e.clientX, e.clientY);
+	    }, { passive: true });
+	    cardEl.addEventListener("pointercancel", () => { swipe = null; }, { passive: true });
+
+	    // Touch events (fallback)
+	    cardEl.addEventListener("touchstart", (e) => {
+	      const t = e.touches && e.touches[0];
+	      if (!t) return;
+	      onSwipeStart(t.clientX, t.clientY);
+	    }, { passive: true });
+	    cardEl.addEventListener("touchend", (e) => {
+	      const t = e.changedTouches && e.changedTouches[0];
+	      if (!t) return;
+	      onSwipeEnd(t.clientX, t.clientY);
+	    }, { passive: true });
+	    cardEl.addEventListener("touchcancel", () => { swipe = null; }, { passive: true });
+
+	    // Keyboard shortcuts
+	    window.addEventListener("keydown", (e) => {
+	      // avoid interfering when typing
+	      const tag = (document.activeElement && document.activeElement.tagName) || "";
+      const typing = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+      if (typing && e.key !== "Escape") return;
+
+      if (e.key === "ArrowRight") next();
+      else if (e.key === "ArrowLeft") prev();
+      else if (e.key === " "){ e.preventDefault(); flip(); }
+      else if (e.key.toLowerCase() === "s") shuffle();
+      else if (e.key === "Escape") {
+        userQuery = "";
+        searchEl.value = "";
+        searchEl.classList.remove("autofill");
+        renderList("");
+        // restore the scroll-based term when not actively searching
+        if (autoScrollTerm) setAutoScrollTerm(autoScrollTerm);
+      }
+    });
+
+	    // Init
+	    renderList("");
+      syncListScrollState({ seedAutoTerm: true });
+	    render();
+	  </script>
+	</body>
+	</html>
