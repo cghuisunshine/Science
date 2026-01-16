@@ -750,6 +750,38 @@
         displaySelect.disabled = !enabled;
       }
 
+      const STORAGE_KEY = "template_terms.cards.v1";
+
+      function persistCardsToLocalStorage(cards, { sourceName = "" } = {}){
+        try {
+          window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            version: 1,
+            sourceName,
+            cards,
+            savedAt: Date.now(),
+          }));
+          return true;
+        } catch {
+          return false;
+        }
+      }
+
+      function restoreCardsFromLocalStorage(){
+        try {
+          const raw = window.localStorage.getItem(STORAGE_KEY);
+          if (!raw) return null;
+          const parsed = JSON.parse(raw);
+          const cards = normalizeCards(parsed);
+          return {
+            cards,
+            sourceName: String(parsed?.sourceName ?? "").trim(),
+          };
+        } catch {
+          try { window.localStorage.removeItem(STORAGE_KEY); } catch {}
+          return null;
+        }
+      }
+
       function normalizeCards(data){
         const list = Array.isArray(data)
           ? data
@@ -770,7 +802,7 @@
         return cleaned;
       }
 
-      function loadCards(cards, { sourceName = "imported JSON" } = {}){
+      function loadCards(cards, { sourceName = "imported JSON", persist = false, persistSourceName = "" } = {}){
         CARDS = cards;
         order = [...CARDS.keys()];
         idx = 0;
@@ -780,6 +812,7 @@
         listWrapEl.scrollTop = 0;
         setAutoScrollTerm("");
         setStatus(`Loaded ${CARDS.length} cards from ${sourceName}.`);
+        if (persist) persistCardsToLocalStorage(CARDS, { sourceName: persistSourceName });
         renderList("");
         syncListScrollState({ seedAutoTerm: true });
         render();
@@ -797,7 +830,7 @@
           const text = await file.text();
           const data = JSON.parse(text);
           const cards = normalizeCards(data);
-          loadCards(cards, { sourceName: file.name });
+          loadCards(cards, { sourceName: file.name, persist: true, persistSourceName: file.name });
         } catch (err) {
           setStatus(err instanceof Error ? err.message : String(err), { error: true });
         }
@@ -911,11 +944,16 @@
     });
 
 	    // Init
-	    renderList("");
-      syncListScrollState({ seedAutoTerm: true });
-	    render();
-      setControlsEnabled(false);
-      setStatus("No cards loaded yet.");
+      const restored = restoreCardsFromLocalStorage();
+      if (restored){
+        loadCards(restored.cards, { sourceName: restored.sourceName ? `saved (${restored.sourceName})` : "saved JSON" });
+      } else {
+	      renderList("");
+        syncListScrollState({ seedAutoTerm: true });
+	      render();
+        setControlsEnabled(false);
+        setStatus("No cards loaded yet.");
+      }
 	  </script>
 	</body>
 	</html>
