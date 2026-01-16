@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Science 10 — Cells &amp; Organelles Flashcards</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#121c32;
+      --card2:#0f1830;
+      --text:#e8eefc;
+      --muted:#a9b7dd;
+      --accent:#7aa2ff;
+      --border:rgba(255,255,255,.12);
+      --shadow: 0 14px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+	    *{box-sizing:border-box}
+	    html, body{height:100%}
+		    body{
+	      margin:0;
+	      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "PingFang SC","Microsoft YaHei", sans-serif;
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(122,162,255,.18), transparent 60%),
+                  radial-gradient(900px 500px at 80% 30%, rgba(123,255,211,.10), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+	      min-height:100vh;
+	      display:flex;
+	      align-items:flex-start;
+	      justify-content:center;
+	      padding:24px;
+	      overflow:hidden;
+	    }
+	    .app{
+	      width:min(980px, 100%);
+	      display:grid;
+	      grid-template-columns: 1.1fr .9fr;
+	      grid-template-rows: auto 1fr;
+	      gap:18px;
+	      height: calc(100vh - 48px);
+	      align-items:stretch;
+	    }
+			    @media (max-width: 900px){
+			      body{overflow:hidden}
+			      .app{
+			        display:flex;
+			        flex-direction:column;
+			        height: calc(100vh - 48px);
+			      }
+			      .stage{position:static; top:auto; align-self:stretch}
+			      .cardWrap{height: clamp(260px, 38vh, 420px)}
+			      .listPanel{flex:1; min-height:0}
+			    }
+    header{
+      grid-column:1/-1;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+    }
+    h1{
+      font-size:20px;
+      margin:0;
+      letter-spacing:.2px;
+    }
+    .sub{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:6px;
+      line-height:1.3;
+    }
+	    .panel{
+	      background: rgba(18,28,50,.96);
+	      border:1px solid var(--border);
+	      border-radius: var(--radius);
+	      box-shadow: var(--shadow);
+	      padding:14px;
+	    }
+
+    /* Flashcard */
+	    .stage{
+	      display:flex;
+	      flex-direction:column;
+	      gap:12px;
+	      position:sticky;
+	      top:24px;
+	      align-self:start;
+	      z-index:2;
+	    }
+	    .cardWrap{
+	      perspective: 1200px;
+	      height: clamp(320px, 52vh, 520px);
+	    }
+	    .card{
+	      width:100%;
+	      height:100%;
+	      position:relative;
+	      transform-style:preserve-3d;
+	      transition:transform .55s cubic-bezier(.2,.8,.2,1);
+	      border-radius: var(--radius);
+	      cursor:pointer;
+	      outline:none;
+	      touch-action: none;
+	    }
+    .card:focus{box-shadow:0 0 0 3px rgba(122,162,255,.35), var(--shadow)}
+    .card.flipped{transform: rotateY(180deg)}
+	    .face{
+      position:absolute;
+      inset:0;
+      padding:18px;
+      border-radius: var(--radius);
+      border:1px solid var(--border);
+	      background: linear-gradient(180deg, rgba(18,28,50,.98), rgba(15,24,48,.98));
+	      backface-visibility:hidden;
+	      display:flex;
+	      flex-direction:column;
+	      gap:12px;
+	      overflow:hidden;
+	    }
+	    .back{
+	      transform: rotateY(180deg);
+	      background: linear-gradient(180deg, rgba(30,50,96,.92), rgba(15,24,48,.98));
+	    }
+    .chipRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .chip{
+      font-size:12px;
+      color:var(--muted);
+      padding:6px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:rgba(0,0,0,.18);
+      user-select:none;
+    }
+    .hint{
+      color:var(--muted);
+      font-size:12px;
+      user-select:none;
+    }
+    .q{
+      font-size:18px;
+      font-weight:700;
+      line-height:1.25;
+      margin-top:4px;
+    }
+    .q .zh{
+      display:block;
+      margin-top:8px;
+      font-weight:650;
+      color:rgba(232,238,252,.92);
+    }
+    .aTitle{
+      font-size:12px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+    }
+    .a{
+      font-size:16px;
+      line-height:1.4;
+      font-weight:650;
+    }
+    .exp{
+      margin-top:8px;
+      color:rgba(232,238,252,.88);
+      line-height:1.55;
+      font-size:14px;
+    }
+    .exp .label{
+      color:var(--muted);
+      font-weight:700;
+      letter-spacing:.04em;
+    }
+    .split{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:6px;
+    }
+    @media (max-width: 520px){
+      .split{grid-template-columns:1fr}
+      .cardWrap{height: 520px;}
+    }
+    .langBlock{
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:rgba(0,0,0,.16);
+      overflow:auto;
+    }
+    .langBlock h3{
+      margin:0 0 6px 0;
+      font-size:12px;
+      letter-spacing:.12em;
+      color:var(--muted);
+      text-transform:uppercase;
+    }
+    .langBlock .big{
+      font-weight:750;
+      font-size:15px;
+      line-height:1.4;
+      margin-bottom:8px;
+    }
+    .langBlock .small{
+      font-size:13px;
+      line-height:1.55;
+      color:rgba(232,238,252,.86);
+    }
+
+    /* Controls */
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    button, select, input[type="text"]{
+      background:rgba(0,0,0,.22);
+      color:var(--text);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:13px;
+      outline:none;
+    }
+    input[type="text"].autofill{
+      color:var(--muted);
+      font-style: italic;
+    }
+    button{cursor:pointer}
+    button:hover{border-color: rgba(122,162,255,.45)}
+    button:active{transform: translateY(1px)}
+    select{cursor:pointer}
+    .wide{
+      width: 100%;
+    }
+    .progress{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      color:var(--muted);
+      font-size:13px;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .bar{
+      width:160px;
+      height:10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.22);
+      overflow:hidden;
+    }
+    .fill{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(122,162,255,.9), rgba(123,255,211,.7));
+    }
+
+	    /* List panel */
+	    .listPanel{
+	      display:flex;
+	      flex-direction:column;
+	      gap:12px;
+	      height:100%;
+	      min-height:0;
+	    }
+	    .topTools{
+	      display:flex;
+	      gap:10px;
+	      flex-wrap:wrap;
+	    }
+	    .listWrap{
+	      border:1px solid var(--border);
+	      border-radius:14px;
+	      overflow:auto;
+	      background:rgba(0,0,0,.16);
+	      flex:1;
+	      min-height:0;
+	      overscroll-behavior: contain;
+	    }
+	    .list{
+	      min-height:0;
+	    }
+    .row{
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      cursor:pointer;
+    }
+    .row:last-child{border-bottom:none}
+    .row:hover{background:rgba(122,162,255,.08)}
+    .row .t{
+      font-weight:700;
+      font-size:13px;
+    }
+    .row .z{
+      color:var(--muted);
+      font-size:12px;
+    }
+    .row .idx{
+      color:var(--muted);
+      font-size:12px;
+      padding:4px 8px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      background:rgba(0,0,0,.18);
+      user-select:none;
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px;
+      color:rgba(232,238,252,.9);
+      padding:2px 6px;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:8px;
+      background:rgba(0,0,0,.28);
+    }
+    .footerTips{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+    a.smallLink{
+      color: rgba(122,162,255,.95);
+      text-decoration:none;
+    }
+    a.smallLink:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>Science 10 — Cells &amp; Organelles Flashcards</h1>
+        <div class="sub">
+          Click the card to flip. Keyboard: <span class="kbd">Space</span> flip · <span class="kbd">←</span>/<span class="kbd">→</span> prev/next · <span class="kbd">S</span> shuffle
+        </div>
+      </div>
+      <div class="progress">
+        <div id="counter">1 / 1</div>
+        <div class="bar" aria-hidden="true"><div class="fill" id="fill"></div></div>
+      </div>
+    </header>
+
+    <!-- Flashcard panel -->
+    <section class="panel stage">
+      <div class="controls">
+        <div class="btnRow">
+          <button id="prevBtn" title="Previous (←)">◀ Prev</button>
+          <button id="flipBtn" title="Flip (Space)">Flip</button>
+          <button id="nextBtn" title="Next (→)">Next ▶</button>
+          <button id="shuffleBtn" title="Shuffle (S)">Shuffle</button>
+        </div>
+
+        <div class="btnRow">
+          <select id="displayMode" title="Display mode">
+            <option value="both" selected>Show EN + 中文</option>
+            <option value="en">English only</option>
+            <option value="zh">中文 only</option>
+          </select>
+          <button id="resetBtn" title="Reset order">Reset</button>
+        </div>
+      </div>
+
+      <div class="cardWrap">
+        <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard">
+          <!-- Front (Question) -->
+          <div class="face front">
+            <div class="chipRow">
+              <div class="chip" id="chipFront">Question</div>
+              <div class="hint">Click to flip</div>
+            </div>
+
+            <div class="q" id="qText"></div>
+
+            <div class="footerTips">
+              Tip: Try answering out loud before flipping. Then explain it in your own words.
+            </div>
+          </div>
+
+          <!-- Back (Answer + Explanation) -->
+          <div class="face back">
+            <div class="chipRow">
+              <div class="chip" id="chipBack">Answer + Explanation</div>
+              <div class="hint">Click to flip back</div>
+            </div>
+
+            <div class="split" id="backSplit">
+              <div class="langBlock" id="enBlock">
+                <h3>English</h3>
+                <div class="big" id="aEn"></div>
+                <div class="small" id="expEn"></div>
+              </div>
+
+              <div class="langBlock" id="zhBlock">
+                <h3>中文</h3>
+                <div class="big" id="aZh"></div>
+                <div class="small" id="expZh"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+	    <!-- List / search panel -->
+	    <aside class="panel listPanel">
+	      <div class="topTools">
+	        <input id="search" class="wide" type="text" placeholder="Search terms (e.g., cell, nucleus, mitochondrion, 细胞, 线粒体)..." />
+	      </div>
+
+	      <div class="listWrap">
+	        <div class="list" id="list"></div>
+	      </div>
+
+	      <div class="footerTips">
+	        You can click any item in the list to jump to that card.<br/>
+	        Want to add more cards (e.g., from your worksheet questions)? Paste them and I’ll extend this set.
+	      </div>
+	    </aside>
+  </div>
+
+  <script>
+	    // Flashcards dataset (EN / 中文)
+	    // Format: term + definition + explanation
+	    const CARDS = [
+  {
+    "en_term": "cell",
+    "en_def": "The smallest structural and functional unit of a living organism.",
+    "en_exp": "A human body is made of trillions of cells working together.",
+    "zh_term": "细胞（cell）",
+    "zh_def": "生物体最基本的结构和功能单位。",
+    "zh_exp": "人体由数以万亿计的细胞共同组成。"
+  },
+  {
+    "en_term": "organelle",
+    "en_def": "A specialized structure within a cell that performs a specific function.",
+    "en_exp": "The nucleus is an organelle that controls many activities in the cell.",
+    "zh_term": "细胞器（organelle）",
+    "zh_def": "位于细胞内部、具有特定功能的微小结构。",
+    "zh_exp": "细胞核是一种细胞器，负责控制许多细胞活动。"
+  },
+  {
+    "en_term": "animal cell",
+    "en_def": "A type of eukaryotic cell found in animals that lacks a cell wall and chloroplasts.",
+    "en_exp": "An animal cell usually has a flexible shape because it has no cell wall.",
+    "zh_term": "动物细胞（animal cell）",
+    "zh_def": "存在于动物体内的一类真核细胞，没有细胞壁和叶绿体。",
+    "zh_exp": "动物细胞由于没有细胞壁，形状通常比较灵活。"
+  },
+  {
+    "en_term": "plant cell",
+    "en_def": "A eukaryotic cell found in plants that has a cell wall, chloroplasts, and a large central vacuole.",
+    "en_exp": "The plant cell’s rigid cell wall helps the plant keep its shape.",
+    "zh_term": "植物细胞（plant cell）",
+    "zh_def": "存在于植物体内的真核细胞，具有细胞壁、叶绿体和大的中央液泡。",
+    "zh_exp": "植物细胞的细胞壁帮助植物保持固定的形状。"
+  },
+  {
+    "en_term": "cell membrane",
+    "en_def": "A thin, flexible barrier that surrounds the cell and controls what enters and leaves.",
+    "en_exp": "The cell membrane allows oxygen to enter the cell while keeping harmful substances out.",
+    "zh_term": "细胞膜（cell membrane）",
+    "zh_def": "包围细胞的薄而有弹性的边界，控制物质进出细胞。",
+    "zh_exp": "细胞膜允许氧气进入细胞，同时阻挡有害物质。"
+  },
+  {
+    "en_term": "cytoplasm",
+    "en_def": "A gel-like fluid inside the cell that contains water, dissolved substances, and organelles.",
+    "en_exp": "Organelles such as mitochondria float in the cytoplasm.",
+    "zh_term": "细胞质（cytoplasm）",
+    "zh_def": "位于细胞内部的胶状液体，含有水、溶解物质和各种细胞器。",
+    "zh_exp": "线粒体等细胞器漂浮在细胞质之中。"
+  },
+  {
+    "en_term": "nucleus",
+    "en_def": "A large organelle that contains DNA and controls the activities and reproduction of the cell.",
+    "en_exp": "The nucleus directs when the cell should grow, divide, or make certain proteins.",
+    "zh_term": "细胞核（nucleus）",
+    "zh_def": "细胞内较大的细胞器，内含 DNA，负责控制细胞活动和细胞分裂。",
+    "zh_exp": "细胞核会指挥细胞何时生长、分裂以及合成哪些蛋白质。"
+  },
+  {
+    "en_term": "DNA (deoxyribonucleic acid)",
+    "en_def": "The molecule that carries genetic information and determines traits passed to new cells or offspring.",
+    "en_exp": "DNA in the nucleus controls inherited features such as eye colour.",
+    "zh_term": "脱氧核糖核酸（DNA）",
+    "zh_def": "携带遗传信息的分子，决定被传递给新细胞或子代的性状。",
+    "zh_exp": "细胞核中的 DNA 决定了如眼睛颜色等遗传特征。"
+  },
+  {
+    "en_term": "trait",
+    "en_def": "A characteristic or feature of an organism that can be inherited.",
+    "en_exp": "Hair colour is a trait that can be passed from parents to children.",
+    "zh_term": "性状（trait）",
+    "zh_def": "生物体所具有的、可以遗传的特征或表现。",
+    "zh_exp": "头发颜色是一种可以由父母遗传给子女的性状。"
+  },
+  {
+    "en_term": "mitochondrion",
+    "en_def": "An oval-shaped organelle where cellular respiration occurs to produce energy for the cell.",
+    "en_exp": "The mitochondrion breaks down glucose to release usable energy.",
+    "zh_term": "线粒体（mitochondrion）",
+    "zh_def": "椭圆形细胞器，进行细胞呼吸，为细胞提供能量。",
+    "zh_exp": "线粒体分解葡萄糖以释放细胞可利用的能量。"
+  },
+  {
+    "en_term": "ribosome",
+    "en_def": "A tiny organelle that assembles amino acids to make proteins.",
+    "en_exp": "Ribosomes on the rough ER help build proteins that will be transported out of the cell.",
+    "zh_term": "核糖体（ribosome）",
+    "zh_def": "体积很小的细胞器，负责将氨基酸组装成蛋白质。",
+    "zh_exp": "粗面内质网上的核糖体帮助合成将要被运出细胞的蛋白质。"
+  },
+  {
+    "en_term": "endoplasmic reticulum (ER)",
+    "en_def": "A network of folded membranes that forms channels to transport proteins and other molecules in the cell.",
+    "en_exp": "Proteins made by ribosomes can move through the endoplasmic reticulum to other parts of the cell.",
+    "zh_term": "内质网（endoplasmic reticulum, ER）",
+    "zh_def": "由折叠膜构成的网状结构，在细胞内形成通道，用于运输蛋白质和其他分子。",
+    "zh_exp": "核糖体合成的蛋白质可以通过内质网被运送到细胞的其他部位。"
+  },
+  {
+    "en_term": "rough endoplasmic reticulum",
+    "en_def": "Region of the endoplasmic reticulum covered with ribosomes, involved in making and transporting proteins.",
+    "en_exp": "The rough endoplasmic reticulum surrounds the nucleus and looks bumpy because of the ribosomes.",
+    "zh_term": "粗面内质网（rough ER）",
+    "zh_def": "表面附着大量核糖体的内质网区域，参与蛋白质的合成和运输。",
+    "zh_exp": "粗面内质网围绕细胞核，由于布满核糖体而呈现粗糙外观。"
+  },
+  {
+    "en_term": "smooth endoplasmic reticulum",
+    "en_def": "Region of the endoplasmic reticulum without ribosomes, involved in making and transporting other molecules such as lipids.",
+    "en_exp": "The smooth endoplasmic reticulum helps process and move molecules that are not proteins.",
+    "zh_term": "光面内质网（smooth ER）",
+    "zh_def": "表面没有核糖体的内质网区域，参与脂质等非蛋白分子的合成与运输。",
+    "zh_exp": "光面内质网帮助加工和运输并非蛋白质的分子。"
+  },
+  {
+    "en_term": "Golgi body (Golgi apparatus)",
+    "en_def": "An organelle made of folded membranes that modifies, sorts, and packages proteins into vesicles.",
+    "en_exp": "The Golgi body receives proteins from the ER and sends them out in small sacs.",
+    "zh_term": "高尔基体（Golgi body / Golgi apparatus）",
+    "zh_def": "由多层膜结构组成的细胞器，用于修饰、分类并包装蛋白质形成囊泡。",
+    "zh_exp": "高尔基体接收来自内质网的蛋白质，并将它们装入囊泡运往其他地方。"
+  },
+  {
+    "en_term": "vesicle",
+    "en_def": "A small, membrane-covered sac that transports materials such as proteins, water, and nutrients within or out of the cell.",
+    "en_exp": "Transport vesicles carry proteins from the Golgi body to other parts of the cell.",
+    "zh_term": "囊泡（vesicle）",
+    "zh_def": "由膜包裹成的小囊状结构，在细胞内或跨细胞膜运输蛋白质、水和营养物质等。",
+    "zh_exp": "运输囊泡将蛋白质从高尔基体送往细胞的其他区域。"
+  },
+  {
+    "en_term": "vacuole",
+    "en_def": "A storage organelle that holds water, wastes, and other substances; often very large in plant cells.",
+    "en_exp": "The central vacuole in plant cells can store large amounts of water and help keep the plant firm.",
+    "zh_term": "液泡（vacuole）",
+    "zh_def": "用于储存水、废物和其他物质的细胞器；植物细胞中的液泡通常很大。",
+    "zh_exp": "植物细胞中的中央液泡能储存大量水分，帮助植物保持挺立。"
+  },
+  {
+    "en_term": "lysosome",
+    "en_def": "An organelle containing digestive enzymes that break down and recycle worn-out cell parts and other materials.",
+    "en_exp": "Lysosomes digest damaged organelles so their materials can be reused.",
+    "zh_term": "溶酶体（lysosome）",
+    "zh_def": "内含消化酶的细胞器，用来分解并循环利用老化或损伤的细胞结构和其他物质。",
+    "zh_exp": "溶酶体能消化损坏的细胞器，使其中的物质得以再次利用。"
+  },
+  {
+    "en_term": "cilia",
+    "en_def": "Short, hair-like structures on the surface of some cells that move in waves to help the cell move or push materials past.",
+    "en_exp": "Cilia in the nasal passages move mucus along to clear dust from the airways.",
+    "zh_term": "纤毛（cilia）",
+    "zh_def": "分布在某些细胞表面的短小毛状结构，通过波浪式摆动来帮助细胞移动或推动周围物质。",
+    "zh_exp": "鼻腔表面的纤毛通过摆动把黏液及附着的灰尘向外推送。"
+  },
+  {
+    "en_term": "flagellum",
+    "en_def": "A long, whip-like structure that helps a cell swim through liquid; cells usually have only one or a few.",
+    "en_exp": "The flagellum moves back and forth, allowing the cell to swim.",
+    "zh_term": "鞭毛（flagellum）",
+    "zh_def": "细胞表面长鞭状的运动结构，帮助细胞在液体中游动，数量一般较少。",
+    "zh_exp": "鞭毛通过来回摆动，使细胞在液体中前进。"
+  },
+  {
+    "en_term": "cell wall",
+    "en_def": "A tough, rigid layer outside the cell membrane in plant cells and bacteria that supports and protects the cell.",
+    "en_exp": "The cell wall helps a plant keep its shape even when it is tall.",
+    "zh_term": "细胞壁（cell wall）",
+    "zh_def": "位于细胞膜外侧的坚硬结构，存在于植物细胞和细菌中，用于支撑并保护细胞。",
+    "zh_exp": "细胞壁帮助高大的植物保持直立的形态。"
+  },
+  {
+    "en_term": "chloroplast",
+    "en_def": "A green organelle in plant cells where photosynthesis occurs.",
+    "en_exp": "Chloroplasts use sunlight to make sugar that the plant can use as food.",
+    "zh_term": "叶绿体（chloroplast）",
+    "zh_def": "存在于植物细胞中的绿色细胞器，是进行光合作用的场所。",
+    "zh_exp": "叶绿体利用阳光把二氧化碳和水合成植物所需的糖。"
+  },
+  {
+    "en_term": "cellular respiration",
+    "en_def": "A process in which cells use glucose and oxygen to produce carbon dioxide, water, and energy.",
+    "en_exp": "During cellular respiration, mitochondria release energy that the cell can use for work.",
+    "zh_term": "细胞呼吸（cellular respiration）",
+    "zh_def": "细胞利用葡萄糖和氧气产生二氧化碳、水和能量的过程。",
+    "zh_exp": "在细胞呼吸过程中，线粒体释放出细胞可以利用的能量。"
+  },
+  {
+    "en_term": "photosynthesis",
+    "en_def": "A process in chloroplasts where energy from sunlight is used to convert carbon dioxide and water into sugar and oxygen.",
+    "en_exp": "Photosynthesis allows plants to make their own food using light energy.",
+    "zh_term": "光合作用（photosynthesis）",
+    "zh_def": "在叶绿体中进行的过程，利用光能将二氧化碳和水转化为糖和氧气。",
+    "zh_exp": "光合作用使植物能够利用光能自己制造养分。"
+  },
+  {
+    "en_term": "glucose",
+    "en_def": "A simple sugar that serves as a major energy source for cells.",
+    "en_exp": "Cells break down glucose during cellular respiration to release energy.",
+    "zh_term": "葡萄糖（glucose）",
+    "zh_def": "一种简单糖，是细胞重要的能量来源。",
+    "zh_exp": "细胞在细胞呼吸过程中分解葡萄糖以释放能量。"
+  },
+  {
+    "en_term": "oxygen",
+    "en_def": "A gas that cells use in cellular respiration to help release energy from glucose.",
+    "en_exp": "Oxygen enters the cell through the cell membrane and is used in mitochondria.",
+    "zh_term": "氧气（oxygen）",
+    "zh_def": "细胞呼吸所需的一种气体，帮助从葡萄糖中释放能量。",
+    "zh_exp": "氧气通过细胞膜进入细胞，并在线粒体中被利用。"
+  },
+  {
+    "en_term": "carbon dioxide",
+    "en_def": "A waste gas produced during cellular respiration and a reactant used in photosynthesis.",
+    "en_exp": "Cells release carbon dioxide into the environment after cellular respiration.",
+    "zh_term": "二氧化碳（carbon dioxide）",
+    "zh_def": "细胞呼吸产生的废气，也是光合作用所需的原料之一。",
+    "zh_exp": "细胞呼吸后，二氧化碳会被释放到周围环境中。"
+  },
+  {
+    "en_term": "water",
+    "en_def": "A molecule essential for life; it is produced in cellular respiration and used in photosynthesis.",
+    "en_exp": "Water inside the cytoplasm helps dissolve substances used by the cell.",
+    "zh_term": "水（water）",
+    "zh_def": "生命活动必需的分子，在细胞呼吸中生成，在光合作用中被消耗。",
+    "zh_exp": "细胞质中的水可以溶解多种物质，帮助细胞进行化学反应。"
+  },
+  {
+    "en_term": "sugar",
+    "en_def": "A general term for sweet-tasting, energy-rich molecules; in the video, it refers to the sugar made by photosynthesis.",
+    "en_exp": "The sugar produced in photosynthesis can later be used in cellular respiration.",
+    "zh_term": "糖（sugar）",
+    "zh_def": "一类甜味、富含能量的分子；视频中指光合作用产生的糖。",
+    "zh_exp": "光合作用产生的糖可以在细胞呼吸中再次被利用来释放能量。"
+  },
+  {
+    "en_term": "proteins",
+    "en_def": "Large molecules made of amino acids that carry out many functions in cells.",
+    "en_exp": "Ribosomes and the ER work together to build and transport proteins.",
+    "zh_term": "蛋白质（proteins）",
+    "zh_def": "由氨基酸组成的大分子，在细胞中承担多种结构和功能。",
+    "zh_exp": "核糖体和内质网协同工作来合成并运输蛋白质。"
+  },
+  {
+    "en_term": "nutrients",
+    "en_def": "Substances that provide energy or materials needed for growth, repair, and cell processes.",
+    "en_exp": "Vesicles can carry nutrients to different parts of the cell.",
+    "zh_term": "营养物质（nutrients）",
+    "zh_def": "为细胞提供能量或构建、修复所需材料的物质。",
+    "zh_exp": "囊泡可以将营养物质运送到细胞的不同区域。"
+  },
+  {
+    "en_term": "waste",
+    "en_def": "Unwanted or harmful substances produced by cell activities that must be stored or removed.",
+    "en_exp": "Some wastes are stored in vacuoles until the cell can get rid of them.",
+    "zh_term": "废物（waste）",
+    "zh_def": "细胞活动产生的多余或有害物质，需要被储存或排出。",
+    "zh_exp": "部分废物会先被储存在液泡中，之后再由细胞排出。"
+  },
+  {
+    "en_term": "mucus",
+    "en_def": "A thick, slippery fluid produced by cells that can trap dust and germs.",
+    "en_exp": "Cilia push mucus through the nasal passages to help clean the air we breathe.",
+    "zh_term": "黏液（mucus）",
+    "zh_def": "由细胞分泌的较稠滑的液体，可以粘住灰尘和病菌。",
+    "zh_exp": "纤毛推动鼻腔中的黏液流动，帮助清除吸入空气中的灰尘。"
+  }
+];
+
+	    // State
+	    let order = [...CARDS.keys()];
+	    let idx = 0;
+	    let flipped = false;
+	    let displayMode = "both"; // both | en | zh
+
+    // Elements
+    const cardEl = document.getElementById("card");
+    const qText = document.getElementById("qText");
+    const aEn = document.getElementById("aEn");
+    const expEn = document.getElementById("expEn");
+    const aZh = document.getElementById("aZh");
+    const expZh = document.getElementById("expZh");
+    const counter = document.getElementById("counter");
+    const fill = document.getElementById("fill");
+
+    const enBlock = document.getElementById("enBlock");
+    const zhBlock = document.getElementById("zhBlock");
+
+	    const prevBtn = document.getElementById("prevBtn");
+	    const nextBtn = document.getElementById("nextBtn");
+	    const flipBtn = document.getElementById("flipBtn");
+	    const shuffleBtn = document.getElementById("shuffleBtn");
+	    const resetBtn = document.getElementById("resetBtn");
+	    const displaySelect = document.getElementById("displayMode");
+
+    const listEl = document.getElementById("list");
+    const searchEl = document.getElementById("search");
+    const listWrapEl = document.querySelector(".listWrap");
+
+    // Search state:
+    // - userQuery drives filtering
+    // - autoScrollTerm is only shown in the input when not actively searching
+    let userQuery = "";
+    let autoScrollTerm = "";
+
+    function setAutoScrollTerm(term){
+      autoScrollTerm = term || "";
+      if (userQuery) return; // don't override active searches
+      if (document.activeElement === searchEl) return; // don't fight the cursor
+      searchEl.value = autoScrollTerm;
+      searchEl.classList.toggle("autofill", Boolean(autoScrollTerm));
+    }
+
+    function termForPos(pos){
+      const cardIndex = order[pos];
+      const card = CARDS[cardIndex];
+      return card ? card.en_term : "";
+    }
+
+    function getTopVisiblePos(){
+      const rows = listEl.querySelectorAll(".row");
+      if (!rows.length) return null;
+      const scrollTop = listWrapEl.scrollTop;
+      for (let i = 0; i < rows.length; i++){
+        const row = rows[i];
+        const top = row.offsetTop;
+        const bottom = top + row.offsetHeight;
+        if (bottom > scrollTop + 1) return Number(row.dataset.pos);
+      }
+      return Number(rows[rows.length - 1].dataset.pos);
+    }
+
+    function getBottomVisiblePos(){
+      const rows = listEl.querySelectorAll(".row");
+      if (!rows.length) return null;
+      const viewBottom = listWrapEl.scrollTop + listWrapEl.clientHeight;
+      for (let i = rows.length - 1; i >= 0; i--){
+        const row = rows[i];
+        const top = row.offsetTop;
+        if (top < viewBottom - 1) return Number(row.dataset.pos);
+      }
+      return Number(rows[0].dataset.pos);
+    }
+
+    let lastTopPos = null;
+    let lastBottomPos = null;
+    let lastScrollTop = 0;
+    let scrollRaf = null;
+
+    function syncListScrollState({ seedAutoTerm = false } = {}){
+      lastTopPos = getTopVisiblePos();
+      lastBottomPos = getBottomVisiblePos();
+      lastScrollTop = listWrapEl.scrollTop;
+      if (seedAutoTerm && lastTopPos != null) setAutoScrollTerm(termForPos(lastTopPos));
+    }
+
+    function clampIndex(){
+      if (idx < 0) idx = order.length - 1;
+      if (idx >= order.length) idx = 0;
+    }
+
+    function currentCard(){
+      return CARDS[ order[idx] ];
+    }
+
+    function setFlipped(v){
+      flipped = v;
+      cardEl.classList.toggle("flipped", flipped);
+    }
+
+    function render(){
+      const c = currentCard();
+      // Front question
+      const qEn = `What is ${c.en_term}?`;
+      const qZh = `什么是 ${c.zh_term}？`;
+
+      if (displayMode === "en"){
+        qText.innerHTML = `${escapeHTML(qEn)}`;
+      } else if (displayMode === "zh"){
+        qText.innerHTML = `<span class="zh">${escapeHTML(qZh)}</span>`;
+      } else {
+        qText.innerHTML = `${escapeHTML(qEn)}<span class="zh">${escapeHTML(qZh)}</span>`;
+      }
+
+      // Back answer/explanation
+      aEn.textContent = c.en_def;
+      expEn.innerHTML = `<span class="label">Explanation: </span>${escapeHTML(c.en_exp)}`;
+
+      aZh.textContent = c.zh_def;
+      expZh.innerHTML = `<span class="label">解释： </span>${escapeHTML(c.zh_exp)}`;
+
+      // show/hide language blocks
+      enBlock.style.display = (displayMode === "zh") ? "none" : "block";
+      zhBlock.style.display = (displayMode === "en") ? "none" : "block";
+
+      // progress
+      counter.textContent = `${idx + 1} / ${order.length}`;
+      fill.style.width = `${((idx + 1) / order.length) * 100}%`;
+
+      // always show front when changing cards
+      setFlipped(false);
+
+      // rebuild list highlight
+      renderList(userQuery);
+    }
+
+    function next(){
+      idx++;
+      clampIndex();
+      render();
+    }
+    function prev(){
+      idx--;
+      clampIndex();
+      render();
+    }
+    function flip(){
+      setFlipped(!flipped);
+    }
+
+    function shuffle(){
+      // Fisher-Yates shuffle of order
+      for (let i = order.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+      }
+      idx = 0;
+      render();
+    }
+
+    function resetOrder(){
+      order = [...CARDS.keys()];
+      idx = 0;
+      render();
+    }
+
+    function escapeHTML(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // List panel
+    function renderList(query=""){
+      const q = query.toLowerCase();
+      const items = [];
+
+      for (let i = 0; i < order.length; i++){
+        const c = CARDS[order[i]];
+        const hay = `${c.en_term} ${c.en_def} ${c.en_exp} ${c.zh_term} ${c.zh_def} ${c.zh_exp}`.toLowerCase();
+        if (!q || hay.includes(q)){
+          items.push({pos:i, card:c});
+        }
+      }
+
+      listEl.innerHTML = items.map(({pos, card}) => {
+        const active = (pos === idx);
+        return `
+          <div class="row" data-pos="${pos}" style="${active ? 'background: rgba(122,162,255,.14);' : ''}">
+            <div>
+              <div class="t">${escapeHTML(card.en_term)}</div>
+              <div class="z">${escapeHTML(card.zh_term)}</div>
+            </div>
+            <div class="idx">${pos+1}</div>
+          </div>
+        `;
+      }).join("");
+
+      // attach handlers
+      [...listEl.querySelectorAll(".row")].forEach(el => {
+        el.addEventListener("click", () => {
+          idx = Number(el.dataset.pos);
+          render();
+        });
+      });
+
+      // If list contents changed (search/filter), re-sync scroll tracking.
+      // Keep the currently displayed autofill term if the user is searching.
+      syncListScrollState();
+    }
+
+	    // Events
+	    let suppressClick = false;
+
+	    cardEl.addEventListener("click", (e) => {
+	      if (suppressClick){
+	        suppressClick = false;
+	        return;
+	      }
+
+	      // Kindle-like navigation: tap left/right edge for prev/next.
+	      const rect = cardEl.getBoundingClientRect();
+	      const edge = Math.min(90, Math.max(44, rect.width * 0.22));
+	      const x = (typeof e.clientX === "number") ? (e.clientX - rect.left) : (rect.width / 2);
+
+	      if (x <= edge) { prev(); return; }
+	      if (x >= rect.width - edge) { next(); return; }
+
+	      flip();
+	    });
+	    cardEl.addEventListener("keydown", (e) => {
+	      if (e.key === "Enter") flip();
+	    });
+
+    prevBtn.addEventListener("click", prev);
+    nextBtn.addEventListener("click", next);
+    flipBtn.addEventListener("click", flip);
+    shuffleBtn.addEventListener("click", shuffle);
+    resetBtn.addEventListener("click", resetOrder);
+
+    displaySelect.addEventListener("change", (e) => {
+      displayMode = e.target.value;
+      render();
+    });
+
+	    searchEl.addEventListener("input", (e) => {
+        userQuery = e.target.value.trim();
+        searchEl.classList.toggle("autofill", !userQuery && Boolean(autoScrollTerm) && document.activeElement !== searchEl);
+        renderList(userQuery);
+      });
+
+      searchEl.addEventListener("focus", () => {
+        searchEl.classList.remove("autofill");
+        searchEl.value = userQuery;
+      });
+      searchEl.addEventListener("blur", () => {
+        if (!userQuery && autoScrollTerm) setAutoScrollTerm(autoScrollTerm);
+      });
+
+      // When scrolling the list, show the last term that just scrolled out of view.
+      listWrapEl.addEventListener("scroll", () => {
+        if (scrollRaf) return;
+        scrollRaf = requestAnimationFrame(() => {
+          scrollRaf = null;
+
+          const newTop = getTopVisiblePos();
+          const newBottom = getBottomVisiblePos();
+          const st = listWrapEl.scrollTop;
+          const direction = st > lastScrollTop ? "down" : (st < lastScrollTop ? "up" : "still");
+
+          if (direction === "down" && lastTopPos != null && newTop != null && newTop !== lastTopPos){
+            setAutoScrollTerm(termForPos(lastTopPos));
+          } else if (direction === "up" && lastBottomPos != null && newBottom != null && newBottom !== lastBottomPos){
+            setAutoScrollTerm(termForPos(lastBottomPos));
+          }
+
+          lastTopPos = newTop;
+          lastBottomPos = newBottom;
+          lastScrollTop = st;
+        });
+      }, { passive: true });
+
+	    // Mobile swipe: swipe up/down for next/prev.
+	    // Attach only to the card so the term list can still scroll normally.
+	    let swipe = null;
+	    const SWIPE_MIN_PX = 44;
+	    const SWIPE_MAX_MS = 700;
+
+	    function onSwipeStart(clientX, clientY){
+	      swipe = { x: clientX, y: clientY, t: performance.now() };
+	    }
+	    function onSwipeEnd(clientX, clientY){
+	      if (!swipe) return;
+	      const dt = performance.now() - swipe.t;
+	      const dx = clientX - swipe.x;
+	      const dy = clientY - swipe.y;
+	      swipe = null;
+
+	      if (dt > SWIPE_MAX_MS) return;
+	      if (Math.abs(dy) < SWIPE_MIN_PX) return;
+	      if (Math.abs(dy) < Math.abs(dx) * 1.2) return; // mostly vertical
+
+	      suppressClick = true;
+	      if (dy < 0) next();
+	      else prev();
+	    }
+
+	    // Pointer events (modern browsers)
+	    cardEl.addEventListener("pointerdown", (e) => {
+	      if (e.pointerType === "mouse") return;
+	      onSwipeStart(e.clientX, e.clientY);
+	    }, { passive: true });
+	    cardEl.addEventListener("pointerup", (e) => {
+	      if (e.pointerType === "mouse") return;
+	      onSwipeEnd(e.clientX, e.clientY);
+	    }, { passive: true });
+	    cardEl.addEventListener("pointercancel", () => { swipe = null; }, { passive: true });
+
+	    // Touch events (fallback)
+	    cardEl.addEventListener("touchstart", (e) => {
+	      const t = e.touches && e.touches[0];
+	      if (!t) return;
+	      onSwipeStart(t.clientX, t.clientY);
+	    }, { passive: true });
+	    cardEl.addEventListener("touchend", (e) => {
+	      const t = e.changedTouches && e.changedTouches[0];
+	      if (!t) return;
+	      onSwipeEnd(t.clientX, t.clientY);
+	    }, { passive: true });
+	    cardEl.addEventListener("touchcancel", () => { swipe = null; }, { passive: true });
+
+	    // Keyboard shortcuts
+	    window.addEventListener("keydown", (e) => {
+	      // avoid interfering when typing
+	      const tag = (document.activeElement && document.activeElement.tagName) || "";
+      const typing = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+      if (typing && e.key !== "Escape") return;
+
+      if (e.key === "ArrowRight") next();
+      else if (e.key === "ArrowLeft") prev();
+      else if (e.key === " "){ e.preventDefault(); flip(); }
+      else if (e.key.toLowerCase() === "s") shuffle();
+      else if (e.key === "Escape") {
+        userQuery = "";
+        searchEl.value = "";
+        searchEl.classList.remove("autofill");
+        renderList("");
+        // restore the scroll-based term when not actively searching
+        if (autoScrollTerm) setAutoScrollTerm(autoScrollTerm);
+      }
+    });
+
+	    // Init
+	    renderList("");
+      syncListScrollState({ seedAutoTerm: true });
+	    render();
+	  </script>
+	</body>
+	</html>
