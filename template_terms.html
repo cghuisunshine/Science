@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Template Flashcards</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#121c32;
+      --card2:#0f1830;
+      --text:#e8eefc;
+      --muted:#a9b7dd;
+      --accent:#7aa2ff;
+      --border:rgba(255,255,255,.12);
+      --shadow: 0 14px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+	    *{box-sizing:border-box}
+	    html, body{height:100%}
+		    body{
+	      margin:0;
+	      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "PingFang SC","Microsoft YaHei", sans-serif;
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(122,162,255,.18), transparent 60%),
+                  radial-gradient(900px 500px at 80% 30%, rgba(123,255,211,.10), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+	      min-height:100vh;
+	      display:flex;
+	      align-items:flex-start;
+	      justify-content:center;
+	      padding:24px;
+	      overflow:hidden;
+	    }
+	    .app{
+	      width:min(980px, 100%);
+	      display:grid;
+	      grid-template-columns: 1.1fr .9fr;
+	      grid-template-rows: auto 1fr;
+	      gap:18px;
+	      height: calc(100vh - 48px);
+	      align-items:stretch;
+	    }
+			    @media (max-width: 900px){
+			      body{overflow:hidden}
+			      .app{
+			        display:flex;
+			        flex-direction:column;
+			        height: calc(100vh - 48px);
+			      }
+			      .stage{position:static; top:auto; align-self:stretch}
+			      .cardWrap{height: clamp(260px, 38vh, 420px)}
+			      .listPanel{flex:1; min-height:0}
+			    }
+    header{
+      grid-column:1/-1;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+    }
+    h1{
+      font-size:20px;
+      margin:0;
+      letter-spacing:.2px;
+    }
+    .sub{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:6px;
+      line-height:1.3;
+    }
+	    .panel{
+	      background: rgba(18,28,50,.96);
+	      border:1px solid var(--border);
+	      border-radius: var(--radius);
+	      box-shadow: var(--shadow);
+	      padding:14px;
+	    }
+
+    /* Flashcard */
+	    .stage{
+	      display:flex;
+	      flex-direction:column;
+	      gap:12px;
+	      position:sticky;
+	      top:24px;
+	      align-self:start;
+	      z-index:2;
+	    }
+	    .cardWrap{
+	      perspective: 1200px;
+	      height: clamp(320px, 52vh, 520px);
+	    }
+	    .card{
+	      width:100%;
+	      height:100%;
+	      position:relative;
+	      transform-style:preserve-3d;
+	      transition:transform .55s cubic-bezier(.2,.8,.2,1);
+	      border-radius: var(--radius);
+	      cursor:pointer;
+	      outline:none;
+	      touch-action: none;
+	    }
+    .card:focus{box-shadow:0 0 0 3px rgba(122,162,255,.35), var(--shadow)}
+    .card.flipped{transform: rotateY(180deg)}
+	    .face{
+      position:absolute;
+      inset:0;
+      padding:18px;
+      border-radius: var(--radius);
+      border:1px solid var(--border);
+	      background: linear-gradient(180deg, rgba(18,28,50,.98), rgba(15,24,48,.98));
+	      backface-visibility:hidden;
+	      display:flex;
+	      flex-direction:column;
+	      gap:12px;
+	      overflow:hidden;
+	    }
+	    .back{
+	      transform: rotateY(180deg);
+	      background: linear-gradient(180deg, rgba(30,50,96,.92), rgba(15,24,48,.98));
+	    }
+    .chipRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .chip{
+      font-size:12px;
+      color:var(--muted);
+      padding:6px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:rgba(0,0,0,.18);
+      user-select:none;
+    }
+    .hint{
+      color:var(--muted);
+      font-size:12px;
+      user-select:none;
+    }
+    .q{
+      font-size:18px;
+      font-weight:700;
+      line-height:1.25;
+      margin-top:4px;
+    }
+    .q .zh{
+      display:block;
+      margin-top:8px;
+      font-weight:650;
+      color:rgba(232,238,252,.92);
+    }
+    .aTitle{
+      font-size:12px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+    }
+    .a{
+      font-size:16px;
+      line-height:1.4;
+      font-weight:650;
+    }
+    .exp{
+      margin-top:8px;
+      color:rgba(232,238,252,.88);
+      line-height:1.55;
+      font-size:14px;
+    }
+    .exp .label{
+      color:var(--muted);
+      font-weight:700;
+      letter-spacing:.04em;
+    }
+    .split{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top:6px;
+    }
+    @media (max-width: 520px){
+      .split{grid-template-columns:1fr}
+      .cardWrap{height: 520px;}
+    }
+    .langBlock{
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:rgba(0,0,0,.16);
+      overflow:auto;
+    }
+    .langBlock h3{
+      margin:0 0 6px 0;
+      font-size:12px;
+      letter-spacing:.12em;
+      color:var(--muted);
+      text-transform:uppercase;
+    }
+    .langBlock .big{
+      font-weight:750;
+      font-size:15px;
+      line-height:1.4;
+      margin-bottom:8px;
+    }
+    .langBlock .small{
+      font-size:13px;
+      line-height:1.55;
+      color:rgba(232,238,252,.86);
+    }
+
+    /* Controls */
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    button, select, input[type="text"]{
+      background:rgba(0,0,0,.22);
+      color:var(--text);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:13px;
+      outline:none;
+    }
+    input[type="text"].autofill{
+      color:var(--muted);
+      font-style: italic;
+    }
+    button{cursor:pointer}
+    button:hover{border-color: rgba(122,162,255,.45)}
+    button:active{transform: translateY(1px)}
+    select{cursor:pointer}
+    .wide{
+      width: 100%;
+    }
+    .progress{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      color:var(--muted);
+      font-size:13px;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .bar{
+      width:160px;
+      height:10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.22);
+      overflow:hidden;
+    }
+    .fill{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(122,162,255,.9), rgba(123,255,211,.7));
+    }
+
+	    /* List panel */
+	    .listPanel{
+	      display:flex;
+	      flex-direction:column;
+	      gap:12px;
+	      height:100%;
+	      min-height:0;
+	    }
+	    .topTools{
+	      display:flex;
+	      gap:10px;
+	      flex-wrap:wrap;
+	    }
+	    .listWrap{
+	      border:1px solid var(--border);
+	      border-radius:14px;
+	      overflow:auto;
+	      background:rgba(0,0,0,.16);
+	      flex:1;
+	      min-height:0;
+	      overscroll-behavior: contain;
+	    }
+	    .list{
+	      min-height:0;
+	    }
+    .row{
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      cursor:pointer;
+    }
+    .row:last-child{border-bottom:none}
+    .row:hover{background:rgba(122,162,255,.08)}
+    .row .t{
+      font-weight:700;
+      font-size:13px;
+    }
+    .row .z{
+      color:var(--muted);
+      font-size:12px;
+    }
+    .row .idx{
+      color:var(--muted);
+      font-size:12px;
+      padding:4px 8px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      background:rgba(0,0,0,.18);
+      user-select:none;
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px;
+      color:rgba(232,238,252,.9);
+      padding:2px 6px;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:8px;
+      background:rgba(0,0,0,.28);
+    }
+    .footerTips{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+    a.smallLink{
+      color: rgba(122,162,255,.95);
+      text-decoration:none;
+    }
+    a.smallLink:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>Template Flashcards</h1>
+        <div class="sub">
+          Click the card to flip. Keyboard: <span class="kbd">Space</span> flip · <span class="kbd">←</span>/<span class="kbd">→</span> prev/next · <span class="kbd">S</span> shuffle
+        </div>
+      </div>
+      <div class="progress">
+        <div id="counter">1 / 1</div>
+        <div class="bar" aria-hidden="true"><div class="fill" id="fill"></div></div>
+      </div>
+    </header>
+
+    <!-- Flashcard panel -->
+    <section class="panel stage">
+      <div class="controls">
+        <div class="btnRow">
+          <button id="prevBtn" title="Previous (←)">◀ Prev</button>
+          <button id="flipBtn" title="Flip (Space)">Flip</button>
+          <button id="nextBtn" title="Next (→)">Next ▶</button>
+          <button id="shuffleBtn" title="Shuffle (S)">Shuffle</button>
+        </div>
+
+        <div class="btnRow">
+          <select id="displayMode" title="Display mode">
+            <option value="both" selected>Show EN + 中文</option>
+            <option value="en">English only</option>
+            <option value="zh">中文 only</option>
+          </select>
+          <button id="resetBtn" title="Reset order">Reset</button>
+          <button id="importBtn" title="Import cards from a .json file">Import JSON</button>
+          <input id="importFile" type="file" accept="application/json,.json" hidden />
+        </div>
+      </div>
+
+      <div class="cardWrap">
+        <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard">
+          <!-- Front (Question) -->
+          <div class="face front">
+            <div class="chipRow">
+              <div class="chip" id="chipFront">Question</div>
+              <div class="hint">Click to flip</div>
+            </div>
+
+            <div class="q" id="qText"></div>
+
+            <div class="footerTips">
+              Tip: Try answering out loud before flipping. Then explain it in your own words.
+            </div>
+          </div>
+
+          <!-- Back (Answer + Explanation) -->
+          <div class="face back">
+            <div class="chipRow">
+              <div class="chip" id="chipBack">Answer + Explanation</div>
+              <div class="hint">Click to flip back</div>
+            </div>
+
+            <div class="split" id="backSplit">
+              <div class="langBlock" id="enBlock">
+                <h3>English</h3>
+                <div class="big" id="aEn"></div>
+                <div class="small" id="expEn"></div>
+              </div>
+
+              <div class="langBlock" id="zhBlock">
+                <h3>中文</h3>
+                <div class="big" id="aZh"></div>
+                <div class="small" id="expZh"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+	    <!-- List / search panel -->
+	    <aside class="panel listPanel">
+	      <div class="topTools">
+	        <input id="search" class="wide" type="text" placeholder="Search terms (e.g., DNA, allele, 染色体, 复制)..." />
+	      </div>
+
+	      <div class="listWrap">
+	        <div class="list" id="list"></div>
+	      </div>
+
+	      <div class="footerTips">
+	        You can click any item in the list to jump to that card.<br/>
+	        Load cards: click <span class="kbd">Import JSON</span> and choose a file like <span class="kbd">startup_terms.json</span>.<br/>
+          <span id="importStatus"></span>
+	      </div>
+	    </aside>
+  </div>
+
+  <script>
+	    // Flashcards dataset (EN / 中文)
+	    // Format: term + definition + explanation
+	    let CARDS = [];
+
+	    // State
+	    let order = [...CARDS.keys()];
+	    let idx = 0;
+	    let flipped = false;
+	    let displayMode = "both"; // both | en | zh
+
+    // Elements
+    const cardEl = document.getElementById("card");
+    const qText = document.getElementById("qText");
+    const aEn = document.getElementById("aEn");
+    const expEn = document.getElementById("expEn");
+    const aZh = document.getElementById("aZh");
+    const expZh = document.getElementById("expZh");
+    const counter = document.getElementById("counter");
+    const fill = document.getElementById("fill");
+
+    const enBlock = document.getElementById("enBlock");
+    const zhBlock = document.getElementById("zhBlock");
+
+	    const prevBtn = document.getElementById("prevBtn");
+	    const nextBtn = document.getElementById("nextBtn");
+	    const flipBtn = document.getElementById("flipBtn");
+	    const shuffleBtn = document.getElementById("shuffleBtn");
+	    const resetBtn = document.getElementById("resetBtn");
+	    const displaySelect = document.getElementById("displayMode");
+      const importBtn = document.getElementById("importBtn");
+      const importFile = document.getElementById("importFile");
+      const importStatus = document.getElementById("importStatus");
+
+    const listEl = document.getElementById("list");
+    const searchEl = document.getElementById("search");
+    const listWrapEl = document.querySelector(".listWrap");
+
+    // Search state:
+    // - userQuery drives filtering
+    // - autoScrollTerm is only shown in the input when not actively searching
+    let userQuery = "";
+    let autoScrollTerm = "";
+
+    function setAutoScrollTerm(term){
+      autoScrollTerm = term || "";
+      if (userQuery) return; // don't override active searches
+      if (document.activeElement === searchEl) return; // don't fight the cursor
+      searchEl.value = autoScrollTerm;
+      searchEl.classList.toggle("autofill", Boolean(autoScrollTerm));
+    }
+
+    function termForPos(pos){
+      const cardIndex = order[pos];
+      const card = CARDS[cardIndex];
+      return card ? card.en_term : "";
+    }
+
+    function getTopVisiblePos(){
+      const rows = listEl.querySelectorAll(".row");
+      if (!rows.length) return null;
+      const scrollTop = listWrapEl.scrollTop;
+      for (let i = 0; i < rows.length; i++){
+        const row = rows[i];
+        const top = row.offsetTop;
+        const bottom = top + row.offsetHeight;
+        if (bottom > scrollTop + 1) return Number(row.dataset.pos);
+      }
+      return Number(rows[rows.length - 1].dataset.pos);
+    }
+
+    function getBottomVisiblePos(){
+      const rows = listEl.querySelectorAll(".row");
+      if (!rows.length) return null;
+      const viewBottom = listWrapEl.scrollTop + listWrapEl.clientHeight;
+      for (let i = rows.length - 1; i >= 0; i--){
+        const row = rows[i];
+        const top = row.offsetTop;
+        if (top < viewBottom - 1) return Number(row.dataset.pos);
+      }
+      return Number(rows[0].dataset.pos);
+    }
+
+    let lastTopPos = null;
+    let lastBottomPos = null;
+    let lastScrollTop = 0;
+    let scrollRaf = null;
+
+    function syncListScrollState({ seedAutoTerm = false } = {}){
+      lastTopPos = getTopVisiblePos();
+      lastBottomPos = getBottomVisiblePos();
+      lastScrollTop = listWrapEl.scrollTop;
+      if (seedAutoTerm && lastTopPos != null) setAutoScrollTerm(termForPos(lastTopPos));
+    }
+
+    function clampIndex(){
+      if (!order.length){
+        idx = 0;
+        return;
+      }
+      if (idx < 0) idx = order.length - 1;
+      if (idx >= order.length) idx = 0;
+    }
+
+    function currentCard(){
+      if (!order.length) return null;
+      return CARDS[order[idx]];
+    }
+
+    function setFlipped(v){
+      flipped = v;
+      cardEl.classList.toggle("flipped", flipped);
+    }
+
+    function render(){
+      const c = currentCard();
+      if (!c){
+        qText.textContent = "No cards loaded. Click “Import JSON” to load a .json file.";
+        aEn.textContent = "";
+        expEn.textContent = "";
+        aZh.textContent = "";
+        expZh.textContent = "";
+
+        enBlock.style.display = (displayMode === "zh") ? "none" : "block";
+        zhBlock.style.display = (displayMode === "en") ? "none" : "block";
+
+        counter.textContent = `0 / 0`;
+        fill.style.width = `0%`;
+        setFlipped(false);
+        renderList(userQuery);
+        setControlsEnabled(false);
+        return;
+      }
+
+      setControlsEnabled(true);
+      // Front question
+      const qEn = `What is ${c.en_term}?`;
+      const qZh = `什么是 ${c.zh_term}？`;
+
+      if (displayMode === "en"){
+        qText.innerHTML = `${escapeHTML(qEn)}`;
+      } else if (displayMode === "zh"){
+        qText.innerHTML = `<span class="zh">${escapeHTML(qZh)}</span>`;
+      } else {
+        qText.innerHTML = `${escapeHTML(qEn)}<span class="zh">${escapeHTML(qZh)}</span>`;
+      }
+
+      // Back answer/explanation
+      aEn.textContent = c.en_def;
+      expEn.innerHTML = `<span class="label">Explanation: </span>${escapeHTML(c.en_exp)}`;
+
+      aZh.textContent = c.zh_def;
+      expZh.innerHTML = `<span class="label">解释： </span>${escapeHTML(c.zh_exp)}`;
+
+      // show/hide language blocks
+      enBlock.style.display = (displayMode === "zh") ? "none" : "block";
+      zhBlock.style.display = (displayMode === "en") ? "none" : "block";
+
+      // progress
+      counter.textContent = `${idx + 1} / ${order.length}`;
+      fill.style.width = `${((idx + 1) / order.length) * 100}%`;
+
+      // always show front when changing cards
+      setFlipped(false);
+
+      // rebuild list highlight
+      renderList(userQuery);
+    }
+
+    function next(){
+      if (!order.length) return;
+      idx++;
+      clampIndex();
+      render();
+    }
+    function prev(){
+      if (!order.length) return;
+      idx--;
+      clampIndex();
+      render();
+    }
+    function flip(){
+      if (!order.length) return;
+      setFlipped(!flipped);
+    }
+
+    function shuffle(){
+      if (!order.length) return;
+      // Fisher-Yates shuffle of order
+      for (let i = order.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+      }
+      idx = 0;
+      render();
+    }
+
+    function resetOrder(){
+      if (!CARDS.length) return;
+      order = [...CARDS.keys()];
+      idx = 0;
+      render();
+    }
+
+    function escapeHTML(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // List panel
+    function renderList(query=""){
+      if (!order.length){
+        listEl.innerHTML = `
+          <div style="padding:12px; color: rgba(232,238,252,.86);">
+            No cards loaded.
+          </div>
+        `;
+        syncListScrollState();
+        return;
+      }
+
+      const q = query.toLowerCase();
+      const items = [];
+
+      for (let i = 0; i < order.length; i++){
+        const c = CARDS[order[i]];
+        const hay = `${c.en_term} ${c.en_def} ${c.en_exp} ${c.zh_term} ${c.zh_def} ${c.zh_exp}`.toLowerCase();
+        if (!q || hay.includes(q)){
+          items.push({pos:i, card:c});
+        }
+      }
+
+      listEl.innerHTML = items.map(({pos, card}) => {
+        const active = (pos === idx);
+        return `
+          <div class="row" data-pos="${pos}" style="${active ? 'background: rgba(122,162,255,.14);' : ''}">
+            <div>
+              <div class="t">${escapeHTML(card.en_term)}</div>
+              <div class="z">${escapeHTML(card.zh_term)}</div>
+            </div>
+            <div class="idx">${pos+1}</div>
+          </div>
+        `;
+      }).join("");
+
+      // attach handlers
+      [...listEl.querySelectorAll(".row")].forEach(el => {
+        el.addEventListener("click", () => {
+          idx = Number(el.dataset.pos);
+          render();
+        });
+      });
+
+      // If list contents changed (search/filter), re-sync scroll tracking.
+      // Keep the currently displayed autofill term if the user is searching.
+      syncListScrollState();
+    }
+
+	    // Events
+	    let suppressClick = false;
+
+	    cardEl.addEventListener("click", (e) => {
+	      if (suppressClick){
+	        suppressClick = false;
+	        return;
+	      }
+
+	      // Kindle-like navigation: tap left/right edge for prev/next.
+	      const rect = cardEl.getBoundingClientRect();
+	      const edge = Math.min(90, Math.max(44, rect.width * 0.22));
+	      const x = (typeof e.clientX === "number") ? (e.clientX - rect.left) : (rect.width / 2);
+
+	      if (x <= edge) { prev(); return; }
+	      if (x >= rect.width - edge) { next(); return; }
+
+	      flip();
+	    });
+	    cardEl.addEventListener("keydown", (e) => {
+	      if (e.key === "Enter") flip();
+	    });
+
+    prevBtn.addEventListener("click", prev);
+    nextBtn.addEventListener("click", next);
+    flipBtn.addEventListener("click", flip);
+    shuffleBtn.addEventListener("click", shuffle);
+    resetBtn.addEventListener("click", resetOrder);
+
+    displaySelect.addEventListener("change", (e) => {
+      displayMode = e.target.value;
+      render();
+    });
+
+      function setStatus(msg, { error = false } = {}){
+        if (!importStatus) return;
+        importStatus.textContent = msg || "";
+        importStatus.style.color = error ? "rgba(255,190,190,.92)" : "rgba(232,238,252,.82)";
+      }
+
+      function setControlsEnabled(enabled){
+        prevBtn.disabled = !enabled;
+        nextBtn.disabled = !enabled;
+        flipBtn.disabled = !enabled;
+        shuffleBtn.disabled = !enabled;
+        resetBtn.disabled = !enabled;
+        displaySelect.disabled = !enabled;
+      }
+
+      function normalizeCards(data){
+        const list = Array.isArray(data)
+          ? data
+          : (data && Array.isArray(data.cards) ? data.cards : (data && Array.isArray(data.terms) ? data.terms : null));
+
+        if (!list) throw new Error("JSON must be an array of cards, or an object with a `cards` (or `terms`) array.");
+
+        const cleaned = list.map((c) => ({
+          en_term: String(c?.en_term ?? "").trim(),
+          en_def: String(c?.en_def ?? "").trim(),
+          en_exp: String(c?.en_exp ?? "").trim(),
+          zh_term: String(c?.zh_term ?? "").trim(),
+          zh_def: String(c?.zh_def ?? "").trim(),
+          zh_exp: String(c?.zh_exp ?? "").trim(),
+        })).filter((c) => c.en_term || c.zh_term);
+
+        if (!cleaned.length) throw new Error("No valid cards found in JSON.");
+        return cleaned;
+      }
+
+      function loadCards(cards, { sourceName = "imported JSON" } = {}){
+        CARDS = cards;
+        order = [...CARDS.keys()];
+        idx = 0;
+        userQuery = "";
+        searchEl.value = "";
+        searchEl.classList.remove("autofill");
+        listWrapEl.scrollTop = 0;
+        setAutoScrollTerm("");
+        setStatus(`Loaded ${CARDS.length} cards from ${sourceName}.`);
+        renderList("");
+        syncListScrollState({ seedAutoTerm: true });
+        render();
+      }
+
+      importBtn.addEventListener("click", () => {
+        importFile.value = "";
+        importFile.click();
+      });
+
+      importFile.addEventListener("change", async () => {
+        const file = importFile.files && importFile.files[0];
+        if (!file) return;
+        try {
+          const text = await file.text();
+          const data = JSON.parse(text);
+          const cards = normalizeCards(data);
+          loadCards(cards, { sourceName: file.name });
+        } catch (err) {
+          setStatus(err instanceof Error ? err.message : String(err), { error: true });
+        }
+      });
+
+	    searchEl.addEventListener("input", (e) => {
+        userQuery = e.target.value.trim();
+        searchEl.classList.toggle("autofill", !userQuery && Boolean(autoScrollTerm) && document.activeElement !== searchEl);
+        renderList(userQuery);
+      });
+
+      searchEl.addEventListener("focus", () => {
+        searchEl.classList.remove("autofill");
+        searchEl.value = userQuery;
+      });
+      searchEl.addEventListener("blur", () => {
+        if (!userQuery && autoScrollTerm) setAutoScrollTerm(autoScrollTerm);
+      });
+
+      // When scrolling the list, show the last term that just scrolled out of view.
+      listWrapEl.addEventListener("scroll", () => {
+        if (scrollRaf) return;
+        scrollRaf = requestAnimationFrame(() => {
+          scrollRaf = null;
+
+          const newTop = getTopVisiblePos();
+          const newBottom = getBottomVisiblePos();
+          const st = listWrapEl.scrollTop;
+          const direction = st > lastScrollTop ? "down" : (st < lastScrollTop ? "up" : "still");
+
+          if (direction === "down" && lastTopPos != null && newTop != null && newTop !== lastTopPos){
+            setAutoScrollTerm(termForPos(lastTopPos));
+          } else if (direction === "up" && lastBottomPos != null && newBottom != null && newBottom !== lastBottomPos){
+            setAutoScrollTerm(termForPos(lastBottomPos));
+          }
+
+          lastTopPos = newTop;
+          lastBottomPos = newBottom;
+          lastScrollTop = st;
+        });
+      }, { passive: true });
+
+	    // Mobile swipe: swipe up/down for next/prev.
+	    // Attach only to the card so the term list can still scroll normally.
+	    let swipe = null;
+	    const SWIPE_MIN_PX = 44;
+	    const SWIPE_MAX_MS = 700;
+
+	    function onSwipeStart(clientX, clientY){
+	      swipe = { x: clientX, y: clientY, t: performance.now() };
+	    }
+	    function onSwipeEnd(clientX, clientY){
+	      if (!swipe) return;
+	      const dt = performance.now() - swipe.t;
+	      const dx = clientX - swipe.x;
+	      const dy = clientY - swipe.y;
+	      swipe = null;
+
+	      if (dt > SWIPE_MAX_MS) return;
+	      if (Math.abs(dy) < SWIPE_MIN_PX) return;
+	      if (Math.abs(dy) < Math.abs(dx) * 1.2) return; // mostly vertical
+
+	      suppressClick = true;
+	      if (dy < 0) next();
+	      else prev();
+	    }
+
+	    // Pointer events (modern browsers)
+	    cardEl.addEventListener("pointerdown", (e) => {
+	      if (e.pointerType === "mouse") return;
+	      onSwipeStart(e.clientX, e.clientY);
+	    }, { passive: true });
+	    cardEl.addEventListener("pointerup", (e) => {
+	      if (e.pointerType === "mouse") return;
+	      onSwipeEnd(e.clientX, e.clientY);
+	    }, { passive: true });
+	    cardEl.addEventListener("pointercancel", () => { swipe = null; }, { passive: true });
+
+	    // Touch events (fallback)
+	    cardEl.addEventListener("touchstart", (e) => {
+	      const t = e.touches && e.touches[0];
+	      if (!t) return;
+	      onSwipeStart(t.clientX, t.clientY);
+	    }, { passive: true });
+	    cardEl.addEventListener("touchend", (e) => {
+	      const t = e.changedTouches && e.changedTouches[0];
+	      if (!t) return;
+	      onSwipeEnd(t.clientX, t.clientY);
+	    }, { passive: true });
+	    cardEl.addEventListener("touchcancel", () => { swipe = null; }, { passive: true });
+
+	    // Keyboard shortcuts
+	    window.addEventListener("keydown", (e) => {
+	      // avoid interfering when typing
+	      const tag = (document.activeElement && document.activeElement.tagName) || "";
+      const typing = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+      if (typing && e.key !== "Escape") return;
+
+      if (e.key === "ArrowRight") next();
+      else if (e.key === "ArrowLeft") prev();
+      else if (e.key === " "){ e.preventDefault(); flip(); }
+      else if (e.key.toLowerCase() === "s") shuffle();
+      else if (e.key === "Escape") {
+        userQuery = "";
+        searchEl.value = "";
+        searchEl.classList.remove("autofill");
+        renderList("");
+        // restore the scroll-based term when not actively searching
+        if (autoScrollTerm) setAutoScrollTerm(autoScrollTerm);
+      }
+    });
+
+	    // Init
+	    renderList("");
+      syncListScrollState({ seedAutoTerm: true });
+	    render();
+      setControlsEnabled(false);
+      setStatus("No cards loaded yet.");
+	  </script>
+	</body>
+	</html>
