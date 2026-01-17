@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Animal and Plant Cells – EN–ZH Side by Side</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      background: #f7fafc;
+      line-height: 1.6;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #1a365d;
+    }
+
+    /* ====== Side-by-side image + text ====== */
+    .pair {
+      display: flex;
+      gap: 1.5rem;
+      background: #ffffff;
+      margin: 1.2rem 0;
+      padding: 1rem 1.2rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      align-items: flex-start;
+    }
+
+    /* Make image take more space */
+    .pair figure {
+      flex: 0 0 68%;
+      margin: 0;
+      text-align: center;
+    }
+
+    .pair img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .pair figcaption {
+      margin-top: 0.5rem;
+      color: #4a5568;
+      font-size: 0.9rem;
+    }
+
+    /* Make text block smaller */
+    .text-block {
+      flex: 0 0 32%;
+      font-size: 0.9rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e0;
+      padding: 0.4rem 0.5rem;
+      vertical-align: top;
+    }
+
+    th {
+      background: #edf2f7;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    .en { color: #1a202c; }
+    .zh { color: #2b6cb0; }
+
+    /* Mobile responsive */
+    @media (max-width: 850px) {
+      .pair { flex-direction: column; }
+      .pair figure, .text-block {
+        flex: 1 1 100%;
+      }
+      .text-block { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Animal &amp; Plant Cells – EN / 中文 对照</h1>
+
+<!-- ========== 1. ANIMAL CELL OVERVIEW ========== -->
+<section class="pair">
+  <figure>
+    <img src="AnimalCell.png" alt="Animal Cell diagram">
+    <figcaption>Animal Cell Diagram / 动物细胞示意图</figcaption>
+  </figure>
+
+  <div class="text-block">
+    <h2 style="font-size:1.1rem;">Animal Cell Terms<br>动物细胞结构名称</h2>
+    <table>
+      <tr><th>English</th><th>中文</th></tr>
+      <tr><td class="en">Nucleus</td><td class="zh">细胞核</td></tr>
+      <tr><td class="en">Ribosomes</td><td class="zh">核糖体</td></tr>
+      <tr><td class="en">Free Ribosomes</td><td class="zh">游离核糖体</td></tr>
+      <tr><td class="en">Rough ER</td><td class="zh">粗面内质网</td></tr>
+      <tr><td class="en">Smooth ER</td><td class="zh">光面内质网</td></tr>
+      <tr><td class="en">Vesicle</td><td class="zh">囊泡</td></tr>
+      <tr><td class="en">Golgi Body</td><td class="zh">高尔基体</td></tr>
+      <tr><td class="en">Cytoplasm</td><td class="zh">细胞质</td></tr>
+      <tr><td class="en">Cell Membrane</td><td class="zh">细胞膜</td></tr>
+      <tr><td class="en">Lysosome</td><td class="zh">溶酶体</td></tr>
+      <tr><td class="en">Mitochondrion</td><td class="zh">线粒体</td></tr>
+      <tr><td class="en">Cilia</td><td class="zh">纤毛</td></tr>
+      <tr><td class="en">Vacuole</td><td class="zh">液泡</td></tr>
+      <tr><td class="en">Flagellum</td><td class="zh">鞭毛</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ========== 2. DEFINITIONS PAGE 1 ========== -->
+<section class="pair">
+  <figure>
+    <img src="CellOrganells-1.png" alt="Organelles Page 1">
+    <figcaption>Organelles Text – Page 1 / 细胞器说明（1）</figcaption>
+  </figure>
+
+  <div class="text-block">
+    <h2 style="font-size:1.1rem;">Definitions (1)<br>定义（1）</h2>
+    <table>
+      <tr><th>Structure</th><th>中文</th></tr>
+      <tr><td class="en">Cell Membrane</td><td class="zh">细胞膜：控制进出细胞的物质。</td></tr>
+      <tr><td class="en">Cytoplasm</td><td class="zh">细胞质：凝胶状液体，包含水和细胞器。</td></tr>
+      <tr><td class="en">Nucleus</td><td class="zh">细胞核：控制细胞活动，含DNA。</td></tr>
+      <tr><td class="en">Mitochondrion</td><td class="zh">线粒体：进行细胞呼吸产生能量。</td></tr>
+      <tr><td class="en">Endoplasmic Reticulum</td><td class="zh">内质网：运输蛋白质的通道。</td></tr>
+      <tr><td class="en">Ribosomes</td><td class="zh">核糖体：制造蛋白质。</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ========== 3. DEFINITIONS PAGE 2 ========== -->
+<section class="pair">
+  <figure>
+    <img src="CellOrganells-2.png" alt="Organelles Page 2">
+    <figcaption>Organelles Text – Page 2 / 细胞器说明（2）</figcaption>
+  </figure>
+
+  <div class="text-block">
+    <h2 style="font-size:1.1rem;">Definitions (2)<br>定义（2）</h2>
+    <table>
+      <tr><th>Structure</th><th>中文</th></tr>
+      <tr><td class="en">Golgi Body</td><td class="zh">高尔基体：加工并包装蛋白质。</td></tr>
+      <tr><td class="en">Vesicles</td><td class="zh">囊泡：运输物质。</td></tr>
+      <tr><td class="en">Vacuoles</td><td class="zh">液泡：储存水及废物。</td></tr>
+      <tr><td class="en">Lysosomes</td><td class="zh">溶酶体：分解旧细胞器。</td></tr>
+      <tr><td class="en">Cilia</td><td class="zh">纤毛：波动运动帮助移动。</td></tr>
+      <tr><td class="en">Flagellum</td><td class="zh">鞭毛：摆动使细胞游动。</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ========== 4. PLANT CELL TEXT ========== -->
+<section class="pair">
+  <figure>
+    <img src="CellOrganells-Plant.png" alt="Plant cell text">
+    <figcaption>Cell Wall &amp; Chloroplasts Text / 细胞壁与叶绿体</figcaption>
+  </figure>
+
+  <div class="text-block">
+    <h2 style="font-size:1.1rem;">Plant Cell Text<br>植物细胞文字</h2>
+    <table>
+      <tr><th>Structure</th><th>中文</th></tr>
+      <tr><td class="en">Cell Wall</td><td class="zh">细胞壁：硬层保护细胞并维持形状。</td></tr>
+      <tr><td class="en">Chloroplasts</td><td class="zh">叶绿体：进行光合作用。</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ========== 5. PLANT CELL DIAGRAM ========== -->
+<section class="pair">
+  <figure>
+    <img src="PlantCell.png" alt="Plant Cell diagram">
+    <figcaption>Plant Cell Diagram / 植物细胞示意图</figcaption>
+  </figure>
+
+  <div class="text-block">
+    <h2 style="font-size:1.1rem;">Plant Cell Parts<br>植物细胞主要结构</h2>
+    <table>
+      <tr><th>English</th><th>中文</th></tr>
+      <tr><td class="en">Chloroplast</td><td class="zh">叶绿体</td></tr>
+      <tr><td class="en">Large Vacuole</td><td class="zh">大型中央液泡</td></tr>
+      <tr><td class="en">Cell Wall</td><td class="zh">细胞壁</td></tr>
+    </table>
+  </div>
+</section>
+
+</body>
+</html>
+
