@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cell Organelles Practice Q&A</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f4f6fb;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      background: #ffffff;
+      margin: 24px;
+      padding: 24px 28px 28px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-top: 0;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      margin-top: 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .stats-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      margin: 12px 0 18px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #f8f9ff;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .stat-label {
+      color: #666;
+    }
+
+    .stat-value {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .question-card {
+      border-radius: 14px;
+      border: 1px solid #e0e4f0;
+      padding: 18px 20px 16px;
+      margin-bottom: 16px;
+      background: #fdfdff;
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .question-index {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #555;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #445;
+    }
+
+    .question-text {
+      font-size: 1.05rem;
+      line-height: 1.5;
+      margin: 6px 0 0;
+    }
+
+    .input-card {
+      border-radius: 14px;
+      border: 1px solid #e0e4f0;
+      padding: 14px 16px;
+      background: #ffffff;
+      margin-bottom: 14px;
+    }
+
+    .input-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #777;
+      margin-bottom: 6px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 80px;
+      resize: vertical;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-family: inherit;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+
+    .feedback {
+      margin-top: 6px;
+      font-size: 0.9rem;
+    }
+
+    .feedback.ok {
+      color: #065f46;
+    }
+
+    .feedback.bad {
+      color: #b91c1c;
+    }
+
+    .answer-card {
+      border-radius: 14px;
+      border: 1px solid #e6e6e6;
+      padding: 14px 16px;
+      background: #ffffff;
+      margin-bottom: 18px;
+      display: none;
+    }
+
+    .answer-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #777;
+      margin-bottom: 4px;
+    }
+
+    .answer-text {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 9px 16px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    button.primary {
+      background: #4f46e5;
+      color: white;
+    }
+
+    button.secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    button.outline {
+      background: white;
+      border: 1px solid #d1d5db;
+      color: #111827;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .spacer {
+      flex: 1;
+    }
+
+    .knowledge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 600px) {
+      .controls-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .spacer {
+        display: none;
+      }
+      button {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Cell Organelles Practice</h1>
+    <p class="subtitle">
+      Type your answer, check it, then reveal the model answer. Based on the YouTube transcript about animal and plant cell organelles.
+    </p>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-label">Question:</span>
+        <span class="stat-value" id="stat-index">1 / 1</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Known:</span>
+        <span class="stat-value" id="stat-known">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Need review:</span>
+        <span class="stat-value" id="stat-unknown">0</span>
+      </div>
+    </div>
+
+    <div class="question-card">
+      <div class="question-header">
+        <div class="question-index" id="question-label">Question 1</div>
+        <div class="tag" id="question-tag">Short Answer</div>
+      </div>
+      <div class="question-text" id="question-text">
+        <!-- Question appears here -->
+      </div>
+    </div>
+
+    <div class="input-card">
+      <div class="input-label">Your answer</div>
+      <textarea id="user-answer" placeholder="Type your answer here before checking..."></textarea>
+      <div style="margin-top: 8px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+        <button class="secondary" id="btn-check">✅ Check my answer</button>
+        <span id="feedback" class="feedback"></span>
+      </div>
+    </div>
+
+    <div class="answer-card" id="answer-card">
+      <div class="answer-label">Model Answer</div>
+      <div class="answer-text" id="answer-text">
+        <!-- Answer appears here -->
+      </div>
+    </div>
+
+    <div class="knowledge-row">
+      <button class="outline" id="btn-known">👍 I knew this</button>
+      <button class="outline" id="btn-unknown">🤔 I didn’t know</button>
+    </div>
+
+    <div class="controls-row">
+      <button class="secondary" id="btn-prev">⟵ Previous</button>
+      <button class="primary" id="btn-toggle-answer">👁 Show Answer</button>
+      <button class="secondary" id="btn-next">Next ⟶</button>
+      <div class="spacer"></div>
+      <button class="secondary" id="btn-random">🎲 Random</button>
+      <button class="secondary" id="btn-reset">Reset Stats</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "What are organelles?",
+        a: "Organelles are specialized parts of a cell that perform specific functions, similar to how organs work in the human body."
+      },
+      {
+        q: "Are organelles found in both plant and animal cells?",
+        a: "Yes, many organelles are found in both plant and animal cells, although some organelles (like cell walls and chloroplasts) are only found in plant cells."
+      },
+      {
+        q: "What is the cell membrane?",
+        a: "The cell membrane is a protective layer that surrounds the cell and controls which substances enter and leave the cell."
+      },
+      {
+        q: "What is the main function of the cell membrane?",
+        a: "It regulates the flow of materials into and out of the cell, helping to protect and maintain the internal environment of the cell."
+      },
+      {
+        q: "What is cytoplasm?",
+        a: "Cytoplasm is a gel-like fluid inside the cell that contains water, dissolved substances, and all of the cell’s organelles."
+      },
+      {
+        q: "Why is cytoplasm important for the cell?",
+        a: "It supports the organelles and provides a medium where many chemical reactions needed for life can occur."
+      },
+      {
+        q: "What is the nucleus?",
+        a: "The nucleus is a large structure inside the cell that controls cell activities and the reproduction of the cell."
+      },
+      {
+        q: "What important molecule does the nucleus contain?",
+        a: "It contains deoxyribonucleic acid (DNA), which holds genetic information."
+      },
+      {
+        q: "What is the role of DNA in the cell?",
+        a: "DNA determines traits and genetic information that are passed on to new cells and future generations when a cell reproduces."
+      },
+      {
+        q: "What is a mitochondrion?",
+        a: "A mitochondrion is an oval-shaped organelle where the cell produces energy through cellular respiration."
+      },
+      {
+        q: "What is the plural form of mitochondrion?",
+        a: "The plural form is mitochondria."
+      },
+      {
+        q: "What process occurs in the mitochondria?",
+        a: "Cellular respiration occurs in the mitochondria."
+      },
+      {
+        q: "What is the word equation for cellular respiration mentioned in the video?",
+        a: "Glucose + oxygen → carbon dioxide + water + energy."
+      },
+      {
+        q: "Where are ribosomes found in a cell?",
+        a: "Ribosomes can be found floating freely in the cytoplasm or attached to the endoplasmic reticulum."
+      },
+      {
+        q: "How are ribosomes usually shown in cell diagrams?",
+        a: "They are shown as small dots, especially on the surface of the rough endoplasmic reticulum."
+      },
+      {
+        q: "What is the main function of ribosomes?",
+        a: "Ribosomes assemble or produce proteins in the cell."
+      },
+      {
+        q: "What is the endoplasmic reticulum (ER)?",
+        a: "The endoplasmic reticulum is a complex network of folded membranes and small channels that extend throughout the cell."
+      },
+      {
+        q: "What is the difference between rough ER and smooth ER?",
+        a: "Rough ER has ribosomes attached to its surface, making it appear rough, while smooth ER has no ribosomes and appears smooth."
+      },
+      {
+        q: "Where is the rough ER located in relation to the nucleus?",
+        a: "The rough ER surrounds the nucleus."
+      },
+      {
+        q: "What is the function of the endoplasmic reticulum?",
+        a: "It acts as a system of channels to transport proteins and other molecules throughout the cytoplasm."
+      },
+      {
+        q: "What is the Golgi body (Golgi apparatus)?",
+        a: "The Golgi body is an organelle made of folded membranes that receives, sorts, modifies, and packages proteins from the endoplasmic reticulum."
+      },
+      {
+        q: "What does the Golgi apparatus do with proteins?",
+        a: "It modifies some proteins, sorts them, and packages them into small membrane-bound sacs called vesicles."
+      },
+      {
+        q: "What are vesicles?",
+        a: "Vesicles are small membrane-covered structures that carry proteins, water, nutrients, and other materials around the cell and even in and out of the cell."
+      },
+      {
+        q: "What are transport vesicles?",
+        a: "Transport vesicles are vesicles produced by the Golgi body that move materials, such as proteins, to other parts of the cell."
+      },
+      {
+        q: "Where do vesicles produced by the Golgi body go?",
+        a: "They detach from the Golgi body and move into the cytoplasm to deliver their contents."
+      },
+      {
+        q: "What are vacuoles?",
+        a: "Vacuoles are structures within the cytoplasm that temporarily store water, other substances, and wastes in cells."
+      },
+      {
+        q: "How do vacuoles in plant cells compare to those in animal cells?",
+        a: "Vacuoles in plant cells are usually much larger than those in animal cells."
+      },
+      {
+        q: "Where are vacuoles found in the cell?",
+        a: "They are found floating in the cytoplasm."
+      },
+      {
+        q: "What are lysosomes?",
+        a: "Lysosomes are organelles that contain digestive chemicals such as enzymes."
+      },
+      {
+        q: "What is the main function of lysosomes?",
+        a: "They break down and recycle worn-out organelles and other materials inside the cell."
+      },
+      {
+        q: "What are cilia?",
+        a: "Cilia are tiny hair-like structures attached to the surface of some animal cells."
+      },
+      {
+        q: "How do cilia move?",
+        a: "They move together in a wave-like fashion."
+      },
+      {
+        q: "What are two functions of cilia on animal cells?",
+        a: "They help the cell move and can push materials, such as mucus, past the surface of the cell."
+      },
+      {
+        q: "Give an example of where cilia are found in the human body and what they do there.",
+        a: "Cilia in the nasal passages push mucus through the passages."
+      },
+      {
+        q: "What is a flagellum?",
+        a: "A flagellum is a long, lash-like structure attached to the surface of some animal cells."
+      },
+      {
+        q: "How does a flagellum help a cell?",
+        a: "It whips back and forth to help the cell swim through a liquid."
+      },
+      {
+        q: "How do flagella differ from cilia?",
+        a: "Flagella are much longer and usually fewer in number, while cilia are shorter and more numerous."
+      },
+      {
+        q: "Do plant cells have all the same organelles as animal cells?",
+        a: "Plant cells can have most of the same organelles as animal cells, but they also have some additional structures such as cell walls and chloroplasts."
+      },
+      {
+        q: "What is a cell wall?",
+        a: "A cell wall is a tough, rigid layer outside the cell membrane that surrounds plant cells and some bacteria."
+      },
+      {
+        q: "What are two main functions of the cell wall?",
+        a: "It helps a plant hold its shape and protects the inside of the cell."
+      },
+      {
+        q: "Do animal cells have a cell wall?",
+        a: "No, animal cells do not have a cell wall; they only have a cell membrane."
+      },
+      {
+        q: "What are chloroplasts?",
+        a: "Chloroplasts are green organelles found only in plant cells where photosynthesis takes place."
+      },
+      {
+        q: "In which type of cells are chloroplasts found?",
+        a: "They are found only in plant cells."
+      },
+      {
+        q: "What process occurs in chloroplasts?",
+        a: "Photosynthesis occurs in chloroplasts."
+      },
+      {
+        q: "What does photosynthesis use and produce, according to the video?",
+        a: "Photosynthesis uses energy from the Sun to convert carbon dioxide and water into sugar and oxygen."
+      },
+      {
+        q: "Why are chloroplasts important for plant cells?",
+        a: "They allow plant cells to produce their own food (sugar) using sunlight."
+      },
+      {
+        q: "How do vacuoles in plant cells differ in size from those in animal cells?",
+        a: "Vacuoles in plant cells are generally much larger than vacuoles in animal cells."
+      },
+      {
+        q: "What do vacuoles store?",
+        a: "They store water, wastes, and other substances in cells."
+      },
+      {
+        q: "Name two organelles that are found in animal cells but not typically mentioned for plant cells in this video.",
+        a: "Cilia and flagella are mentioned as external structures on many animal cells."
+      },
+      {
+        q: "Where in the cell is genetic information stored?",
+        a: "Genetic information is stored in DNA in the nucleus."
+      },
+      {
+        q: "Which organelle is described as producing energy for the cell?",
+        a: "The mitochondrion produces energy through cellular respiration."
+      },
+      {
+        q: "Which organelle is described as producing food for the cell?",
+        a: "Chloroplasts produce food (sugar) for plant cells through photosynthesis."
+      },
+      {
+        q: "Which organelles are directly involved in making and transporting proteins?",
+        a: "Ribosomes, rough endoplasmic reticulum, the Golgi body, and vesicles are involved."
+      },
+      {
+        q: "How are proteins first made in the cell?",
+        a: "They are assembled by ribosomes."
+      },
+      {
+        q: "After proteins are made by ribosomes on the rough ER, where do they go next?",
+        a: "They are transported through the endoplasmic reticulum to the Golgi body."
+      },
+      {
+        q: "What does the Golgi body do after receiving proteins from the ER?",
+        a: "It sorts, modifies, and packages them into vesicles."
+      },
+      {
+        q: "True or False: Cytoplasm contains all of the organelles in a cell.",
+        a: "True. All organelles float within the cytoplasm."
+      },
+      {
+        q: "True or False: Animal cells perform photosynthesis.",
+        a: "False. Photosynthesis occurs in chloroplasts, which are found only in plant cells."
+      },
+      {
+        q: "True or False: Plant cells have both a cell membrane and a cell wall.",
+        a: "True. Plant cells have a cell membrane surrounded by a cell wall."
+      },
+      {
+        q: "True or False: Vacuoles are always the same size in all cells.",
+        a: "False. Vacuoles in plant cells are usually much larger than those in animal cells."
+      },
+      {
+        q: "Which external structures help move mucus in the nasal passages?",
+        a: "Cilia move in a wave-like fashion to push mucus along the passages."
+      },
+      {
+        q: "Which structure would help a single-celled organism swim through water?",
+        a: "A flagellum would whip back and forth to help it swim."
+      }
+    ];
+
+    let currentIndex = 0;
+    let knownCount = 0;
+    let unknownCount = 0;
+
+    const questionTextEl = document.getElementById("question-text");
+    const answerTextEl = document.getElementById("answer-text");
+    const answerCardEl = document.getElementById("answer-card");
+    const questionLabelEl = document.getElementById("question-label");
+    const statIndexEl = document.getElementById("stat-index");
+    const statKnownEl = document.getElementById("stat-known");
+    const statUnknownEl = document.getElementById("stat-unknown");
+    const btnToggleAnswer = document.getElementById("btn-toggle-answer");
+    const btnPrev = document.getElementById("btn-prev");
+    const btnNext = document.getElementById("btn-next");
+    const btnRandom = document.getElementById("btn-random");
+    const btnReset = document.getElementById("btn-reset");
+    const btnKnown = document.getElementById("btn-known");
+    const btnUnknown = document.getElementById("btn-unknown");
+    const btnCheck = document.getElementById("btn-check");
+    const userAnswerEl = document.getElementById("user-answer");
+    const feedbackEl = document.getElementById("feedback");
+
+    function normalizeText(str) {
+      return str
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, " ")
+        .split(/\s+/)
+        .filter(Boolean);
+    }
+
+    function similarityScore(userText, targetText) {
+      const uWords = normalizeText(userText);
+      const tWords = normalizeText(targetText);
+      if (uWords.length === 0 || tWords.length === 0) return 0;
+
+      const uSet = new Set(uWords);
+      const tSet = new Set(tWords);
+      let intersection = 0;
+      tSet.forEach(w => {
+        if (uSet.has(w)) intersection++;
+      });
+      const union = uSet.size + tSet.size - intersection;
+      return union === 0 ? 0 : intersection / union;
+    }
+
+    function renderQuestion() {
+      const qObj = questions[currentIndex];
+      questionTextEl.textContent = qObj.q;
+      answerTextEl.textContent = qObj.a;
+      questionLabelEl.textContent = "Question " + (currentIndex + 1);
+      statIndexEl.textContent = (currentIndex + 1) + " / " + questions.length;
+
+      // reset UI for new question
+      answerCardEl.style.display = "none";
+      btnToggleAnswer.textContent = "👁 Show Answer";
+      userAnswerEl.value = "";
+      feedbackEl.textContent = "";
+      feedbackEl.className = "feedback";
+
+      btnPrev.disabled = currentIndex === 0;
+      btnNext.disabled = currentIndex === questions.length - 1;
+    }
+
+    function toggleAnswer() {
+      if (answerCardEl.style.display === "none") {
+        answerCardEl.style.display = "block";
+        btnToggleAnswer.textContent = "🙈 Hide Answer";
+      } else {
+        answerCardEl.style.display = "none";
+        btnToggleAnswer.textContent = "👁 Show Answer";
+      }
+    }
+
+    function randomQuestion() {
+      let newIndex = currentIndex;
+      if (questions.length > 1) {
+        while (newIndex === currentIndex) {
+          newIndex = Math.floor(Math.random() * questions.length);
+        }
+      }
+      currentIndex = newIndex;
+      renderQuestion();
+    }
+
+    function updateStats() {
+      statKnownEl.textContent = knownCount;
+      statUnknownEl.textContent = unknownCount;
+    }
+
+    btnToggleAnswer.addEventListener("click", toggleAnswer);
+
+    btnPrev.addEventListener("click", () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+      }
+    });
+
+    btnNext.addEventListener("click", () => {
+      if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      }
+    });
+
+    btnRandom.addEventListener("click", randomQuestion);
+
+    btnReset.addEventListener("click", () => {
+      knownCount = 0;
+      unknownCount = 0;
+      updateStats();
+    });
+
+    btnKnown.addEventListener("click", () => {
+      knownCount++;
+      updateStats();
+      if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      }
+    });
+
+    btnUnknown.addEventListener("click", () => {
+      unknownCount++;
+      updateStats();
+      // stay on this question for review
+    });
+
+     btnCheck.addEventListener("click", () => {
+       const userText = userAnswerEl.value.trim();
+       const correctText = questions[currentIndex].a;
+       if (!userText) {
+         feedbackEl.textContent = "No answer entered. Showing the model answer.";
+         feedbackEl.className = "feedback bad";
+
+         // still reveal the model answer even if input is empty
+         answerCardEl.style.display = "block";
+         btnToggleAnswer.textContent = "🙈 Hide Answer";
+         return;
+       }
+ 
+       const score = similarityScore(userText, correctText);
+       const percent = Math.round(score * 100);
+ 
+       if (percent >= 70) {
+         feedbackEl.textContent = `Good! Your answer overlaps about ${percent}% with the model answer.`;
+         feedbackEl.className = "feedback ok";
+       } else if (percent >= 40) {
+         feedbackEl.textContent = `Not bad. Overlap about ${percent}%. Read the model answer to refine your phrasing.`;
+         feedbackEl.className = "feedback";
+       } else {
+         feedbackEl.textContent = `Low overlap (~${percent}%). Compare with the model answer and try again.`;
+         feedbackEl.className = "feedback bad";
+       }
+
+       // show the model answer after checking
+       answerCardEl.style.display = "block";
+       btnToggleAnswer.textContent = "🙈 Hide Answer";
+     });
+
+    // initial render
+    renderQuestion();
+    updateStats();
+  </script>
+</body>
+</html>
+
