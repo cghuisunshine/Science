@@ -18,6 +18,25 @@
       color: #1a365d;
     }
 
+    /* ====== Toggle controls ====== */
+    .view-toggle {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding: 0.6rem 0.8rem;
+      background: #e2e8f0;
+      border-radius: 999px;
+      align-items: center;
+      font-size: 0.95rem;
+    }
+    .view-toggle label {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
     /* ====== Side-by-side image + text ====== */
     .pair {
       display: flex;
@@ -30,7 +49,7 @@
       align-items: flex-start;
     }
 
-    /* Make image take more space */
+    /* Image larger */
     .pair figure {
       flex: 0 0 68%;
       margin: 0;
@@ -50,7 +69,7 @@
       font-size: 0.9rem;
     }
 
-    /* Make text block smaller */
+    /* Text block smaller */
     .text-block {
       flex: 0 0 32%;
       font-size: 0.9rem;
@@ -77,6 +96,24 @@
     .en { color: #1a202c; }
     .zh { color: #2b6cb0; }
 
+    /* ====== Mode-specific visibility ====== */
+
+    /* Image-only mode */
+    body[data-view-mode="images"] .text-block {
+      display: none;
+    }
+    body[data-view-mode="images"] .pair figure {
+      flex: 1 1 100%;
+    }
+
+    /* Text-only mode */
+    body[data-view-mode="text"] .pair figure {
+      display: none;
+    }
+    body[data-view-mode="text"] .text-block {
+      flex: 1 1 100%;
+    }
+
     /* Mobile responsive */
     @media (max-width: 850px) {
       .pair { flex-direction: column; }
@@ -87,11 +124,26 @@
     }
   </style>
 </head>
-<body>
-
+<body data-view-mode="both">
 <h1>Animal &amp; Plant Cells – EN / 中文 对照</h1>
 
-<!-- ========== 1. ANIMAL CELL OVERVIEW ========== -->
+<div class="view-toggle">
+  <span>View:</span>
+  <label>
+    <input type="radio" name="viewMode" value="both" checked>
+    Both / 图 + 文
+  </label>
+  <label>
+    <input type="radio" name="viewMode" value="images">
+    Image only / 只看图
+  </label>
+  <label>
+    <input type="radio" name="viewMode" value="text">
+    Text only / 只看文字
+  </label>
+</div>
+
+<!-- ========== 1. ANIMAL CELL OVERVIEW (LABELS) ========== -->
 <section class="pair">
   <figure>
     <img src="AnimalCell.png" alt="Animal Cell diagram">
@@ -99,28 +151,29 @@
   </figure>
 
   <div class="text-block">
-    <h2 style="font-size:1.1rem;">Animal Cell Terms<br>动物细胞结构名称</h2>
+    <h2 style="font-size:1.1rem;">Animal Cell Labels<br>动物细胞标注</h2>
     <table>
-      <tr><th>English</th><th>中文</th></tr>
+      <tr><th>English (from image)</th><th>中文翻译</th></tr>
+      <tr><td class="en">Rough Endoplasmic Reticulum</td><td class="zh">粗面内质网</td></tr>
+      <tr><td class="en">Vesicle</td><td class="zh">囊泡</td></tr>
+      <tr><td class="en">Golgi Body</td><td class="zh">高尔基体</td></tr>
+      <tr><td class="en">Smooth Endoplasmic Reticulum</td><td class="zh">光面内质网</td></tr>
+      <tr><td class="en">Cytoplasm</td><td class="zh">细胞质</td></tr>
+      <tr><td class="en">Flagellum</td><td class="zh">鞭毛</td></tr>
       <tr><td class="en">Nucleus</td><td class="zh">细胞核</td></tr>
       <tr><td class="en">Ribosomes</td><td class="zh">核糖体</td></tr>
       <tr><td class="en">Free Ribosomes</td><td class="zh">游离核糖体</td></tr>
-      <tr><td class="en">Rough ER</td><td class="zh">粗面内质网</td></tr>
-      <tr><td class="en">Smooth ER</td><td class="zh">光面内质网</td></tr>
-      <tr><td class="en">Vesicle</td><td class="zh">囊泡</td></tr>
-      <tr><td class="en">Golgi Body</td><td class="zh">高尔基体</td></tr>
-      <tr><td class="en">Cytoplasm</td><td class="zh">细胞质</td></tr>
-      <tr><td class="en">Cell Membrane</td><td class="zh">细胞膜</td></tr>
       <tr><td class="en">Lysosome</td><td class="zh">溶酶体</td></tr>
       <tr><td class="en">Mitochondrion</td><td class="zh">线粒体</td></tr>
       <tr><td class="en">Cilia</td><td class="zh">纤毛</td></tr>
       <tr><td class="en">Vacuole</td><td class="zh">液泡</td></tr>
-      <tr><td class="en">Flagellum</td><td class="zh">鞭毛</td></tr>
+      <tr><td class="en">Cell Membrane</td><td class="zh">细胞膜</td></tr>
+      <tr><td class="en">An Animal Cell</td><td class="zh">动物细胞</td></tr>
     </table>
   </div>
 </section>
 
-<!-- ========== 2. DEFINITIONS PAGE 1 ========== -->
+<!-- ========== 2. DEFINITIONS PAGE 1 (FULL TEXT) ========== -->
 <section class="pair">
   <figure>
     <img src="CellOrganells-1.png" alt="Organelles Page 1">
@@ -130,18 +183,76 @@
   <div class="text-block">
     <h2 style="font-size:1.1rem;">Definitions (1)<br>定义（1）</h2>
     <table>
-      <tr><th>Structure</th><th>中文</th></tr>
-      <tr><td class="en">Cell Membrane</td><td class="zh">细胞膜：控制进出细胞的物质。</td></tr>
-      <tr><td class="en">Cytoplasm</td><td class="zh">细胞质：凝胶状液体，包含水和细胞器。</td></tr>
-      <tr><td class="en">Nucleus</td><td class="zh">细胞核：控制细胞活动，含DNA。</td></tr>
-      <tr><td class="en">Mitochondrion</td><td class="zh">线粒体：进行细胞呼吸产生能量。</td></tr>
-      <tr><td class="en">Endoplasmic Reticulum</td><td class="zh">内质网：运输蛋白质的通道。</td></tr>
-      <tr><td class="en">Ribosomes</td><td class="zh">核糖体：制造蛋白质。</td></tr>
+      <tr><th>English (exact from image)</th><th>中文翻译</th></tr>
+
+      <tr>
+        <td class="en">
+          <strong>Cell Membrane</strong><br>
+          A layer that protects and surrounds cells. It controls substances that flow in and out of the cell.
+        </td>
+        <td class="zh">
+          <strong>细胞膜：</strong>一层保护并包围细胞的薄层。它控制进出细胞的物质。
+        </td>
+      </tr>
+
+      <tr>
+        <td class="en">
+          <strong>Cytoplasm</strong><br>
+          A gel-like fluid inside the cell. It contains water, other substances, and all the cell organelles.
+        </td>
+        <td class="zh">
+          <strong>细胞质：</strong>细胞内部的凝胶状液体。它含有水、其他物质以及所有细胞器。
+        </td>
+      </tr>
+
+      <tr>
+        <td class="en">
+          <strong>Nucleus</strong><br>
+          Controls activities in the cell and cell reproduction. It contains deoxyribonucleic acid (DNA), which
+          determines traits that are passed on when a cell reproduces.
+        </td>
+        <td class="zh">
+          <strong>细胞核：</strong>控制细胞活动和细胞繁殖。它含有脱氧核糖核酸（DNA），决定细胞在繁殖时传递的性状。
+        </td>
+      </tr>
+
+      <tr>
+        <td class="en">
+          <strong>Mitochondrion</strong><br>
+          The plural is mitochondria. Here the cell produces energy using the process of cellular respiration:<br>
+          glucose + oxygen &rarr; carbon dioxide + water + energy
+        </td>
+        <td class="zh">
+          <strong>线粒体：</strong>其复数形式为 mitochondria。细胞在这里通过细胞呼吸产生能量：<br>
+          葡萄糖 + 氧气 &rarr; 二氧化碳 + 水 + 能量
+        </td>
+      </tr>
+
+      <tr>
+        <td class="en">
+          <strong>Endoplasmic Reticulum</strong><br>
+          Folded membranes that act as channels to transport proteins and other materials through the cytoplasm.
+        </td>
+        <td class="zh">
+          <strong>内质网：</strong>折叠的膜结构，充当通道，将蛋白质和其他物质在细胞质中运输。
+        </td>
+      </tr>
+
+      <tr>
+        <td class="en">
+          <strong>Ribosomes</strong><br>
+          These assemble or produce proteins in the cell. Some are attached to the endoplasmic reticulum and some
+          float freely in the cytoplasm.
+        </td>
+        <td class="zh">
+          <strong>核糖体：</strong>在细胞中组装或合成蛋白质。一些附着在内质网上，另一些则自由漂浮在细胞质中。
+        </td>
+      </tr>
     </table>
   </div>
 </section>
 
-<!-- ========== 3. DEFINITIONS PAGE 2 ========== -->
+<!-- ========== 3. DEFINITIONS PAGE 2 (FULL TEXT) ========== -->
 <section class="pair">
   <figure>
     <img src="CellOrganells-2.png" alt="Organelles Page 2">
@@ -151,18 +262,77 @@
   <div class="text-block">
     <h2 style="font-size:1.1rem;">Definitions (2)<br>定义（2）</h2>
     <table>
-      <tr><th>Structure</th><th>中文</th></tr>
-      <tr><td class="en">Golgi Body</td><td class="zh">高尔基体：加工并包装蛋白质。</td></tr>
-      <tr><td class="en">Vesicles</td><td class="zh">囊泡：运输物质。</td></tr>
-      <tr><td class="en">Vacuoles</td><td class="zh">液泡：储存水及废物。</td></tr>
-      <tr><td class="en">Lysosomes</td><td class="zh">溶酶体：分解旧细胞器。</td></tr>
-      <tr><td class="en">Cilia</td><td class="zh">纤毛：波动运动帮助移动。</td></tr>
-      <tr><td class="en">Flagellum</td><td class="zh">鞭毛：摆动使细胞游动。</td></tr>
+      <tr><th>English (exact from image)</th><th>中文翻译</th></tr>
+
+      <tr>
+        <td class="en">
+          <strong>Golgi Body</strong><br>
+          Receives proteins from the endoplasmic reticulum, sorts them, and packages them into little bag-like
+          structures called vesicles.
+        </td>
+        <td class="zh">
+          <strong>高尔基体：</strong>从内质网接收蛋白质，对其进行分类，并将它们包装成被称为囊泡的小袋状结构。
+        </td>
+      </tr>
+
+      <tr>
+        <td class="en">
+          <strong>Vesicles</strong><br>
+          Membrane covered structures that carry proteins, water, and nutrients around the cell and in and in and
+          out of the cell.
+        </td>
+        <td class="zh">
+          <strong>囊泡：</strong>被膜包裹的结构，在细胞内部以及进出细胞时运输蛋白质、水和养分。
+        </td>
+      </tr>
+
+      <tr>
+        <td class="en">
+          <strong>Vacuoles</strong><br>
+          Structures that temporarily store water, other substances, and wastes in cells. Vacuoles in plant cells
+          are usually much larger than those in animal cells.
+        </td>
+        <td class="zh">
+          <strong>液泡：</strong>在细胞内暂时储存水、其他物质和废物的结构。植物细胞中的液泡通常比动物细胞中的大得多。
+        </td>
+      </tr>
+
+      <tr>
+        <td class="en">
+          <strong>Lysosomes</strong><br>
+          Structures that contain digestive chemicals like enzymes, which break down and recycle worn-out organelles.
+        </td>
+        <td class="zh">
+          <strong>溶酶体：</strong>含有消化性化学物质（如酶）的结构，用来分解并回收老化的细胞器。
+        </td>
+      </tr>
+
+      <tr>
+        <td class="en">
+          <strong>Cilia</strong><br>
+          Tiny hair-like structures attached to the body of some cells. They can move together in a wave-like fashion
+          and help the cell move around.
+        </td>
+        <td class="zh">
+          <strong>纤毛：</strong>附着在某些细胞表面的微小毛状结构。它们可以以波浪形式协同摆动，帮助细胞移动。
+        </td>
+      </tr>
+
+      <tr>
+        <td class="en">
+          <strong>Flagellum</strong><br>
+          A lash-like structure attached to the body of some cells. They can whip back and forth to help the cell swim
+          though a liquid.
+        </td>
+        <td class="zh">
+          <strong>鞭毛：</strong>附着在某些细胞上的鞭状结构。它可以来回摆动，帮助细胞在液体中游动。
+        </td>
+      </tr>
     </table>
   </div>
 </section>
 
-<!-- ========== 4. PLANT CELL TEXT ========== -->
+<!-- ========== 4. PLANT CELL TEXT (FULL) ========== -->
 <section class="pair">
   <figure>
     <img src="CellOrganells-Plant.png" alt="Plant cell text">
@@ -170,16 +340,37 @@
   </figure>
 
   <div class="text-block">
-    <h2 style="font-size:1.1rem;">Plant Cell Text<br>植物细胞文字</h2>
+    <h2 style="font-size:1.1rem;">Plant Cell Text<br>植物细胞文字说明</h2>
     <table>
-      <tr><th>Structure</th><th>中文</th></tr>
-      <tr><td class="en">Cell Wall</td><td class="zh">细胞壁：硬层保护细胞并维持形状。</td></tr>
-      <tr><td class="en">Chloroplasts</td><td class="zh">叶绿体：进行光合作用。</td></tr>
+      <tr><th>English (exact from image)</th><th>中文翻译</th></tr>
+
+      <tr>
+        <td class="en">
+          <strong>Cell Wall (in Plant Cells and Bacteria)</strong><br>
+          A tough layer outside of the cell membrane. It can be rigid, which helps a plant cell hold its shape.
+          It also protects the cell.
+        </td>
+        <td class="zh">
+          <strong>细胞壁（存在于植物细胞和细菌中）：</strong>位于细胞膜外的一层坚硬结构。它可以很坚硬，帮助植物细胞保持形状，同时也保护细胞。
+        </td>
+      </tr>
+
+      <tr>
+        <td class="en">
+          <strong>Chloroplasts (Only in Plant Cells)</strong><br>
+          Carry out photosynthesis.<br>
+          carbon dioxide + water + energy &rarr; sugar + oxygen
+        </td>
+        <td class="zh">
+          <strong>叶绿体（只存在于植物细胞中）：</strong>进行光合作用。<br>
+          二氧化碳 + 水 + 能量 &rarr; 糖 + 氧气
+        </td>
+      </tr>
     </table>
   </div>
 </section>
 
-<!-- ========== 5. PLANT CELL DIAGRAM ========== -->
+<!-- ========== 5. PLANT CELL DIAGRAM (LABELS) ========== -->
 <section class="pair">
   <figure>
     <img src="PlantCell.png" alt="Plant Cell diagram">
@@ -187,15 +378,39 @@
   </figure>
 
   <div class="text-block">
-    <h2 style="font-size:1.1rem;">Plant Cell Parts<br>植物细胞主要结构</h2>
+    <h2 style="font-size:1.1rem;">Plant Cell Labels<br>植物细胞标注</h2>
     <table>
-      <tr><th>English</th><th>中文</th></tr>
+      <tr><th>English (from image)</th><th>中文翻译</th></tr>
       <tr><td class="en">Chloroplast</td><td class="zh">叶绿体</td></tr>
       <tr><td class="en">Large Vacuole</td><td class="zh">大型中央液泡</td></tr>
       <tr><td class="en">Cell Wall</td><td class="zh">细胞壁</td></tr>
+      <tr><td class="en">A Plant Cell</td><td class="zh">植物细胞</td></tr>
     </table>
   </div>
 </section>
+
+<script>
+  // Simple mode switcher
+  (function () {
+    const radios = document.querySelectorAll('input[name="viewMode"]');
+    const body = document.body;
+
+    function updateMode(value) {
+      body.setAttribute('data-view-mode', value);
+    }
+
+    radios.forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          updateMode(e.target.value);
+        }
+      });
+    });
+
+    // Ensure default is "both"
+    updateMode('both');
+  })();
+</script>
 
 </body>
 </html>
