@@ -288,14 +288,13 @@
       <summary>AI grading (optional)</summary>
       <div class="settings-row">
         <label for="grade-api-url">Grade API URL</label>
-        <input id="grade-api-url" type="text" placeholder="http://127.0.0.1:8080/grade" />
+        <input id="grade-api-url" type="text" placeholder="https://lakesideart.gochatus.org/grade-service/grade" />
         <button class="secondary" id="btn-test-api" type="button">Test</button>
         <span id="api-status" class="feedback"></span>
       </div>
       <div class="settings-hint">
-        Tip: serve this page with <code>python3 -m http.server 8000</code> and enable CORS on the backend:
-        <code>CORS_ALLOW_ORIGIN=http://127.0.0.1:8000 python3 backend/grade_service.py</code>
-        (or use <code>*</code>).
+        Tip: if you're using the local backend, serve this page with <code>python3 -m http.server 8000</code> and enable CORS:
+        <code>CORS_ALLOW_ORIGIN=http://127.0.0.1:8000 python3 backend/grade_service.py</code>.
       </div>
     </details>
 
@@ -356,6 +355,7 @@
   </div>
 
   <script>
+    const DEFAULT_GRADE_API_URL = "https://lakesideart.gochatus.org/grade-service/grade";
     const questions = [
       {
         q: "What are organelles?",
@@ -716,8 +716,8 @@
 
     function saveGradeApiUrl() {
       const url = (gradeApiUrlEl.value || "").trim();
-      if (url) localStorage.setItem("gradeApiUrl", url);
-      else localStorage.removeItem("gradeApiUrl");
+      // Allow saving an empty string to persist "AI grading off".
+      localStorage.setItem("gradeApiUrl", url);
     }
 
     async function fetchJsonWithTimeout(url, options, timeoutMs) {
@@ -751,6 +751,22 @@
       return null;
     }
 
+    function deriveHealthUrl(gradeUrl) {
+      try {
+        const u = new URL(gradeUrl);
+        u.search = "";
+        u.hash = "";
+        if (u.pathname.endsWith("/grade")) {
+          u.pathname = u.pathname.replace(/\/grade$/, "/health");
+        } else {
+          u.pathname = u.pathname.replace(/\/+$/, "") + "/health";
+        }
+        return u.toString();
+      } catch {
+        return null;
+      }
+    }
+
     async function testApi() {
       const gradeUrl = getGradeApiUrl();
       if (!gradeUrl) {
@@ -760,17 +776,23 @@
 
       setApiStatus("Testing…");
       try {
-        const healthUrl = new URL("/health", gradeUrl).toString();
+        const healthUrl = deriveHealthUrl(gradeUrl);
+        if (!healthUrl) {
+          setApiStatus("Invalid URL.", "bad");
+          return;
+        }
         const { ok, status, data } = await fetchJsonWithTimeout(healthUrl, { method: "GET" }, 4000);
         if (!ok) {
           setApiStatus(`Health check failed (${status}).`, "bad");
           return;
         }
-        if (data && data.ok === true) {
-          setApiStatus("Backend OK.", "ok");
-        } else {
-          setApiStatus("Backend responded, but not recognized.", "bad");
-        }
+        const looksHealthy =
+          !data ||
+          data.ok === true ||
+          data.status === "ok" ||
+          data.healthy === true ||
+          data.health === "ok";
+        setApiStatus(looksHealthy ? "Backend OK." : "Backend responded.", looksHealthy ? "ok" : "bad");
       } catch (err) {
         setApiStatus("Could not reach backend (CORS/URL/offline).", "bad");
       }
@@ -815,7 +837,8 @@
       // stay on this question for review
     });
 
-    gradeApiUrlEl.value = localStorage.getItem("gradeApiUrl") || "";
+    const savedGradeApiUrl = localStorage.getItem("gradeApiUrl");
+    gradeApiUrlEl.value = savedGradeApiUrl === null ? DEFAULT_GRADE_API_URL : savedGradeApiUrl;
     gradeApiUrlEl.addEventListener("change", () => {
       saveGradeApiUrl();
       setApiStatus("");
