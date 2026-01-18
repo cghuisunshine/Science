@@ -19,6 +19,13 @@
       --bad: #b91c1c;
       --shadow: 0 16px 46px rgba(17, 24, 39, 0.12);
       --radius: 16px;
+
+      --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+      --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+      --ring: 0 0 0 4px rgba(15, 118, 110, 0.16);
+      --ring2: 0 0 0 4px rgba(154, 52, 18, 0.14);
     }
 
     * { box-sizing: border-box; }
@@ -27,7 +34,9 @@
       margin: 0;
       min-height: 100vh;
       color: var(--ink);
-      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+      font-family: var(--font-serif);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       background:
         radial-gradient(1200px 700px at 18% 12%, rgba(15, 118, 110, 0.12), transparent 55%),
         radial-gradient(900px 600px at 80% 26%, rgba(154, 52, 18, 0.10), transparent 60%),
@@ -45,36 +54,116 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       border: 1px solid rgba(17, 24, 39, 0.08);
-      padding: 24px 26px 26px;
+      padding: 22px 24px 30px;
+      position: relative;
+      overflow: clip;
+    }
+
+    .container:before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      background:
+        radial-gradient(900px 260px at 12% 0%, rgba(15, 118, 110, 0.07), transparent 58%),
+        radial-gradient(880px 260px at 88% 0%, rgba(154, 52, 18, 0.05), transparent 62%);
+      pointer-events: none;
+    }
+
+    .container > * { position: relative; }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .header-copy {
+      min-width: 240px;
+      flex: 1;
     }
 
     h1 {
       margin: 0;
-      font-size: 1.85rem;
+      font-size: 1.9rem;
       letter-spacing: 0.01em;
+      line-height: 1.15;
     }
 
     .subtitle {
-      margin: 6px 0 0;
-      color: var(--muted);
+      margin: 7px 0 0;
+      color: rgba(17, 24, 39, 0.64);
       font-size: 0.98rem;
-      line-height: 1.35;
+      line-height: 1.38;
+      max-width: 70ch;
+    }
+
+    .header-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .pill {
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(17, 24, 39, 0.14);
+      background: rgba(255, 255, 255, 0.72);
+      color: rgba(17, 24, 39, 0.74);
+      white-space: nowrap;
+      backdrop-filter: blur(6px);
+    }
+
+    .pill.accent {
+      border-color: rgba(15, 118, 110, 0.22);
+      background: rgba(15, 118, 110, 0.08);
+      color: rgba(15, 118, 110, 0.94);
     }
 
     details.settings {
-      margin: 14px 0 16px;
+      margin: 12px 0 16px;
       padding: 12px 14px;
       border-radius: 14px;
       border: 1px solid rgba(17, 24, 39, 0.10);
-      background: rgba(255, 255, 255, 0.65);
-      backdrop-filter: blur(6px);
+      background: rgba(255, 255, 255, 0.64);
+      backdrop-filter: blur(8px);
       font-size: 0.95rem;
     }
 
     details.settings summary {
       cursor: pointer;
-      font-weight: 700;
-      color: rgba(17, 24, 39, 0.88);
+      font-weight: 800;
+      color: rgba(17, 24, 39, 0.86);
+      font-family: var(--font-sans);
+      letter-spacing: 0.01em;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    details.settings summary::-webkit-details-marker { display: none; }
+
+    details.settings summary:after {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-right: 2px solid rgba(17, 24, 39, 0.45);
+      border-bottom: 2px solid rgba(17, 24, 39, 0.45);
+      transform: rotate(45deg);
+      transition: transform 160ms ease;
+      margin-left: auto;
+      flex: 0 0 auto;
+    }
+
+    details.settings[open] summary:after {
+      transform: rotate(225deg);
     }
 
     .settings-row {
@@ -85,30 +174,42 @@
       align-items: center;
     }
 
+    .settings-row.top {
+      align-items: flex-start;
+    }
+
     .settings-row label {
-      font-weight: 700;
-      color: rgba(17, 24, 39, 0.72);
+      font-family: var(--font-sans);
+      font-weight: 800;
+      color: rgba(17, 24, 39, 0.68);
+    }
+
+    .grow {
+      flex: 1;
+      min-width: 260px;
     }
 
     input[type="text"] {
       flex: 1;
       min-width: 260px;
       padding: 9px 10px;
-      border-radius: 10px;
+      border-radius: 12px;
       border: 1px solid rgba(17, 24, 39, 0.18);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-family: var(--font-mono);
       font-size: 0.92rem;
       background: #fff;
+      box-shadow: 0 1px 0 rgba(17, 24, 39, 0.05);
+      transition: border-color 160ms ease, box-shadow 160ms ease;
     }
 
     input[type="file"] {
       width: 100%;
       max-width: 520px;
       padding: 8px 10px;
-      border-radius: 10px;
+      border-radius: 12px;
       border: 1px dashed rgba(17, 24, 39, 0.22);
       background: rgba(255, 255, 255, 0.75);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-family: var(--font-mono);
       font-size: 0.92rem;
     }
 
@@ -116,11 +217,11 @@
       margin-top: 10px;
       font-size: 0.9rem;
       color: rgba(17, 24, 39, 0.66);
-      line-height: 1.35;
+      line-height: 1.38;
     }
 
     code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-family: var(--font-mono);
       font-size: 0.92em;
       background: rgba(15, 118, 110, 0.08);
       border: 1px solid rgba(15, 118, 110, 0.18);
@@ -137,7 +238,7 @@
       margin: 10px 0 18px;
       padding: 10px 12px;
       border-radius: 14px;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.62));
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.62));
       border: 1px solid rgba(17, 24, 39, 0.10);
     }
 
@@ -146,10 +247,11 @@
       align-items: baseline;
       gap: 6px;
       white-space: nowrap;
+      font-family: var(--font-sans);
     }
 
-    .stat-label { color: rgba(17, 24, 39, 0.58); }
-    .stat-value { font-weight: 800; color: rgba(17, 24, 39, 0.88); }
+    .stat-label { color: rgba(17, 24, 39, 0.56); }
+    .stat-value { font-weight: 900; color: rgba(17, 24, 39, 0.88); }
 
     .question-card {
       border-radius: 18px;
@@ -183,12 +285,12 @@
     }
 
     .question-index {
-      font-size: 0.9rem;
-      font-weight: 800;
-      letter-spacing: 0.06em;
+      font-size: 0.88rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: rgba(17, 24, 39, 0.70);
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: rgba(17, 24, 39, 0.72);
+      font-family: var(--font-sans);
     }
 
     .tag {
@@ -198,13 +300,13 @@
       border: 1px solid rgba(15, 118, 110, 0.22);
       background: rgba(15, 118, 110, 0.08);
       color: rgba(15, 118, 110, 0.92);
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-family: var(--font-sans);
       white-space: nowrap;
     }
 
     .question-text {
-      font-size: 1.1rem;
-      line-height: 1.52;
+      font-size: 1.12rem;
+      line-height: 1.55;
       margin: 6px 0 0;
     }
 
@@ -216,40 +318,57 @@
     }
 
     .input-card { margin-bottom: 12px; }
-    .answer-card { margin-bottom: 18px; display: none; }
+    .answer-card {
+      margin-bottom: 18px;
+      display: none;
+      animation: reveal 220ms ease-out;
+    }
 
     .input-label, .answer-label {
-      font-size: 0.85rem;
-      font-weight: 800;
+      font-size: 0.84rem;
+      font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: rgba(17, 24, 39, 0.62);
+      letter-spacing: 0.08em;
+      color: rgba(17, 24, 39, 0.60);
       margin-bottom: 6px;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-family: var(--font-sans);
     }
 
     textarea {
       width: 100%;
       min-height: 84px;
       resize: vertical;
-      padding: 9px 10px;
+      padding: 10px 11px;
       border-radius: 12px;
       border: 1px solid rgba(17, 24, 39, 0.18);
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-family: var(--font-sans);
       font-size: 0.98rem;
+      line-height: 1.4;
       background: #fff;
+      box-shadow: 0 1px 0 rgba(17, 24, 39, 0.05);
+      transition: border-color 160ms ease, box-shadow 160ms ease;
     }
 
     textarea.paste {
       min-height: 130px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-family: var(--font-mono);
       font-size: 0.92rem;
     }
+
+    .btn-row {
+      margin-top: 8px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-row.tight { gap: 10px; }
 
     .feedback {
       margin-top: 6px;
       font-size: 0.95rem;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-family: var(--font-sans);
     }
 
     .feedback.ok { color: var(--ok); }
@@ -259,8 +378,135 @@
       font-size: 1.02rem;
       line-height: 1.5;
       white-space: pre-wrap;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-family: var(--font-sans);
     }
+
+    .review-panel {
+      display: none;
+      margin-top: 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(17, 24, 39, 0.12);
+      background: rgba(255, 255, 255, 0.88);
+      overflow: hidden;
+    }
+
+    .review-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      background:
+        radial-gradient(520px 120px at 20% 0%, rgba(15, 118, 110, 0.08), transparent 60%),
+        radial-gradient(520px 120px at 85% 0%, rgba(154, 52, 18, 0.06), transparent 60%),
+        rgba(255, 255, 255, 0.78);
+      border-bottom: 1px solid rgba(17, 24, 39, 0.10);
+    }
+
+    .review-title {
+      font-family: var(--font-sans);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+
+    .review-sub {
+      margin-top: 2px;
+      font-family: var(--font-sans);
+      color: rgba(17, 24, 39, 0.62);
+      font-size: 0.92rem;
+      line-height: 1.35;
+    }
+
+    .review-list {
+      padding: 12px 14px 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .review-item {
+      border-radius: 14px;
+      border: 1px solid rgba(17, 24, 39, 0.10);
+      background: rgba(255, 255, 255, 0.85);
+      padding: 10px 12px;
+    }
+
+    .review-item .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      font-family: var(--font-sans);
+      margin-bottom: 6px;
+    }
+
+    .review-item .idx {
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(17, 24, 39, 0.70);
+      font-size: 0.78rem;
+    }
+
+    .review-item .verdict {
+      font-family: var(--font-sans);
+      font-weight: 900;
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .review-item .verdict.ok { color: var(--ok); }
+    .review-item .verdict.bad { color: var(--bad); }
+    .review-item .verdict.unknown { color: rgba(17, 24, 39, 0.62); }
+    .review-item .verdict.na { color: rgba(17, 24, 39, 0.52); }
+    .review-item .q {
+      font-family: var(--font-sans);
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+
+    .review-item .explain {
+      font-family: var(--font-sans);
+      color: rgba(17, 24, 39, 0.68);
+      font-size: 0.95rem;
+      line-height: 1.35;
+      white-space: pre-wrap;
+    }
+
+    .review-item .answer {
+      margin-top: 8px;
+      border-radius: 12px;
+      border: 1px dashed rgba(17, 24, 39, 0.18);
+      background: rgba(17, 24, 39, 0.03);
+      padding: 8px 10px;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      white-space: pre-wrap;
+    }
+
+    .actions-wrap {
+      position: sticky;
+      bottom: 12px;
+      margin-top: 10px;
+      padding-top: 8px;
+    }
+
+    .actions-wrap:before {
+      content: "";
+      position: absolute;
+      inset: -14px -14px -14px -14px;
+      background: linear-gradient(
+        180deg,
+        rgba(251, 250, 246, 0),
+        rgba(251, 250, 246, 0.70) 24%,
+        rgba(251, 250, 246, 0.92)
+      );
+      pointer-events: none;
+      filter: blur(0.3px);
+    }
+
+    .actions-wrap > * { position: relative; }
 
     .controls-row {
       display: flex;
@@ -287,12 +533,18 @@
       align-items: center;
       gap: 8px;
       white-space: nowrap;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-family: var(--font-sans);
+      transition: transform 120ms ease, filter 160ms ease, box-shadow 160ms ease;
+      box-shadow: 0 1px 0 rgba(17, 24, 39, 0.08);
     }
+
+    button:hover { filter: brightness(0.98); box-shadow: 0 10px 22px rgba(17, 24, 39, 0.10); }
+    button:active { transform: translateY(1px); }
 
     button.primary {
       background: linear-gradient(180deg, rgba(15, 118, 110, 0.98), rgba(13, 148, 136, 0.98));
       color: #fff;
+      box-shadow: 0 14px 30px rgba(15, 118, 110, 0.22);
     }
 
     button.secondary {
@@ -309,33 +561,70 @@
     button:disabled {
       opacity: 0.55;
       cursor: default;
+      box-shadow: none;
+      transform: none;
     }
 
     .spacer { flex: 1; }
+
+    :is(button, input, textarea, summary):focus-visible {
+      outline: none;
+      box-shadow: var(--ring);
+      border-color: rgba(15, 118, 110, 0.50);
+    }
+
+    #btn-toggle-answer:focus-visible {
+      box-shadow: var(--ring2);
+      border-color: rgba(154, 52, 18, 0.50);
+    }
 
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+    }
+
+    @media (max-width: 760px) {
+      .header-row { flex-direction: column; align-items: flex-start; }
+      .header-meta { justify-content: flex-start; }
+    }
+
     @media (max-width: 640px) {
       body { padding: 16px; }
-      .container { padding: 18px 16px; }
+      .container { padding: 18px 16px 26px; }
       .controls-row { flex-direction: column; align-items: stretch; }
       .knowledge-row { justify-content: stretch; }
       .spacer { display: none; }
       button { justify-content: center; }
       input[type="text"] { min-width: 0; }
+      .actions-wrap { bottom: 10px; }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>General FAQ Practice</h1>
-    <p class="subtitle">
-      Load a file of question/answer pairs (JSON or simple text), type your answer, check it, then (optionally) reveal a model answer.
-      Answers are optional; if a model answer is missing, AI grading can still be used.
-    </p>
+    <div class="header-row">
+      <div class="header-copy">
+        <h1>General FAQ Practice</h1>
+        <p class="subtitle">
+          Load a file of question/answer pairs (JSON or simple text), type your answer, check it, then (optionally) reveal a model answer.
+          Answers are optional; if a model answer is missing, AI grading can still be used.
+        </p>
+      </div>
+      <div class="header-meta" aria-label="Session info">
+        <span class="pill accent" title="Questions in current set">Set: <span id="pill-total">1</span></span>
+        <span class="pill" title="Drafts saved">Answered: <span id="pill-answered">0</span> / <span id="pill-total-2">1</span></span>
+        <span class="pill" title="Your progress markers">Known: <span id="pill-known">0</span> | Review: <span id="pill-unknown">0</span></span>
+      </div>
+    </div>
 
     <details class="settings" open>
       <summary>Data + AI grading (optional)</summary>
@@ -346,11 +635,11 @@
         <button class="secondary" id="btn-reload-default" type="button">Load default</button>
       </div>
 
-      <div class="settings-row" style="align-items: flex-start;">
+      <div class="settings-row top">
         <label for="faq-paste">Paste</label>
-        <div style="flex: 1; min-width: 260px;">
+        <div class="grow">
           <textarea id="faq-paste" class="paste" placeholder="Paste JSON, or plain text blocks separated by an empty line..."></textarea>
-          <div style="margin-top: 8px; display: flex; gap: 10px; flex-wrap: wrap;">
+          <div class="btn-row">
             <button class="secondary" id="btn-load-paste" type="button">Load pasted</button>
             <button class="secondary" id="btn-clear-paste" type="button">Clear</button>
           </div>
@@ -405,7 +694,7 @@
     <div class="input-card">
       <div class="input-label">Your answer</div>
       <textarea id="user-answer" placeholder="Type your answer here before checking..."></textarea>
-      <div style="margin-top: 8px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+      <div class="btn-row tight">
         <button class="secondary" id="btn-check" type="button">Check my answer</button>
         <span id="feedback" class="feedback"></span>
       </div>
@@ -416,18 +705,32 @@
       <div class="answer-text" id="answer-text"></div>
     </div>
 
-    <div class="knowledge-row">
-      <button class="outline" id="btn-known" type="button">I knew this</button>
-      <button class="outline" id="btn-unknown" type="button">I didn't know</button>
+    <div class="review-panel" id="review-panel" aria-live="polite">
+      <div class="review-head">
+        <div>
+          <div class="review-title">Review: Check All</div>
+          <div class="review-sub" id="review-sub">Run "Check All" to grade everything you've answered so far.</div>
+        </div>
+        <button class="outline" id="btn-close-review" type="button">Close</button>
+      </div>
+      <div class="review-list" id="review-list"></div>
     </div>
 
-    <div class="controls-row">
-      <button class="secondary" id="btn-prev" type="button">&lt;- Previous</button>
-      <button class="primary" id="btn-toggle-answer" type="button">Show Answer</button>
-      <button class="secondary" id="btn-next" type="button">Next -&gt;</button>
-      <div class="spacer"></div>
-      <button class="secondary" id="btn-random" type="button">Random</button>
-      <button class="secondary" id="btn-reset" type="button">Reset Stats</button>
+    <div class="actions-wrap">
+      <div class="knowledge-row">
+        <button class="outline" id="btn-known" type="button">I knew this</button>
+        <button class="outline" id="btn-unknown" type="button">I didn't know</button>
+      </div>
+
+      <div class="controls-row">
+        <button class="secondary" id="btn-prev" type="button">&lt;- Previous</button>
+        <button class="primary" id="btn-toggle-answer" type="button">Show Answer</button>
+        <button class="secondary" id="btn-next" type="button">Next -&gt;</button>
+        <div class="spacer"></div>
+        <button class="secondary" id="btn-random" type="button">Random</button>
+        <button class="secondary" id="btn-check-all" type="button" title="Check all answered questions">Check All</button>
+        <button class="secondary" id="btn-reset" type="button">Reset Stats</button>
+      </div>
     </div>
   </div>
 
@@ -485,10 +788,38 @@
       }
     }
 
+    function answersStorageKey() {
+      return LS_FAQ_KEY + ".answers.v1";
+    }
+
+    function saveAnswersToLocalStorage() {
+      try {
+        localStorage.setItem(answersStorageKey(), JSON.stringify({ v: 1, answers: answersByIndex }));
+      } catch {
+        // ignore
+      }
+    }
+
+    function loadAnswersFromLocalStorage() {
+      try {
+        const raw = localStorage.getItem(answersStorageKey());
+        if (!raw) return {};
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== "object") return {};
+        return (parsed.answers && typeof parsed.answers === "object") ? parsed.answers : {};
+      } catch {
+        return {};
+      }
+    }
+
     let questions = loadQuestionsFromLocalStorage() || DEFAULT_QUESTIONS.slice();
     let currentIndex = 0;
     let knownCount = 0;
     let unknownCount = 0;
+
+    // per-question drafts (not the same as "Known/Review" stats)
+    // { [index:number]: { answer: string, updated_at: string } }
+    let answersByIndex = {};
 
     const questionCardEl = document.getElementById("question-card");
     const questionTextEl = document.getElementById("question-text");
@@ -500,6 +831,18 @@
     const statIndexEl = document.getElementById("stat-index");
     const statKnownEl = document.getElementById("stat-known");
     const statUnknownEl = document.getElementById("stat-unknown");
+
+    const pillTotalEl = document.getElementById("pill-total");
+    const pillTotal2El = document.getElementById("pill-total-2");
+    const pillAnsweredEl = document.getElementById("pill-answered");
+    const pillKnownEl = document.getElementById("pill-known");
+    const pillUnknownEl = document.getElementById("pill-unknown");
+
+    const btnCheckAll = document.getElementById("btn-check-all");
+    const reviewPanelEl = document.getElementById("review-panel");
+    const reviewListEl = document.getElementById("review-list");
+    const reviewSubEl = document.getElementById("review-sub");
+    const btnCloseReview = document.getElementById("btn-close-review");
 
     const btnToggleAnswer = document.getElementById("btn-toggle-answer");
     const btnPrev = document.getElementById("btn-prev");
@@ -601,6 +944,14 @@
       return null;
     }
 
+    function extractGradeResults(data) {
+      if (!data) return null;
+      if (Array.isArray(data.results)) return data.results;
+      if (data.result && Array.isArray(data.result.results)) return data.result.results;
+      if (data.model_result && Array.isArray(data.model_result.results)) return data.model_result.results;
+      return null;
+    }
+
     function deriveHealthUrl(gradeUrl) {
       try {
         const u = new URL(gradeUrl);
@@ -648,9 +999,23 @@
       }
     }
 
+    function countAnswered() {
+      let n = 0;
+      for (const k of Object.keys(answersByIndex || {})) {
+        const v = answersByIndex[k];
+        if (v && typeof v.answer === "string" && v.answer.trim()) n++;
+      }
+      return n;
+    }
+
     function updateStats() {
       statKnownEl.textContent = knownCount;
       statUnknownEl.textContent = unknownCount;
+      if (pillKnownEl) pillKnownEl.textContent = knownCount;
+      if (pillUnknownEl) pillUnknownEl.textContent = unknownCount;
+      if (pillTotalEl) pillTotalEl.textContent = questions.length;
+      if (pillTotal2El) pillTotal2El.textContent = questions.length;
+      if (pillAnsweredEl) pillAnsweredEl.textContent = countAnswered();
     }
 
     function currentQuestion() {
@@ -673,6 +1038,7 @@
         btnNext.disabled = true;
         btnToggleAnswer.disabled = true;
         btnCheck.disabled = true;
+        if (btnCheckAll) btnCheckAll.disabled = true;
         return;
       }
 
@@ -680,18 +1046,23 @@
       answerTextEl.textContent = qObj.a || "";
       questionLabelEl.textContent = "Question " + (currentIndex + 1);
       statIndexEl.textContent = (currentIndex + 1) + " / " + questions.length;
+      if (pillTotalEl) pillTotalEl.textContent = questions.length;
+      if (pillTotal2El) pillTotal2El.textContent = questions.length;
       questionTagEl.textContent = qObj.tag || (hasModelAnswer(qObj) ? "Short Answer" : "No Model Answer");
 
       answerCardEl.style.display = "none";
       btnToggleAnswer.textContent = hasModelAnswer(qObj) ? "Show Answer" : "No answer";
       btnToggleAnswer.disabled = !hasModelAnswer(qObj);
 
-      userAnswerEl.value = "";
+      const saved = answersByIndex[String(currentIndex)];
+      userAnswerEl.value = saved && typeof saved.answer === "string" ? saved.answer : "";
       setFeedback("", "");
 
       btnPrev.disabled = currentIndex === 0;
       btnNext.disabled = currentIndex === questions.length - 1;
       btnCheck.disabled = false;
+      if (btnCheckAll) btnCheckAll.disabled = countAnswered() === 0;
+      updateStats();
 
       // small re-trigger animation
       questionCardEl.style.animation = "none";
@@ -722,6 +1093,12 @@
       unknownCount = 0;
       updateStats();
       renderQuestion();
+    }
+
+    function clearAllAnswers() {
+      answersByIndex = {};
+      saveAnswersToLocalStorage();
+      updateStats();
     }
 
     function coerceQuestions(raw) {
@@ -829,6 +1206,25 @@
       }
     }
 
+    function storeCurrentDraftAnswer() {
+      const v = userAnswerEl.value;
+      if (typeof v !== "string") return;
+      answersByIndex[String(currentIndex)] = { answer: v, updated_at: new Date().toISOString() };
+      saveAnswersToLocalStorage();
+      updateStats();
+      if (btnCheckAll) btnCheckAll.disabled = countAnswered() === 0;
+    }
+
+    let draftSaveTimer = null;
+    userAnswerEl.addEventListener("input", () => {
+      clearTimeout(draftSaveTimer);
+      draftSaveTimer = setTimeout(storeCurrentDraftAnswer, 250);
+    });
+
+    userAnswerEl.addEventListener("blur", () => {
+      storeCurrentDraftAnswer();
+    });
+
     btnToggleAnswer.addEventListener("click", toggleAnswer);
 
     btnPrev.addEventListener("click", () => {
@@ -847,11 +1243,30 @@
 
     btnRandom.addEventListener("click", randomQuestion);
 
-    btnReset.addEventListener("click", () => {
+    btnReset.addEventListener("click", (e) => {
       knownCount = 0;
       unknownCount = 0;
+      if (e && e.shiftKey) {
+        clearAllAnswers();
+        setFeedback("Cleared saved answers.", "ok");
+      }
       updateStats();
     });
+
+    function openReviewPanel() {
+      if (!reviewPanelEl) return;
+      reviewPanelEl.style.display = "block";
+      reviewPanelEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function closeReviewPanel() {
+      if (!reviewPanelEl) return;
+      reviewPanelEl.style.display = "none";
+    }
+
+    if (btnCloseReview) {
+      btnCloseReview.addEventListener("click", closeReviewPanel);
+    }
 
     btnKnown.addEventListener("click", () => {
       knownCount++;
@@ -896,12 +1311,94 @@
     });
     btnTestApi.addEventListener("click", testApi);
 
+    // quick UX: Ctrl/Cmd+Enter submits "Check my answer"
+    userAnswerEl.addEventListener("keydown", (e) => {
+      const isEnter = e.key === "Enter";
+      const isModified = e.metaKey || e.ctrlKey;
+      if (isEnter && isModified && !btnCheck.disabled) {
+        e.preventDefault();
+        btnCheck.click();
+      }
+    });
+
+    if (btnCheckAll) {
+      btnCheckAll.addEventListener("click", checkAllAnswered);
+    }
+
+    async function gradeOne({ questionText, userText, correctText }) {
+      const gradeUrl = getGradeApiUrl();
+      const aiTimeoutMs = 60000;
+
+      if (gradeUrl) {
+        const pair = { question: questionText, answer: userText };
+        if (correctText) pair.reference_answer = correctText;
+        const payload = { pairs: [pair] };
+
+        const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+          gradeUrl,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          },
+          aiTimeoutMs
+        );
+
+        if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+
+        const first = extractFirstGradeResult(data);
+        if (!ok || !first) {
+          const reason = data && data.error ? data.error : `bad_response_${status}`;
+          const detail = text ? ` (${text.slice(0, 160)})` : "";
+          throw new Error(reason + detail);
+        }
+
+        const verdict = first.verdict === "correct" ? "correct" : "wrong";
+        const explanation = (first.explanation || "").trim();
+        return { verdict, explanation, mode: "ai" };
+      }
+
+      const local = localOverlapCheck(userText, correctText);
+      if (local.verdict === "unknown") return { verdict: "unknown", explanation: local.explanation, mode: "local" };
+      return { verdict: local.verdict, explanation: local.explanation, mode: "local" };
+    }
+
+    async function gradeManyAi(pairs) {
+      const gradeUrl = getGradeApiUrl();
+      const aiTimeoutMs = 60000;
+      if (!gradeUrl) throw new Error("no_grade_url");
+      if (!Array.isArray(pairs) || pairs.length === 0) return [];
+
+      const payload = { pairs };
+      const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+        gradeUrl,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        },
+        aiTimeoutMs
+      );
+
+      if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+
+      const results = extractGradeResults(data);
+      if (!ok || !results || !Array.isArray(results)) {
+        const reason = data && data.error ? data.error : `bad_response_${status}`;
+        const detail = text ? ` (${text.slice(0, 160)})` : "";
+        throw new Error(reason + detail);
+      }
+
+      return results;
+    }
+
     btnCheck.addEventListener("click", async () => {
+      storeCurrentDraftAnswer();
+
       const userText = userAnswerEl.value.trim();
       const qObj = currentQuestion();
       const questionText = qObj ? qObj.q : "";
       const correctText = qObj && typeof qObj.a === "string" ? qObj.a.trim() : "";
-      const aiTimeoutMs = 60000;
 
       if (!qObj) return;
 
@@ -921,49 +1418,12 @@
       setFeedback(gradeUrl ? "Checking with AI grader..." : "Checking...", "");
 
       try {
-        if (gradeUrl) {
-          const pair = { question: questionText, answer: userText };
-          if (correctText) pair.reference_answer = correctText;
-          const payload = { pairs: [pair] };
-
-          const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
-            gradeUrl,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload)
-            },
-            aiTimeoutMs
-          );
-
-          if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
-
-          const first = extractFirstGradeResult(data);
-          if (!ok || !first) {
-            const reason = data && data.error ? data.error : `bad_response_${status}`;
-            const detail = text ? ` (${text.slice(0, 160)})` : "";
-            throw new Error(reason + detail);
-          }
-
-          const verdict = first.verdict === "correct" ? "correct" : "wrong";
-          const explanation = (first.explanation || "").trim();
-          setFeedback(
-            verdict === "correct" ? `Correct. ${explanation}` : `Wrong. ${explanation}`,
-            verdict === "correct" ? "ok" : "bad"
-          );
-        } else {
-          const local = localOverlapCheck(userText, correctText);
-          if (local.verdict === "unknown") {
-            setFeedback(local.explanation, "bad");
-          } else {
-            setFeedback(
-              local.verdict === "correct" ? `Correct. ${local.explanation}` : `Wrong. ${local.explanation}`,
-              local.verdict === "correct" ? "ok" : "bad"
-            );
-          }
-        }
+        const result = await gradeOne({ questionText, userText, correctText });
+        const isCorrect = result.verdict === "correct";
+        const prefix = result.verdict === "unknown" ? "" : (isCorrect ? "Correct. " : "Wrong. ");
+        setFeedback(prefix + (result.explanation || ""), isCorrect ? "ok" : "bad");
       } catch (err) {
-        console.warn("AI grading failed:", err);
+        console.warn("Grading failed:", err);
         const local = localOverlapCheck(userText, correctText);
         if (local.verdict === "unknown") {
           setFeedback("AI grading unavailable; also no model answer to compare against.", "bad");
@@ -982,10 +1442,223 @@
       }
     });
 
+    function renderReviewItem({ index, q, userAnswer, verdict, explanation }) {
+      const safe = (s) => String(s || "");
+      const verdictClass =
+        verdict === "correct" ? "ok" :
+        (verdict === "unknown" ? "unknown" :
+        (verdict === "na" ? "na" : "bad"));
+      const verdictText =
+        verdict === "correct" ? "Correct" :
+        (verdict === "unknown" ? "Unknown" :
+        (verdict === "na" ? "Not answered" : "Wrong"));
+
+      const el = document.createElement("div");
+      el.className = "review-item";
+      el.innerHTML =
+        `<div class="meta">` +
+          `<div class="idx">Q${index + 1}</div>` +
+          `<div class="verdict ${verdictClass}">${verdictText}</div>` +
+        `</div>` +
+        `<div class="q">${escapeHtml(safe(q))}</div>` +
+        `<div class="explain">${escapeHtml(safe(explanation))}</div>` +
+        `<div class="answer">${escapeHtml(safe(userAnswer))}</div>`;
+
+      return el;
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    async function checkAllAnswered() {
+      storeCurrentDraftAnswer();
+
+      const answeredKeys = Object.keys(answersByIndex || {}).filter((k) => {
+        const v = answersByIndex[k];
+        return v && typeof v.answer === "string" && v.answer.trim();
+      });
+
+      const answeredCount = answeredKeys.length;
+      const totalCount = questions.length;
+
+      if (btnCheckAll) btnCheckAll.disabled = true;
+      if (reviewSubEl) reviewSubEl.textContent = `Checking answered questions (${answeredCount}/${totalCount})...`;
+      if (reviewListEl) reviewListEl.innerHTML = "";
+      openReviewPanel();
+
+      let correct = 0;
+      let wrong = 0;
+      let unknown = 0;
+      let notAnswered = 0;
+
+      const gradeUrl = getGradeApiUrl();
+
+      // Prefer batching when AI grader is enabled.
+      if (gradeUrl && answeredCount > 0) {
+        const pairs = [];
+        const indexByPair = [];
+
+        for (const k of answeredKeys) {
+          const idx = Number(k);
+          const qObj = questions[idx];
+          if (!qObj) continue;
+
+          const userText = (answersByIndex[k] && answersByIndex[k].answer) ? String(answersByIndex[k].answer).trim() : "";
+          const correctText = (qObj && typeof qObj.a === "string") ? qObj.a.trim() : "";
+
+          const pair = { question: qObj.q, answer: userText };
+          if (correctText) pair.reference_answer = correctText;
+          pairs.push(pair);
+          indexByPair.push(idx);
+        }
+
+        try {
+          const results = await gradeManyAi(pairs);
+          const byIndex = {};
+
+          for (let i = 0; i < indexByPair.length; i++) {
+            const idx = indexByPair[i];
+            const r = results[i] || {};
+            const verdict = r.verdict === "correct" ? "correct" : (r.verdict === "unknown" ? "unknown" : "wrong");
+            const explanation = String(r.explanation || "").trim();
+            byIndex[String(idx)] = { verdict, explanation };
+          }
+
+          for (let idx = 0; idx < questions.length; idx++) {
+            const qObj = questions[idx];
+            if (!qObj) continue;
+
+            const saved = answersByIndex[String(idx)];
+            const userText = saved && typeof saved.answer === "string" ? String(saved.answer).trim() : "";
+
+            let verdict = "na";
+            let explanation = "Not answered.";
+
+            if (userText) {
+              const r = byIndex[String(idx)] || { verdict: "wrong", explanation: "" };
+              verdict = r.verdict;
+              explanation = r.explanation || "";
+
+              if (verdict === "correct") correct++;
+              else if (verdict === "unknown") unknown++;
+              else wrong++;
+            } else {
+              notAnswered++;
+            }
+
+            if (reviewListEl) {
+              reviewListEl.appendChild(renderReviewItem({
+                index: idx,
+                q: qObj.q,
+                userAnswer: userText,
+                verdict,
+                explanation
+              }));
+            }
+          }
+        } catch (err) {
+          console.warn("Batch grading failed; falling back to local/per-item:", err);
+
+          // fall back for *all* questions (showing not-answered too)
+          for (let idx = 0; idx < questions.length; idx++) {
+            const qObj = questions[idx];
+            if (!qObj) continue;
+
+            const saved = answersByIndex[String(idx)];
+            const userText = saved && typeof saved.answer === "string" ? String(saved.answer).trim() : "";
+            const correctText = (qObj && typeof qObj.a === "string") ? qObj.a.trim() : "";
+
+            let verdict = "na";
+            let explanation = "Not answered.";
+
+            if (userText) {
+              try {
+                const one = await gradeOne({ questionText: qObj.q, userText, correctText });
+                verdict = one.verdict || "wrong";
+                explanation = one.explanation || "";
+              } catch (err2) {
+                console.warn("Check-all grading failed:", err2);
+                const local = localOverlapCheck(userText, correctText);
+                verdict = local.verdict;
+                explanation = `AI grading unavailable; using overlap check. ${local.explanation}`;
+              }
+
+              if (verdict === "correct") correct++;
+              else if (verdict === "unknown") unknown++;
+              else wrong++;
+            } else {
+              notAnswered++;
+            }
+
+            if (reviewListEl) {
+              reviewListEl.appendChild(renderReviewItem({
+                index: idx,
+                q: qObj.q,
+                userAnswer: userText,
+                verdict,
+                explanation
+              }));
+            }
+          }
+        }
+      } else {
+        // No AI grader (or no answered questions): local overlap check per question.
+        for (let idx = 0; idx < questions.length; idx++) {
+          const qObj = questions[idx];
+          if (!qObj) continue;
+
+          const saved = answersByIndex[String(idx)];
+          const userText = saved && typeof saved.answer === "string" ? String(saved.answer).trim() : "";
+          const correctText = (qObj && typeof qObj.a === "string") ? qObj.a.trim() : "";
+
+          let verdict = "na";
+          let explanation = "Not answered.";
+
+          if (userText) {
+            const local = localOverlapCheck(userText, correctText);
+            verdict = local.verdict;
+            explanation = local.explanation;
+
+            if (verdict === "correct") correct++;
+            else if (verdict === "unknown") unknown++;
+            else wrong++;
+          } else {
+            notAnswered++;
+          }
+
+          if (reviewListEl) {
+            reviewListEl.appendChild(renderReviewItem({
+              index: idx,
+              q: qObj.q,
+              userAnswer: userText,
+              verdict,
+              explanation
+            }));
+          }
+        }
+      }
+
+      if (reviewSubEl) {
+        const denom = answeredCount || 1;
+        const pct = Math.round((correct / denom) * 100);
+        reviewSubEl.textContent = `Done. Answered: ${answeredCount}/${totalCount}. Correct: ${correct}. Wrong: ${wrong}. Unknown: ${unknown}. Not answered: ${notAnswered}. Correct rate: ${pct}% (of answered).`;
+      }
+
+      if (btnCheckAll) btnCheckAll.disabled = false;
+    }
+
     // initial render
     // Persist whatever we started with (default or previously saved).
     saveQuestionsToLocalStorage(questions);
+    answersByIndex = loadAnswersFromLocalStorage();
     resetSession();
+    updateStats();
   </script>
 </body>
 </html>

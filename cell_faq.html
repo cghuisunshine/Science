@@ -198,6 +198,102 @@
       display: none;
     }
 
+    .review-panel {
+      display: none;
+      border-radius: 14px;
+      border: 1px solid #e0e4f0;
+      background: #f8f9ff;
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .review-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-bottom: 1px solid #e0e4f0;
+      background: #ffffff;
+    }
+
+    .review-title {
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .review-sub {
+      margin-top: 2px;
+      font-size: 0.85rem;
+      color: #6b7280;
+      line-height: 1.3;
+    }
+
+    .review-list {
+      padding: 10px 12px 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .review-item {
+      background: #ffffff;
+      border: 1px solid #e0e4f0;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .review-item .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .review-item .idx {
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #4b5563;
+      font-weight: 700;
+    }
+
+    .review-item .verdict {
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .review-item .verdict.ok { color: #065f46; }
+    .review-item .verdict.bad { color: #b91c1c; }
+    .review-item .verdict.na { color: #6b7280; }
+
+    .review-item .q {
+      font-weight: 650;
+      color: #111827;
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+
+    .review-item .explain {
+      font-size: 0.9rem;
+      line-height: 1.35;
+      color: #374151;
+      white-space: pre-wrap;
+    }
+
+    .review-item .answer {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px dashed #d1d5db;
+      background: #f9fafb;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+    }
+
     .answer-label {
       font-size: 0.85rem;
       font-weight: 600;
@@ -339,6 +435,17 @@
       </div>
     </div>
 
+    <div class="review-panel" id="review-panel" aria-live="polite">
+      <div class="review-head">
+        <div>
+          <div class="review-title">Review: Check All</div>
+          <div class="review-sub" id="review-sub">Click "Check All" to grade everything (answered items are graded; blanks are marked Not answered).</div>
+        </div>
+        <button class="outline" id="btn-close-review" type="button">Close</button>
+      </div>
+      <div class="review-list" id="review-list"></div>
+    </div>
+
     <div class="knowledge-row">
       <button class="outline" id="btn-known">👍 I knew this</button>
       <button class="outline" id="btn-unknown">🤔 I didn’t know</button>
@@ -350,6 +457,7 @@
       <button class="secondary" id="btn-next">Next ⟶</button>
       <div class="spacer"></div>
       <button class="secondary" id="btn-random">🎲 Random</button>
+      <button class="secondary" id="btn-check-all" title="Check all questions">Check All</button>
       <button class="secondary" id="btn-reset">Reset Stats</button>
     </div>
   </div>
@@ -611,6 +719,10 @@
     let knownCount = 0;
     let unknownCount = 0;
 
+    // per-question drafts
+    // { [index:number]: { answer: string, updated_at: string } }
+    let answersByIndex = {};
+
     const questionTextEl = document.getElementById("question-text");
     const answerTextEl = document.getElementById("answer-text");
     const answerCardEl = document.getElementById("answer-card");
@@ -626,11 +738,17 @@
     const btnKnown = document.getElementById("btn-known");
     const btnUnknown = document.getElementById("btn-unknown");
     const btnCheck = document.getElementById("btn-check");
+    const btnCheckAll = document.getElementById("btn-check-all");
     const userAnswerEl = document.getElementById("user-answer");
     const feedbackEl = document.getElementById("feedback");
     const gradeApiUrlEl = document.getElementById("grade-api-url");
     const btnTestApi = document.getElementById("btn-test-api");
     const apiStatusEl = document.getElementById("api-status");
+
+    const reviewPanelEl = document.getElementById("review-panel");
+    const reviewListEl = document.getElementById("review-list");
+    const reviewSubEl = document.getElementById("review-sub");
+    const btnCloseReview = document.getElementById("btn-close-review");
 
     function normalizeText(str) {
       return str
@@ -655,6 +773,48 @@
       return union === 0 ? 0 : intersection / union;
     }
 
+    function answersStorageKey() {
+      return "cellFaq.answers.v1";
+    }
+
+    function saveAnswersToLocalStorage() {
+      try {
+        localStorage.setItem(answersStorageKey(), JSON.stringify({ v: 1, answers: answersByIndex }));
+      } catch {
+        // ignore
+      }
+    }
+
+    function loadAnswersFromLocalStorage() {
+      try {
+        const raw = localStorage.getItem(answersStorageKey());
+        if (!raw) return {};
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== "object") return {};
+        return (parsed.answers && typeof parsed.answers === "object") ? parsed.answers : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function storeCurrentDraftAnswer() {
+      const v = userAnswerEl.value;
+      if (typeof v !== "string") return;
+      answersByIndex[String(currentIndex)] = { answer: v, updated_at: new Date().toISOString() };
+      saveAnswersToLocalStorage();
+      if (btnCheckAll) btnCheckAll.disabled = false;
+    }
+
+    let draftSaveTimer = null;
+    userAnswerEl.addEventListener("input", () => {
+      clearTimeout(draftSaveTimer);
+      draftSaveTimer = setTimeout(storeCurrentDraftAnswer, 250);
+    });
+
+    userAnswerEl.addEventListener("blur", () => {
+      storeCurrentDraftAnswer();
+    });
+
     function renderQuestion() {
       const qObj = questions[currentIndex];
       questionTextEl.textContent = qObj.q;
@@ -665,12 +825,16 @@
       // reset UI for new question
       answerCardEl.style.display = "none";
       btnToggleAnswer.textContent = "👁 Show Answer";
-      userAnswerEl.value = "";
+
+      const saved = answersByIndex[String(currentIndex)];
+      userAnswerEl.value = saved && typeof saved.answer === "string" ? saved.answer : "";
+
       feedbackEl.textContent = "";
       feedbackEl.className = "feedback";
 
       btnPrev.disabled = currentIndex === 0;
       btnNext.disabled = currentIndex === questions.length - 1;
+      if (btnCheckAll) btnCheckAll.disabled = false;
     }
 
     function toggleAnswer() {
@@ -748,6 +912,14 @@
       if (Array.isArray(data.results) && data.results[0]) return data.results[0];
       if (data.result && Array.isArray(data.result.results) && data.result.results[0]) return data.result.results[0];
       if (data.model_result && Array.isArray(data.model_result.results) && data.model_result.results[0]) return data.model_result.results[0];
+      return null;
+    }
+
+    function extractGradeResults(data) {
+      if (!data) return null;
+      if (Array.isArray(data.results)) return data.results;
+      if (data.result && Array.isArray(data.result.results)) return data.result.results;
+      if (data.model_result && Array.isArray(data.model_result.results)) return data.model_result.results;
       return null;
     }
 
@@ -854,7 +1026,224 @@
       return { verdict: "wrong", explanation: `Low overlap (~${percent}%). Compare with the model answer and try again.` };
     }
 
+    async function gradeManyAi(pairs) {
+      const gradeUrl = getGradeApiUrl();
+      const aiTimeoutMs = 60000;
+      if (!gradeUrl) throw new Error("no_grade_url");
+      if (!Array.isArray(pairs) || pairs.length === 0) return [];
+
+      const payload = { pairs };
+      const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+        gradeUrl,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        },
+        aiTimeoutMs
+      );
+
+      if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+
+      const results = extractGradeResults(data);
+      if (!ok || !results || !Array.isArray(results)) {
+        const reason = data && data.error ? data.error : `bad_response_${status}`;
+        const detail = text ? ` (${text.slice(0, 160)})` : "";
+        throw new Error(reason + detail);
+      }
+
+      return results;
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function renderReviewItem({ index, q, userAnswer, verdict, explanation }) {
+      const verdictClass = verdict === "correct" ? "ok" : (verdict === "na" ? "na" : "bad");
+      const verdictText = verdict === "correct" ? "Correct" : (verdict === "na" ? "Not answered" : "Wrong");
+
+      const el = document.createElement("div");
+      el.className = "review-item";
+      el.innerHTML =
+        `<div class="meta">` +
+          `<div class="idx">Q${index + 1}</div>` +
+          `<div class="verdict ${verdictClass}">${verdictText}</div>` +
+        `</div>` +
+        `<div class="q">${escapeHtml(q)}</div>` +
+        `<div class="explain">${escapeHtml(explanation)}</div>` +
+        `<div class="answer">${escapeHtml(userAnswer)}</div>`;
+      return el;
+    }
+
+    function openReviewPanel() {
+      if (!reviewPanelEl) return;
+      reviewPanelEl.style.display = "block";
+      reviewPanelEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function closeReviewPanel() {
+      if (!reviewPanelEl) return;
+      reviewPanelEl.style.display = "none";
+    }
+
+    if (btnCloseReview) btnCloseReview.addEventListener("click", closeReviewPanel);
+
+    async function checkAll() {
+      storeCurrentDraftAnswer();
+
+      if (btnCheckAll) btnCheckAll.disabled = true;
+      if (reviewListEl) reviewListEl.innerHTML = "";
+      openReviewPanel();
+
+      const total = questions.length;
+
+      const answeredKeys = Object.keys(answersByIndex || {}).filter((k) => {
+        const v = answersByIndex[k];
+        return v && typeof v.answer === "string" && v.answer.trim();
+      });
+      const answeredCount = answeredKeys.length;
+
+      if (reviewSubEl) reviewSubEl.textContent = `Checking answered questions (${answeredCount}/${total})...`;
+
+      let correct = 0;
+      let wrong = 0;
+      let notAnswered = 0;
+
+      const gradeUrl = getGradeApiUrl();
+
+      if (gradeUrl && answeredCount > 0) {
+        const pairs = [];
+        const indexByPair = [];
+        for (const k of answeredKeys) {
+          const idx = Number(k);
+          const qObj = questions[idx];
+          if (!qObj) continue;
+          const userText = String((answersByIndex[k] && answersByIndex[k].answer) || "").trim();
+          const pair = { question: qObj.q, answer: userText, reference_answer: qObj.a };
+          pairs.push(pair);
+          indexByPair.push(idx);
+        }
+
+        try {
+          const results = await gradeManyAi(pairs);
+          const byIndex = {};
+          for (let i = 0; i < indexByPair.length; i++) {
+            const idx = indexByPair[i];
+            const r = results[i] || {};
+            const verdict = r.verdict === "correct" ? "correct" : "wrong";
+            const explanation = String(r.explanation || "").trim();
+            byIndex[String(idx)] = { verdict, explanation };
+          }
+
+          for (let idx = 0; idx < questions.length; idx++) {
+            const qObj = questions[idx];
+            const saved = answersByIndex[String(idx)];
+            const userText = saved && typeof saved.answer === "string" ? String(saved.answer).trim() : "";
+
+            let verdict = "na";
+            let explanation = "Not answered.";
+
+            if (userText) {
+              const r = byIndex[String(idx)] || { verdict: "wrong", explanation: "" };
+              verdict = r.verdict;
+              explanation = r.explanation || "";
+              if (verdict === "correct") correct++;
+              else wrong++;
+            } else {
+              notAnswered++;
+            }
+
+            if (reviewListEl) {
+              reviewListEl.appendChild(renderReviewItem({
+                index: idx,
+                q: qObj.q,
+                userAnswer: userText,
+                verdict,
+                explanation
+              }));
+            }
+          }
+        } catch (err) {
+          console.warn("Batch grading failed; falling back to local check:", err);
+          for (let idx = 0; idx < questions.length; idx++) {
+            const qObj = questions[idx];
+            const saved = answersByIndex[String(idx)];
+            const userText = saved && typeof saved.answer === "string" ? String(saved.answer).trim() : "";
+
+            let verdict = "na";
+            let explanation = "Not answered.";
+
+            if (userText) {
+              const local = localOverlapCheck(userText, qObj.a);
+              verdict = local.verdict;
+              explanation = `AI grading unavailable; using overlap check. ${local.explanation}`;
+              if (verdict === "correct") correct++;
+              else wrong++;
+            } else {
+              notAnswered++;
+            }
+
+            if (reviewListEl) {
+              reviewListEl.appendChild(renderReviewItem({
+                index: idx,
+                q: qObj.q,
+                userAnswer: userText,
+                verdict,
+                explanation
+              }));
+            }
+          }
+        }
+      } else {
+        for (let idx = 0; idx < questions.length; idx++) {
+          const qObj = questions[idx];
+          const saved = answersByIndex[String(idx)];
+          const userText = saved && typeof saved.answer === "string" ? String(saved.answer).trim() : "";
+
+          let verdict = "na";
+          let explanation = "Not answered.";
+
+          if (userText) {
+            const local = localOverlapCheck(userText, qObj.a);
+            verdict = local.verdict;
+            explanation = local.explanation;
+            if (verdict === "correct") correct++;
+            else wrong++;
+          } else {
+            notAnswered++;
+          }
+
+          if (reviewListEl) {
+            reviewListEl.appendChild(renderReviewItem({
+              index: idx,
+              q: qObj.q,
+              userAnswer: userText,
+              verdict,
+              explanation
+            }));
+          }
+        }
+      }
+
+      if (reviewSubEl) {
+        const denom = answeredCount || 1;
+        const pct = Math.round((correct / denom) * 100);
+        reviewSubEl.textContent = `Done. Answered: ${answeredCount}/${total}. Correct: ${correct}. Wrong: ${wrong}. Not answered: ${notAnswered}. Correct rate: ${pct}% (of answered).`;
+      }
+
+      if (btnCheckAll) btnCheckAll.disabled = false;
+    }
+
+    if (btnCheckAll) btnCheckAll.addEventListener("click", checkAll);
+
     btnCheck.addEventListener("click", async () => {
+      storeCurrentDraftAnswer();
       const userText = userAnswerEl.value.trim();
       const qObj = questions[currentIndex];
       const questionText = qObj.q;
@@ -926,6 +1315,7 @@
     });
 
     // initial render
+    answersByIndex = loadAnswersFromLocalStorage();
     renderQuestion();
     updateStats();
   </script>
