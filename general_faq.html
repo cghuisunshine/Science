@@ -1486,14 +1486,14 @@
       if (!qObj) return;
 
       if (!userText) {
-        if (hasModelAnswer(qObj)) {
-          setFeedback("No answer entered. Showing the model answer.", "bad");
-          answerCardEl.style.display = "block";
-          btnToggleAnswer.textContent = "Hide Answer";
-        } else {
-          setFeedback("No answer entered.", "bad");
-        }
-        return;
+          if (hasModelAnswer(qObj)) {
+            setFeedback("No answer entered. Showing the model answer.", "bad");
+            answerCardEl.style.display = "block";
+            btnToggleAnswer.textContent = "Hide Answer";
+          } else {
+            setFeedback("No answer entered.", "bad");
+          }
+          return;
       }
 
       const gradeUrl = getGradeApiUrl();
