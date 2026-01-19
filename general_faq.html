@@ -1417,6 +1417,39 @@
       return [];
     }
 
+    async function tryLoadSameDirManifest(baseDir) {
+      // Optional manifest support for hosts that do not expose directory listings.
+      // If present, it should list same-folder FAQ files.
+      // Supported shapes:
+      // - JSON array: ["a.json","b.txt"]
+      // - JSON object: {"files":["a.json"]}
+      const manifestNames = [
+        "faq_index.json",
+        "faq-index.json",
+        "faq_files.json",
+        "faq-files.json",
+        "index.json"
+      ];
+
+      for (const name of manifestNames) {
+        const url = baseDir + name;
+        try {
+          const resp = await fetch(url, { method: "GET" });
+          if (!resp.ok) continue;
+          const data = await resp.json().catch(() => null);
+          if (!data) continue;
+
+          const files = Array.isArray(data) ? data : (Array.isArray(data.files) ? data.files : []);
+          if (!Array.isArray(files) || !files.length) continue;
+          return files.map((v) => String(v || "").trim()).filter(Boolean);
+        } catch {
+          // ignore
+        }
+      }
+
+      return [];
+    }
+
     async function listSameDirFaqCandidates() {
       const baseDir = resolveBaseDirUrl();
       if (!baseDir) return [];
@@ -1440,6 +1473,17 @@
         const ghFiles = await listGithubPagesSameDirFiles();
         if (ghFiles && ghFiles.length) {
           for (const f of ghFiles) push(f);
+          if (out.length) return out;
+        }
+      } catch {
+        // ignore
+      }
+
+      // Other hosts: if a manifest exists in the same folder, use it.
+      try {
+        const manifestFiles = await tryLoadSameDirManifest(baseDir);
+        if (manifestFiles && manifestFiles.length) {
+          for (const f of manifestFiles) push(f);
           if (out.length) return out;
         }
       } catch {
