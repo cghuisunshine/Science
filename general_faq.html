@@ -1348,11 +1348,7 @@
 
       if (!qObj) return;
 
-      const gradeUrl = getGradeApiUrl();
-
-      // If no backend is configured, keep the old UX: blanks just reveal the model answer.
-      // If a backend *is* configured, still send the blank answer for grading.
-      if (!userText && !gradeUrl) {
+      if (!userText) {
         if (hasModelAnswer(qObj)) {
           setFeedback("No answer entered. Showing the model answer.", "bad");
           answerCardEl.style.display = "block";
@@ -1363,18 +1359,15 @@
         return;
       }
 
+      const gradeUrl = getGradeApiUrl();
       btnCheck.disabled = true;
-      const checkingMsg = gradeUrl
-        ? (!userText ? "Checking blank answer with AI grader..." : "Checking with AI grader...")
-        : "Checking...";
-      setFeedback(checkingMsg, "");
+      setFeedback(gradeUrl ? "Checking with AI grader..." : "Checking...", "");
 
       try {
         const result = await gradeOne({ questionText, userText, correctText });
         const isCorrect = result.verdict === "correct";
         const prefix = result.verdict === "unknown" ? "" : (isCorrect ? "Correct. " : "Wrong. ");
-        const explanation = (result.explanation || "").trim();
-        setFeedback(prefix + explanation, isCorrect ? "ok" : "bad");
+        setFeedback(prefix + (result.explanation || ""), isCorrect ? "ok" : "bad");
       } catch (err) {
         console.warn("Grading failed:", err);
 
