@@ -634,6 +634,13 @@
         <button class="secondary" id="btn-reload-default" type="button">Load default</button>
       </div>
 
+      <div class="settings-row">
+        <label for="faq-url">FAQ URL</label>
+        <input id="faq-url" type="text" placeholder="https://example.com/faq.json" />
+        <button class="secondary" id="btn-load-url" type="button">Load URL</button>
+        <button class="secondary" id="btn-clear-url" type="button">Clear</button>
+      </div>
+
       <div class="settings-row top">
         <label for="faq-paste">Paste</label>
         <div class="grow">
@@ -866,6 +873,9 @@
 
     const faqJsonEl = document.getElementById("faq-json");
     const btnReloadDefault = document.getElementById("btn-reload-default");
+    const faqUrlEl = document.getElementById("faq-url");
+    const btnLoadUrl = document.getElementById("btn-load-url");
+    const btnClearUrl = document.getElementById("btn-clear-url");
     const faqPasteEl = document.getElementById("faq-paste");
     const btnLoadPaste = document.getElementById("btn-load-paste");
     const btnClearPaste = document.getElementById("btn-clear-paste");
@@ -1296,6 +1306,36 @@
       }
     }
 
+    async function loadFaqFromUrl(url) {
+      const raw = String(url || "").trim();
+      if (!raw) {
+        setFeedback("Enter a URL first.", "bad");
+        return;
+      }
+
+      let resolvedUrl = raw;
+      try {
+        // Support relative paths (including just a filename) relative to the current page.
+        resolvedUrl = new URL(raw, window.location.href).toString();
+      } catch {
+        // keep raw
+      }
+
+      setFeedback("Loading URL...", "");
+      try {
+        const resp = await fetch(resolvedUrl, { method: "GET" });
+        if (!resp.ok) throw new Error(`http_${resp.status}`);
+        const text = await resp.text();
+        questions = parseFaqFromText(text);
+        resetSession();
+        saveQuestionsToLocalStorage(questions);
+        try { localStorage.setItem("generalFaq.faqUrl.v1", raw); } catch {}
+        setFeedback(`Loaded ${questions.length} questions from URL.`, "ok");
+      } catch (err) {
+        setFeedback(`Failed to load URL (${String(err.message || err)}). This may be a CORS issue.`, "bad");
+      }
+    }
+
     function loadFaqFromPaste(text) {
       const trimmed = String(text || "").trim();
       if (!trimmed) {
@@ -1377,6 +1417,30 @@
       setFeedback("Loaded default questions.", "ok");
       faqJsonEl.value = "";
     });
+
+    if (btnLoadUrl) {
+      btnLoadUrl.addEventListener("click", () => {
+        loadFaqFromUrl(faqUrlEl ? faqUrlEl.value : "");
+      });
+    }
+
+    if (btnClearUrl) {
+      btnClearUrl.addEventListener("click", () => {
+        if (faqUrlEl) faqUrlEl.value = "";
+        try { localStorage.removeItem("generalFaq.faqUrl.v1"); } catch {}
+      });
+    }
+
+    if (faqUrlEl) {
+      const savedFaqUrl = localStorage.getItem("generalFaq.faqUrl.v1");
+      if (savedFaqUrl) faqUrlEl.value = savedFaqUrl;
+      faqUrlEl.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          if (btnLoadUrl) btnLoadUrl.click();
+        }
+      });
+    }
 
     btnLoadPaste.addEventListener("click", () => {
       loadFaqFromPaste(faqPasteEl.value);
