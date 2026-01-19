@@ -1306,6 +1306,17 @@
       }
     }
 
+    async function isSupportedFaqJsonUrl(url) {
+      try {
+        const { ok, data } = await fetchJsonWithTimeout(url, { method: "GET" }, 4000);
+        if (!ok || !data) return false;
+        const qs = coerceQuestions(data);
+        return Array.isArray(qs) && qs.length > 0;
+      } catch {
+        return false;
+      }
+    }
+
     async function loadFaqFile(file) {
       if (!file) return;
 
@@ -1478,7 +1489,6 @@
         const ghFiles = await listGithubPagesSameDirFiles();
         if (ghFiles && ghFiles.length) {
           for (const f of ghFiles) push(f);
-          if (out.length) return out;
         }
       } catch {
         // ignore
@@ -1489,7 +1499,6 @@
         const manifestFiles = await tryLoadSameDirManifest(baseDir);
         if (manifestFiles && manifestFiles.length) {
           for (const f of manifestFiles) push(f);
-          if (out.length) return out;
         }
       } catch {
         // ignore
@@ -1530,21 +1539,39 @@
         // ignore
       }
 
-      if (out.length) return out;
-
       // Fallback: probe a few common filenames.
       const candidates = ["index.json", "faq.json", "faq.txt", "questions.json", "questions.txt"];
       for (const name of candidates) {
         const url = baseDir + name;
         try {
-          const resp = await fetch(url, { method: "GET" });
-          if (resp.ok) push(name);
+          if (/\.json$/i.test(name)) {
+            const ok = await isSupportedFaqJsonUrl(url);
+            if (ok) push(name);
+          } else {
+            const resp = await fetch(url, { method: "GET" });
+            if (resp.ok) push(name);
+          }
         } catch {
           // ignore
         }
       }
 
-      return out;
+      // Filter out .json files that are not in a supported FAQ JSON shape.
+      const filtered = [];
+      for (const name of out) {
+        if (/\.json$/i.test(name)) {
+          try {
+            const resolvedUrl = new URL(name, baseDir).toString();
+            const ok = await isSupportedFaqJsonUrl(resolvedUrl);
+            if (!ok) continue;
+          } catch {
+            continue;
+          }
+        }
+        filtered.push(name);
+      }
+
+      return filtered;
     }
 
     async function refreshFaqUrlPicker() {
