@@ -1,0 +1,250 @@
+[
+  {
+    "q": "What are organelles?",
+    "a": "Organelles are specialized parts of a cell that perform specific functions, similar to how organs work in the human body."
+  },
+  {
+    "q": "Are organelles found in both plant and animal cells?",
+    "a": "Yes, many organelles are found in both plant and animal cells, although some organelles (like cell walls and chloroplasts) are only found in plant cells."
+  },
+  {
+    "q": "What is the cell membrane?",
+    "a": "The cell membrane is a protective layer that surrounds the cell and controls which substances enter and leave the cell."
+  },
+  {
+    "q": "What is the main function of the cell membrane?",
+    "a": "It regulates the flow of materials into and out of the cell, helping to protect and maintain the internal environment of the cell."
+  },
+  {
+    "q": "What is cytoplasm?",
+    "a": "Cytoplasm is a gel-like fluid inside the cell that contains water, dissolved substances, and all of the cell’s organelles."
+  },
+  {
+    "q": "Why is cytoplasm important for the cell?",
+    "a": "It supports the organelles and provides a medium where many chemical reactions needed for life can occur."
+  },
+  {
+    "q": "What is the nucleus?",
+    "a": "The nucleus is a large structure inside the cell that controls cell activities and the reproduction of the cell."
+  },
+  {
+    "q": "What important molecule does the nucleus contain?",
+    "a": "It contains deoxyribonucleic acid (DNA), which holds genetic information."
+  },
+  {
+    "q": "What is the role of DNA in the cell?",
+    "a": "DNA determines traits and genetic information that are passed on to new cells and future generations when a cell reproduces."
+  },
+  {
+    "q": "What is a mitochondrion?",
+    "a": "A mitochondrion is an oval-shaped organelle where the cell produces energy through cellular respiration."
+  },
+  {
+    "q": "What is the plural form of mitochondrion?",
+    "a": "The plural form is mitochondria."
+  },
+  {
+    "q": "What process occurs in the mitochondria?",
+    "a": "Cellular respiration occurs in the mitochondria."
+  },
+  {
+    "q": "What is the word equation for cellular respiration mentioned in the video?",
+    "a": "Glucose + oxygen → carbon dioxide + water + energy."
+  },
+  {
+    "q": "Where are ribosomes found in a cell?",
+    "a": "Ribosomes can be found floating freely in the cytoplasm or attached to the endoplasmic reticulum."
+  },
+  {
+    "q": "How are ribosomes usually shown in cell diagrams?",
+    "a": "They are shown as small dots, especially on the surface of the rough endoplasmic reticulum."
+  },
+  {
+    "q": "What is the main function of ribosomes?",
+    "a": "Ribosomes assemble or produce proteins in the cell."
+  },
+  {
+    "q": "What is the endoplasmic reticulum (ER)?",
+    "a": "The endoplasmic reticulum is a complex network of folded membranes and small channels that extend throughout the cell."
+  },
+  {
+    "q": "What is the difference between rough ER and smooth ER?",
+    "a": "Rough ER has ribosomes attached to its surface, making it appear rough, while smooth ER has no ribosomes and appears smooth."
+  },
+  {
+    "q": "Where is the rough ER located in relation to the nucleus?",
+    "a": "The rough ER surrounds the nucleus."
+  },
+  {
+    "q": "What is the function of the endoplasmic reticulum?",
+    "a": "It acts as a system of channels to transport proteins and other molecules throughout the cytoplasm."
+  },
+  {
+    "q": "What is the Golgi body (Golgi apparatus)?",
+    "a": "The Golgi body is an organelle made of folded membranes that receives, sorts, modifies, and packages proteins from the endoplasmic reticulum."
+  },
+  {
+    "q": "What does the Golgi apparatus do with proteins?",
+    "a": "It modifies some proteins, sorts them, and packages them into small membrane-bound sacs called vesicles."
+  },
+  {
+    "q": "What are vesicles?",
+    "a": "Vesicles are small membrane-covered structures that carry proteins, water, nutrients, and other materials around the cell and even in and out of the cell."
+  },
+  {
+    "q": "What are transport vesicles?",
+    "a": "Transport vesicles are vesicles produced by the Golgi body that move materials, such as proteins, to other parts of the cell."
+  },
+  {
+    "q": "Where do vesicles produced by the Golgi body go?",
+    "a": "They detach from the Golgi body and move into the cytoplasm to deliver their contents."
+  },
+  {
+    "q": "What are vacuoles?",
+    "a": "Vacuoles are structures within the cytoplasm that temporarily store water, other substances, and wastes in cells."
+  },
+  {
+    "q": "How do vacuoles in plant cells compare to those in animal cells?",
+    "a": "Vacuoles in plant cells are usually much larger than those in animal cells."
+  },
+  {
+    "q": "Where are vacuoles found in the cell?",
+    "a": "They are found floating in the cytoplasm."
+  },
+  {
+    "q": "What are lysosomes?",
+    "a": "Lysosomes are organelles that contain digestive chemicals such as enzymes."
+  },
+  {
+    "q": "What is the main function of lysosomes?",
+    "a": "They break down and recycle worn-out organelles and other materials inside the cell."
+  },
+  {
+    "q": "What are cilia?",
+    "a": "Cilia are tiny hair-like structures attached to the surface of some animal cells."
+  },
+  {
+    "q": "How do cilia move?",
+    "a": "They move together in a wave-like fashion."
+  },
+  {
+    "q": "What are two functions of cilia on animal cells?",
+    "a": "They help the cell move and can push materials, such as mucus, past the surface of the cell."
+  },
+  {
+    "q": "Give an example of where cilia are found in the human body and what they do there.",
+    "a": "Cilia in the nasal passages push mucus through the passages."
+  },
+  {
+    "q": "What is a flagellum?",
+    "a": "A flagellum is a long, lash-like structure attached to the surface of some animal cells."
+  },
+  {
+    "q": "How does a flagellum help a cell?",
+    "a": "It whips back and forth to help the cell swim through a liquid."
+  },
+  {
+    "q": "How do flagella differ from cilia?",
+    "a": "Flagella are much longer and usually fewer in number, while cilia are shorter and more numerous."
+  },
+  {
+    "q": "Do plant cells have all the same organelles as animal cells?",
+    "a": "Plant cells can have most of the same organelles as animal cells, but they also have some additional structures such as cell walls and chloroplasts."
+  },
+  {
+    "q": "What is a cell wall?",
+    "a": "A cell wall is a tough, rigid layer outside the cell membrane that surrounds plant cells and some bacteria."
+  },
+  {
+    "q": "What are two main functions of the cell wall?",
+    "a": "It helps a plant hold its shape and protects the inside of the cell."
+  },
+  {
+    "q": "Do animal cells have a cell wall?",
+    "a": "No, animal cells do not have a cell wall; they only have a cell membrane."
+  },
+  {
+    "q": "What are chloroplasts?",
+    "a": "Chloroplasts are green organelles found only in plant cells where photosynthesis takes place."
+  },
+  {
+    "q": "In which type of cells are chloroplasts found?",
+    "a": "They are found only in plant cells."
+  },
+  {
+    "q": "What process occurs in chloroplasts?",
+    "a": "Photosynthesis occurs in chloroplasts."
+  },
+  {
+    "q": "What does photosynthesis use and produce, according to the video?",
+    "a": "Photosynthesis uses energy from the Sun to convert carbon dioxide and water into sugar and oxygen."
+  },
+  {
+    "q": "Why are chloroplasts important for plant cells?",
+    "a": "They allow plant cells to produce their own food (sugar) using sunlight."
+  },
+  {
+    "q": "How do vacuoles in plant cells differ in size from those in animal cells?",
+    "a": "Vacuoles in plant cells are generally much larger than vacuoles in animal cells."
+  },
+  {
+    "q": "What do vacuoles store?",
+    "a": "They store water, wastes, and other substances in cells."
+  },
+  {
+    "q": "Name two organelles that are found in animal cells but not typically mentioned for plant cells in this video.",
+    "a": "Cilia and flagella are mentioned as external structures on many animal cells."
+  },
+  {
+    "q": "Where in the cell is genetic information stored?",
+    "a": "Genetic information is stored in DNA in the nucleus."
+  },
+  {
+    "q": "Which organelle is described as producing energy for the cell?",
+    "a": "The mitochondrion produces energy through cellular respiration."
+  },
+  {
+    "q": "Which organelle is described as producing food for the cell?",
+    "a": "Chloroplasts produce food (sugar) for plant cells through photosynthesis."
+  },
+  {
+    "q": "Which organelles are directly involved in making and transporting proteins?",
+    "a": "Ribosomes, rough endoplasmic reticulum, the Golgi body, and vesicles are involved."
+  },
+  {
+    "q": "How are proteins first made in the cell?",
+    "a": "They are assembled by ribosomes."
+  },
+  {
+    "q": "After proteins are made by ribosomes on the rough ER, where do they go next?",
+    "a": "They are transported through the endoplasmic reticulum to the Golgi body."
+  },
+  {
+    "q": "What does the Golgi body do after receiving proteins from the ER?",
+    "a": "It sorts, modifies, and packages them into vesicles."
+  },
+  {
+    "q": "True or False: Cytoplasm contains all of the organelles in a cell.",
+    "a": "True. All organelles float within the cytoplasm."
+  },
+  {
+    "q": "True or False: Animal cells perform photosynthesis.",
+    "a": "False. Photosynthesis occurs in chloroplasts, which are found only in plant cells."
+  },
+  {
+    "q": "True or False: Plant cells have both a cell membrane and a cell wall.",
+    "a": "True. Plant cells have a cell membrane surrounded by a cell wall."
+  },
+  {
+    "q": "True or False: Vacuoles are always the same size in all cells.",
+    "a": "False. Vacuoles in plant cells are usually much larger than those in animal cells."
+  },
+  {
+    "q": "Which external structures help move mucus in the nasal passages?",
+    "a": "Cilia move in a wave-like fashion to push mucus along the passages."
+  },
+  {
+    "q": "Which structure would help a single-celled organism swim through water?",
+    "a": "A flagellum would whip back and forth to help it swim."
+  }
+]
