@@ -1363,6 +1363,60 @@
       }
     }
 
+    function githubPagesRepoInfo() {
+      try {
+        const u = new URL(window.location.href);
+        if (!/\.github\.io$/i.test(u.hostname)) return null;
+
+        const owner = u.hostname.split(".")[0];
+        const parts = u.pathname.split("/").filter(Boolean);
+        if (parts.length < 1) return null;
+
+        const repo = parts[0];
+        const dirParts = parts.slice(1, -1);
+        const dirPath = dirParts.join("/");
+        return { owner, repo, dirPath };
+      } catch {
+        return null;
+      }
+    }
+
+    async function listGithubPagesSameDirFiles() {
+      const info = githubPagesRepoInfo();
+      if (!info) return [];
+
+      const pathSuffix = info.dirPath ? "/" + info.dirPath : "";
+      const base = `https://api.github.com/repos/${info.owner}/${info.repo}/contents${pathSuffix}`;
+      const urls = [base, base + "?ref=main", base + "?ref=master"];
+
+      for (const url of urls) {
+        try {
+          const resp = await fetch(url, {
+            method: "GET",
+            headers: { "Accept": "application/vnd.github+json" }
+          });
+          if (!resp.ok) continue;
+          const data = await resp.json().catch(() => null);
+          if (!Array.isArray(data)) continue;
+
+          const out = [];
+          for (const item of data) {
+            if (!item || typeof item !== "object") continue;
+            if (item.type !== "file") continue;
+            const name = String(item.name || "").trim();
+            if (!/\.(json|txt)$/i.test(name)) continue;
+            out.push(name);
+          }
+
+          if (out.length) return out.sort((a, b) => a.localeCompare(b));
+        } catch {
+          // ignore
+        }
+      }
+
+      return [];
+    }
+
     async function listSameDirFaqCandidates() {
       const baseDir = resolveBaseDirUrl();
       if (!baseDir) return [];
@@ -1378,6 +1432,19 @@
         dedupe.add(n);
         out.push(n);
       };
+
+      // GitHub Pages project sites can list the repo folder via GitHub API.
+      // Example: https://cghuisunshine.github.io/Science/general_faq.html
+      // Lists files from https://api.github.com/repos/cghuisunshine/Science/contents/
+      try {
+        const ghFiles = await listGithubPagesSameDirFiles();
+        if (ghFiles && ghFiles.length) {
+          for (const f of ghFiles) push(f);
+          if (out.length) return out;
+        }
+      } catch {
+        // ignore
+      }
 
       // Best case: server exposes directory listing at the folder URL.
       try {
