@@ -797,12 +797,40 @@
       }
     }
 
+    function generatedAnswersStorageKey() {
+      return LS_FAQ_KEY + ".generatedAnswers.v1";
+    }
+
+    function saveGeneratedAnswersToLocalStorage() {
+      try {
+        localStorage.setItem(generatedAnswersStorageKey(), JSON.stringify({ v: 1, answers: generatedAnswersByIndex }));
+      } catch {
+        // ignore
+      }
+    }
+
+    function loadGeneratedAnswersFromLocalStorage() {
+      try {
+        const raw = localStorage.getItem(generatedAnswersStorageKey());
+        if (!raw) return {};
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== "object") return {};
+        return (parsed.answers && typeof parsed.answers === "object") ? parsed.answers : {};
+      } catch {
+        return {};
+      }
+    }
+
     let questions = loadQuestionsFromLocalStorage() || DEFAULT_QUESTIONS.slice();
     let currentIndex = 0;
 
     // per-question drafts (not the same as "Known/Review" stats)
     // { [index:number]: { answer: string, updated_at: string } }
     let answersByIndex = {};
+
+    // Cached "Show Answer" results for questions without model answers.
+    // { [index:number]: { answer: string, updated_at: string } }
+    let generatedAnswersByIndex = {};
 
     const questionCardEl = document.getElementById("question-card");
     const questionTextEl = document.getElementById("question-text");
@@ -998,6 +1026,77 @@
       return Boolean(qObj && typeof qObj.a === "string" && qObj.a.trim());
     }
 
+    function getQaApiUrl() {
+      const gradeUrl = getGradeApiUrl();
+      if (!gradeUrl) return null;
+      try {
+        const u = new URL(gradeUrl);
+        u.search = "";
+        u.hash = "";
+        u.pathname = u.pathname.replace(/\/grade$/, "/qa");
+        if (!u.pathname.endsWith("/qa")) {
+          u.pathname = u.pathname.replace(/\/+$/, "") + "/qa";
+        }
+        return u.toString();
+      } catch {
+        return null;
+      }
+    }
+
+    function extractQaPairs(data) {
+      if (!data) return null;
+      if (Array.isArray(data.pairs)) return data.pairs;
+      if (Array.isArray(data.results)) return data.results;
+      if (Array.isArray(data.items)) return data.items;
+      if (Array.isArray(data)) return data;
+      return null;
+    }
+
+    function normalizeQaPair(p) {
+      if (!p || typeof p !== "object") return null;
+      const question = String(p.question ?? p.q ?? "").trim();
+      const answer = String(p.answer ?? p.a ?? "").trim();
+      if (!question && !answer) return null;
+      return { question, answer };
+    }
+
+    async function fetchGeneratedAnswerForCurrent() {
+      const qObj = currentQuestion();
+      if (!qObj) throw new Error("no_question");
+
+      const qaUrl = getQaApiUrl();
+      if (!qaUrl) throw new Error("no_qa_url");
+
+      const questionText = String(qObj.q || "").trim();
+      if (!questionText) throw new Error("empty_question");
+
+      const payload = { questions: [questionText] };
+      const aiTimeoutMs = 60000;
+
+      const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+        qaUrl,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        },
+        aiTimeoutMs
+      );
+
+      if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+
+      const pairs = extractQaPairs(data);
+      const firstRaw = Array.isArray(pairs) && pairs.length ? pairs[0] : null;
+      const first = normalizeQaPair(firstRaw);
+      if (!ok || !first || !first.answer) {
+        const reason = (data && data.error) ? data.error : `bad_response_${status}`;
+        const detail = text ? ` (${text.slice(0, 160)})` : "";
+        throw new Error(reason + detail);
+      }
+
+      return first.answer;
+    }
+
     function renderQuestion() {
       const qObj = currentQuestion();
       if (!qObj) {
@@ -1023,8 +1122,8 @@
       questionTagEl.textContent = qObj.tag || (hasModelAnswer(qObj) ? "Short Answer" : "No Model Answer");
 
       answerCardEl.style.display = "none";
-      btnToggleAnswer.textContent = hasModelAnswer(qObj) ? "Show Answer" : "No answer";
-      btnToggleAnswer.disabled = !hasModelAnswer(qObj);
+      btnToggleAnswer.textContent = "Show Answer";
+      btnToggleAnswer.disabled = false;
 
       const saved = answersByIndex[String(currentIndex)];
       userAnswerEl.value = saved && typeof saved.answer === "string" ? saved.answer : "";
@@ -1042,11 +1141,47 @@
       questionCardEl.style.animation = "fadeInUp 220ms ease-out";
     }
 
-    function toggleAnswer() {
-      if (!hasModelAnswer(currentQuestion())) return;
+    async function toggleAnswer() {
+      const qObj = currentQuestion();
+      if (!qObj) return;
+
       const showing = answerCardEl.style.display !== "none";
-      answerCardEl.style.display = showing ? "none" : "block";
-      btnToggleAnswer.textContent = showing ? "Show Answer" : "Hide Answer";
+      if (showing) {
+        answerCardEl.style.display = "none";
+        btnToggleAnswer.textContent = "Show Answer";
+        return;
+      }
+
+      btnToggleAnswer.disabled = true;
+      setFeedback("", "");
+
+      try {
+        if (hasModelAnswer(qObj)) {
+          answerTextEl.textContent = qObj.a || "";
+        } else {
+          const cached = generatedAnswersByIndex[String(currentIndex)];
+          const cachedText = cached && typeof cached.answer === "string" ? cached.answer.trim() : "";
+
+          if (cachedText) {
+            answerTextEl.textContent = cachedText;
+          } else {
+            setFeedback("Generating an answer...", "");
+            const generated = await fetchGeneratedAnswerForCurrent();
+            answerTextEl.textContent = generated;
+            generatedAnswersByIndex[String(currentIndex)] = { answer: generated, updated_at: new Date().toISOString() };
+            saveGeneratedAnswersToLocalStorage();
+            setFeedback("", "");
+          }
+        }
+
+        answerCardEl.style.display = "block";
+        btnToggleAnswer.textContent = "Hide Answer";
+      } catch (err) {
+        console.warn("QA fetch failed:", err);
+        setFeedback("Could not fetch an answer. Set the Grade API URL to your backend and ensure /qa is reachable.", "bad");
+      } finally {
+        btnToggleAnswer.disabled = false;
+      }
     }
 
     function randomQuestion() {
@@ -1067,7 +1202,9 @@
 
     function clearAllAnswers() {
       answersByIndex = {};
+      generatedAnswersByIndex = {};
       saveAnswersToLocalStorage();
+      saveGeneratedAnswersToLocalStorage();
       updateStats();
     }
 
@@ -1604,6 +1741,7 @@
     // Persist whatever we started with (default or previously saved).
     saveQuestionsToLocalStorage(questions);
     answersByIndex = loadAnswersFromLocalStorage();
+    generatedAnswersByIndex = loadGeneratedAnswersFromLocalStorage();
     resetSession();
     updateStats();
   </script>
