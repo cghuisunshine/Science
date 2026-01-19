@@ -650,7 +650,7 @@
       <div class="settings-row">
         <label for="faq-url">FAQ URL</label>
         <input id="faq-url" type="text" placeholder="https://example.com/faq.json" />
-        <select id="faq-url-pick" aria-label="Pick a local FAQ file"></select>
+        <select id="faq-url-pick" aria-label="Pick a FAQ file from this page folder"></select>
         <button class="secondary" id="btn-load-url" type="button">Load URL</button>
         <button class="secondary" id="btn-clear-url" type="button">Clear</button>
       </div>
@@ -1367,21 +1367,68 @@
       const baseDir = resolveBaseDirUrl();
       if (!baseDir) return [];
 
-      // These are best-effort only; many servers won't expose directory listings.
-      const candidates = ["index.json", "faq.json", "faq.txt", "questions.json", "questions.txt"];
-      const found = [];
+      const dedupe = new Set();
+      const out = [];
+      const push = (name) => {
+        const n = String(name || "").trim();
+        if (!n) return;
+        if (!/\.(json|txt)$/i.test(n)) return;
+        if (n.includes("/")) return;
+        if (dedupe.has(n)) return;
+        dedupe.add(n);
+        out.push(n);
+      };
 
+      // Best case: server exposes directory listing at the folder URL.
+      try {
+        const resp = await fetch(baseDir, { method: "GET" });
+        if (resp.ok) {
+          const ct = (resp.headers.get("content-type") || "").toLowerCase();
+          const text = await resp.text();
+
+          if (ct.includes("application/json")) {
+            try {
+              const data = JSON.parse(text);
+              const files = Array.isArray(data) ? data : (Array.isArray(data.files) ? data.files : []);
+              for (const f of files) push(f);
+            } catch {
+              // ignore
+            }
+          } else {
+            try {
+              const doc = new DOMParser().parseFromString(text, "text/html");
+              const links = Array.from(doc.querySelectorAll("a[href]"));
+              for (const a of links) {
+                const href = a.getAttribute("href") || "";
+                if (!href || href === "../") continue;
+                const cleaned = href.split("#")[0].split("?")[0];
+                const filename = cleaned.replace(/^\.\//, "").replace(/\/+$/, "");
+                push(filename);
+              }
+            } catch {
+              // ignore
+            }
+          }
+        }
+      } catch {
+        // ignore
+      }
+
+      if (out.length) return out;
+
+      // Fallback: probe a few common filenames.
+      const candidates = ["index.json", "faq.json", "faq.txt", "questions.json", "questions.txt"];
       for (const name of candidates) {
         const url = baseDir + name;
         try {
           const resp = await fetch(url, { method: "GET" });
-          if (resp.ok) found.push(name);
+          if (resp.ok) push(name);
         } catch {
           // ignore
         }
       }
 
-      return found;
+      return out;
     }
 
     async function refreshFaqUrlPicker() {
@@ -1390,7 +1437,7 @@
       faqUrlPickEl.innerHTML = "";
       const opt0 = document.createElement("option");
       opt0.value = "";
-      opt0.textContent = "Local files...";
+      opt0.textContent = "Same-folder files...";
       faqUrlPickEl.appendChild(opt0);
 
       const list = await listSameDirFaqCandidates();
