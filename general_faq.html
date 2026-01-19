@@ -622,7 +622,6 @@
       <div class="header-meta" aria-label="Session info">
         <span class="pill accent" title="Questions in current set">Set: <span id="pill-total">1</span></span>
         <span class="pill" title="Drafts saved">Answered: <span id="pill-answered">0</span> / <span id="pill-total-2">1</span></span>
-        <span class="pill" title="Your progress markers">Known: <span id="pill-known">0</span> | Review: <span id="pill-unknown">0</span></span>
       </div>
     </div>
 
@@ -673,14 +672,6 @@
         <span class="stat-label">Question:</span>
         <span class="stat-value" id="stat-index">1 / 1</span>
       </div>
-      <div class="stat-item">
-        <span class="stat-label">Known:</span>
-        <span class="stat-value" id="stat-known">0</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-label">Need review:</span>
-        <span class="stat-value" id="stat-unknown">0</span>
-      </div>
     </div>
 
     <div class="question-card" id="question-card">
@@ -717,11 +708,6 @@
     </div>
 
     <div class="actions-wrap">
-      <div class="knowledge-row">
-        <button class="outline" id="btn-known" type="button">I knew this</button>
-        <button class="outline" id="btn-unknown" type="button">I didn't know</button>
-      </div>
-
       <div class="controls-row">
         <button class="secondary" id="btn-prev" type="button">&lt;- Previous</button>
         <button class="primary" id="btn-toggle-answer" type="button">Show Answer</button>
@@ -729,7 +715,6 @@
         <div class="spacer"></div>
         <button class="secondary" id="btn-random" type="button">Random</button>
         <button class="secondary" id="btn-check-all" type="button" title="Check all answered questions">Check All</button>
-        <button class="secondary" id="btn-reset" type="button">Reset Stats</button>
       </div>
     </div>
   </div>
@@ -814,8 +799,6 @@
 
     let questions = loadQuestionsFromLocalStorage() || DEFAULT_QUESTIONS.slice();
     let currentIndex = 0;
-    let knownCount = 0;
-    let unknownCount = 0;
 
     // per-question drafts (not the same as "Known/Review" stats)
     // { [index:number]: { answer: string, updated_at: string } }
@@ -829,14 +812,10 @@
     const questionTagEl = document.getElementById("question-tag");
 
     const statIndexEl = document.getElementById("stat-index");
-    const statKnownEl = document.getElementById("stat-known");
-    const statUnknownEl = document.getElementById("stat-unknown");
 
     const pillTotalEl = document.getElementById("pill-total");
     const pillTotal2El = document.getElementById("pill-total-2");
     const pillAnsweredEl = document.getElementById("pill-answered");
-    const pillKnownEl = document.getElementById("pill-known");
-    const pillUnknownEl = document.getElementById("pill-unknown");
 
     const btnCheckAll = document.getElementById("btn-check-all");
     const reviewPanelEl = document.getElementById("review-panel");
@@ -848,9 +827,6 @@
     const btnPrev = document.getElementById("btn-prev");
     const btnNext = document.getElementById("btn-next");
     const btnRandom = document.getElementById("btn-random");
-    const btnReset = document.getElementById("btn-reset");
-    const btnKnown = document.getElementById("btn-known");
-    const btnUnknown = document.getElementById("btn-unknown");
     const btnCheck = document.getElementById("btn-check");
 
     const userAnswerEl = document.getElementById("user-answer");
@@ -1009,10 +985,6 @@
     }
 
     function updateStats() {
-      statKnownEl.textContent = knownCount;
-      statUnknownEl.textContent = unknownCount;
-      if (pillKnownEl) pillKnownEl.textContent = knownCount;
-      if (pillUnknownEl) pillUnknownEl.textContent = unknownCount;
       if (pillTotalEl) pillTotalEl.textContent = questions.length;
       if (pillTotal2El) pillTotal2El.textContent = questions.length;
       if (pillAnsweredEl) pillAnsweredEl.textContent = countAnswered();
@@ -1089,8 +1061,6 @@
 
     function resetSession() {
       currentIndex = 0;
-      knownCount = 0;
-      unknownCount = 0;
       updateStats();
       renderQuestion();
     }
@@ -1243,16 +1213,6 @@
 
     btnRandom.addEventListener("click", randomQuestion);
 
-    btnReset.addEventListener("click", (e) => {
-      knownCount = 0;
-      unknownCount = 0;
-      if (e && e.shiftKey) {
-        clearAllAnswers();
-        setFeedback("Cleared saved answers.", "ok");
-      }
-      updateStats();
-    });
-
     function openReviewPanel() {
       if (!reviewPanelEl) return;
       reviewPanelEl.style.display = "block";
@@ -1267,20 +1227,6 @@
     if (btnCloseReview) {
       btnCloseReview.addEventListener("click", closeReviewPanel);
     }
-
-    btnKnown.addEventListener("click", () => {
-      knownCount++;
-      updateStats();
-      if (currentIndex < questions.length - 1) {
-        currentIndex++;
-        renderQuestion();
-      }
-    });
-
-    btnUnknown.addEventListener("click", () => {
-      unknownCount++;
-      updateStats();
-    });
 
     faqJsonEl.addEventListener("change", () => {
       const file = faqJsonEl.files && faqJsonEl.files[0];
