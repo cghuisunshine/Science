@@ -1029,9 +1029,11 @@
     }
 
     function countAnswered() {
+      // Only count answers that correspond to the currently loaded question set.
+      // This avoids stale localStorage entries showing up as "Answered".
       let n = 0;
-      for (const k of Object.keys(answersByIndex || {})) {
-        const v = answersByIndex[k];
+      for (let idx = 0; idx < questions.length; idx++) {
+        const v = answersByIndex[String(idx)];
         if (v && typeof v.answer === "string" && v.answer.trim()) n++;
       }
       return n;
@@ -1311,11 +1313,13 @@
       try {
         const text = await file.text();
         questions = parseFaqFromText(text);
+        clearAllAnswers();
         resetSession();
         saveQuestionsToLocalStorage(questions);
         setFeedback(`Loaded ${questions.length} questions.`, "ok");
       } catch (err) {
         questions = DEFAULT_QUESTIONS.slice();
+        clearAllAnswers();
         resetSession();
         setFeedback(`Failed to load file (${String(err.message || err)}). Using default.`, "bad");
       }
@@ -1342,6 +1346,7 @@
         if (!resp.ok) throw new Error(`http_${resp.status}`);
         const text = await resp.text();
         questions = parseFaqFromText(text);
+        clearAllAnswers();
         resetSession();
         saveQuestionsToLocalStorage(questions);
         try { localStorage.setItem("generalFaq.faqUrl.v1", raw); } catch {}
@@ -1578,6 +1583,7 @@
 
       try {
         questions = parseFaqFromText(trimmed);
+        clearAllAnswers();
         resetSession();
         saveQuestionsToLocalStorage(questions);
         setFeedback(`Loaded ${questions.length} questions from paste.`, "ok");
@@ -1645,6 +1651,7 @@
 
     btnReloadDefault.addEventListener("click", () => {
       questions = DEFAULT_QUESTIONS.slice();
+      clearAllAnswers();
       resetSession();
       saveQuestionsToLocalStorage(questions);
       setFeedback("Loaded default questions.", "ok");
@@ -1872,12 +1879,13 @@
     async function checkAllAnswered() {
       storeCurrentDraftAnswer();
 
-      const answeredKeys = Object.keys(answersByIndex || {}).filter((k) => {
-        const v = answersByIndex[k];
-        return v && typeof v.answer === "string" && v.answer.trim();
-      });
+      const answeredIndices = [];
+      for (let idx = 0; idx < questions.length; idx++) {
+        const v = answersByIndex[String(idx)];
+        if (v && typeof v.answer === "string" && v.answer.trim()) answeredIndices.push(idx);
+      }
 
-      const answeredCount = answeredKeys.length;
+      const answeredCount = answeredIndices.length;
       const totalCount = questions.length;
 
       if (btnCheckAll) btnCheckAll.disabled = true;
@@ -1897,12 +1905,12 @@
         const pairs = [];
         const indexByPair = [];
 
-        for (const k of answeredKeys) {
-          const idx = Number(k);
+        for (const idx of answeredIndices) {
           const qObj = questions[idx];
           if (!qObj) continue;
 
-          const userText = (answersByIndex[k] && answersByIndex[k].answer) ? String(answersByIndex[k].answer).trim() : "";
+          const saved = answersByIndex[String(idx)];
+          const userText = (saved && typeof saved.answer === "string") ? String(saved.answer).trim() : "";
           const correctText = (qObj && typeof qObj.a === "string") ? qObj.a.trim() : "";
 
           const pair = { question: qObj.q, answer: userText };
