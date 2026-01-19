@@ -213,6 +213,19 @@
       font-size: 0.92rem;
     }
 
+    select {
+      padding: 9px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(17, 24, 39, 0.18);
+      font-family: var(--font-mono);
+      font-size: 0.92rem;
+      background: rgba(255, 255, 255, 0.92);
+      color: rgba(17, 24, 39, 0.90);
+      box-shadow: 0 1px 0 rgba(17, 24, 39, 0.05);
+      max-width: 280px;
+      min-width: 180px;
+    }
+
     .settings-hint {
       margin-top: 10px;
       font-size: 0.9rem;
@@ -637,6 +650,7 @@
       <div class="settings-row">
         <label for="faq-url">FAQ URL</label>
         <input id="faq-url" type="text" placeholder="https://example.com/faq.json" />
+        <select id="faq-url-pick" aria-label="Pick a local FAQ file"></select>
         <button class="secondary" id="btn-load-url" type="button">Load URL</button>
         <button class="secondary" id="btn-clear-url" type="button">Clear</button>
       </div>
@@ -874,6 +888,7 @@
     const faqJsonEl = document.getElementById("faq-json");
     const btnReloadDefault = document.getElementById("btn-reload-default");
     const faqUrlEl = document.getElementById("faq-url");
+    const faqUrlPickEl = document.getElementById("faq-url-pick");
     const btnLoadUrl = document.getElementById("btn-load-url");
     const btnClearUrl = document.getElementById("btn-clear-url");
     const faqPasteEl = document.getElementById("faq-paste");
@@ -1336,6 +1351,66 @@
       }
     }
 
+    function resolveBaseDirUrl() {
+      try {
+        const u = new URL(window.location.href);
+        u.hash = "";
+        u.search = "";
+        u.pathname = u.pathname.replace(/\/[^/]*$/, "/");
+        return u.toString();
+      } catch {
+        return null;
+      }
+    }
+
+    async function listSameDirFaqCandidates() {
+      const baseDir = resolveBaseDirUrl();
+      if (!baseDir) return [];
+
+      // These are best-effort only; many servers won't expose directory listings.
+      const candidates = ["index.json", "faq.json", "faq.txt", "questions.json", "questions.txt"];
+      const found = [];
+
+      for (const name of candidates) {
+        const url = baseDir + name;
+        try {
+          const resp = await fetch(url, { method: "GET" });
+          if (resp.ok) found.push(name);
+        } catch {
+          // ignore
+        }
+      }
+
+      return found;
+    }
+
+    async function refreshFaqUrlPicker() {
+      if (!faqUrlPickEl) return;
+
+      faqUrlPickEl.innerHTML = "";
+      const opt0 = document.createElement("option");
+      opt0.value = "";
+      opt0.textContent = "Local files...";
+      faqUrlPickEl.appendChild(opt0);
+
+      const list = await listSameDirFaqCandidates();
+      if (!list.length) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "(none found)";
+        opt.disabled = true;
+        faqUrlPickEl.appendChild(opt);
+        return;
+      }
+
+      for (const name of list) {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        faqUrlPickEl.appendChild(opt);
+      }
+    }
+
     function loadFaqFromPaste(text) {
       const trimmed = String(text || "").trim();
       if (!trimmed) {
@@ -1441,6 +1516,18 @@
         }
       });
     }
+
+    if (faqUrlPickEl) {
+      faqUrlPickEl.addEventListener("change", () => {
+        const v = (faqUrlPickEl.value || "").trim();
+        if (!v) return;
+        if (faqUrlEl) faqUrlEl.value = v;
+        if (btnLoadUrl) btnLoadUrl.click();
+      });
+    }
+
+    // Populate the picker (best-effort; depends on server allowing fetch of these files).
+    refreshFaqUrlPicker();
 
     btnLoadPaste.addEventListener("click", () => {
       loadFaqFromPaste(faqPasteEl.value);
