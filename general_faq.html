@@ -1212,7 +1212,8 @@
       btnPrev.disabled = currentIndex === 0;
       btnNext.disabled = currentIndex === questions.length - 1;
       btnCheck.disabled = false;
-      if (btnCheckAll) btnCheckAll.disabled = countAnswered() === 0;
+      // Allow "Check All" even with zero answered (it will mark blanks as not answered).
+      if (btnCheckAll) btnCheckAll.disabled = false;
       updateStats();
 
       // small re-trigger animation
@@ -1678,7 +1679,8 @@
       answersByIndex[String(currentIndex)] = { answer: v, updated_at: new Date().toISOString() };
       saveAnswersToLocalStorage();
       updateStats();
-      if (btnCheckAll) btnCheckAll.disabled = countAnswered() === 0;
+      // Keep "Check All" available; it can still review unanswered items.
+      if (btnCheckAll) btnCheckAll.disabled = false;
     }
 
     let draftSaveTimer = null;
