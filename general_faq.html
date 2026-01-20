@@ -528,6 +528,15 @@
       margin-bottom: 10px;
     }
 
+    .nav-group, .util-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .util-group { margin-left: auto; }
+
     .knowledge-row {
       display: flex;
       flex-wrap: wrap;
@@ -614,9 +623,9 @@
       body { padding: 16px; }
       .container { padding: 18px 16px 26px; }
 
-      /* Keep navigation on one row; utilities wrap below. */
-      .controls-row { flex-direction: row; flex-wrap: wrap; align-items: center; }
-      .controls-row .spacer { display: block; flex: 0 0 100%; height: 0; }
+      /* Keep controls on the right for easier thumb reach. */
+      .controls-row { flex-direction: column; align-items: flex-end; }
+      .util-group { margin-left: 0; }
       .knowledge-row { justify-content: stretch; }
       button { justify-content: center; }
 
@@ -739,12 +748,15 @@
 
     <div class="actions-wrap">
       <div class="controls-row">
-        <button class="secondary" id="btn-prev" type="button">← Previous</button>
-        <button class="primary" id="btn-toggle-answer" type="button">Show Answer</button>
-        <button class="secondary" id="btn-next" type="button">Next →</button>
-        <div class="spacer"></div>
-        <button class="secondary" id="btn-random" type="button">Random</button>
-        <button class="secondary" id="btn-check-all" type="button" title="Check all answered questions">Check All</button>
+        <div class="nav-group">
+          <button class="secondary" id="btn-prev" type="button">← Previous</button>
+          <button class="primary" id="btn-toggle-answer" type="button">Show Answer</button>
+          <button class="secondary" id="btn-next" type="button">Next →</button>
+        </div>
+        <div class="util-group">
+          <button class="secondary" id="btn-random" type="button">Random</button>
+          <button class="secondary" id="btn-check-all" type="button" title="Check all answered questions">Check All</button>
+        </div>
       </div>
     </div>
   </div>
