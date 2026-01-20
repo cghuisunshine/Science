@@ -1871,6 +1871,8 @@
 
     if (btnReset) {
       btnReset.addEventListener("click", () => {
+        const ok = window.confirm("Reset will clear all saved answers for this FAQ set. Continue?");
+        if (!ok) return;
         resetAllAnswersUi();
       });
     }

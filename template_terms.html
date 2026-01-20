@@ -373,6 +373,9 @@
             <option value="en">English only</option>
             <option value="zh">中文 only</option>
           </select>
+          <select id="same-folder-pick" title="Pick a JSON file from this page folder">
+            <option value="">Same-folder files...</option>
+          </select>
           <button id="resetBtn" title="Reset order">Reset</button>
           <button id="importBtn" title="Import cards from a .json file">Import JSON</button>
           <input id="importFile" type="file" accept="application/json,.json" hidden />
@@ -433,7 +436,7 @@
 
 	      <div class="footerTips">
 	        You can click any item in the list to jump to that card.<br/>
-	        Load cards: click <span class="kbd">Import JSON</span> and choose a file like <span class="kbd">startup_terms.json</span>.<br/>
+	        Load cards: choose <span class="kbd">Same-folder files</span> (if available) or click <span class="kbd">Import JSON</span> and pick a file like <span class="kbd">startup_terms.json</span>.<br/>
           <span id="importStatus"></span>
 	      </div>
 	    </aside>
@@ -468,7 +471,8 @@
 	    const flipBtn = document.getElementById("flipBtn");
 	    const shuffleBtn = document.getElementById("shuffleBtn");
 	    const resetBtn = document.getElementById("resetBtn");
-	    const displaySelect = document.getElementById("displayMode");
+      const displaySelect = document.getElementById("displayMode");
+      const sameFolderPickEl = document.getElementById("same-folder-pick");
       const importBtn = document.getElementById("importBtn");
       const importFile = document.getElementById("importFile");
       const importStatus = document.getElementById("importStatus");
@@ -818,6 +822,283 @@
         render();
       }
 
+      async function fetchJsonWithTimeout(url, timeoutMs = 6000){
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+          const resp = await fetch(url, { method: "GET", signal: controller.signal });
+          const text = await resp.text().catch(() => "");
+          let data = null;
+          try { data = text ? JSON.parse(text) : null; } catch { data = null; }
+          return { ok: resp.ok, status: resp.status, data, text };
+        } catch (err) {
+          if (err && err.name === "AbortError") return { ok: false, status: 0, data: null, text: "" };
+          throw err;
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+
+      function resolveBaseDirUrl(){
+        try {
+          const u = new URL(window.location.href);
+          u.hash = "";
+          u.search = "";
+          u.pathname = u.pathname.replace(/\/[^/]*$/, "/");
+          return u.toString();
+        } catch {
+          return null;
+        }
+      }
+
+      function githubPagesRepoInfo(){
+        try {
+          const u = new URL(window.location.href);
+          if (!/\.github\.io$/i.test(u.hostname)) return null;
+
+          const owner = u.hostname.split(".")[0];
+          const parts = u.pathname.split("/").filter(Boolean);
+          if (parts.length < 1) return null;
+
+          const repo = parts[0];
+          const dirParts = parts.slice(1, -1);
+          const dirPath = dirParts.join("/");
+          return { owner, repo, dirPath };
+        } catch {
+          return null;
+        }
+      }
+
+      async function listGithubPagesSameDirFiles(){
+        const info = githubPagesRepoInfo();
+        if (!info) return [];
+
+        const pathSuffix = info.dirPath ? "/" + info.dirPath : "";
+        const base = `https://api.github.com/repos/${info.owner}/${info.repo}/contents${pathSuffix}`;
+        const urls = [base, base + "?ref=main", base + "?ref=master"];
+
+        for (const url of urls){
+          try {
+            const resp = await fetch(url, {
+              method: "GET",
+              headers: { "Accept": "application/vnd.github+json" }
+            });
+            if (!resp.ok) continue;
+            const data = await resp.json().catch(() => null);
+            if (!Array.isArray(data)) continue;
+
+            const out = [];
+            for (const item of data){
+              if (!item || typeof item !== "object") continue;
+              if (item.type !== "file") continue;
+              const name = String(item.name || "").trim();
+              if (!/\.json$/i.test(name)) continue;
+              out.push(name);
+            }
+
+            if (out.length) return out.sort((a, b) => a.localeCompare(b));
+          } catch {
+            // ignore
+          }
+        }
+
+        return [];
+      }
+
+      async function tryLoadSameDirManifest(baseDir){
+        // Optional manifest support for hosts that do not expose directory listings.
+        // Supported shapes:
+        // - JSON array: ["a.json","b.json"]
+        // - JSON object: {"files":["a.json"]}
+        const manifestNames = [
+          "terms_index.json",
+          "terms-index.json",
+          "terms_files.json",
+          "terms-files.json",
+          "index.json"
+        ];
+
+        for (const name of manifestNames){
+          const url = baseDir + name;
+          try {
+            const resp = await fetch(url, { method: "GET" });
+            if (!resp.ok) continue;
+            const data = await resp.json().catch(() => null);
+            if (!data) continue;
+
+            const files = Array.isArray(data)
+              ? data
+              : (Array.isArray(data.files) ? data.files : (Array.isArray(data.terms) ? data.terms : []));
+
+            if (!Array.isArray(files) || !files.length) continue;
+            return files.map((v) => String(v || "").trim()).filter(Boolean);
+          } catch {
+            // ignore
+          }
+        }
+
+        return [];
+      }
+
+      async function isSupportedTermsJsonUrl(url){
+        try {
+          const { ok, data } = await fetchJsonWithTimeout(url, 4500);
+          if (!ok || !data) return false;
+          const cards = normalizeCards(data);
+          return Array.isArray(cards) && cards.length > 0;
+        } catch {
+          return false;
+        }
+      }
+
+      async function listSameDirTermsCandidates(){
+        const baseDir = resolveBaseDirUrl();
+        if (!baseDir) return [];
+
+        const dedupe = new Set();
+        const out = [];
+        const push = (name) => {
+          const n = String(name || "").trim();
+          if (!n) return;
+          if (!/\.json$/i.test(n)) return;
+          if (n.includes("/")) return;
+          if (dedupe.has(n)) return;
+          dedupe.add(n);
+          out.push(n);
+        };
+
+        try {
+          const ghFiles = await listGithubPagesSameDirFiles();
+          if (ghFiles && ghFiles.length){
+            for (const f of ghFiles) push(f);
+          }
+        } catch {
+          // ignore
+        }
+
+        try {
+          const manifestFiles = await tryLoadSameDirManifest(baseDir);
+          if (manifestFiles && manifestFiles.length){
+            for (const f of manifestFiles) push(f);
+          }
+        } catch {
+          // ignore
+        }
+
+        // Best case: server exposes directory listing at the folder URL.
+        try {
+          const resp = await fetch(baseDir, { method: "GET" });
+          if (resp.ok){
+            const ct = (resp.headers.get("content-type") || "").toLowerCase();
+            const text = await resp.text();
+
+            if (ct.includes("application/json")){
+              try {
+                const data = JSON.parse(text);
+                const files = Array.isArray(data) ? data : (Array.isArray(data.files) ? data.files : []);
+                for (const f of files) push(f);
+              } catch {
+                // ignore
+              }
+            } else {
+              try {
+                const doc = new DOMParser().parseFromString(text, "text/html");
+                const links = Array.from(doc.querySelectorAll("a[href]"));
+                for (const a of links){
+                  const href = a.getAttribute("href") || "";
+                  if (!href || href === "../") continue;
+                  const cleaned = href.split("#")[0].split("?")[0];
+                  const filename = cleaned.replace(/^\.\//, "").replace(/\/+$|\/$/, "");
+                  push(filename);
+                }
+              } catch {
+                // ignore
+              }
+            }
+          }
+        } catch {
+          // ignore
+        }
+
+        // Small fallback: probe a couple common names.
+        const candidates = ["terms.json", "startup_terms.json", "template_terms.json", "index.json"];
+        for (const name of candidates){
+          try {
+            const url = baseDir + name;
+            const ok = await isSupportedTermsJsonUrl(url);
+            if (ok) push(name);
+          } catch {
+            // ignore
+          }
+        }
+
+        // Validate .json files match the expected flashcard schema.
+        const filtered = [];
+        for (const name of out){
+          try {
+            const resolvedUrl = new URL(name, baseDir).toString();
+            const ok = await isSupportedTermsJsonUrl(resolvedUrl);
+            if (!ok) continue;
+            filtered.push(name);
+          } catch {
+            // ignore
+          }
+        }
+
+        return filtered.sort((a, b) => a.localeCompare(b));
+      }
+
+      async function refreshSameFolderPicker(){
+        if (!sameFolderPickEl) return;
+
+        sameFolderPickEl.innerHTML = "";
+        const opt0 = document.createElement("option");
+        opt0.value = "";
+        opt0.textContent = "Same-folder files...";
+        sameFolderPickEl.appendChild(opt0);
+
+        const list = await listSameDirTermsCandidates();
+        if (!list.length){
+          const opt = document.createElement("option");
+          opt.value = "";
+          opt.textContent = "(none found)";
+          opt.disabled = true;
+          sameFolderPickEl.appendChild(opt);
+          return;
+        }
+
+        for (const name of list){
+          const opt = document.createElement("option");
+          opt.value = name;
+          opt.textContent = name;
+          sameFolderPickEl.appendChild(opt);
+        }
+      }
+
+      async function loadCardsFromUrl(url){
+        const raw = String(url || "").trim();
+        if (!raw) return;
+
+        let resolvedUrl = raw;
+        try {
+          resolvedUrl = new URL(raw, window.location.href).toString();
+        } catch {
+          // keep raw
+        }
+
+        setStatus(`Loading ${raw}...`);
+        try {
+          const resp = await fetch(resolvedUrl, { method: "GET" });
+          if (!resp.ok) throw new Error(`http_${resp.status}`);
+          const text = await resp.text();
+          const data = JSON.parse(text);
+          const cards = normalizeCards(data);
+          loadCards(cards, { sourceName: raw, persist: true, persistSourceName: raw });
+        } catch (err) {
+          setStatus(err instanceof Error ? err.message : String(err), { error: true });
+        }
+      }
+
       importBtn.addEventListener("click", () => {
         importFile.value = "";
         importFile.click();
@@ -835,6 +1116,14 @@
           setStatus(err instanceof Error ? err.message : String(err), { error: true });
         }
       });
+
+      if (sameFolderPickEl){
+        sameFolderPickEl.addEventListener("change", () => {
+          const v = String(sameFolderPickEl.value || "").trim();
+          if (!v) return;
+          loadCardsFromUrl(v);
+        });
+      }
 
 	    searchEl.addEventListener("input", (e) => {
         userQuery = e.target.value.trim();
@@ -954,6 +1243,9 @@
         setControlsEnabled(false);
         setStatus("No cards loaded yet.");
       }
+
+      // Populate the picker (best-effort; depends on server allowing fetch of these files).
+      refreshSameFolderPicker();
 	  </script>
 	</body>
 	</html>
