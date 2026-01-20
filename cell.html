@@ -67,6 +67,34 @@
       margin-top: 0.5rem;
       color: #4a5568;
       font-size: 0.9rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .caption-btn {
+      appearance: none;
+      border: 1px solid #cbd5e0;
+      background: #ffffff;
+      color: #1a365d;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      line-height: 1.2;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+
+    .caption-btn:hover {
+      background: #edf2f7;
+    }
+
+    .caption-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+      box-shadow: none;
     }
 
     /* Text block smaller */
@@ -146,8 +174,19 @@
 <!-- ========== 1. ANIMAL CELL OVERVIEW (LABELS) ========== -->
 <section class="pair">
   <figure>
-    <img src="AnimalCell.png" alt="Animal Cell diagram">
-    <figcaption>Animal Cell Diagram / 动物细胞示意图</figcaption>
+    <img
+      id="animalCellDiagram"
+      src="AnimalCell.png"
+      data-src-labels="AnimalCell.png"
+      data-src-masked="AnimalCell_masked.png"
+      alt="Animal Cell diagram"
+    >
+    <figcaption>
+      <span>Animal Cell Diagram / 动物细胞示意图</span>
+      <button type="button" class="caption-btn" id="animalCellLabelsToggle" aria-pressed="false">
+        Hide labels / 隐藏标注
+      </button>
+    </figcaption>
   </figure>
 
   <div class="text-block">
@@ -373,8 +412,19 @@
 <!-- ========== 5. PLANT CELL DIAGRAM (LABELS) ========== -->
 <section class="pair">
   <figure>
-    <img src="PlantCell.png" alt="Plant Cell diagram">
-    <figcaption>Plant Cell Diagram / 植物细胞示意图</figcaption>
+    <img
+      id="plantCellDiagram"
+      src="PlantCell.png"
+      data-src-labels="PlantCell.png"
+      data-src-masked="PlantCell_masked.png"
+      alt="Plant Cell diagram"
+    >
+    <figcaption>
+      <span>Plant Cell Diagram / 植物细胞示意图</span>
+      <button type="button" class="caption-btn" id="plantCellLabelsToggle" aria-pressed="false">
+        Hide labels / 隐藏标注
+      </button>
+    </figcaption>
   </figure>
 
   <div class="text-block">
@@ -410,8 +460,65 @@
     // Ensure default is "both"
     updateMode('both');
   })();
+
+  // Toggle AnimalCell labeled vs masked image
+  (function () {
+    const img = document.getElementById('animalCellDiagram');
+    const btn = document.getElementById('animalCellLabelsToggle');
+    if (!img || !btn) return;
+
+    const labeledSrc = img.getAttribute('data-src-labels') || img.getAttribute('src');
+    const maskedSrc = img.getAttribute('data-src-masked');
+    if (!labeledSrc || !maskedSrc) {
+      btn.disabled = true;
+      return;
+    }
+
+    let isMasked = false;
+
+    function sync() {
+      img.setAttribute('src', isMasked ? maskedSrc : labeledSrc);
+      btn.textContent = isMasked ? 'Show labels / 显示标注' : 'Hide labels / 隐藏标注';
+      btn.setAttribute('aria-pressed', isMasked ? 'true' : 'false');
+    }
+
+    btn.addEventListener('click', () => {
+      isMasked = !isMasked;
+      sync();
+    });
+
+    sync();
+  })();
+
+  // Toggle PlantCell labeled vs masked image
+  (function () {
+    const img = document.getElementById('plantCellDiagram');
+    const btn = document.getElementById('plantCellLabelsToggle');
+    if (!img || !btn) return;
+
+    const labeledSrc = img.getAttribute('data-src-labels') || img.getAttribute('src');
+    const maskedSrc = img.getAttribute('data-src-masked');
+    if (!labeledSrc || !maskedSrc) {
+      btn.disabled = true;
+      return;
+    }
+
+    let isMasked = false;
+
+    function sync() {
+      img.setAttribute('src', isMasked ? maskedSrc : labeledSrc);
+      btn.textContent = isMasked ? 'Show labels / 显示标注' : 'Hide labels / 隐藏标注';
+      btn.setAttribute('aria-pressed', isMasked ? 'true' : 'false');
+    }
+
+    btn.addEventListener('click', () => {
+      isMasked = !isMasked;
+      sync();
+    });
+
+    sync();
+  })();
 </script>
 
 </body>
 </html>
-
