@@ -489,6 +489,7 @@
               <span class="pill" id="pill-turn">turn: w</span>
               <span class="pill" id="pill-you">you: white</span>
               <span class="pill" id="pill-state">ready</span>
+              <span class="pill" id="clock-turn">w 00:00</span>
             </div>
           </div>
           <div class="small" id="status-text">Your move.</div>
@@ -563,6 +564,8 @@
     const debugEl = document.getElementById('debug');
     const apiStatusEl = document.getElementById('api-status');
 
+    const clockTurnEl = document.getElementById('clock-turn');
+
     const btnUndo = document.getElementById('btn-undo');
     const btnFlip = document.getElementById('btn-flip');
     const btnNew = document.getElementById('btn-new');
@@ -591,9 +594,46 @@
       return (v === null || v === undefined) ? '' : String(v);
     }
 
+    function fmtClock(ms) {
+      const clamped = Math.max(0, Math.floor(ms));
+      const totalSec = Math.floor(clamped / 1000);
+      const h = Math.floor(totalSec / 3600);
+      const m = Math.floor((totalSec % 3600) / 60);
+      const s = totalSec % 60;
+      const mm = String(m).padStart(2, '0');
+      const ss = String(s).padStart(2, '0');
+      if (h > 0) return `${h}:${mm}:${ss}`;
+      return `${mm}:${ss}`;
+    }
+
     let animating = false;
     let activeMoveAnim = null; // { from, to, code }
     let lastFlashSquare = null;
+
+    let clockTurnStartMs = performance.now();
+    let clockTicker = null;
+
+    function resetTurnClock() {
+      clockTurnStartMs = performance.now();
+      renderTurnClock();
+    }
+
+    function startTurnClockTicker() {
+      if (clockTicker) return;
+      clockTicker = window.setInterval(() => {
+        renderTurnClock();
+      }, 200);
+    }
+
+    function renderTurnClock() {
+      if (!clockTurnEl) return;
+      let elapsed = 0;
+      if (game && typeof game.isGameOver === 'function' && !game.isGameOver()) {
+        elapsed = Math.max(0, performance.now() - clockTurnStartMs);
+      }
+      const turnChar = (game && typeof game.turn === 'function') ? game.turn() : 'w';
+      clockTurnEl.textContent = `${turnChar} ${fmtClock(elapsed)}`;
+    }
 
     function getSquareEl(square) {
       return boardEl.querySelector(`[data-square="${square}"]`);
@@ -1107,6 +1147,8 @@
       activeMoveAnim = null;
       renderBoard();
       flashDestination(to);
+      // Start next side's turn clock after animation.
+      resetTurnClock();
 
       await maybeAiMove();
     }
@@ -1310,6 +1352,8 @@
         activeMoveAnim = null;
         renderBoard();
         flashDestination(moveTo);
+        // Start next side's turn clock after animation.
+        resetTurnClock();
       } catch (err) {
         console.warn('AI move failed:', err);
         setApiStatus(`AI error: ${safeText(err && err.message ? err.message : err)}`, 'bad');
@@ -1372,6 +1416,9 @@
       lastFlashSquare = null;
       busy = false;
 
+      resetTurnClock();
+      startTurnClockTicker();
+
       // Default flip: human perspective.
       flipped = (humanColor === 'b');
 
@@ -1399,6 +1446,7 @@
         setApiStatus('Undid last moves.', 'good');
       }
       lastFlashSquare = null;
+      resetTurnClock();
       clearHighlights();
       renderAll();
     });
@@ -1427,6 +1475,8 @@
     endpointEl.value = (endpointEl.value || '').trim() || DEFAULT_ENDPOINT;
     humanColor = selectSideEl.value === 'b' ? 'b' : 'w';
     flipped = (humanColor === 'b');
+    resetTurnClock();
+    startTurnClockTicker();
     renderAll();
     syncBoardSize();
     window.addEventListener('resize', () => syncBoardSize());
