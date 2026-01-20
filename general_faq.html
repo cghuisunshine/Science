@@ -613,10 +613,19 @@
     @media (max-width: 640px) {
       body { padding: 16px; }
       .container { padding: 18px 16px 26px; }
-      .controls-row { flex-direction: column; align-items: stretch; }
+
+      /* Keep navigation on one row; utilities wrap below. */
+      .controls-row { flex-direction: row; flex-wrap: wrap; align-items: center; }
+      .controls-row .spacer { display: block; flex: 0 0 100%; height: 0; }
       .knowledge-row { justify-content: stretch; }
-      .spacer { display: none; }
       button { justify-content: center; }
+
+      /* Arrow-only nav buttons still need a tap target. */
+      #btn-prev, #btn-next { min-width: 56px; padding-left: 14px; padding-right: 14px; }
+
+      /* Let feedback drop under the buttons when tight. */
+      #feedback { flex: 0 0 100%; }
+
       input[type="text"] { min-width: 0; }
       .actions-wrap { bottom: 10px; }
     }
@@ -730,9 +739,9 @@
 
     <div class="actions-wrap">
       <div class="controls-row">
-        <button class="secondary" id="btn-prev" type="button">&lt;- Previous</button>
+        <button class="secondary" id="btn-prev" type="button">← Previous</button>
         <button class="primary" id="btn-toggle-answer" type="button">Show Answer</button>
-        <button class="secondary" id="btn-next" type="button">Next -&gt;</button>
+        <button class="secondary" id="btn-next" type="button">Next →</button>
         <div class="spacer"></div>
         <button class="secondary" id="btn-random" type="button">Random</button>
         <button class="secondary" id="btn-check-all" type="button" title="Check all answered questions">Check All</button>
@@ -880,6 +889,50 @@
 
     const userAnswerEl = document.getElementById("user-answer");
     const feedbackEl = document.getElementById("feedback");
+
+    const mobileMq = window.matchMedia("(max-width: 640px)");
+    const controlsRowEl = btnPrev ? btnPrev.parentElement : null;
+    const inputBtnRowEl = document.querySelector(".input-card .btn-row.tight");
+
+    function applyResponsiveControls() {
+      const isMobile = !!(mobileMq && mobileMq.matches);
+
+      if (btnPrev) {
+        btnPrev.textContent = isMobile ? "←" : "← Previous";
+        btnPrev.setAttribute("aria-label", "Previous question");
+        btnPrev.setAttribute("title", "Previous question");
+      }
+
+      if (btnNext) {
+        btnNext.textContent = isMobile ? "→" : "Next →";
+        btnNext.setAttribute("aria-label", "Next question");
+        btnNext.setAttribute("title", "Next question");
+      }
+
+      if (!btnToggleAnswer) return;
+
+      if (isMobile) {
+        if (inputBtnRowEl) {
+          if (feedbackEl && feedbackEl.parentElement === inputBtnRowEl) {
+            inputBtnRowEl.insertBefore(btnToggleAnswer, feedbackEl);
+          } else {
+            inputBtnRowEl.appendChild(btnToggleAnswer);
+          }
+        }
+      } else {
+        if (controlsRowEl && btnNext && btnNext.parentElement === controlsRowEl) {
+          controlsRowEl.insertBefore(btnToggleAnswer, btnNext);
+        }
+      }
+    }
+
+    if (mobileMq && typeof mobileMq.addEventListener === "function") {
+      mobileMq.addEventListener("change", applyResponsiveControls);
+    } else if (mobileMq && typeof mobileMq.addListener === "function") {
+      mobileMq.addListener(applyResponsiveControls);
+    }
+
+    applyResponsiveControls();
 
     const gradeApiUrlEl = document.getElementById("grade-api-url");
     const btnTestApi = document.getElementById("btn-test-api");
