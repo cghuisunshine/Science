@@ -489,10 +489,24 @@
 
     .review-item .answer {
       margin-top: 8px;
+      display: grid;
+      gap: 6px;
       border-radius: 12px;
       border: 1px dashed rgba(17, 24, 39, 0.18);
       background: rgba(17, 24, 39, 0.03);
       padding: 8px 10px;
+    }
+
+    .review-item .answer .k {
+      font-family: var(--font-sans);
+      font-weight: 900;
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(17, 24, 39, 0.62);
+    }
+
+    .review-item .answer .v {
       font-family: var(--font-mono);
       font-size: 0.88rem;
       white-space: pre-wrap;
@@ -739,7 +753,7 @@
       <div class="review-head">
         <div>
           <div class="review-title">Review: Check All</div>
-          <div class="review-sub" id="review-sub">Run "Check All" to grade everything you've answered so far.</div>
+          <div class="review-sub" id="review-sub">Run "Check All" to review your answers and see the correct answer for every question.</div>
         </div>
         <button class="outline" id="btn-close-review" type="button">Close</button>
       </div>
@@ -755,7 +769,8 @@
         </div>
         <div class="util-group">
           <button class="secondary" id="btn-random" type="button">Random</button>
-          <button class="secondary" id="btn-check-all" type="button" title="Check all answered questions">Check All</button>
+          <button class="secondary" id="btn-check-all" type="button" title="Check all questions (shows correct answers)">Check All</button>
+          <button class="secondary" id="btn-reset" type="button" title="Clear all saved answers">Reset</button>
         </div>
       </div>
     </div>
@@ -888,6 +903,7 @@
     const pillAnsweredEl = document.getElementById("pill-answered");
 
     const btnCheckAll = document.getElementById("btn-check-all");
+    const btnReset = document.getElementById("btn-reset");
     const reviewPanelEl = document.getElementById("review-panel");
     const reviewListEl = document.getElementById("review-list");
     const reviewSubEl = document.getElementById("review-sub");
@@ -1152,17 +1168,14 @@
       return { question, answer };
     }
 
-    async function fetchGeneratedAnswerForCurrent() {
-      const qObj = currentQuestion();
-      if (!qObj) throw new Error("no_question");
-
+    async function fetchGeneratedAnswerForQuestion(questionText) {
       const qaUrl = getQaApiUrl();
       if (!qaUrl) throw new Error("no_qa_url");
 
-      const questionText = String(qObj.q || "").trim();
-      if (!questionText) throw new Error("empty_question");
+      const q = String(questionText || "").trim();
+      if (!q) throw new Error("empty_question");
 
-      const payload = { questions: [questionText] };
+      const payload = { questions: [q] };
       const aiTimeoutMs = 60000;
 
       const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
@@ -1187,6 +1200,37 @@
       }
 
       return first.answer;
+    }
+
+    async function fetchGeneratedAnswerForCurrent() {
+      const qObj = currentQuestion();
+      if (!qObj) throw new Error("no_question");
+      return fetchGeneratedAnswerForQuestion(String(qObj.q || "").trim());
+    }
+
+    async function getCorrectAnswerTextForIndex(idx) {
+      const qObj = questions[idx];
+      if (!qObj) return "";
+
+      const model = (typeof qObj.a === "string" ? qObj.a : "").trim();
+      if (model) return model;
+
+      const cached = generatedAnswersByIndex[String(idx)];
+      const cachedText = cached && typeof cached.answer === "string" ? cached.answer.trim() : "";
+      if (cachedText) return cachedText;
+
+      // No model answer. If /qa is configured, generate one (and cache it).
+      try {
+        const generated = await fetchGeneratedAnswerForQuestion(String(qObj.q || "").trim());
+        const out = String(generated || "").trim();
+        if (out) {
+          generatedAnswersByIndex[String(idx)] = { answer: out, updated_at: new Date().toISOString() };
+          saveGeneratedAnswersToLocalStorage();
+        }
+        return out;
+      } catch {
+        return "";
+      }
     }
 
     function renderQuestion() {
@@ -1299,6 +1343,13 @@
       saveAnswersToLocalStorage();
       saveGeneratedAnswersToLocalStorage();
       updateStats();
+    }
+
+    function resetAllAnswersUi() {
+      clearAllAnswers();
+      setFeedback("Cleared all answers.", "ok");
+      closeReviewPanel();
+      renderQuestion();
     }
 
     function coerceQuestions(raw) {
@@ -1818,6 +1869,12 @@
       btnCheckAll.addEventListener("click", checkAllAnswered);
     }
 
+    if (btnReset) {
+      btnReset.addEventListener("click", () => {
+        resetAllAnswersUi();
+      });
+    }
+
     async function gradeOne({ questionText, userText, correctText }) {
       const gradeUrl = getGradeApiUrl();
       const aiTimeoutMs = 60000;
@@ -1936,7 +1993,7 @@
       }
     });
 
-    function renderReviewItem({ index, q, userAnswer, verdict, explanation }) {
+    function renderReviewItem({ index, q, userAnswer, correctAnswer, verdict, explanation }) {
       const safe = (s) => String(s || "");
       const verdictClass =
         verdict === "correct" ? "ok" :
@@ -1947,6 +2004,11 @@
         (verdict === "unknown" ? "Unknown" :
         (verdict === "na" ? "Not answered" : "Wrong"));
 
+      const userDisplay = (typeof userAnswer === "string" && userAnswer.trim()) ? userAnswer : "(Not answered)";
+      const correctDisplay = (typeof correctAnswer === "string" && correctAnswer.trim())
+        ? correctAnswer
+        : "(No model answer available. Use \"Show Answer\" with AI /qa enabled.)";
+
       const el = document.createElement("div");
       el.className = "review-item";
       el.innerHTML =
@@ -1956,7 +2018,14 @@
         `</div>` +
         `<div class="q">${escapeHtml(safe(q))}</div>` +
         `<div class="explain">${escapeHtml(safe(explanation))}</div>` +
-        `<div class="answer">${escapeHtml(safe(userAnswer))}</div>`;
+        `<div class="answer">` +
+          `<div class="k">Your answer</div>` +
+          `<div class="v">${escapeHtml(safe(userDisplay))}</div>` +
+        `</div>` +
+        `<div class="answer">` +
+          `<div class="k">Correct answer</div>` +
+          `<div class="v">${escapeHtml(safe(correctDisplay))}</div>` +
+        `</div>`;
 
       return el;
     }
@@ -1983,7 +2052,7 @@
       const totalCount = questions.length;
 
       if (btnCheckAll) btnCheckAll.disabled = true;
-      if (reviewSubEl) reviewSubEl.textContent = `Checking answered questions (${answeredCount}/${totalCount})...`;
+      if (reviewSubEl) reviewSubEl.textContent = `Checking answered questions (${answeredCount}/${totalCount})... (Correct answers will be shown for all questions.)`;
       if (reviewListEl) reviewListEl.innerHTML = "";
       openReviewPanel();
 
@@ -2047,11 +2116,13 @@
               notAnswered++;
             }
 
+            const correctAnswer = await getCorrectAnswerTextForIndex(idx);
             if (reviewListEl) {
               reviewListEl.appendChild(renderReviewItem({
                 index: idx,
                 q: qObj.q,
                 userAnswer: userText,
+                correctAnswer,
                 verdict,
                 explanation
               }));
@@ -2091,11 +2162,13 @@
               notAnswered++;
             }
 
+            const correctAnswer = await getCorrectAnswerTextForIndex(idx);
             if (reviewListEl) {
               reviewListEl.appendChild(renderReviewItem({
                 index: idx,
                 q: qObj.q,
                 userAnswer: userText,
+                correctAnswer,
                 verdict,
                 explanation
               }));
@@ -2127,11 +2200,13 @@
             notAnswered++;
           }
 
+          const correctAnswer = await getCorrectAnswerTextForIndex(idx);
           if (reviewListEl) {
             reviewListEl.appendChild(renderReviewItem({
               index: idx,
               q: qObj.q,
               userAnswer: userText,
+              correctAnswer,
               verdict,
               explanation
             }));
