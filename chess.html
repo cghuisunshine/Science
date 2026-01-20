@@ -149,6 +149,7 @@
     .board{
       width: 100%;
       aspect-ratio: 1 / 1;
+      position: relative;
       border-radius: 16px;
       overflow:hidden;
       border: 1px solid rgba(0,0,0,.35);
@@ -226,6 +227,104 @@
       pointer-events:none;
     }
     .sq.capture.legal::before{ display:none; }
+
+    .sq.lastFlash{
+      animation: lastPulse 1.1s ease-in-out infinite;
+    }
+
+    @keyframes lastPulse{
+      0%, 100%{
+        box-shadow:
+          inset 0 0 0 1px rgba(0,0,0,.55),
+          inset 0 0 0 3px rgba(255,229,140,.55),
+          0 12px 28px rgba(0,0,0,.22),
+          0 0 0 2px rgba(255,229,140,.22);
+      }
+      50%{
+        box-shadow:
+          inset 0 0 0 1px rgba(0,0,0,.68),
+          inset 0 0 0 3px rgba(255,229,140,.92),
+          0 16px 40px rgba(0,0,0,.34),
+          0 0 0 4px rgba(255,229,140,.30);
+      }
+    }
+
+    .sq.lastFlash .piece{
+      animation: piecePulse 1.1s ease-in-out infinite;
+      will-change: transform, filter;
+    }
+    .sq.lastFlash .piece.white{
+      /* Dark halo + cool glow so white pieces pop on light squares */
+      filter:
+        drop-shadow(0 0 2px rgba(0,0,0,.95))
+        drop-shadow(0 0 10px rgba(122,162,255,.85))
+        drop-shadow(0 0 18px rgba(255,229,140,.25));
+    }
+    .sq.lastFlash .piece.black{
+      /* Light halo so black pieces read on dark squares */
+      filter:
+        drop-shadow(0 0 2px rgba(255,255,255,.70))
+        drop-shadow(0 0 10px rgba(255,229,140,.70));
+    }
+
+    @keyframes piecePulse{
+      0%, 100%{ transform: translateY(-1px) scale(1.00); }
+      50%{ transform: translateY(-1px) scale(1.08); }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .sq.lastFlash{ animation: none; }
+      .sq.lastFlash .piece{ animation: none; }
+      .sq.flash::after{ animation: none; opacity: .65; }
+    }
+
+    .sq.flash::after{
+      content:"";
+      position:absolute;
+      inset: 0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,229,140,.62), rgba(255,229,140,0) 62%),
+        linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,0));
+      animation: destFlash 2s ease-out forwards;
+      mix-blend-mode: screen;
+    }
+
+    @keyframes destFlash{
+      0%{ opacity: 0; transform: scale(.98); }
+      20%{ opacity: .95; transform: scale(1.00); }
+      100%{ opacity: 0; transform: scale(1.06); }
+    }
+
+    .moveGhost{
+      position:absolute;
+      display:grid;
+      place-items:center;
+      left:0;
+      top:0;
+      width: 0;
+      height: 0;
+      font-size: clamp(28px, 6vw, 44px);
+      line-height: 1;
+      transform: translate(0px, 0px);
+      transition: transform 180ms cubic-bezier(.22, .75, .22, 1);
+      pointer-events:none;
+      z-index: 5;
+    }
+    .moveGhost.white{
+      color: rgba(255,255,255,.98);
+      -webkit-text-stroke: 1.2px rgba(0,0,0,.58);
+      text-shadow:
+        0 2px 6px rgba(0,0,0,.35),
+        0 0 14px rgba(0,0,0,.20);
+    }
+    .moveGhost.black{
+      color: rgba(12,12,12,.92);
+      -webkit-text-stroke: 0.8px rgba(255,255,255,.22);
+      text-shadow:
+        0 1px 0 rgba(255,255,255,.18),
+        0 0 10px rgba(0,0,0,.10);
+    }
 
     .statusRow{
       display:flex;
@@ -490,6 +589,110 @@
 
     function safeText(v) {
       return (v === null || v === undefined) ? '' : String(v);
+    }
+
+    let animating = false;
+    let activeMoveAnim = null; // { from, to, code }
+    let lastFlashSquare = null;
+
+    function getSquareEl(square) {
+      return boardEl.querySelector(`[data-square="${square}"]`);
+    }
+
+    function clearPersistentFlash() {
+      if (!lastFlashSquare) return;
+      const prev = getSquareEl(lastFlashSquare);
+      if (prev) prev.classList.remove('lastFlash');
+      lastFlashSquare = null;
+    }
+
+    function setPersistentFlash(square) {
+      if (!square) return;
+      if (lastFlashSquare && lastFlashSquare !== square) {
+        const prev = getSquareEl(lastFlashSquare);
+        if (prev) prev.classList.remove('lastFlash');
+      }
+      lastFlashSquare = square;
+      const el = getSquareEl(square);
+      if (el) el.classList.add('lastFlash');
+    }
+
+    function flashDestination(square) {
+      // Persist until the next move animation begins.
+      setPersistentFlash(square);
+
+      const el = getSquareEl(square);
+      if (!el) return;
+      el.classList.remove('flash');
+      // restart animation
+      // eslint-disable-next-line no-unused-expressions
+      el.offsetWidth;
+      el.classList.add('flash');
+      window.setTimeout(() => {
+        // Purely cleanup; the persistent highlight remains via .lastFlash
+        const now = getSquareEl(square);
+        if (now) now.classList.remove('flash');
+      }, 2100);
+    }
+
+    function playMoveAnimation(anim) {
+      if (!anim || !anim.from || !anim.to || !anim.code) return Promise.resolve();
+      // Clear previous destination highlight as the next move begins.
+      clearPersistentFlash();
+
+      const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduceMotion) return Promise.resolve();
+
+      const fromEl = getSquareEl(anim.from);
+      const toEl = getSquareEl(anim.to);
+      if (!fromEl || !toEl) return Promise.resolve();
+
+      const boardRect = boardEl.getBoundingClientRect();
+      const fr = fromEl.getBoundingClientRect();
+      const tr = toEl.getBoundingClientRect();
+      const dx = tr.left - fr.left;
+      const dy = tr.top - fr.top;
+
+      const ghost = document.createElement('div');
+      ghost.className = `moveGhost ${anim.code[0] === 'w' ? 'white' : 'black'}`;
+      ghost.textContent = PIECE_GLYPH[anim.code] || '';
+      ghost.style.left = `${fr.left - boardRect.left}px`;
+      ghost.style.top = `${fr.top - boardRect.top}px`;
+      ghost.style.width = `${fr.width}px`;
+      ghost.style.height = `${fr.height}px`;
+
+      animating = true;
+      boardEl.appendChild(ghost);
+
+      return new Promise((resolve) => {
+        const finish = () => {
+          ghost.remove();
+          animating = false;
+          resolve();
+        };
+
+        const onEnd = (e) => {
+          if (e && e.propertyName && e.propertyName !== 'transform') return;
+          ghost.removeEventListener('transitionend', onEnd);
+          finish();
+        };
+        ghost.addEventListener('transitionend', onEnd);
+
+        requestAnimationFrame(() => {
+          // Ensure the element has been painted before we transition.
+          requestAnimationFrame(() => {
+            ghost.style.transform = `translate(${dx}px, ${dy}px)`;
+          });
+        });
+
+        // Safety net in case transitionend doesn't fire.
+        window.setTimeout(() => {
+          if (document.body.contains(ghost)) {
+            ghost.removeEventListener('transitionend', onEnd);
+            finish();
+          }
+        }, 350);
+      });
     }
 
     function setPill(el, text, kind) {
@@ -767,7 +970,8 @@
 
         const piece = game.get(sq);
         const code = pieceToCode(piece);
-        if (code) {
+        const suppress = activeMoveAnim && activeMoveAnim.to === sq;
+        if (code && !suppress) {
           const span = document.createElement('span');
           span.className = 'piece ' + (code[0] === 'w' ? 'white' : 'black');
           span.textContent = PIECE_GLYPH[code] || '';
@@ -785,6 +989,7 @@
         if (selectedSquare === sq) el.classList.add('sel');
         if (legalToSquares.has(sq)) el.classList.add('legal');
         if (legalCaptureSquares.has(sq)) el.classList.add('capture');
+        if (lastFlashSquare === sq) el.classList.add('lastFlash');
 
         el.addEventListener('click', () => onSquareClick(sq));
         boardEl.appendChild(el);
@@ -873,6 +1078,7 @@
     }
 
     async function tryUserMove(from, to) {
+      if (animating) return;
       const piece = game.get(from);
       if (!piece) return;
 
@@ -884,7 +1090,10 @@
       }
 
       try {
+        const code = pieceToCode(piece);
+        const promoCode = promotion ? (piece.color + promotion) : null;
         game.move({ from, to, promotion });
+        activeMoveAnim = { from, to, code: promoCode || code };
       } catch (e) {
         setApiStatus(`Illegal move: ${from}-${to}`, 'bad');
         return;
@@ -892,6 +1101,13 @@
 
       clearHighlights();
       renderAll();
+
+      const anim = activeMoveAnim;
+      await playMoveAnimation(anim);
+      activeMoveAnim = null;
+      renderBoard();
+      flashDestination(to);
+
       await maybeAiMove();
     }
 
@@ -908,7 +1124,7 @@
     }
 
     function onSquareClick(square) {
-      if (busy) return;
+      if (busy || animating) return;
       if (game.isGameOver()) return;
       if (!isUserTurn(game, humanColor)) return;
 
@@ -1022,6 +1238,7 @@
 
     async function askAiForMove({ force = false } = {}) {
       if (busy) return;
+      if (animating) return;
       if (game.isGameOver()) return;
       if (!force && isUserTurn(game, humanColor)) return;
 
@@ -1074,7 +1291,11 @@
         if (!moveFrom || !moveTo) throw new Error('ai_missing_from_to');
 
         // Apply using chess.js as authority.
+        const movingPiece = game.get(moveFrom);
+        const movingCode = pieceToCode(movingPiece);
+        const promoCode = (movingPiece && promoLetter) ? (movingPiece.color + promoLetter) : null;
         game.move({ from: moveFrom, to: moveTo, promotion: promoLetter });
+        activeMoveAnim = { from: moveFrom, to: moveTo, code: promoCode || movingCode };
 
         setApiStatus(`AI played: ${moveFrom}-${moveTo}${promo ? '=' + promo : ''}`, 'good');
         clearHighlights();
@@ -1083,6 +1304,12 @@
           ai_envelope: envelope,
           ai_parsed: parsed
         });
+
+        const anim = activeMoveAnim;
+        await playMoveAnimation(anim);
+        activeMoveAnim = null;
+        renderBoard();
+        flashDestination(moveTo);
       } catch (err) {
         console.warn('AI move failed:', err);
         setApiStatus(`AI error: ${safeText(err && err.message ? err.message : err)}`, 'bad');
@@ -1142,6 +1369,7 @@
     function newGame() {
       game = new Chess();
       clearHighlights();
+      lastFlashSquare = null;
       busy = false;
 
       // Default flip: human perspective.
@@ -1155,12 +1383,13 @@
     btnNew.addEventListener('click', () => newGame());
 
     btnFlip.addEventListener('click', () => {
+      if (animating) return;
       flipped = !flipped;
       renderBoard();
     });
 
     btnUndo.addEventListener('click', () => {
-      if (busy) return;
+      if (busy || animating) return;
       // Undo up to 2 plies.
       const m1 = game.undo();
       const m2 = game.undo();
@@ -1169,14 +1398,22 @@
       } else {
         setApiStatus('Undid last moves.', 'good');
       }
+      lastFlashSquare = null;
       clearHighlights();
       renderAll();
     });
 
-    btnAiMove.addEventListener('click', () => askAiForMove({ force: true }));
-    btnTest.addEventListener('click', () => testEndpoint());
+    btnAiMove.addEventListener('click', () => {
+      if (animating) return;
+      askAiForMove({ force: true });
+    });
+    btnTest.addEventListener('click', () => {
+      if (animating) return;
+      testEndpoint();
+    });
 
     selectSideEl.addEventListener('change', () => {
+      if (animating) return;
       humanColor = selectSideEl.value === 'b' ? 'b' : 'w';
       newGame();
     });
