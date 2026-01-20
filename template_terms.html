@@ -557,14 +557,14 @@
       cardEl.classList.toggle("flipped", flipped);
     }
 
-    function render(){
-      const c = currentCard();
-      if (!c){
-        qText.textContent = "No cards loaded. Click “Import JSON” to load a .json file.";
-        aEn.textContent = "";
-        expEn.textContent = "";
-        aZh.textContent = "";
-        expZh.textContent = "";
+	    function render(){
+	      const c = currentCard();
+	      if (!c){
+	        qText.textContent = "No cards loaded. Click \"Import JSON\" to load a .json file, or pick a same-folder JSON file.";
+	        aEn.textContent = "";
+	        expEn.textContent = "";
+	        aZh.textContent = "";
+	        expZh.textContent = "";
 
         enBlock.style.display = (displayMode === "zh") ? "none" : "block";
         zhBlock.style.display = (displayMode === "en") ? "none" : "block";
