@@ -994,41 +994,33 @@
     }
 
     function buildEnginePrompt(state) {
-      const instructions = [
-        'You are a Xiangqi (Chinese chess) engine. I will send you the current position as JSON.',
-        '',
-        'Your job:',
-        '1) Decide the best LEGAL move for the current player.',
-        '2) Output ONLY valid JSON (no explanation, no markdown).',
-        '',
-        'Output format:',
-        '{',
-        '  "move": { "from": "<square>", "to": "<square>" },',
-        '  "updated_state": {',
-        '    "turn": "red" | "black",',
-        '    "board": [10 x 9 array]',
-        '  }',
-        '}',
-        '',
-        'Coordinate system:',
-        '- Squares are like "a0".."i9" where a..i are files (left to right) and 0..9 are ranks (top to bottom).',
-        '- board[0] is the TOP row (rank 0), board[9] is the BOTTOM row (rank 9).',
-        '',
-        'Piece codes:',
-        '- Red: rr rn re ra rk rc rp',
-        '- Black: br bn be ba bk bc bp',
-        '',
-        'Rules reminders (must be legal):',
-        '- Cannon captures need exactly ONE screen piece; non-captures move like rook.',
-        '- Horse has a "leg" block. Elephant has an "eye" block and cannot cross river.',
-        '- Advisors + King stay inside the palace. Kings cannot face each other with no pieces between.',
-        '- Pawns move forward; after crossing river they may move sideways (never backward).',
-        '',
-        'Current position JSON:',
-        JSON.stringify(state, null, 2)
-      ].join('\n');
-      return instructions;
-    }
+  return [
+    'You are a fast Xiangqi (Chinese chess) move generator.',
+    'I will send you the current position as JSON. You must choose ONE legal move for the side to move.',
+    '',
+    'Hard constraints (VERY IMPORTANT):',
+    '- Think shallowly. Do NOT calculate deep variations.',
+    '- NO explanation, NO comments, NO markdown.',
+    '- Output ONLY ONE JSON object. No text before or after.',
+    '',
+    'Board + coordinates:',
+    '- Squares look like "a0".."i9" (files a–i left→right, ranks 0–9 top→bottom).',
+    '- The JSON state I send already encodes whose turn it is and all piece locations.',
+    '',
+    'Required output format (exactly):',
+    '{',
+    '  "move": {',
+    '    "from": "<square>",',
+    '    "to": "<square>"',
+    '  }',
+    '}',
+    '',
+    'Do not include any other fields. Do not include "updated_state".',
+    'Now respond with ONLY one JSON object in that format for this position:',
+    JSON.stringify(state)
+  ].join('\\n');
+}
+ 
 
     async function fetchJsonWithTimeout(url, options, timeoutMs) {
       const controller = new AbortController();
