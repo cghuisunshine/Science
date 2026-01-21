@@ -63,6 +63,48 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
 
+    /* ====== Practice labels overlay (draggable) ====== */
+    .diagram-stage {
+      position: relative;
+      width: 100%;
+      display: inline-block;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      background: #fff;
+    }
+
+    /* Keep image styling consistent inside the stage */
+    .diagram-stage > img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .labels-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none; /* enabled only in practice mode */
+    }
+
+    .labels-layer.is-active {
+      pointer-events: auto;
+    }
+
+    .drag-text {
+      position: absolute;
+      padding: 4px 8px;
+      background: rgba(255, 255, 0, 0.85);
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      cursor: move;
+      user-select: none;
+      white-space: nowrap;
+      font-size: 14px;
+      border-radius: 6px;
+    }
+
     .pair figcaption {
       margin-top: 0.5rem;
       color: #4a5568;
@@ -174,13 +216,16 @@
 <!-- ========== 1. ANIMAL CELL OVERVIEW (LABELS) ========== -->
 <section class="pair">
   <figure>
-    <img
-      id="animalCellDiagram"
-      src="AnimalCell.png"
-      data-src-labels="AnimalCell.png"
-      data-src-masked="AnimalCell_masked.png"
-      alt="Animal Cell diagram"
-    >
+    <div class="diagram-stage" id="animalCellStage">
+      <img
+        id="animalCellDiagram"
+        src="AnimalCell.png"
+        data-src-labels="AnimalCell.png"
+        data-src-masked="AnimalCell_masked.png"
+        alt="Animal Cell diagram"
+      >
+      <div class="labels-layer" id="animalCellLabelsLayer" aria-hidden="true"></div>
+    </div>
     <figcaption>
       <span>Animal Cell Diagram / 动物细胞示意图</span>
       <button type="button" class="caption-btn" id="animalCellLabelsToggle" aria-pressed="false">
@@ -412,13 +457,16 @@
 <!-- ========== 5. PLANT CELL DIAGRAM (LABELS) ========== -->
 <section class="pair">
   <figure>
-    <img
-      id="plantCellDiagram"
-      src="PlantCell.png"
-      data-src-labels="PlantCell.png"
-      data-src-masked="PlantCell_masked.png"
-      alt="Plant Cell diagram"
-    >
+    <div class="diagram-stage" id="plantCellStage">
+      <img
+        id="plantCellDiagram"
+        src="PlantCell.png"
+        data-src-labels="PlantCell.png"
+        data-src-masked="PlantCell_masked.png"
+        alt="Plant Cell diagram"
+      >
+      <div class="labels-layer" id="plantCellLabelsLayer" aria-hidden="true"></div>
+    </div>
     <figcaption>
       <span>Plant Cell Diagram / 植物细胞示意图</span>
       <button type="button" class="caption-btn" id="plantCellLabelsToggle" aria-pressed="false">
@@ -463,60 +511,159 @@
 
   // Toggle AnimalCell labeled vs masked image
   (function () {
-    const img = document.getElementById('animalCellDiagram');
-    const btn = document.getElementById('animalCellLabelsToggle');
-    if (!img || !btn) return;
+    let dragging = null;
+    let dragStage = null;
+    let offsetX = 0;
+    let offsetY = 0;
 
-    const labeledSrc = img.getAttribute('data-src-labels') || img.getAttribute('src');
-    const maskedSrc = img.getAttribute('data-src-masked');
-    if (!labeledSrc || !maskedSrc) {
-      btn.disabled = true;
-      return;
+    function onMouseMove(e) {
+      if (!dragging || !dragStage) return;
+      const stageRect = dragStage.getBoundingClientRect();
+
+      let x = e.clientX - stageRect.left - offsetX;
+      let y = e.clientY - stageRect.top - offsetY;
+
+      const maxX = stageRect.width - dragging.offsetWidth;
+      const maxY = stageRect.height - dragging.offsetHeight;
+      if (x < 0) x = 0;
+      if (y < 0) y = 0;
+      if (x > maxX) x = maxX;
+      if (y > maxY) y = maxY;
+
+      dragging.style.left = x + 'px';
+      dragging.style.top = y + 'px';
     }
 
-    let isMasked = false;
-
-    function sync() {
-      img.setAttribute('src', isMasked ? maskedSrc : labeledSrc);
-      btn.textContent = isMasked ? 'Show labels / 显示标注' : 'Hide labels / 隐藏标注';
-      btn.setAttribute('aria-pressed', isMasked ? 'true' : 'false');
+    function onMouseUp() {
+      dragging = null;
+      dragStage = null;
     }
 
-    btn.addEventListener('click', () => {
-      isMasked = !isMasked;
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+
+    function createLabels(layer, labels) {
+      if (!layer) return;
+      layer.innerHTML = '';
+      const startX = 12;
+      const startY = 12;
+      const lineHeight = 36;
+
+      labels.forEach((text, idx) => {
+        const el = document.createElement('div');
+        el.className = 'drag-text';
+        el.textContent = String(text || '');
+        el.style.left = startX + 'px';
+        el.style.top = (startY + idx * lineHeight) + 'px';
+        layer.appendChild(el);
+      });
+    }
+
+    function enableDragging(stage, layer) {
+      if (!stage || !layer) return;
+
+      layer.addEventListener('mousedown', (e) => {
+        const target = e.target;
+        if (!target || !target.classList || !target.classList.contains('drag-text')) return;
+
+        dragging = target;
+        dragStage = stage;
+
+        const rect = dragging.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+        e.preventDefault();
+      });
+    }
+
+    function setupPracticeDiagram(opts) {
+      const img = document.getElementById(opts.imgId);
+      const btn = document.getElementById(opts.btnId);
+      const stage = document.getElementById(opts.stageId);
+      const layer = document.getElementById(opts.layerId);
+      const labels = Array.isArray(opts.labels) ? opts.labels : [];
+
+      if (!img || !btn || !stage || !layer) return;
+
+      const labeledSrc = img.getAttribute('data-src-labels') || img.getAttribute('src');
+      const maskedSrc = img.getAttribute('data-src-masked');
+      if (!labeledSrc || !maskedSrc) {
+        btn.disabled = true;
+        return;
+      }
+
+      let isMasked = false;
+      let labelsReady = false;
+
+      enableDragging(stage, layer);
+
+      function setPracticeMode(on) {
+        if (on) {
+          if (!labelsReady) {
+            createLabels(layer, labels);
+            labelsReady = true;
+          }
+          layer.classList.add('is-active');
+          layer.setAttribute('aria-hidden', 'false');
+          layer.style.display = 'block';
+        } else {
+          layer.classList.remove('is-active');
+          layer.setAttribute('aria-hidden', 'true');
+          layer.style.display = 'none';
+        }
+      }
+
+      function sync() {
+        img.setAttribute('src', isMasked ? maskedSrc : labeledSrc);
+        btn.textContent = isMasked ? 'Show labels / 显示标注' : 'Hide labels / 隐藏标注';
+        btn.setAttribute('aria-pressed', isMasked ? 'true' : 'false');
+        // When the diagram labels are hidden (masked image), show draggable yellow labels.
+        setPracticeMode(isMasked);
+      }
+
+      btn.addEventListener('click', () => {
+        isMasked = !isMasked;
+        sync();
+      });
+
       sync();
+    }
+
+    setupPracticeDiagram({
+      imgId: 'animalCellDiagram',
+      btnId: 'animalCellLabelsToggle',
+      stageId: 'animalCellStage',
+      layerId: 'animalCellLabelsLayer',
+      labels: [
+        'Rough Endoplasmic Reticulum',
+        'Vesicle',
+        'Golgi Body',
+        'Smooth Endoplasmic Reticulum',
+        'Cytoplasm',
+        'Flagellum',
+        'Nucleus',
+        'Ribosomes',
+        'Free Ribosomes',
+        'Lysosome',
+        'Mitochondrion',
+        'Cilia',
+        'Vacuole',
+        'Cell Membrane',
+        'An Animal Cell'
+      ]
     });
 
-    sync();
-  })();
-
-  // Toggle PlantCell labeled vs masked image
-  (function () {
-    const img = document.getElementById('plantCellDiagram');
-    const btn = document.getElementById('plantCellLabelsToggle');
-    if (!img || !btn) return;
-
-    const labeledSrc = img.getAttribute('data-src-labels') || img.getAttribute('src');
-    const maskedSrc = img.getAttribute('data-src-masked');
-    if (!labeledSrc || !maskedSrc) {
-      btn.disabled = true;
-      return;
-    }
-
-    let isMasked = false;
-
-    function sync() {
-      img.setAttribute('src', isMasked ? maskedSrc : labeledSrc);
-      btn.textContent = isMasked ? 'Show labels / 显示标注' : 'Hide labels / 隐藏标注';
-      btn.setAttribute('aria-pressed', isMasked ? 'true' : 'false');
-    }
-
-    btn.addEventListener('click', () => {
-      isMasked = !isMasked;
-      sync();
+    setupPracticeDiagram({
+      imgId: 'plantCellDiagram',
+      btnId: 'plantCellLabelsToggle',
+      stageId: 'plantCellStage',
+      layerId: 'plantCellLabelsLayer',
+      labels: [
+        'Chloroplast',
+        'Large Vacuole',
+        'Cell Wall',
+      ]
     });
-
-    sync();
   })();
 </script>
 
