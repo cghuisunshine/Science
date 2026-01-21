@@ -521,6 +521,7 @@
 
           <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; align-items:center">
             <button class="btn primary" id="btn-ai-move" type="button">Ask AI To Move</button>
+            <button class="btn" id="btn-autoplay" type="button" aria-pressed="false">Auto Play</button>
             <button class="btn" id="btn-test" type="button">Test Endpoint</button>
             <span class="muted" id="api-status"></span>
           </div>
@@ -570,6 +571,7 @@
     const btnFlip = document.getElementById('btn-flip');
     const btnNew = document.getElementById('btn-new');
     const btnAiMove = document.getElementById('btn-ai-move');
+    const btnAutoplay = document.getElementById('btn-autoplay');
     const btnTest = document.getElementById('btn-test');
 
     const selectSideEl = document.getElementById('select-side');
@@ -912,6 +914,8 @@
     let humanColor = 'w';
     let flipped = false;
     let busy = false;
+    let autoplay = false;
+    let autoplayToken = 0;
 
     let selectedSquare = null;
     /** @type {Set<string>} */
@@ -943,12 +947,16 @@
         setPill(pillStateEl, 'thinking…', 'warn');
       } else if (game.isGameOver()) {
         setPill(pillStateEl, 'game over', 'bad');
+      } else if (autoplay) {
+        setPill(pillStateEl, 'autoplay', 'warn');
       } else {
         setPill(pillStateEl, isUserTurn(game, humanColor) ? 'your move' : 'ai move', isUserTurn(game, humanColor) ? 'good' : 'warn');
       }
 
       if (game.isGameOver()) {
         statusTextEl.textContent = gameStatusText(game);
+      } else if (autoplay) {
+        statusTextEl.textContent = 'Autoplaying…';
       } else {
         statusTextEl.textContent = isUserTurn(game, humanColor) ? 'Your move.' : 'AI to move.';
       }
@@ -1168,6 +1176,7 @@
     function onSquareClick(square) {
       if (busy || animating) return;
       if (game.isGameOver()) return;
+      if (autoplay) return;
       if (!isUserTurn(game, humanColor)) return;
 
       const clickedPiece = game.get(square);
@@ -1278,11 +1287,50 @@
       }
     }
 
+    function sleep(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    function setAutoplay(next) {
+      autoplay = !!next;
+      btnAutoplay.setAttribute('aria-pressed', autoplay ? 'true' : 'false');
+      btnAutoplay.textContent = autoplay ? 'Stop Auto' : 'Auto Play';
+      btnAutoplay.classList.toggle('danger', autoplay);
+      renderMeta();
+    }
+
+    function stopAutoplay() {
+      if (!autoplay) return;
+      autoplayToken++;
+      setAutoplay(false);
+    }
+
+    async function autoplayLoop(token) {
+      while (autoplay && token === autoplayToken) {
+        if (game.isGameOver()) {
+          stopAutoplay();
+          return;
+        }
+        if (busy || animating) {
+          await sleep(120);
+          continue;
+        }
+        const ok = await askAiForMove({ force: true });
+        if (!autoplay || token !== autoplayToken) return;
+        if (ok === false) {
+          setApiStatus('Autoplay stopped (AI error).', 'bad');
+          stopAutoplay();
+          return;
+        }
+        await sleep(260);
+      }
+    }
+
     async function askAiForMove({ force = false } = {}) {
-      if (busy) return;
-      if (animating) return;
-      if (game.isGameOver()) return;
-      if (!force && isUserTurn(game, humanColor)) return;
+      if (busy) return null;
+      if (animating) return null;
+      if (game.isGameOver()) return null;
+      if (!force && isUserTurn(game, humanColor)) return null;
 
       const endpoint = (endpointEl.value || '').trim() || DEFAULT_ENDPOINT;
 
@@ -1298,6 +1346,7 @@
       let rawResponseText = '';
       let parsed = null;
       let envelope = null;
+      let okMove = null;
 
       try {
         const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
@@ -1338,6 +1387,7 @@
         const promoCode = (movingPiece && promoLetter) ? (movingPiece.color + promoLetter) : null;
         game.move({ from: moveFrom, to: moveTo, promotion: promoLetter });
         activeMoveAnim = { from: moveFrom, to: moveTo, code: promoCode || movingCode };
+        okMove = true;
 
         setApiStatus(`AI played: ${moveFrom}-${moveTo}${promo ? '=' + promo : ''}`, 'good');
         clearHighlights();
@@ -1357,6 +1407,7 @@
       } catch (err) {
         console.warn('AI move failed:', err);
         setApiStatus(`AI error: ${safeText(err && err.message ? err.message : err)}`, 'bad');
+        okMove = false;
         renderAll({
           ai_request: reqBody,
           ai_envelope: envelope,
@@ -1367,6 +1418,7 @@
         busy = false;
         renderMeta();
       }
+      return okMove;
     }
 
     async function maybeAiMove() {
@@ -1411,6 +1463,7 @@
     }
 
     function newGame() {
+      stopAutoplay();
       game = new Chess();
       clearHighlights();
       lastFlashSquare = null;
@@ -1437,6 +1490,7 @@
 
     btnUndo.addEventListener('click', () => {
       if (busy || animating) return;
+      stopAutoplay();
       // Undo up to 2 plies.
       const m1 = game.undo();
       const m2 = game.undo();
@@ -1453,7 +1507,18 @@
 
     btnAiMove.addEventListener('click', () => {
       if (animating) return;
+      stopAutoplay();
       askAiForMove({ force: true });
+    });
+    btnAutoplay.addEventListener('click', async () => {
+      if (game.isGameOver()) return;
+      if (autoplay) {
+        stopAutoplay();
+        return;
+      }
+      autoplayToken++;
+      setAutoplay(true);
+      await autoplayLoop(autoplayToken);
     });
     btnTest.addEventListener('click', () => {
       if (animating) return;
@@ -1462,6 +1527,7 @@
 
     selectSideEl.addEventListener('change', () => {
       if (animating) return;
+      stopAutoplay();
       humanColor = selectSideEl.value === 'b' ? 'b' : 'w';
       newGame();
     });
