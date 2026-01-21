@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>General Labels on Image</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 16px;
+    }
+
+    .controls {
+      margin-bottom: 12px;
+    }
+
+    .controls label {
+      margin-right: 8px;
+    }
+
+    .controls input[type="text"] {
+      width: 420px;
+      max-width: 90vw;
+      padding: 6px 8px;
+      border: 1px solid #bbb;
+      border-radius: 6px;
+    }
+
+    .controls select {
+      max-width: 90vw;
+      padding: 6px 8px;
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .controls button {
+      margin-left: 6px;
+      padding: 6px 10px;
+      border: 1px solid #bbb;
+      border-radius: 8px;
+      background: #f7f7f7;
+      cursor: pointer;
+    }
+
+    .controls button:hover {
+      background: #f0f0f0;
+    }
+
+    .canvas-wrapper {
+      border: 1px solid #ccc;
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #canvas {
+      position: relative;
+      display: inline-block;
+    }
+
+    #bgImage {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .drag-text {
+      position: absolute;
+      padding: 4px 8px;
+      background: rgba(255, 255, 0, 0.8);
+      border: 1px solid #999;
+      cursor: move;
+      user-select: none;
+      white-space: nowrap;
+      font-size: 14px;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #555;
+      margin-top: 8px;
+      max-width: 600px;
+    }
+
+    .error {
+      color: #b00020;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>General Labels on Image</h1>
+
+  <div class="controls">
+    <label>
+      Image (.png / .jpg):
+      <input type="file" id="imageInput" accept="image/png,image/jpeg">
+    </label>
+
+    <label style="display:block; margin-top:8px;">
+      Image URL:
+      <input type="text" id="imageUrl" placeholder="https://example.com/image.png (or local relative path like ./worksheet.png)">
+      <select id="imageUrlPick" aria-label="Pick an image from this page folder"></select>
+      <button type="button" id="loadImageUrl">Load</button>
+      <button type="button" id="clearImageUrl">Clear</button>
+    </label>
+
+    <label>
+      Labels JSON:
+      <input type="file" id="jsonInput" accept="application/json">
+    </label>
+
+    <label style="display:block; margin-top:8px;">
+      Labels JSON URL:
+      <input type="text" id="labelsUrl" placeholder="https://example.com/labels.json (or just labels.json if hosted beside this page)">
+      <select id="labelsUrlPick" aria-label="Pick a labels JSON from this page folder"></select>
+      <button type="button" id="loadLabelsUrl">Load</button>
+      <button type="button" id="clearLabelsUrl">Clear</button>
+    </label>
+
+    <button type="button" id="clearSaved" title="Clear saved image/labels from this browser">Clear saved</button>
+  </div>
+
+  <div class="hint">
+    1. Choose an image file (your worksheet PNG).<br>
+    2. Choose a JSON file containing label texts.<br>
+    3. Drag labels on top of the image to where you want them.
+  </div>
+
+  <div id="error" class="error"></div>
+  <div id="status" class="hint" style="margin-top:6px;"></div>
+
+  <div class="canvas-wrapper" id="canvasWrapper" style="display:none;">
+    <div id="canvas">
+      <img id="bgImage" alt="Background">
+      <!-- draggable labels will be added here -->
+    </div>
+  </div>
+
+  <script>
+    const imageInput = document.getElementById('imageInput');
+    const jsonInput = document.getElementById('jsonInput');
+    const imageUrlInput = document.getElementById('imageUrl');
+    const labelsUrlInput = document.getElementById('labelsUrl');
+    const imageUrlPick = document.getElementById('imageUrlPick');
+    const labelsUrlPick = document.getElementById('labelsUrlPick');
+    const loadImageUrlBtn = document.getElementById('loadImageUrl');
+    const clearImageUrlBtn = document.getElementById('clearImageUrl');
+    const loadLabelsUrlBtn = document.getElementById('loadLabelsUrl');
+    const clearLabelsUrlBtn = document.getElementById('clearLabelsUrl');
+    const bgImage = document.getElementById('bgImage');
+    const canvas = document.getElementById('canvas');
+    const canvasWrapper = document.getElementById('canvasWrapper');
+    const errorBox = document.getElementById('error');
+    const statusBox = document.getElementById('status');
+    const clearSavedBtn = document.getElementById('clearSaved');
+
+    const STORAGE_KEYS = {
+      imageName: 'generalLabels.imageName',
+      labelsName: 'generalLabels.labelsName',
+      imageUrl: 'generalLabels.imageUrl',
+      labelsUrl: 'generalLabels.labelsUrl'
+    };
+
+    let dragging = null;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    function setStatus(msg) {
+      statusBox.textContent = msg || '';
+    }
+
+    function clearSaved() {
+      Object.values(STORAGE_KEYS).forEach(k => localStorage.removeItem(k));
+      setStatus('Cleared saved image/labels.');
+    }
+
+    function safeLocalStorageSet(key, value) {
+      try {
+        localStorage.setItem(key, value);
+        return true;
+      } catch (e) {
+        console.warn('localStorage setItem failed:', e);
+        return false;
+      }
+    }
+
+    function safeLocalStorageRemove(key) {
+      try {
+        localStorage.removeItem(key);
+      } catch {
+        // ignore
+      }
+    }
+
+    function resolveMaybeRelativeUrl(raw) {
+      const v = String(raw || '').trim();
+      if (!v) return null;
+      try {
+        return new URL(v, window.location.href).toString();
+      } catch {
+        return v;
+      }
+    }
+
+    function resolveBaseDirUrl() {
+      try {
+        const u = new URL(window.location.href);
+        u.hash = '';
+        u.search = '';
+        u.pathname = u.pathname.replace(/\/[^/]*$/, '/');
+        return u.toString();
+      } catch {
+        return null;
+      }
+    }
+
+    function githubPagesRepoInfo() {
+      try {
+        const u = new URL(window.location.href);
+        if (!/\.github\.io$/i.test(u.hostname)) return null;
+
+        const owner = u.hostname.split('.')[0];
+        const parts = u.pathname.split('/').filter(Boolean);
+        if (parts.length < 1) return null;
+
+        const repo = parts[0];
+        const dirParts = parts.slice(1, -1);
+        const dirPath = dirParts.join('/');
+        return { owner, repo, dirPath };
+      } catch {
+        return null;
+      }
+    }
+
+    async function listGithubPagesSameDirFiles(filterRe) {
+      const info = githubPagesRepoInfo();
+      if (!info) return [];
+
+      const pathSuffix = info.dirPath ? '/' + info.dirPath : '';
+      const base = `https://api.github.com/repos/${info.owner}/${info.repo}/contents${pathSuffix}`;
+      const urls = [base, base + '?ref=main', base + '?ref=master'];
+
+      for (const url of urls) {
+        try {
+          const resp = await fetch(url, {
+            method: 'GET',
+            headers: { 'Accept': 'application/vnd.github+json' }
+          });
+          if (!resp.ok) continue;
+          const data = await resp.json().catch(() => null);
+          if (!Array.isArray(data)) continue;
+
+          const out = [];
+          for (const item of data) {
+            if (!item || typeof item !== 'object') continue;
+            if (item.type !== 'file') continue;
+            const name = String(item.name || '').trim();
+            if (!name) continue;
+            if (name.includes('/')) continue;
+            if (!filterRe.test(name)) continue;
+            out.push(name);
+          }
+
+          if (out.length) return out.sort((a, b) => a.localeCompare(b));
+        } catch {
+          // ignore
+        }
+      }
+
+      return [];
+    }
+
+    async function tryLoadSameDirManifest(baseDir, manifestNames, filterRe) {
+      // Optional manifest support for hosts that do not expose directory listings.
+      // Supported shapes:
+      // - JSON array: ["a.json","b.png"]
+      // - JSON object: {"files":[...]} or {"images":[...]} or {"labels":[...]}
+      for (const name of manifestNames) {
+        const url = baseDir + name;
+        try {
+          const resp = await fetch(url, { method: 'GET' });
+          if (!resp.ok) continue;
+          const data = await resp.json().catch(() => null);
+          if (!data) continue;
+
+          let files = [];
+          if (Array.isArray(data)) files = data;
+          else if (Array.isArray(data.files)) files = data.files;
+          else if (Array.isArray(data.images)) files = data.images;
+          else if (Array.isArray(data.labels)) files = data.labels;
+
+          if (!Array.isArray(files) || !files.length) continue;
+
+          const out = [];
+          for (const v of files) {
+            const n = String(v || '').trim();
+            if (!n) continue;
+            if (n.includes('/')) continue;
+            if (!filterRe.test(n)) continue;
+            out.push(n);
+          }
+          if (out.length) return out;
+        } catch {
+          // ignore
+        }
+      }
+      return [];
+    }
+
+    function parseDirListingForFiles(htmlText, filterRe) {
+      const out = [];
+      const dedupe = new Set();
+
+      // Works with typical Apache/nginx directory listing and GitHub Pages index pages.
+      const re = /href\s*=\s*"([^"]+)"/gi;
+      let m;
+      while ((m = re.exec(String(htmlText || '')))) {
+        const href = String(m[1] || '').trim();
+        if (!href) continue;
+        const cleaned = href.split('#')[0].split('?')[0];
+        const name = cleaned.replace(/^\.\//, '').replace(/^\//, '');
+        if (!name || name.includes('/')) continue;
+        if (!filterRe.test(name)) continue;
+        if (dedupe.has(name)) continue;
+        dedupe.add(name);
+        out.push(name);
+      }
+
+      return out.sort((a, b) => a.localeCompare(b));
+    }
+
+    async function listSameDirCandidates(filterRe, manifestNames) {
+      const baseDir = resolveBaseDirUrl();
+      if (!baseDir) return [];
+
+      // 1) GitHub Pages: use GitHub API to list the folder.
+      try {
+        const gh = await listGithubPagesSameDirFiles(filterRe);
+        if (gh && gh.length) return gh;
+      } catch {
+        // ignore
+      }
+
+      // 2) Manifest in the same folder.
+      try {
+        const mf = await tryLoadSameDirManifest(baseDir, manifestNames, filterRe);
+        if (mf && mf.length) return mf;
+      } catch {
+        // ignore
+      }
+
+      // 3) Directory listing HTML.
+      try {
+        const resp = await fetch(baseDir, { method: 'GET' });
+        if (resp.ok) {
+          const text = await resp.text();
+          const parsed = parseDirListingForFiles(text, filterRe);
+          if (parsed && parsed.length) return parsed;
+        }
+      } catch {
+        // ignore
+      }
+
+      return [];
+    }
+
+    function fillPicker(selectEl, label, names) {
+      if (!selectEl) return;
+      selectEl.innerHTML = '';
+
+      const opt0 = document.createElement('option');
+      opt0.value = '';
+      opt0.textContent = label;
+      selectEl.appendChild(opt0);
+
+      const list = Array.isArray(names) ? names : [];
+      for (const n of list) {
+        const opt = document.createElement('option');
+        opt.value = n;
+        opt.textContent = n;
+        selectEl.appendChild(opt);
+      }
+    }
+
+    async function initSameDirPickers() {
+      // If the page is opened via file://, fetching the directory won't work.
+      // We still show the selects, but they will remain empty.
+      const imgRe = /\.(png|jpg|jpeg|gif|webp)$/i;
+      const labelsRe = /\.(json)$/i;
+
+      fillPicker(imageUrlPick, 'Pick image from folder', []);
+      fillPicker(labelsUrlPick, 'Pick labels from folder', []);
+
+      try {
+        const images = await listSameDirCandidates(imgRe, ['image_index.json', 'images_index.json', 'assets_index.json', 'index.json']);
+        fillPicker(imageUrlPick, images.length ? 'Pick image from folder' : 'No folder images found', images);
+      } catch {
+        fillPicker(imageUrlPick, 'Could not list folder images', []);
+      }
+
+      try {
+        const labels = await listSameDirCandidates(labelsRe, ['labels_index.json', 'labels-files.json', 'labels_files.json', 'index.json']);
+        fillPicker(labelsUrlPick, labels.length ? 'Pick labels from folder' : 'No folder label JSON found', labels);
+      } catch {
+        fillPicker(labelsUrlPick, 'Could not list folder labels', []);
+      }
+    }
+
+    async function loadImageFromUrl(rawUrl) {
+      const resolved = resolveMaybeRelativeUrl(rawUrl);
+      if (!resolved) {
+        errorBox.textContent = 'Enter an image URL first.';
+        return;
+      }
+
+      errorBox.textContent = '';
+      setStatus('Loading image URL...');
+
+      bgImage.onload = () => {
+        canvasWrapper.style.display = 'inline-block';
+        setStatus('Loaded image URL.');
+      };
+
+      bgImage.onerror = () => {
+        errorBox.textContent = 'Failed to load image URL (bad URL, offline, or blocked).';
+        setStatus('');
+      };
+
+      bgImage.src = resolved;
+    }
+
+    async function loadLabelsFromUrl(rawUrl) {
+      const resolved = resolveMaybeRelativeUrl(rawUrl);
+      if (!resolved) {
+        errorBox.textContent = 'Enter a labels JSON URL first.';
+        return;
+      }
+
+      errorBox.textContent = '';
+      setStatus('Loading labels URL...');
+
+      try {
+        const resp = await fetch(resolved, { method: 'GET' });
+        if (!resp.ok) throw new Error('http_' + resp.status);
+        const text = await resp.text();
+
+        const rawText = String(text || '').replace(/^\uFEFF/, '').trim();
+        const data = JSON.parse(rawText);
+        createLabelsFromData(data);
+        setStatus('Loaded labels URL.');
+      } catch (e) {
+        console.error(e);
+        errorBox.textContent = 'Failed to load labels URL (CORS/URL/offline/invalid JSON).';
+        setStatus('');
+      }
+    }
+
+    function restoreFromStorage() {
+      // Browsers do not allow re-opening local files on refresh using only filenames.
+      // We can only remember the last chosen names and show them to you.
+      try {
+        const savedImageName = localStorage.getItem(STORAGE_KEYS.imageName) || '';
+        const savedLabelsName = localStorage.getItem(STORAGE_KEYS.labelsName) || '';
+        const savedImageUrl = localStorage.getItem(STORAGE_KEYS.imageUrl) || '';
+        const savedLabelsUrl = localStorage.getItem(STORAGE_KEYS.labelsUrl) || '';
+
+        if (imageUrlInput && savedImageUrl) imageUrlInput.value = savedImageUrl;
+        if (labelsUrlInput && savedLabelsUrl) labelsUrlInput.value = savedLabelsUrl;
+
+        if (savedImageName || savedLabelsName || savedImageUrl || savedLabelsUrl) {
+          const parts = [];
+          if (savedImageName) parts.push('Last image: ' + savedImageName);
+          if (savedLabelsName) parts.push('Last labels: ' + savedLabelsName);
+
+          if (savedImageUrl) parts.push('Image URL: ' + savedImageUrl);
+          if (savedLabelsUrl) parts.push('Labels URL: ' + savedLabelsUrl);
+
+          const suffix = (savedImageName || savedLabelsName) ? ' (re-select local files after refresh)' : '';
+          setStatus(parts.join(' | ') + suffix);
+
+          // Remote URLs can be reloaded automatically on refresh.
+          if (savedImageUrl) loadImageFromUrl(savedImageUrl);
+          if (savedLabelsUrl) loadLabelsFromUrl(savedLabelsUrl);
+        } else {
+          setStatus('No saved filenames yet.');
+        }
+      } catch (e) {
+        console.warn('localStorage not available:', e);
+        setStatus('Storage unavailable (private mode / file:// / browser setting).');
+      }
+    }
+
+    clearSavedBtn.addEventListener('click', () => {
+      clearSaved();
+    });
+
+    imageUrlPick.addEventListener('change', () => {
+      const v = (imageUrlPick.value || '').trim();
+      if (!v) return;
+      imageUrlInput.value = v;
+    });
+
+    labelsUrlPick.addEventListener('change', () => {
+      const v = (labelsUrlPick.value || '').trim();
+      if (!v) return;
+      labelsUrlInput.value = v;
+    });
+
+    // --- Image loading ---
+    imageInput.addEventListener('change', event => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = e => {
+        bgImage.src = e.target.result;
+        canvasWrapper.style.display = 'inline-block';
+        errorBox.textContent = '';
+        if (!safeLocalStorageSet(STORAGE_KEYS.imageName, file.name || '')) {
+          setStatus('Could not save image filename (storage unavailable).');
+        }
+        safeLocalStorageRemove(STORAGE_KEYS.imageUrl);
+        if (imageUrlInput) imageUrlInput.value = '';
+        setStatus('Loaded image: ' + (file.name || ''));
+      };
+      reader.onerror = () => {
+        errorBox.textContent = 'Error reading image file.';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // --- JSON loading ---
+    jsonInput.addEventListener('change', event => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const rawText = String(e.target.result || '').replace(/^\uFEFF/, '').trim();
+          const data = JSON.parse(rawText);
+          errorBox.textContent = '';
+          createLabelsFromData(data);
+          if (!safeLocalStorageSet(STORAGE_KEYS.labelsName, file.name || '')) {
+            setStatus('Could not save labels filename (storage unavailable).');
+          }
+          safeLocalStorageRemove(STORAGE_KEYS.labelsUrl);
+          if (labelsUrlInput) labelsUrlInput.value = '';
+          setStatus('Loaded labels: ' + (file.name || ''));
+        } catch (err) {
+          console.error(err);
+          errorBox.textContent = 'Invalid JSON file: ' + (err && err.message ? err.message : String(err));
+        }
+      };
+      reader.onerror = () => {
+        errorBox.textContent = 'Error reading JSON file.';
+      };
+      reader.readAsText(file, 'utf-8');
+    });
+
+    loadImageUrlBtn.addEventListener('click', async () => {
+      const raw = (imageUrlInput.value || '').trim();
+      if (!raw) {
+        errorBox.textContent = 'Enter an image URL first.';
+        return;
+      }
+      errorBox.textContent = '';
+      safeLocalStorageSet(STORAGE_KEYS.imageUrl, raw);
+      safeLocalStorageRemove(STORAGE_KEYS.imageName);
+      await loadImageFromUrl(raw);
+    });
+
+    clearImageUrlBtn.addEventListener('click', () => {
+      if (imageUrlInput) imageUrlInput.value = '';
+      safeLocalStorageRemove(STORAGE_KEYS.imageUrl);
+      setStatus('Cleared image URL.');
+    });
+
+    loadLabelsUrlBtn.addEventListener('click', async () => {
+      const raw = (labelsUrlInput.value || '').trim();
+      if (!raw) {
+        errorBox.textContent = 'Enter a labels JSON URL first.';
+        return;
+      }
+      errorBox.textContent = '';
+      safeLocalStorageSet(STORAGE_KEYS.labelsUrl, raw);
+      safeLocalStorageRemove(STORAGE_KEYS.labelsName);
+      await loadLabelsFromUrl(raw);
+    });
+
+    clearLabelsUrlBtn.addEventListener('click', () => {
+      if (labelsUrlInput) labelsUrlInput.value = '';
+      safeLocalStorageRemove(STORAGE_KEYS.labelsUrl);
+      setStatus('Cleared labels URL.');
+    });
+
+    // --- Create labels from JSON data ---
+    function createLabelsFromData(data) {
+      // Clear old labels
+      const old = canvas.querySelectorAll('.drag-text');
+      old.forEach(el => el.remove());
+
+      let labelsArray = [];
+
+      // Accept either:
+      // 1) [ "Text 1", "Text 2", ... ]
+      // 2) { "labels": [ { "text": "...", "x": 50, "y": 80 }, ... ] }
+      // 3) [ { "text": "...", "x": 50, "y": 80 }, ... ] (saved state)
+      if (Array.isArray(data)) {
+        labelsArray = data.map(item => {
+          if (typeof item === 'string') {
+            return { text: item };
+          } else {
+            return {
+              text: item.text || '',
+              x: item.x,
+              y: item.y
+            };
+          }
+        });
+      } else if (data && Array.isArray(data.labels)) {
+        labelsArray = data.labels.map(item => ({
+          text: item.text || '',
+          x: item.x,
+          y: item.y
+        }));
+      } else {
+        errorBox.textContent = 'JSON format not recognized. See instructions below.';
+        return;
+      }
+
+      // Create each label
+      const startX = 20;
+      const startY = 20;
+      const lineHeight = 40;
+
+      labelsArray.forEach((label, index) => {
+        const div = document.createElement('div');
+        div.className = 'drag-text';
+        div.textContent = label.text || '';
+
+        // If x,y given in JSON, use them; otherwise stack them vertically
+        const x = (typeof label.x === 'number') ? label.x : startX;
+        const y = (typeof label.y === 'number') ? label.y : startY + index * lineHeight;
+
+        div.style.left = x + 'px';
+        div.style.top = y + 'px';
+
+        canvas.appendChild(div);
+      });
+
+    }
+
+    // --- Dragging logic (same as before) ---
+    canvas.addEventListener('mousedown', e => {
+      if (!e.target.classList.contains('drag-text')) return;
+      dragging = e.target;
+      const rect = dragging.getBoundingClientRect();
+      const canvasRect = canvas.getBoundingClientRect();
+      offsetX = e.clientX - rect.left;
+      offsetY = e.clientY - rect.top;
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (!dragging) return;
+
+      const canvasRect = canvas.getBoundingClientRect();
+      let x = e.clientX - canvasRect.left - offsetX;
+      let y = e.clientY - canvasRect.top - offsetY;
+
+      // Optional: keep inside canvas
+      const maxX = canvasRect.width - dragging.offsetWidth;
+      const maxY = canvasRect.height - dragging.offsetHeight;
+      if (x < 0) x = 0;
+      if (y < 0) y = 0;
+      if (x > maxX) x = maxX;
+      if (y > maxY) y = maxY;
+
+      dragging.style.left = x + 'px';
+      dragging.style.top = y + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+      dragging = null;
+    });
+
+    // Restore last imported image/labels on refresh.
+    restoreFromStorage();
+
+    // Populate pickers (same-folder candidates) like general_faq.html.
+    initSameDirPickers();
+  </script>
+
+  <hr>
+
+  <h2>JSON format you can use</h2>
+  <p>Two simple options are supported:</p>
+
+  <h3>Option 1 – Just a list of texts</h3>
+  <pre>[
+  "First label text",
+  "Second label text",
+  "Third label text"
+]</pre>
+
+  <p>They will appear stacked on the left, and you can drag them where you want.</p>
+
+  <h3>Option 2 – Text plus optional positions</h3>
+  <pre>{
+  "labels": [
+    { "text": "First label",  "x": 30,  "y": 40 },
+    { "text": "Second label", "x": 50,  "y": 120 },
+    { "text": "Third label" }  // no x,y → stacked automatically
+  ]
+}</pre>
+
+</body>
+</html>
