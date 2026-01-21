@@ -628,11 +628,15 @@
     let humanColor = 'r';
     let flipped = false;
     let busy = false;
+    let lastAiError = null; // { message, httpStatus, aborted }
 
     let autoplayEnabled = false;
     let autoplayDelayMs = 450;
     let autoplayTimer = null;
     let autoplayToken = 0;
+    let autoplayRetryCount = 0;
+    const autoplayMaxRetries = 6;
+    const autoplayRetryBaseMs = 1200;
 
     let selectedSquare = null;
     let legalToSquares = new Set();
@@ -647,6 +651,7 @@
     function stopAutoplay(message) {
       autoplayEnabled = false;
       autoplayToken++;
+      autoplayRetryCount = 0;
       if (autoplayTimer) {
         window.clearTimeout(autoplayTimer);
         autoplayTimer = null;
@@ -679,10 +684,29 @@
       const moved = await askAiForMove({ force: true });
       if (!autoplayEnabled || token !== autoplayToken) return;
       if (!moved) {
-        stopAutoplay('Auto play stopped (AI error).');
+        const isTransient =
+          lastAiError &&
+          (
+            lastAiError.aborted ||
+            lastAiError.httpStatus === 502 ||
+            lastAiError.httpStatus === 503 ||
+            lastAiError.httpStatus === 504 ||
+            /timeout/i.test(lastAiError.message || '')
+          );
+
+        if (isTransient && autoplayRetryCount < autoplayMaxRetries) {
+          autoplayRetryCount++;
+          const delay = Math.min(15000, autoplayRetryBaseMs * (2 ** (autoplayRetryCount - 1)));
+          setApiStatus(`Auto play retry ${autoplayRetryCount}/${autoplayMaxRetries} (transient: ${safeText(lastAiError.httpStatus || lastAiError.message)})…`, 'warn');
+          scheduleAutoplayTick(token, delay);
+          return;
+        }
+
+        stopAutoplay(`Auto play stopped (AI error: ${safeText(lastAiError && lastAiError.message ? lastAiError.message : 'unknown')}).`);
         return;
       }
 
+      autoplayRetryCount = 0;
       scheduleAutoplayTick(token, autoplayDelayMs);
     }
 
@@ -1038,6 +1062,7 @@
       const endpoint = (endpointEl.value || '').trim() || DEFAULT_ENDPOINT;
 
       busy = true;
+      lastAiError = null;
       setApiStatus('Calling AI…');
       renderMeta();
 
@@ -1101,8 +1126,15 @@
         flashDestination(moveTo);
         resetTurnClock();
       } catch (err) {
+        const msg = safeText(err && err.message ? err.message : err);
+        const m = msg.match(/^http_(\d{3})$/);
+        lastAiError = {
+          message: msg,
+          httpStatus: m ? Number(m[1]) : null,
+          aborted: !!(err && err.name === 'AbortError')
+        };
         console.warn('AI move failed:', err);
-        setApiStatus(`AI error: ${safeText(err && err.message ? err.message : err)}`, 'bad');
+        setApiStatus(`AI error: ${msg}`, 'bad');
         renderAll({
           ai_request: reqBody,
           ai_envelope: envelope,

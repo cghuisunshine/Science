@@ -1220,49 +1220,31 @@
     }
 
     function buildEnginePrompt(state) {
-      const instructions = [
-        'You are a chess engine. I will send you the current chess position as JSON.',
-        '',
-        'Your job:',
-        '1. Read the board state and decide the best legal move for the current player.',
-        '2. Output ONLY valid JSON, with NO explanation, NO text outside the JSON.',
-        '',
-        'Speed constraints:',
-        '- Decide quickly and output the final answer only.',
-        '- Do NOT include analysis, reasoning, candidate moves, or variations.',
-        '- Do NOT output any text outside the JSON.',
-        '',
-        'The required output format is:',
-        '',
-        '{',
-        '  "move": {',
-        '    "from": "<square>",',
-        '    "to": "<square>",',
-        '    "promotion": null | "queen" | "rook" | "bishop" | "knight"',
-        '  },',
-        '  "updated_state": {',
-        '    "turn": "white" | "black",',
-        '    "board": [8 x 8 array],',
-        '    "castling": { "white": "KQ" | "K" | "Q" | "", "black": "kq" | "k" | "q" | "" },',
-        '    "en_passant": "<square>" | null,',
-        '    "halfmove_clock": <number>,',
-        '    "fullmove_number": <number>',
-        '  }',
-        '}',
-        '',
-        'Rules:',
-        '- "from" and "to" MUST be algebraic squares like "e2", "f3", "a8", etc.',
-        '- Board MUST be an 8×8 array where board[0] is rank 8 and board[7] is rank 1.',
-        '- Piece codes: "wp","wn","wb","wr","wq","wk","bp","bn","bb","br","bq","bk", or null.',
-        '- After making your move, update the board in the returned "updated_state".',
-        '- Do NOT output any explanation. Do NOT output text before or after the JSON.',
-        '',
-        'Current position JSON:',
-        JSON.stringify(state, null, 2)
-      ].join('\n');
-
-      return instructions;
-    }
+  return [
+    'You are a chess move generator for blitz chess.',
+    'I will give you the current position as JSON. You must choose one legal move for the side to move.',
+    '',
+    'Rules (very important):',
+    '- Think shallowly. Do NOT calculate deep variations.',
+    '- NO explanation, NO reasoning, NO comments.',
+    '- Output ONLY JSON, with NO text before or after.',
+    '',
+    'Output format (exactly):',
+    '{',
+    '  "move": {',
+    '    "from": "<square>",',
+    '    "to": "<square>",',
+    '    "promotion": null | "queen" | "rook" | "bishop" | "knight"',
+    '  }',
+    '}',
+    '',
+    'Now respond with ONLY one JSON object in that format.',
+    'Current position JSON:',
+    // minified to save tokens
+    JSON.stringify(state)
+  ].join('\n');
+}
+ 
 
     async function fetchJsonWithTimeout(url, options, timeoutMs) {
       const controller = new AbortController();
