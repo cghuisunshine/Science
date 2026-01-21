@@ -78,7 +78,7 @@
       display:grid;
       gap:16px;
       grid-template-columns: 1.1fr .9fr;
-      align-items:start;
+      align-items:stretch;
     }
     @media (max-width: 950px){
       .panel{grid-template-columns:1fr}
@@ -91,6 +91,11 @@
       overflow:hidden;
       box-shadow: 0 12px 30px rgba(0,0,0,.25);
     }
+    .card.scrollable-body{
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+    }
     .card h2{
       margin:0;
       padding:14px 16px;
@@ -99,6 +104,12 @@
       color:#f1f4ff;
     }
     .card .body{padding:14px 16px}
+    .card.scrollable-body .body{
+      flex:1;
+      min-height:0;
+      overflow:auto;
+      -webkit-overflow-scrolling:touch;
+    }
 
     .imgwrap{
       background:#0a0f22;
@@ -149,7 +160,7 @@
       border:0;
       padding:0;
       color:inherit;
-      text-align:left;
+	      text-align:left;
 	      cursor:pointer;
 	      font-family:inherit;
 	    }
@@ -172,6 +183,29 @@
 	    }
     .q .label::-webkit-details-marker{display:none}
     .q .label::marker{content:""}
+    .toggle-answer{
+      flex:0 0 auto;
+      border:1px solid rgba(122,162,255,.45);
+      background:rgba(122,162,255,.12);
+      color:var(--ink);
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
+      font-family:inherit;
+      line-height:1.1;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      white-space:nowrap;
+    }
+    .toggle-answer:hover{background:rgba(122,162,255,.18)}
+    .toggle-answer:active{transform:translateY(1px)}
+    .toggle-answer:focus-visible{
+      outline:2px solid rgba(122,162,255,.65);
+      outline-offset:3px;
+    }
     .pill{
       display:inline-block;
       padding:2px 8px;
@@ -185,6 +219,11 @@
 	    .ans{margin:0; color:#f2f4ff; font-size:14px}
 	    .explain{margin:8px 0 0; color:var(--muted); font-size:13px}
 	    .q[open] .ans + .ans{margin-top:6px}
+	    /* Prevent a brief flash of answers before JS groups them into .answer-area */
+	    .q > p.ans,
+	    .q > p.explain{
+	      display:none;
+	    }
 	    .zh-block,
 	    .zh-inline{
 	      display:none;
@@ -198,6 +237,149 @@
 	    body.lang-bi .q .label .zh-inline{
 	      display:block;
 	    }
+	    details.settings{
+	      max-width:1200px;
+	      margin:0 auto;
+	      padding:0 16px 14px;
+	    }
+	    details.settings > summary{
+	      list-style:none;
+	      cursor:pointer;
+	      user-select:none;
+	      display:flex;
+	      align-items:center;
+	      justify-content:space-between;
+	      gap:12px;
+	      padding:10px 12px;
+	      border-radius:14px;
+	      border:1px solid var(--line);
+	      background:rgba(18,26,51,.65);
+	      font-weight:800;
+	      color:var(--ink);
+	    }
+	    details.settings > summary::-webkit-details-marker{display:none}
+	    .settings-row{
+	      display:flex;
+	      flex-wrap:wrap;
+	      gap:10px;
+	      align-items:center;
+	      padding:12px 12px 0;
+	    }
+	    .settings-row label{
+	      font-weight:800;
+	      color:var(--muted);
+	      font-size:13px;
+	    }
+	    .settings-row input[type="text"]{
+	      flex:1;
+	      min-width:260px;
+	      padding:8px 10px;
+	      border-radius:12px;
+	      border:1px solid var(--line);
+	      background:rgba(10,15,34,.55);
+	      color:var(--ink);
+	      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+	      font-size:13px;
+	      outline:none;
+	    }
+	    .settings-row input[type="text"]:focus-visible{
+	      outline:2px solid rgba(122,162,255,.65);
+	      outline-offset:3px;
+	    }
+	    .settings-btn{
+	      border:1px solid var(--line);
+	      background:rgba(18,26,51,.7);
+	      color:var(--ink);
+	      padding:8px 12px;
+	      border-radius:12px;
+	      font-size:13px;
+	      cursor:pointer;
+	      user-select:none;
+	      font-family:inherit;
+	    }
+	    .settings-btn:focus-visible{
+	      outline:2px solid rgba(122,162,255,.65);
+	      outline-offset:3px;
+	    }
+	    .api-status{
+	      padding:10px 12px 0;
+	      font-size:13px;
+	      color:var(--muted);
+	      min-height:18px;
+	    }
+	    .api-status.ok{color:#b6ffcf}
+	    .api-status.bad{color:#ffb4b4}
+
+	    .practice{
+	      margin-top:10px;
+	      border-top:1px dashed rgba(42,53,102,.7);
+	      padding-top:10px;
+	      display:grid;
+	      gap:8px;
+	    }
+	    .practice-label{
+	      font-size:13px;
+	      font-weight:800;
+	      color:var(--muted);
+	    }
+	    textarea.user-answer{
+	      width:100%;
+	      resize:vertical;
+	      min-height:72px;
+	      padding:10px 10px;
+	      border-radius:12px;
+	      border:1px solid var(--line);
+	      background:rgba(10,15,34,.55);
+	      color:var(--ink);
+	      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+	      font-size:13px;
+	      line-height:1.35;
+	      outline:none;
+	    }
+	    textarea.user-answer:focus-visible{
+	      outline:2px solid rgba(122,162,255,.65);
+	      outline-offset:3px;
+	    }
+	    .practice-actions{
+	      display:flex;
+	      flex-wrap:wrap;
+	      gap:10px;
+	      align-items:center;
+	    }
+	    .check-answer{
+	      border:1px solid rgba(122,162,255,.55);
+	      background:rgba(122,162,255,.14);
+	      color:var(--ink);
+	      padding:8px 12px;
+	      border-radius:12px;
+	      font-size:13px;
+	      cursor:pointer;
+	      user-select:none;
+	      font-family:inherit;
+	      font-weight:800;
+	    }
+	    .check-answer:disabled{
+	      opacity:.6;
+	      cursor:not-allowed;
+	    }
+	    .check-status{
+	      font-size:13px;
+	      color:var(--muted);
+	      min-height:18px;
+	    }
+	    .check-status.ok{color:#b6ffcf}
+	    .check-status.bad{color:#ffb4b4}
+	    .answer-area{
+	      margin-top:10px;
+	      padding:10px 10px;
+	      border:1px solid rgba(42,53,102,.9);
+	      border-radius:12px;
+	      background:rgba(10,15,34,.35);
+	      max-height:min(220px, 32vh);
+	      overflow:auto;
+	      -webkit-overflow-scrolling:touch;
+	    }
+	    .answer-area[hidden]{display:none}
 	    footer{
 	      max-width:1200px;
 	      margin:0 auto;
@@ -225,10 +407,20 @@
 	    </div>
 	  </header>
 
+	  <details class="settings" aria-label="AI grader settings">
+	    <summary>AI grader settings</summary>
+	    <div class="settings-row">
+	      <label for="grade-api-url">Grade API URL</label>
+	      <input id="grade-api-url" type="text" inputmode="url" placeholder="https://example.com/grade" />
+	      <button type="button" class="settings-btn" id="btn-test-api">Test</button>
+	    </div>
+	    <div id="api-status" class="api-status" role="status" aria-live="polite"></div>
+	  </details>
+
   <main>
     <!-- ===================== Q1–Q6 ===================== -->
     <section class="panel" aria-label="Questions 1 to 6">
-      <div class="card" aria-label="Worksheet image Q1 to Q6">
+	      <div class="card" id="img-q1-6" aria-label="Worksheet image Q1 to Q6">
         <h2>Input Image (Questions 1–6)</h2>
         <div class="imgwrap">
           <!-- Put the image file in the same folder as this HTML OR update src -->
@@ -237,44 +429,39 @@
             alt="DNA Replication worksheet questions 1 to 6"
           />
         </div>
-        <div class="body">
-          <div class="note">
-            If the image doesn’t display, confirm the file name matches exactly or update
-            <code class="inline">src="..."</code>.
-          </div>
-        </div>
+        <div class="body"></div>
       </div>
 
-	      <div class="card" aria-label="Answers Q1 to Q6">
+	      <div class="card scrollable-body" id="answers-q1-6" aria-label="Answers Q1 to Q6">
 	        <h2>Answers (Questions 1–6)</h2>
 	        <div class="body">
 	          <div class="qa">
-	            <details class="q">
-	              <summary class="label"><span class="pill">1</span> <span class="label-text">Rank (smallest → biggest)<span class="zh-inline" lang="zh-Hans">从小到大排序</span></span></summary>
+	            <details class="q" open>
+	              <summary class="label"><span class="pill">1</span> <span class="label-text">Rank (smallest → biggest)<span class="zh-inline" lang="zh-Hans">从小到大排序</span></span><button type="button" class="toggle-answer" aria-expanded="false"><span class="toggle-text-en">Show answer</span><span class="toggle-text-zh zh-inline" lang="zh-Hans">显示答案</span></button></summary>
 	              <p class="ans">Nucleotide → Gene → DNA → Chromosome → Nucleus → Cell</p>
 	              <p class="ans zh-block" lang="zh-Hans">核苷酸 → 基因 → DNA → 染色体 → 细胞核 → 细胞</p>
 	              <p class="explain">Explanation: Nucleotides are the building blocks; genes are sections of DNA; DNA coils into chromosomes; chromosomes are in the nucleus; the nucleus is inside the cell.</p>
 	              <p class="explain zh-block" lang="zh-Hans">解释：核苷酸是基本构件；基因是 DNA 的片段；DNA 盘绕形成染色体；染色体位于细胞核内；细胞核在细胞内部。</p>
 	            </details>
 
-	            <details class="q">
-	              <summary class="label"><span class="pill">2</span> <span class="label-text">Where does DNA replication take place?<span class="zh-inline" lang="zh-Hans">DNA 复制发生在哪里？</span></span></summary>
+	            <details class="q" open>
+	              <summary class="label"><span class="pill">2</span> <span class="label-text">Where does DNA replication take place?<span class="zh-inline" lang="zh-Hans">DNA 复制发生在哪里？</span></span><button type="button" class="toggle-answer" aria-expanded="false"><span class="toggle-text-en">Show answer</span><span class="toggle-text-zh zh-inline" lang="zh-Hans">显示答案</span></button></summary>
 	              <p class="ans">In the nucleus.</p>
 	              <p class="ans zh-block" lang="zh-Hans">在细胞核中。</p>
 	              <p class="explain">Explanation: In eukaryotic cells, DNA is stored in the nucleus, so it is copied there before the cell divides.</p>
 	              <p class="explain zh-block" lang="zh-Hans">解释：在真核细胞中，DNA 储存在细胞核内，因此细胞分裂前会在细胞核中完成复制。</p>
 	            </details>
 
-	            <details class="q">
-	              <summary class="label"><span class="pill">3</span> <span class="label-text">When does DNA replication take place?<span class="zh-inline" lang="zh-Hans">DNA 复制在什么时候发生？</span></span></summary>
+	            <details class="q" open>
+	              <summary class="label"><span class="pill">3</span> <span class="label-text">When does DNA replication take place?<span class="zh-inline" lang="zh-Hans">DNA 复制在什么时候发生？</span></span><button type="button" class="toggle-answer" aria-expanded="false"><span class="toggle-text-en">Show answer</span><span class="toggle-text-zh zh-inline" lang="zh-Hans">显示答案</span></button></summary>
 	              <p class="ans">During S phase of interphase (before cell division).</p>
 	              <p class="ans zh-block" lang="zh-Hans">在间期的 S 期（细胞分裂前）。</p>
 	              <p class="explain">Explanation: The S (“synthesis”) phase is when the cell duplicates its DNA so each daughter cell can receive a complete set.</p>
 	              <p class="explain zh-block" lang="zh-Hans">解释：S（“合成”）期是细胞复制 DNA 的阶段，以便每个子细胞都能获得完整的一套遗传信息。</p>
 	            </details>
 
-	            <details class="q">
-	              <summary class="label"><span class="pill">4</span> <span class="label-text">Complementary base sequence<span class="zh-inline" lang="zh-Hans">互补碱基序列</span></span></summary>
+	            <details class="q" open>
+	              <summary class="label"><span class="pill">4</span> <span class="label-text">Complementary base sequence<span class="zh-inline" lang="zh-Hans">互补碱基序列</span></span><button type="button" class="toggle-answer" aria-expanded="false"><span class="toggle-text-en">Show answer</span><span class="toggle-text-zh zh-inline" lang="zh-Hans">显示答案</span></button></summary>
 	              <p class="ans"><strong>Given:</strong> G-A-C-T-T-A-C-G-T-A-C-C</p>
 	              <p class="ans"><strong>Complement:</strong> C-T-G-A-A-T-G-C-A-T-G-G</p>
 	              <p class="ans zh-block" lang="zh-Hans"><strong>已知：</strong>G-A-C-T-T-A-C-G-T-A-C-C</p>
@@ -283,8 +470,8 @@
 	              <p class="explain zh-block" lang="zh-Hans">解释：使用碱基互补配对规则：A↔T，C↔G。</p>
 	            </details>
 
-	            <details class="q">
-	              <summary class="label"><span class="pill">5</span> <span class="label-text">Result of DNA replication<span class="zh-inline" lang="zh-Hans">DNA 复制的结果</span></span></summary>
+	            <details class="q" open>
+	              <summary class="label"><span class="pill">5</span> <span class="label-text">Result of DNA replication<span class="zh-inline" lang="zh-Hans">DNA 复制的结果</span></span><button type="button" class="toggle-answer" aria-expanded="false"><span class="toggle-text-en">Show answer</span><span class="toggle-text-zh zh-inline" lang="zh-Hans">显示答案</span></button></summary>
 	              <p class="ans">
 	                Two identical DNA molecules. Each new DNA has one original (parent) strand and one new strand
 	                (semi-conservative replication).
@@ -294,8 +481,8 @@
 	              <p class="explain zh-block" lang="zh-Hans">解释：保留一条原有链作为模板，利用互补配对规则可帮助新链更准确地复制。</p>
 	            </details>
 
-	            <details class="q">
-	              <summary class="label"><span class="pill">6</span> <span class="label-text">Book analogy<span class="zh-inline" lang="zh-Hans">书本类比</span></span></summary>
+	            <details class="q" open>
+	              <summary class="label"><span class="pill">6</span> <span class="label-text">Book analogy<span class="zh-inline" lang="zh-Hans">书本类比</span></span><button type="button" class="toggle-answer" aria-expanded="false"><span class="toggle-text-en">Show answer</span><span class="toggle-text-zh zh-inline" lang="zh-Hans">显示答案</span></button></summary>
 	              <p class="ans"><strong>a)</strong> Chapters = Chromosomes</p>
 	              <p class="ans"><strong>b)</strong> Sentences = Genes</p>
 	              <p class="ans"><strong>c)</strong> Letters = Bases (A, T, C, G)</p>
@@ -312,7 +499,7 @@
 
     <!-- ===================== Q7–Q8 ===================== -->
     <section class="panel" aria-label="Questions 7 to 8">
-      <div class="card" aria-label="Worksheet image Q7 to Q8">
+	      <div class="card" id="img-q7-8" aria-label="Worksheet image Q7 to Q8">
         <h2>Input Image (Questions 7–8)</h2>
         <div class="imgwrap">
           <!-- Put the image file in the same folder as this HTML OR update src -->
@@ -321,68 +508,63 @@
             alt="DNA to RNA to protein worksheet questions 7 to 8"
           />
         </div>
-        <div class="body">
-          <div class="note">
-            If the image doesn’t display, confirm the file name matches exactly or update
-            <code class="inline">src="..."</code>.
-          </div>
-        </div>
+        <div class="body"></div>
       </div>
 
-	      <div class="card" aria-label="Answers Q7 to Q8">
+		      <div class="card scrollable-body" id="answers-q7-8" aria-label="Answers Q7 to Q8">
 	        <h2>Answers (Questions 7–8)</h2>
 	        <div class="body">
 	          <div class="qa">
-	            <details class="q">
-	              <summary class="label"><span class="pill">7a</span> <span class="label-text">Name of Molecule X<span class="zh-inline" lang="zh-Hans">分子 X 的名称</span></span></summary>
+	            <details class="q" open>
+	              <summary class="label"><span class="pill">7a</span> <span class="label-text">Name of Molecule X<span class="zh-inline" lang="zh-Hans">分子 X 的名称</span></span><button type="button" class="toggle-answer" aria-expanded="false"><span class="toggle-text-en">Show answer</span><span class="toggle-text-zh zh-inline" lang="zh-Hans">显示答案</span></button></summary>
 	              <p class="ans">DNA (Deoxyribonucleic acid)</p>
 	              <p class="ans zh-block" lang="zh-Hans">DNA（脱氧核糖核酸）</p>
 	              <p class="explain">Explanation: DNA is the long-term information storage molecule in cells.</p>
 	              <p class="explain zh-block" lang="zh-Hans">解释：DNA 是细胞中长期储存遗传信息的分子。</p>
 	            </details>
 
-	            <details class="q">
-	              <summary class="label"><span class="pill">7b</span> <span class="label-text">Name of Molecule Y<span class="zh-inline" lang="zh-Hans">分子 Y 的名称</span></span></summary>
+	            <details class="q" open>
+	              <summary class="label"><span class="pill">7b</span> <span class="label-text">Name of Molecule Y<span class="zh-inline" lang="zh-Hans">分子 Y 的名称</span></span><button type="button" class="toggle-answer" aria-expanded="false"><span class="toggle-text-en">Show answer</span><span class="toggle-text-zh zh-inline" lang="zh-Hans">显示答案</span></button></summary>
 	              <p class="ans">RNA (messenger RNA / mRNA)</p>
 	              <p class="ans zh-block" lang="zh-Hans">RNA（信使 RNA / mRNA）</p>
 	              <p class="explain">Explanation: mRNA is a temporary copy of a gene that carries the message to where proteins are made.</p>
 	              <p class="explain zh-block" lang="zh-Hans">解释：mRNA 是基因的临时拷贝，把信息传递到合成蛋白质的地方。</p>
 	            </details>
 
-	            <details class="q">
-	              <summary class="label"><span class="pill">7c</span> <span class="label-text">Name of Molecule Z<span class="zh-inline" lang="zh-Hans">分子 Z 的名称</span></span></summary>
+	            <details class="q" open>
+	              <summary class="label"><span class="pill">7c</span> <span class="label-text">Name of Molecule Z<span class="zh-inline" lang="zh-Hans">分子 Z 的名称</span></span><button type="button" class="toggle-answer" aria-expanded="false"><span class="toggle-text-en">Show answer</span><span class="toggle-text-zh zh-inline" lang="zh-Hans">显示答案</span></button></summary>
 	              <p class="ans">Protein</p>
 	              <p class="ans zh-block" lang="zh-Hans">蛋白质</p>
 	              <p class="explain">Explanation: Proteins are the final products of gene instructions and do most cellular jobs.</p>
 	              <p class="explain zh-block" lang="zh-Hans">解释：蛋白质是基因指令的最终产物，承担细胞中大多数功能。</p>
 	            </details>
 
-	            <details class="q">
-	              <summary class="label"><span class="pill">7d</span> <span class="label-text">Function of Molecule X<span class="zh-inline" lang="zh-Hans">分子 X 的功能</span></span></summary>
+	            <details class="q" open>
+	              <summary class="label"><span class="pill">7d</span> <span class="label-text">Function of Molecule X<span class="zh-inline" lang="zh-Hans">分子 X 的功能</span></span><button type="button" class="toggle-answer" aria-expanded="false"><span class="toggle-text-en">Show answer</span><span class="toggle-text-zh zh-inline" lang="zh-Hans">显示答案</span></button></summary>
 	              <p class="ans">Stores genetic information (instructions) that control traits, growth, and development.</p>
 	              <p class="ans zh-block" lang="zh-Hans">储存遗传信息（指令），控制性状、生长与发育。</p>
 	              <p class="explain">Explanation: The order of DNA bases is a code that can be read to build specific proteins.</p>
 	              <p class="explain zh-block" lang="zh-Hans">解释：DNA 碱基的排列顺序是一种“编码”，可被读取用来合成特定蛋白质。</p>
 	            </details>
 
-	            <details class="q">
-	              <summary class="label"><span class="pill">7e</span> <span class="label-text">Function of Molecule Y<span class="zh-inline" lang="zh-Hans">分子 Y 的功能</span></span></summary>
+	            <details class="q" open>
+	              <summary class="label"><span class="pill">7e</span> <span class="label-text">Function of Molecule Y<span class="zh-inline" lang="zh-Hans">分子 Y 的功能</span></span><button type="button" class="toggle-answer" aria-expanded="false"><span class="toggle-text-en">Show answer</span><span class="toggle-text-zh zh-inline" lang="zh-Hans">显示答案</span></button></summary>
 	              <p class="ans">Carries instructions from DNA to the ribosome where proteins are made.</p>
 	              <p class="ans zh-block" lang="zh-Hans">把 DNA 的指令携带到核糖体，在那里合成蛋白质。</p>
 	              <p class="explain">Explanation: Ribosomes read mRNA codons to assemble amino acids in the correct order.</p>
 	              <p class="explain zh-block" lang="zh-Hans">解释：核糖体读取 mRNA 的密码子，按正确顺序连接氨基酸。</p>
 	            </details>
 
-	            <details class="q">
-	              <summary class="label"><span class="pill">7f</span> <span class="label-text">Function of Molecule Z<span class="zh-inline" lang="zh-Hans">分子 Z 的功能</span></span></summary>
+	            <details class="q" open>
+	              <summary class="label"><span class="pill">7f</span> <span class="label-text">Function of Molecule Z<span class="zh-inline" lang="zh-Hans">分子 Z 的功能</span></span><button type="button" class="toggle-answer" aria-expanded="false"><span class="toggle-text-en">Show answer</span><span class="toggle-text-zh zh-inline" lang="zh-Hans">显示答案</span></button></summary>
 	              <p class="ans">Proteins build structures and control reactions (enzymes/hormones), producing traits and functions.</p>
 	              <p class="ans zh-block" lang="zh-Hans">蛋白质构建结构并控制反应（如酶/激素），从而产生各种性状与功能。</p>
 	              <p class="explain">Explanation: A protein’s shape determines its function, such as catalyzing reactions (enzymes) or sending signals (some hormones).</p>
 	              <p class="explain zh-block" lang="zh-Hans">解释：蛋白质的形状决定其功能，例如催化反应（酶）或传递信号（某些激素）。</p>
 	            </details>
 
-	            <details class="q">
-	              <summary class="label"><span class="pill">8</span> <span class="label-text">How are genes involved in producing proteins?<span class="zh-inline" lang="zh-Hans">基因如何参与蛋白质的产生？</span></span></summary>
+	            <details class="q" open>
+	              <summary class="label"><span class="pill">8</span> <span class="label-text">How are genes involved in producing proteins?<span class="zh-inline" lang="zh-Hans">基因如何参与蛋白质的产生？</span></span><button type="button" class="toggle-answer" aria-expanded="false"><span class="toggle-text-en">Show answer</span><span class="toggle-text-zh zh-inline" lang="zh-Hans">显示答案</span></button></summary>
 	              <p class="ans">
 	                Genes are sections of DNA that contain instructions for making specific proteins.
 	                A gene is transcribed into RNA, and the RNA is translated into a protein.
@@ -392,32 +574,36 @@
 	              <p class="explain zh-block" lang="zh-Hans">解释：基因的碱基序列决定 mRNA 序列，mRNA 序列又决定氨基酸排列顺序，从而决定合成的蛋白质。</p>
 	            </details>
 
-	            <details class="q">
-	              <summary class="label"><span class="pill">Extra</span> <span class="label-text">Quick summary<span class="zh-inline" lang="zh-Hans">快速总结</span></span></summary>
-	              <p class="ans">DNA → RNA → Protein</p>
-	              <p class="ans zh-block" lang="zh-Hans">DNA → RNA → 蛋白质</p>
-	              <p class="explain">Explanation: This is the “central dogma” pathway for how genetic information becomes a trait.</p>
-	              <p class="explain zh-block" lang="zh-Hans">解释：这就是遗传信息如何变成性状的“中心法则”路径。</p>
-	            </details>
-	          </div>
-	        </div>
-	      </div>
-	    </section>
+		          </div>
+		        </div>
+		      </div>
+		    </section>
   </main>
 
 	<footer>
-	    Click a question to reveal its answer (click again to hide).
-	    <span class="zh-inline" lang="zh-Hans">点击题目显示答案（再点一次可隐藏）。</span>
+	    Type your answer, click “Check”, then use “Show answer” to reveal the model answer.
+	    <span class="zh-inline" lang="zh-Hans">先填写你的答案并点击“Check”，再用“显示答案”查看标准答案。</span>
 	</footer>
 
 	<script>
-	  (function () {
-	    const LANG_STORAGE_KEY = "dnaQuestionsLang";
-	    const langButtons = Array.from(document.querySelectorAll(".lang-btn"));
+		  (function () {
+		    const LANG_STORAGE_KEY = "dnaQuestionsLang";
+		    const langButtons = Array.from(document.querySelectorAll(".lang-btn"));
 
-	    const setLanguage = (lang) => {
-	      const isBilingual = lang === "bi";
-	      document.body.classList.toggle("lang-bi", isBilingual);
+		    const SHOW_EN = "Show answer";
+		    const HIDE_EN = "Hide answer";
+		    const SHOW_ZH = "显示答案";
+		    const HIDE_ZH = "隐藏答案";
+
+		    const DEFAULT_GRADE_API_URL = "https://lakesideart.gochatus.org/grade-service/grade";
+		    const GRADE_API_STORAGE_KEY = "gradeApiUrl";
+		    const gradeApiUrlEl = document.getElementById("grade-api-url");
+		    const btnTestApi = document.getElementById("btn-test-api");
+		    const apiStatusEl = document.getElementById("api-status");
+
+		    const setLanguage = (lang) => {
+		      const isBilingual = lang === "bi";
+		      document.body.classList.toggle("lang-bi", isBilingual);
 
 	      for (const btn of langButtons) {
 	        const active = btn.dataset.lang === lang;
@@ -437,10 +623,392 @@
 	      setLanguage("en");
 	    }
 
-	    for (const btn of langButtons) {
-	      btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
-	    }
-	  })();
-	</script>
+		    for (const btn of langButtons) {
+		      btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
+		    }
+
+		    function setApiStatus(text, kind) {
+		      if (!apiStatusEl) return;
+		      apiStatusEl.textContent = text || "";
+		      apiStatusEl.className = "api-status" + (kind ? " " + kind : "");
+		    }
+
+		    function getGradeApiUrl() {
+		      const raw = gradeApiUrlEl ? String(gradeApiUrlEl.value || "").trim() : "";
+		      return raw || null;
+		    }
+
+		    function saveGradeApiUrl() {
+		      if (!gradeApiUrlEl) return;
+		      const url = String(gradeApiUrlEl.value || "").trim();
+		      try {
+		        localStorage.setItem(GRADE_API_STORAGE_KEY, url);
+		      } catch {}
+		    }
+
+		    async function fetchJsonWithTimeout(url, options, timeoutMs) {
+		      const controller = new AbortController();
+		      const timer = setTimeout(() => controller.abort(), timeoutMs);
+		      try {
+		        const resp = await fetch(url, { ...options, signal: controller.signal });
+		        const text = await resp.text().catch(() => "");
+		        let data = null;
+		        try { data = text ? JSON.parse(text) : null; } catch { data = null; }
+		        return { ok: resp.ok, status: resp.status, data, text };
+		      } catch (err) {
+		        if (err && err.name === "AbortError") return { ok: false, status: 0, data: null, text: "", aborted: true };
+		        throw err;
+		      } finally {
+		        clearTimeout(timer);
+		      }
+		    }
+
+		    function extractFirstGradeResult(data) {
+		      if (!data) return null;
+		      if (Array.isArray(data.results) && data.results[0]) return data.results[0];
+		      if (data.result && Array.isArray(data.result.results) && data.result.results[0]) return data.result.results[0];
+		      if (data.model_result && Array.isArray(data.model_result.results) && data.model_result.results[0]) return data.model_result.results[0];
+		      return null;
+		    }
+
+		    function normalizeText(str) {
+		      return String(str || "")
+		        .toLowerCase()
+		        .replace(/[^a-z0-9\s]/g, " ")
+		        .split(/\s+/)
+		        .filter(Boolean);
+		    }
+
+		    function similarityScore(userText, targetText) {
+		      const uWords = normalizeText(userText);
+		      const tWords = normalizeText(targetText);
+		      if (uWords.length === 0 || tWords.length === 0) return 0;
+
+		      const uSet = new Set(uWords);
+		      const tSet = new Set(tWords);
+		      let intersection = 0;
+		      tSet.forEach((w) => { if (uSet.has(w)) intersection++; });
+		      const union = uSet.size + tSet.size - intersection;
+		      return union === 0 ? 0 : intersection / union;
+		    }
+
+		    function localOverlapCheck(userText, correctText) {
+		      if (!correctText) {
+		        return { verdict: "unknown", explanation: "No model answer provided; enable AI grading to validate." };
+		      }
+
+		      const score = similarityScore(userText, correctText);
+		      const percent = Math.round(score * 100);
+		      if (percent >= 70) return { verdict: "correct", explanation: `Overlap about ${percent}% with the model answer.` };
+		      if (percent >= 40) return { verdict: "wrong", explanation: `Partial overlap (${percent}%). Compare with the model answer and refine.` };
+		      return { verdict: "wrong", explanation: `Low overlap (~${percent}%). Compare with the model answer and try again.` };
+		    }
+
+		    async function gradeOne({ questionText, userText, correctText }) {
+		      const gradeUrl = getGradeApiUrl();
+		      const aiTimeoutMs = 60000;
+
+		      if (gradeUrl) {
+		        const pair = { question: questionText, answer: userText };
+		        if (correctText) pair.reference_answer = correctText;
+		        const payload = { pairs: [pair] };
+
+		        const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+		          gradeUrl,
+		          {
+		            method: "POST",
+		            headers: { "Content-Type": "application/json" },
+		            body: JSON.stringify(payload)
+		          },
+		          aiTimeoutMs
+		        );
+
+		        if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+
+		        const first = extractFirstGradeResult(data);
+		        if (!ok || !first) {
+		          const reason = data && data.error ? data.error : `bad_response_${status}`;
+		          const detail = text ? ` (${text.slice(0, 160)})` : "";
+		          throw new Error(reason + detail);
+		        }
+
+		        const verdict = first.verdict === "correct" ? "correct" : "wrong";
+		        const explanation = String(first.explanation || "").trim();
+		        return { verdict, explanation, mode: "ai" };
+		      }
+
+		      const local = localOverlapCheck(userText, correctText);
+		      if (local.verdict === "unknown") return { verdict: "unknown", explanation: local.explanation, mode: "local" };
+		      return { verdict: local.verdict, explanation: local.explanation, mode: "local" };
+		    }
+
+		    function deriveHealthUrl(gradeUrl) {
+		      try {
+		        const u = new URL(gradeUrl);
+		        u.search = "";
+		        u.hash = "";
+		        if (u.pathname.endsWith("/grade")) {
+		          u.pathname = u.pathname.replace(/\/grade$/, "/health");
+		        } else {
+		          u.pathname = u.pathname.replace(/\/+$/, "") + "/health";
+		        }
+		        return u.toString();
+		      } catch {
+		        return null;
+		      }
+		    }
+
+		    async function testApi() {
+		      const gradeUrl = getGradeApiUrl();
+		      if (!gradeUrl) {
+		        setApiStatus("Set a URL first.", "bad");
+		        return;
+		      }
+
+		      setApiStatus("Testing...");
+		      try {
+		        const healthUrl = deriveHealthUrl(gradeUrl);
+		        if (!healthUrl) {
+		          setApiStatus("Invalid URL.", "bad");
+		          return;
+		        }
+		        const { ok, status, data } = await fetchJsonWithTimeout(healthUrl, { method: "GET" }, 4000);
+		        if (!ok) {
+		          setApiStatus(`Health check failed (${status}).`, "bad");
+		          return;
+		        }
+		        const looksHealthy =
+		          !data ||
+		          data.ok === true ||
+		          data.status === "ok" ||
+		          data.healthy === true ||
+		          data.health === "ok";
+		        setApiStatus(looksHealthy ? "Backend OK." : "Backend responded.", looksHealthy ? "ok" : "bad");
+		      } catch {
+		        setApiStatus("Could not reach backend (CORS/URL/offline).", "bad");
+		      }
+		    }
+
+		    function englishTextFrom(el) {
+		      if (!el) return "";
+		      const clone = el.cloneNode(true);
+		      const remove = clone.querySelectorAll ? clone.querySelectorAll(".zh-inline,.zh-block") : [];
+		      for (const n of remove) n.remove();
+		      return String(clone.textContent || "").replace(/\s+/g, " ").trim();
+		    }
+
+		    function ensurePracticeUi() {
+		      const detailsEls = Array.from(document.querySelectorAll("details.q"));
+		      for (const details of detailsEls) {
+		        const summary = details.querySelector("summary.label");
+		        if (!summary) continue;
+
+		        let answerArea = details.querySelector(".answer-area");
+		        if (!answerArea) {
+		          answerArea = document.createElement("div");
+		          answerArea.className = "answer-area";
+		        }
+
+		        // Move existing answer/explanation content under a dedicated container so we can hide it.
+		        const toMove = [];
+		        for (const child of Array.from(details.children)) {
+		          if (child === summary) continue;
+		          if (child.classList.contains("practice")) continue;
+		          if (child.classList.contains("answer-area")) continue;
+		          toMove.push(child);
+		        }
+		        for (const el of toMove) answerArea.appendChild(el);
+		        answerArea.hidden = true;
+
+		        if (!answerArea.parentElement) details.appendChild(answerArea);
+		        else if (answerArea.parentElement === details && answerArea !== details.lastElementChild) {
+		          details.appendChild(answerArea);
+		        }
+
+		        if (details.querySelector(".practice")) continue;
+		        const practice = document.createElement("div");
+		        practice.className = "practice";
+		        practice.innerHTML =
+		          `<div class="practice-label">Your answer</div>` +
+		          `<textarea class="user-answer" rows="3" placeholder="Type your answer here..."></textarea>` +
+		          `<div class="practice-actions">` +
+		            `<button type="button" class="check-answer">Check</button>` +
+		            `<div class="check-status" role="status" aria-live="polite"></div>` +
+		          `</div>`;
+		        summary.insertAdjacentElement("afterend", practice);
+		      }
+		    }
+
+		    function getCorrectAnswerText(details) {
+		      const answerArea = details.querySelector(".answer-area");
+		      if (!answerArea) return "";
+		      const parts = [];
+		      const ansEls = Array.from(answerArea.querySelectorAll(".ans:not(.zh-block)"));
+		      for (const el of ansEls) {
+		        const t = String(el.textContent || "").trim();
+		        if (t) parts.push(t);
+		      }
+		      return parts.join("\n").trim();
+		    }
+
+		    function initAnswerToggles() {
+		      const detailsEls = Array.from(document.querySelectorAll("details.q"));
+		      for (const details of detailsEls) {
+		        const summary = details.querySelector("summary.label");
+		        const btn = summary?.querySelector("button.toggle-answer");
+		        const answerArea = details.querySelector(".answer-area");
+		        if (!summary || !btn || !answerArea) continue;
+
+		        const enSpan = btn.querySelector(".toggle-text-en");
+		        const zhSpan = btn.querySelector(".toggle-text-zh");
+
+		        const sync = () => {
+		          const shown = !answerArea.hidden;
+		          btn.setAttribute("aria-expanded", shown ? "true" : "false");
+		          if (enSpan) enSpan.textContent = shown ? HIDE_EN : SHOW_EN;
+		          if (zhSpan) zhSpan.textContent = shown ? HIDE_ZH : SHOW_ZH;
+		        };
+
+		        btn.addEventListener("click", (e) => {
+		          e.preventDefault();
+		          e.stopPropagation();
+		          details.open = true;
+		          answerArea.hidden = !answerArea.hidden;
+		          sync();
+		        });
+
+		        sync();
+		      }
+		    }
+
+		    function setCheckStatus(el, text, kind) {
+		      if (!el) return;
+		      el.textContent = text || "";
+		      el.className = "check-status" + (kind ? " " + kind : "");
+		    }
+
+		    function initChecking() {
+		      const detailsEls = Array.from(document.querySelectorAll("details.q"));
+		      for (const details of detailsEls) {
+		        const textarea = details.querySelector("textarea.user-answer");
+		        const btnCheck = details.querySelector("button.check-answer");
+		        const statusEl = details.querySelector(".check-status");
+		        if (!textarea || !btnCheck || !statusEl) continue;
+
+		        const labelTextEl = details.querySelector(".label-text");
+		        const pillEl = details.querySelector(".pill");
+
+		        textarea.addEventListener("keydown", (e) => {
+		          const isEnter = e.key === "Enter";
+		          const isModified = e.metaKey || e.ctrlKey;
+		          if (isEnter && isModified && !btnCheck.disabled) {
+		            e.preventDefault();
+		            btnCheck.click();
+		          }
+		        });
+
+		        btnCheck.addEventListener("click", async () => {
+		          const userText = String(textarea.value || "").trim();
+		          if (!userText) {
+		            setCheckStatus(statusEl, "Type an answer first.", "bad");
+		            return;
+		          }
+
+		          const pill = pillEl ? String(pillEl.textContent || "").trim() : "";
+		          const questionCore = englishTextFrom(labelTextEl);
+		          const questionText = pill ? `Question ${pill}: ${questionCore}` : questionCore;
+		          const correctText = getCorrectAnswerText(details);
+
+		          const gradeUrl = getGradeApiUrl();
+		          btnCheck.disabled = true;
+		          setCheckStatus(statusEl, gradeUrl ? "Checking with AI grader..." : "Checking...", "");
+
+		          try {
+		            const result = await gradeOne({ questionText, userText, correctText });
+		            const isCorrect = result.verdict === "correct";
+		            const prefix = result.verdict === "unknown" ? "" : (isCorrect ? "Correct. " : "Wrong. ");
+		            setCheckStatus(statusEl, prefix + (result.explanation || ""), isCorrect ? "ok" : "bad");
+		          } catch (err) {
+		            console.warn("Grading failed:", err);
+		            const local = localOverlapCheck(userText, correctText);
+		            if (local.verdict === "unknown") {
+		              setCheckStatus(statusEl, "AI grading unavailable; also no model answer to compare against.", "bad");
+		            } else {
+		              setCheckStatus(
+		                statusEl,
+		                `AI grading unavailable; using overlap check. ${local.verdict === "correct" ? "Correct." : "Wrong."} ${local.explanation}`,
+		                local.verdict === "correct" ? "ok" : "bad"
+		              );
+		            }
+		          } finally {
+		            btnCheck.disabled = false;
+		          }
+		        });
+		      }
+		    }
+
+		    function syncAnswersPanelHeights() {
+		      const pairs = [
+		        ["img-q1-6", "answers-q1-6"],
+		        ["img-q7-8", "answers-q7-8"]
+		      ];
+
+		      for (const [imgId, answersId] of pairs) {
+		        const imgCard = document.getElementById(imgId);
+		        const answersCard = document.getElementById(answersId);
+		        if (!imgCard || !answersCard) continue;
+
+		        const h = Math.round(imgCard.getBoundingClientRect().height);
+		        if (h > 0) answersCard.style.height = Math.round(h * 0.75) + "px";
+		        else answersCard.style.height = "";
+		      }
+		    }
+
+		    function installAnswersPanelHeightSync() {
+		      const imgCards = [
+		        document.getElementById("img-q1-6"),
+		        document.getElementById("img-q7-8")
+		      ].filter(Boolean);
+
+		      if (imgCards.length === 0) return;
+
+		      let raf = 0;
+		      const schedule = () => {
+		        if (raf) cancelAnimationFrame(raf);
+		        raf = requestAnimationFrame(() => {
+		          raf = 0;
+		          syncAnswersPanelHeights();
+		        });
+		      };
+
+		      for (const imgCard of imgCards) {
+		        const img = imgCard.querySelector("img");
+		        if (!img) continue;
+		        if (img.complete) schedule();
+		        img.addEventListener("load", schedule);
+		      }
+
+		      window.addEventListener("resize", schedule, { passive: true });
+		      schedule();
+		    }
+
+		    // Init AI settings UI (mirrors general_faq.html behavior).
+		    if (gradeApiUrlEl) {
+		      let saved = null;
+		      try { saved = localStorage.getItem(GRADE_API_STORAGE_KEY); } catch { saved = null; }
+		      gradeApiUrlEl.value = saved === null ? DEFAULT_GRADE_API_URL : saved;
+		      gradeApiUrlEl.addEventListener("change", () => {
+		        saveGradeApiUrl();
+		        setApiStatus("", "");
+		      });
+		    }
+		    if (btnTestApi) btnTestApi.addEventListener("click", testApi);
+
+		    ensurePracticeUi();
+		    initAnswerToggles();
+		    initChecking();
+		    installAnswersPanelHeightSync();
+		  })();
+		</script>
 </body>
 </html>
