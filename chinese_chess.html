@@ -383,6 +383,7 @@
 
           <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; align-items:center">
             <button class="btn primary" id="btn-ai-move" type="button">Ask AI To Move</button>
+            <button class="btn" id="btn-autoplay" type="button">Auto Play</button>
             <button class="btn" id="btn-test" type="button">Test Endpoint</button>
             <span class="muted" id="api-status"></span>
           </div>
@@ -423,6 +424,7 @@
     const btnFlip = document.getElementById('btn-flip');
     const btnNew = document.getElementById('btn-new');
     const btnAiMove = document.getElementById('btn-ai-move');
+    const btnAutoplay = document.getElementById('btn-autoplay');
     const btnTest = document.getElementById('btn-test');
 
     const selectSideEl = document.getElementById('select-side');
@@ -627,9 +629,77 @@
     let flipped = false;
     let busy = false;
 
+    let autoplayEnabled = false;
+    let autoplayDelayMs = 450;
+    let autoplayTimer = null;
+    let autoplayToken = 0;
+
     let selectedSquare = null;
     let legalToSquares = new Set();
     let legalCaptureSquares = new Set();
+
+    function renderAutoplayButton() {
+      if (!btnAutoplay) return;
+      btnAutoplay.textContent = autoplayEnabled ? 'Stop Auto Play' : 'Auto Play';
+      btnAutoplay.classList.toggle('danger', autoplayEnabled);
+    }
+
+    function stopAutoplay(message) {
+      autoplayEnabled = false;
+      autoplayToken++;
+      if (autoplayTimer) {
+        window.clearTimeout(autoplayTimer);
+        autoplayTimer = null;
+      }
+      if (message) setApiStatus(message, 'warn');
+      renderAutoplayButton();
+      renderMeta();
+    }
+
+    function scheduleAutoplayTick(token, delayMs) {
+      if (autoplayTimer) window.clearTimeout(autoplayTimer);
+      autoplayTimer = window.setTimeout(() => autoplayTick(token), Math.max(0, delayMs || 0));
+    }
+
+    async function autoplayTick(token) {
+      if (!autoplayEnabled) return;
+      if (token !== autoplayToken) return;
+
+      if (game.isGameOver && game.isGameOver()) {
+        stopAutoplay('Auto play stopped (game over).');
+        renderAll();
+        return;
+      }
+
+      if (busy || animating) {
+        scheduleAutoplayTick(token, 160);
+        return;
+      }
+
+      const moved = await askAiForMove({ force: true });
+      if (!autoplayEnabled || token !== autoplayToken) return;
+      if (!moved) {
+        stopAutoplay('Auto play stopped (AI error).');
+        return;
+      }
+
+      scheduleAutoplayTick(token, autoplayDelayMs);
+    }
+
+    function startAutoplay() {
+      if (autoplayEnabled) return;
+      autoplayEnabled = true;
+      autoplayToken++;
+      setApiStatus('Auto play on (AI vs AI).', 'good');
+      renderAutoplayButton();
+      renderMeta();
+      scheduleAutoplayTick(autoplayToken, 50);
+    }
+
+    function toggleAutoplay() {
+      if (autoplayEnabled) stopAutoplay('Auto play off.');
+      else startAutoplay();
+    }
 
     function currentStateJson() {
       return game.state();
@@ -654,6 +724,8 @@
         setPill(pillStateEl, 'thinking…', 'warn');
       } else if (game.isGameOver && game.isGameOver()) {
         setPill(pillStateEl, 'game over', 'bad');
+      } else if (autoplayEnabled) {
+        setPill(pillStateEl, 'autoplay', 'warn');
       } else {
         setPill(
           pillStateEl,
@@ -664,6 +736,8 @@
 
       if (game.isGameOver && game.isGameOver()) {
         statusTextEl.textContent = gameStatusText(game);
+      } else if (autoplayEnabled) {
+        statusTextEl.textContent = 'Auto-playing (AI vs AI)…';
       } else {
         statusTextEl.textContent = isUserTurn(game, humanColor) ? 'Your move.' : 'AI to move.';
       }
@@ -805,6 +879,10 @@
     function onSquareClick(square) {
       if (busy || animating) return;
       if (game.isGameOver && game.isGameOver()) return;
+      if (autoplayEnabled) {
+        setApiStatus('Stop Auto Play to make moves.', 'warn');
+        return;
+      }
       if (!isUserTurn(game, humanColor)) return;
 
       const clickedPiece = game.get(square);
@@ -952,10 +1030,10 @@
     }
 
     async function askAiForMove({ force = false } = {}) {
-      if (busy) return;
-      if (animating) return;
-      if (game.isGameOver && game.isGameOver()) return;
-      if (!force && isUserTurn(game, humanColor)) return;
+      if (busy) return false;
+      if (animating) return false;
+      if (game.isGameOver && game.isGameOver()) return false;
+      if (!force && isUserTurn(game, humanColor)) return false;
 
       const endpoint = (endpointEl.value || '').trim() || DEFAULT_ENDPOINT;
 
@@ -971,6 +1049,7 @@
       let rawResponseText = '';
       let parsed = null;
       let envelope = null;
+      let moved = false;
 
       try {
         const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
@@ -1005,6 +1084,7 @@
         const moving = game.get(moveFrom);
         game.move({ from: moveFrom, to: moveTo });
         activeMoveAnim = { from: moveFrom, to: moveTo, pieceCode: moving || 'rp' };
+        moved = true;
 
         setApiStatus(`AI played: ${moveFrom}-${moveTo}`, 'good');
         clearHighlights();
@@ -1033,6 +1113,7 @@
         busy = false;
         renderMeta();
       }
+      return moved;
     }
 
     async function maybeAiMove() {
@@ -1089,7 +1170,11 @@
 
       renderAll();
       syncBoardSize();
-      maybeAiMove();
+      if (autoplayEnabled) {
+        scheduleAutoplayTick(autoplayToken, 50);
+      } else {
+        maybeAiMove();
+      }
     }
 
     btnNew.addEventListener('click', () => newGame());
@@ -1102,6 +1187,7 @@
 
     btnUndo.addEventListener('click', () => {
       if (busy || animating) return;
+      if (autoplayEnabled) stopAutoplay('Auto play stopped (undo).');
       const m1 = game.undo();
       const m2 = game.undo();
       if (!m1 && !m2) {
@@ -1118,6 +1204,10 @@
     btnAiMove.addEventListener('click', () => {
       if (animating) return;
       askAiForMove({ force: true });
+    });
+    btnAutoplay.addEventListener('click', () => {
+      if (animating) return;
+      toggleAutoplay();
     });
     btnTest.addEventListener('click', () => {
       if (animating) return;
@@ -1139,6 +1229,7 @@
     endpointEl.value = (endpointEl.value || '').trim() || DEFAULT_ENDPOINT;
     humanColor = selectSideEl.value === 'b' ? 'b' : 'r';
     flipped = (humanColor === 'b');
+    renderAutoplayButton();
     resetTurnClock();
     startTurnClockTicker();
     renderAll();
