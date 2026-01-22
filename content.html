@@ -37,5 +37,15 @@
 
 
   </ul>
+
+  <script src="./assets/page_ai_widget.js"></script>
+  <script>
+    PageAIAssistant.mount({
+      mode: 'general',
+      endpoint: 'https://lakesideart.gochatus.org/grade-service/general',
+      contextSelector: 'body',
+      maxContextChars: 12000
+    });
+  </script>
 </body>
 </html>
