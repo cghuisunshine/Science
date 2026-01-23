@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+  <head>
+    <title>Podcast Subscriptions</title>
+  </head>
+  <body>
+    <outline 
+      text="每日头条"
+      title="每日头条"
+      type="rss"
+      xmlUrl="https://news.iooi.life/api/podcast/21OcHTtvFOLgoXLnxDG_6Jmr5vDjl2sE/feed.xml"
+      htmlUrl="https://news.iooi.life"
+      description="每天自动生成的新闻头条音频"
+      language="zh-cn"
+      image="https://news.iooi.life/static/podcast-cover.jpg"
+      category="News"
+    />
+  </body>
+</opml>
+
