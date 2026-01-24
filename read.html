@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PDF Reader (Local + URL) + Speech + Copy</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    #text { white-space: pre-wrap; margin-top: 20px; border: 1px solid #ccc; padding: 10px; border-radius: 6px; }
+    button { margin-right: 10px; padding: 8px 12px; }
+    input[type="text"] { width: 70%; padding: 6px; }
+  </style>
+</head>
+<body>
+
+<h2>PDF Text Reader (Local File + Online Link)</h2>
+
+<!-- Local file -->
+<input type="file" id="file" accept="application/pdf">
+
+<br><br>
+
+<!-- Online PDF link -->
+<input type="text" id="url" placeholder="Paste PDF URL here (https://...)">
+<button id="loadUrl">Load PDF from URL</button>
+
+<br><br>
+
+<!-- Actions -->
+<button id="speak">Speak</button>
+<button id="copy">Copy All Text</button>
+
+<div id="text">Upload a PDF or enter a URL to extract text…</div>
+
+<script>
+const textDiv = document.getElementById("text");
+let fullText = "";
+
+// Extract text from a PDF Document object
+async function extractText(pdf) {
+  fullText = "";
+  textDiv.textContent = "Extracting text…";
+
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const strings = content.items.map(item => item.str).join(" ");
+    fullText += `\n\n=== Page ${i} ===\n` + strings;
+  }
+
+  textDiv.textContent = fullText.trim();
+}
+
+/* -------- LOCAL FILE -------- */
+document.getElementById("file").onchange = async function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+  extractText(pdf);
+};
+
+/* -------- URL LOADING -------- */
+document.getElementById("loadUrl").onclick = async function() {
+  const url = document.getElementById("url").value.trim();
+  if (!url) return alert("Please paste a valid PDF URL.");
+
+  try {
+    const pdf = await pdfjsLib.getDocument(url).promise;
+    extractText(pdf);
+  } catch (err) {
+    alert("Failed to load PDF from URL.\n" + err);
+  }
+};
+
+/* -------- SPEAK -------- */
+document.getElementById("speak").onclick = function() {
+  if (!fullText.trim()) return alert("No text loaded yet");
+  const utterance = new SpeechSynthesisUtterance(fullText);
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utterance);
+};
+
+/* -------- COPY -------- */
+document.getElementById("copy").onclick = async function() {
+  if (!fullText.trim()) return alert("No text to copy");
+  try {
+    await navigator.clipboard.writeText(fullText);
+    alert("Copied to clipboard!");
+  } catch (err) {
+    alert("Copy failed: " + err);
+  }
+};
+</script>
+
+</body>
+</html>
+
