@@ -192,6 +192,9 @@
         <span class="mono">PDF:</span>
         <input id="pdfUrl" style="min-width:420px"
                value="https://cghuisunshine.github.io/Science/biology2-china.bookmarked.pdf" />
+        <input id="pdfFile" type="file" accept="application/pdf" style="display:none" />
+        <button id="btnPickFile">Choose PDF…</button>
+        <span class="mono" id="pdfSourceLabel"></span>
         <span class="mono">Page</span>
         <input id="pageInput" style="width:90px" value="27" />
         <button class="primary" id="btnLoad">Load</button>
@@ -314,7 +317,13 @@
   // -------------------------
   // PDF.js setup
   // -------------------------
-  const pdfjsLib = window['pdfjs-dist/build/pdf'];
+  const pdfjsLib = window.pdfjsLib || window['pdfjs-dist/build/pdf'];
+  if(!pdfjsLib){
+    console.error("PDF.js not found on window. Did the CDN script fail to load?");
+    const stateEl = document.getElementById("state");
+    if(stateEl) stateEl.textContent = "PDF.js failed to load (offline/CDN blocked)";
+    return;
+  }
   // Worker (CDN matched version)
   pdfjsLib.GlobalWorkerOptions.workerSrc =
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js";
@@ -323,6 +332,9 @@
   // DOM
   // -------------------------
   const pdfUrlEl = document.getElementById('pdfUrl');
+  const pdfFileEl = document.getElementById('pdfFile');
+  const btnPickFile = document.getElementById('btnPickFile');
+  const pdfSourceLabel = document.getElementById('pdfSourceLabel');
   const pageInputEl = document.getElementById('pageInput');
   const btnLoad = document.getElementById('btnLoad');
   const btnPrev = document.getElementById('btnPrev');
@@ -358,6 +370,7 @@
   let isRendering = false;
   let renderQueued = false;
   let drawMode = false;
+  let localPdf = null; // { key, name, data: Uint8Array }
 
   // -------------------------
   // Storage keys
@@ -367,6 +380,7 @@
 
   function pdfKey() {
     // stable key per PDF URL
+    if(pdfUrlEl.dataset.source === "local" && localPdf?.key) return localPdf.key;
     return (pdfUrlEl.value || "").trim();
   }
 
@@ -411,6 +425,29 @@
     return Number.isFinite(n) ? n : fallback;
   }
   function setState(msg){ stateEl.textContent = msg; }
+  function formatErr(e){
+    if(!e) return "unknown error";
+    if(typeof e === "string") return e;
+    if(e?.message) return e.message;
+    try { return JSON.stringify(e); } catch { return String(e); }
+  }
+
+  function setUrlSource(){
+    pdfUrlEl.dataset.source = "url";
+    localPdf = null;
+    pdfSourceLabel.textContent = "";
+  }
+
+  function setLocalSource(file, data){
+    localPdf = {
+      key: `local:${file.name}:${file.size}:${file.lastModified}`,
+      name: file.name,
+      data
+    };
+    pdfUrlEl.dataset.source = "local";
+    pdfUrlEl.value = file.name;
+    pdfSourceLabel.textContent = "(local file)";
+  }
 
   // Convert between canvas px and stage CSS px:
   // We set stage size to canvas width/height in CSS pixels (1:1).
@@ -427,11 +464,16 @@
   // Rendering
   // -------------------------
   async function loadPdf(){
-    const url = pdfKey();
-    if(!url) return;
+    const key = pdfKey();
+    if(!key) return;
 
     setState("loading PDF…");
-    pdfDoc = await pdfjsLib.getDocument(url).promise;
+    const docRequest =
+      (pdfUrlEl.dataset.source === "local" && localPdf?.data)
+        ? { data: localPdf.data }
+        : key;
+
+    pdfDoc = await pdfjsLib.getDocument(docRequest).promise;
     pdfMetaEl.textContent = `pages=${pdfDoc.numPages}`;
     pageNum = clamp(toInt(pageInputEl.value, 1), 1, pdfDoc.numPages);
     pageInputEl.value = pageNum;
@@ -677,9 +719,33 @@
   // -------------------------
   // Controls
   // -------------------------
+  btnPickFile.addEventListener("click", () => pdfFileEl.click());
+  pdfFileEl.addEventListener("change", async () => {
+    const file = pdfFileEl.files && pdfFileEl.files[0];
+    if(!file) return;
+    try{
+      setState("reading file…");
+      const buf = await file.arrayBuffer();
+      setLocalSource(file, new Uint8Array(buf));
+      await loadPdf();
+    }catch(e){
+      console.error(e);
+      setState(`Failed to load local file: ${formatErr(e)}`);
+    }
+  });
+
+  // If user edits the URL field after selecting a local file, switch back to URL mode.
+  pdfUrlEl.addEventListener("input", () => {
+    if(pdfUrlEl.dataset.source === "local") setUrlSource();
+  });
+
   btnLoad.addEventListener("click", async () => {
     try { await loadPdf(); }
-    catch(e){ console.error(e); setState("Failed to load PDF (check URL/CORS)"); }
+    catch(e){
+      console.error(e);
+      const msg = formatErr(e);
+      setState(`Failed to load PDF: ${msg.includes("CORS") ? "CORS blocked" : msg} (try Choose PDF… or serve over http://)`);
+    }
   });
 
   btnPrev.addEventListener("click", async () => {
@@ -744,14 +810,14 @@
 
     // Load default PDF
     try{
+      setUrlSource();
       await loadPdf();
     }catch(e){
       console.error(e);
-      setState("Failed to load PDF (check URL/CORS)");
+      setState(`Failed to load PDF: ${formatErr(e)} (try Choose PDF… or serve over http://)`);
     }
   })();
 })();
 </script>
 </body>
 </html>
-
