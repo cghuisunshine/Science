@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PDF.js Split View + Page Switcher + Annotations</title>
+
+  <!-- PDF.js (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#0b0f14; --panel:#0f172a; --text:#e6edf3; --muted:#9aa4b2;
+      --line:#223043; --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --r:16px;
+      --btnbg: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; padding:18px;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "PingFang SC","Microsoft YaHei", Arial;
+      background: radial-gradient(1100px 700px at 20% 10%, #0f1a2b 0%, var(--bg) 60%);
+      color:var(--text);
+    }
+    .wrap{max-width:1280px;margin:0 auto}
+    header{
+      display:flex; gap:12px; align-items:flex-end; justify-content:space-between;
+      margin-bottom:12px;
+    }
+    h1{margin:0;font-size:18px}
+    .hint{margin-top:6px;font-size:13px;color:var(--muted);line-height:1.4}
+    .panel{
+      background: rgba(15,23,42,.7);
+      border:1px solid var(--line);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .toolbar{
+      display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+      padding:10px 12px;
+      border-bottom:1px solid var(--line);
+      background: rgba(0,0,0,.14);
+    }
+    .toolbar .left, .toolbar .right{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    button{
+      border:1px solid var(--line);
+      background: var(--btnbg);
+      color:var(--text);
+      padding:9px 11px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:700;
+    }
+    button:hover{outline:2px solid rgba(255,255,255,.08)}
+    button.primary{border-color:rgba(31,111,235,.55)}
+    button.green{border-color:rgba(45,186,78,.55)}
+    button.warn{border-color:rgba(245,158,11,.55)}
+    button.danger{border-color:rgba(239,68,68,.55)}
+    input{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      padding:9px 11px;
+      border-radius:12px;
+      outline:none;
+    }
+    input:focus{outline:2px solid rgba(31,111,235,.25)}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color:var(--muted)}
+    .grid{
+      display:grid;
+      grid-template-columns: 1.25fr 1fr;
+      min-height: 78vh;
+    }
+    .col{padding:12px}
+    .col + .col{border-left:1px solid var(--line)}
+    .titleRow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+    .secTitle{font-size:14px;color:#dbe7ff;margin:0}
+    .tag{font-size:12px;color:var(--muted)}
+    .box{
+      border:1px dashed rgba(154,164,178,.28);
+      border-radius: 14px;
+      overflow:hidden;
+      background: rgba(0,0,0,.14);
+      height: calc(78vh - 54px);
+      position:relative;
+    }
+
+    /* PDF canvas wrapper */
+    .pdfWrap{
+      position:absolute; inset:0;
+      overflow:auto;
+      padding:10px;
+    }
+    .pageStage{
+      position:relative;
+      display:inline-block;
+      border-radius:12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      background: rgba(255,255,255,.02);
+    }
+    canvas{display:block; border-radius:12px}
+    .annoLayer{
+      position:absolute; inset:0;
+      border-radius:12px;
+      pointer-events:auto;
+    }
+    .annoBox{
+      position:absolute;
+      border:2px solid rgba(245, 158, 11, .95);
+      background: rgba(245, 158, 11, .15);
+      border-radius:10px;
+      cursor:pointer;
+    }
+    .annoBox:hover{outline:2px solid rgba(245,158,11,.25)}
+    .annoLabel{
+      position:absolute;
+      left:6px; top:6px;
+      font-size:12px;
+      color: #ffe9b3;
+      text-shadow: 0 1px 2px rgba(0,0,0,.65);
+      max-width: calc(100% - 12px);
+      overflow:hidden;
+      white-space:nowrap;
+      text-overflow:ellipsis;
+      pointer-events:none;
+    }
+
+    /* Drawing overlay */
+    .drawOverlay{
+      position:absolute; inset:0;
+      border-radius:12px;
+      pointer-events:none;
+    }
+    .drawRect{
+      position:absolute;
+      border:2px dashed rgba(45,186,78,.95);
+      background: rgba(45,186,78,.12);
+      border-radius:10px;
+    }
+
+    /* Right text area */
+    .textBox{
+      height:100%;
+      overflow:auto;
+      padding:12px;
+      background: rgba(255,255,255,.02);
+    }
+    .section{margin:0 0 16px 0}
+    .bi{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .card{
+      border:1px solid rgba(154,164,178,.20);
+      border-radius: 14px;
+      padding:12px;
+      background: rgba(255,255,255,.03);
+    }
+    .langLabel{font-size:12px;color:var(--muted);margin-bottom:6px}
+    .p{margin:0;line-height:1.6;font-size:14px}
+    ul{margin:8px 0 0 18px}
+    li{margin:6px 0;line-height:1.55}
+
+    /* Language modes */
+    #textPanel.text-en-only .lang-zh{display:none}
+    #textPanel.text-en-only .bi{grid-template-columns:1fr}
+    #textPanel.text-bi .lang-zh{display:block}
+    #textPanel.text-bi .lang-en{display:block}
+    #textPanel.text-bi .bi{grid-template-columns:1fr 1fr}
+
+    /* Mobile */
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+      .col + .col{border-left:none;border-top:1px solid var(--line)}
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>PDF.js Split View (Page Switcher + Annotations)</h1>
+      <div class="hint">
+        Left: PDF rendered to canvas (PDF.js). Right: CN+EN text (toggle EN-only).
+        Add annotations by turning on <b>Draw</b> and dragging a rectangle. Click an annotation to edit/delete.
+      </div>
+    </div>
+  </header>
+
+  <div class="panel">
+    <div class="toolbar">
+      <div class="left">
+        <span class="mono">PDF:</span>
+        <input id="pdfUrl" style="min-width:420px"
+               value="https://cghuisunshine.github.io/Science/biology2-china.bookmarked.pdf" />
+        <span class="mono">Page</span>
+        <input id="pageInput" style="width:90px" value="27" />
+        <button class="primary" id="btnLoad">Load</button>
+
+        <button id="btnPrev">◀ Prev</button>
+        <button id="btnNext">Next ▶</button>
+
+        <button id="btnZoomOut">－</button>
+        <button id="btnZoomIn">＋</button>
+        <span class="mono" id="zoomLabel">zoom=1.20</span>
+      </div>
+
+      <div class="right">
+        <button class="green" id="btnDraw">✏️ Draw: OFF</button>
+        <button class="warn" id="btnClearPage">🧽 Clear page annotations</button>
+        <button class="danger" id="btnClearAll">🗑 Clear ALL annotations</button>
+
+        <button id="btnLangBi">🈶🅔 CN+EN</button>
+        <button id="btnLangEn">🇬🇧 EN only</button>
+
+        <span class="mono" id="state">ready</span>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: PDF -->
+      <div class="col">
+        <div class="titleRow">
+          <p class="secTitle">PDF Canvas</p>
+          <span class="tag" id="pdfMeta">-</span>
+        </div>
+
+        <div class="box">
+          <div class="pdfWrap" id="pdfWrap">
+            <div class="pageStage" id="pageStage">
+              <canvas id="pdfCanvas"></canvas>
+
+              <!-- annotation layer -->
+              <div class="annoLayer" id="annoLayer"></div>
+
+              <!-- drawing overlay -->
+              <div class="drawOverlay" id="drawOverlay"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: TEXT -->
+      <div class="col">
+        <div class="titleRow">
+          <p class="secTitle">Text</p>
+          <span class="tag">CN+EN / EN-only</span>
+        </div>
+
+        <div class="box">
+          <div class="textBox" id="textPanel">
+            <!-- Example content from your extracted page (edit freely) -->
+
+            <div class="section">
+              <p class="secTitle">Title</p>
+              <div class="bi">
+                <div class="card lang-zh">
+                  <div class="langLabel">中文</div>
+                  <p class="p">第1节：减数分裂和受精作用</p>
+                </div>
+                <div class="card lang-en">
+                  <div class="langLabel">English</div>
+                  <p class="p">Section 1: Meiosis and Fertilization</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <p class="secTitle">Inquiry</p>
+              <div class="bi">
+                <div class="card lang-zh">
+                  <div class="langLabel">中文</div>
+                  <p class="p">在腐烂的水果周围常可看到飞舞的果蝇。果蝇的生长周期短，繁殖快，染色体少且容易观察，是遗传学上常用的实验材料。</p>
+                  <p class="p" style="margin-top:10px;">右图是黑腹果蝇雌雄个体的体细胞和配子的染色体示意图。</p>
+                </div>
+                <div class="card lang-en">
+                  <div class="langLabel">English</div>
+                  <p class="p">Fruit flies are often seen around rotting fruit. They have a short life cycle, reproduce quickly, and have relatively few chromosomes that are easy to observe, so they are commonly used in genetics experiments.</p>
+                  <p class="p" style="margin-top:10px;">The figure shows the chromosomes in somatic cells and gametes of male and female fruit flies.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <p class="secTitle">Learning Focus</p>
+              <div class="bi">
+                <div class="card lang-zh">
+                  <div class="langLabel">中文</div>
+                  <ul class="p">
+                    <li>减数分裂的含义是什么？</li>
+                    <li>配子的形成为什么必须经过减数分裂？</li>
+                    <li>减数分裂是怎样进行的？</li>
+                  </ul>
+                </div>
+                <div class="card lang-en">
+                  <div class="langLabel">English</div>
+                  <ul class="p">
+                    <li>What does meiosis mean?</li>
+                    <li>Why must gametes be formed through meiosis?</li>
+                    <li>How does meiosis proceed?</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /textPanel -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // -------------------------
+  // PDF.js setup
+  // -------------------------
+  const pdfjsLib = window['pdfjs-dist/build/pdf'];
+  // Worker (CDN matched version)
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js";
+
+  // -------------------------
+  // DOM
+  // -------------------------
+  const pdfUrlEl = document.getElementById('pdfUrl');
+  const pageInputEl = document.getElementById('pageInput');
+  const btnLoad = document.getElementById('btnLoad');
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+  const btnZoomIn = document.getElementById('btnZoomIn');
+  const btnZoomOut = document.getElementById('btnZoomOut');
+  const zoomLabel = document.getElementById('zoomLabel');
+  const stateEl = document.getElementById('state');
+  const pdfMetaEl = document.getElementById('pdfMeta');
+
+  const canvas = document.getElementById('pdfCanvas');
+  const ctx = canvas.getContext('2d');
+
+  const pageStage = document.getElementById('pageStage');
+  const annoLayer = document.getElementById('annoLayer');
+  const drawOverlay = document.getElementById('drawOverlay');
+  const pdfWrap = document.getElementById('pdfWrap');
+
+  const btnDraw = document.getElementById('btnDraw');
+  const btnClearPage = document.getElementById('btnClearPage');
+  const btnClearAll = document.getElementById('btnClearAll');
+
+  const textPanel = document.getElementById('textPanel');
+  const btnLangBi = document.getElementById('btnLangBi');
+  const btnLangEn = document.getElementById('btnLangEn');
+
+  // -------------------------
+  // State
+  // -------------------------
+  let pdfDoc = null;
+  let pageNum = 27;
+  let scale = 1.2;
+  let isRendering = false;
+  let renderQueued = false;
+  let drawMode = false;
+
+  // -------------------------
+  // Storage keys
+  // -------------------------
+  const LS_LANG = "pdfjs_split_lang_v1";
+  const LS_ANNOS = "pdfjs_split_annotations_v1"; // stores { [pdfKey]: { [pageNum]: [anno...] } }
+
+  function pdfKey() {
+    // stable key per PDF URL
+    return (pdfUrlEl.value || "").trim();
+  }
+
+  function readAllAnnoData(){
+    try { return JSON.parse(localStorage.getItem(LS_ANNOS) || "{}"); }
+    catch { return {}; }
+  }
+  function writeAllAnnoData(obj){
+    localStorage.setItem(LS_ANNOS, JSON.stringify(obj));
+  }
+
+  function getAnnosForPage(){
+    const all = readAllAnnoData();
+    const k = pdfKey();
+    const byPdf = all[k] || {};
+    return byPdf[String(pageNum)] || [];
+  }
+
+  function setAnnosForPage(list){
+    const all = readAllAnnoData();
+    const k = pdfKey();
+    all[k] = all[k] || {};
+    all[k][String(pageNum)] = list;
+    writeAllAnnoData(all);
+  }
+
+  function clearPageAnnos(){
+    setAnnosForPage([]);
+  }
+  function clearAllAnnosForPdf(){
+    const all = readAllAnnoData();
+    delete all[pdfKey()];
+    writeAllAnnoData(all);
+  }
+
+  // -------------------------
+  // Helpers
+  // -------------------------
+  function clamp(n, lo, hi){ return Math.max(lo, Math.min(hi, n)); }
+  function toInt(v, fallback){
+    const n = parseInt(String(v).trim(), 10);
+    return Number.isFinite(n) ? n : fallback;
+  }
+  function setState(msg){ stateEl.textContent = msg; }
+
+  // Convert between canvas px and stage CSS px:
+  // We set stage size to canvas width/height in CSS pixels (1:1).
+  function setStageSize(w, h){
+    pageStage.style.width = w + "px";
+    pageStage.style.height = h + "px";
+    annoLayer.style.width = w + "px";
+    annoLayer.style.height = h + "px";
+    drawOverlay.style.width = w + "px";
+    drawOverlay.style.height = h + "px";
+  }
+
+  // -------------------------
+  // Rendering
+  // -------------------------
+  async function loadPdf(){
+    const url = pdfKey();
+    if(!url) return;
+
+    setState("loading PDF…");
+    pdfDoc = await pdfjsLib.getDocument(url).promise;
+    pdfMetaEl.textContent = `pages=${pdfDoc.numPages}`;
+    pageNum = clamp(toInt(pageInputEl.value, 1), 1, pdfDoc.numPages);
+    pageInputEl.value = pageNum;
+    setState("PDF loaded");
+    await renderPage();
+  }
+
+  async function renderPage(){
+    if(!pdfDoc) return;
+
+    if(isRendering){
+      renderQueued = true;
+      return;
+    }
+    isRendering = true;
+    renderQueued = false;
+
+    setState(`rendering page ${pageNum}…`);
+    zoomLabel.textContent = `zoom=${scale.toFixed(2)}`;
+
+    const page = await pdfDoc.getPage(pageNum);
+    const viewport = page.getViewport({ scale });
+
+    canvas.width = Math.floor(viewport.width);
+    canvas.height = Math.floor(viewport.height);
+    setStageSize(canvas.width, canvas.height);
+
+    // Render
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    // Paint annotations
+    renderAnnoLayer();
+
+    // Keep page visible reasonably
+    // (do not force scroll if user is working; just ensure stage exists)
+    setState(`ready (page ${pageNum})`);
+    isRendering = false;
+
+    if(renderQueued){
+      renderQueued = false;
+      await renderPage();
+    }
+  }
+
+  // -------------------------
+  // Annotation UI
+  // Coordinates are stored normalized (0..1) relative to stage size,
+  // so annotations survive zoom changes.
+  // anno: { id, x, y, w, h, note }  (all x/y/w/h normalized)
+  // -------------------------
+  function renderAnnoLayer(){
+    const W = canvas.width, H = canvas.height;
+    annoLayer.innerHTML = "";
+
+    const list = getAnnosForPage();
+    for(const a of list){
+      const el = document.createElement("div");
+      el.className = "annoBox";
+      el.dataset.id = a.id;
+
+      const left = a.x * W;
+      const top  = a.y * H;
+      const w    = a.w * W;
+      const h    = a.h * H;
+
+      el.style.left = left + "px";
+      el.style.top  = top  + "px";
+      el.style.width = w + "px";
+      el.style.height = h + "px";
+
+      const label = document.createElement("div");
+      label.className = "annoLabel";
+      label.textContent = a.note ? a.note : "Note";
+      el.appendChild(label);
+
+      el.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        editAnno(a.id);
+      });
+
+      annoLayer.appendChild(el);
+    }
+  }
+
+  function editAnno(id){
+    const list = getAnnosForPage();
+    const idx = list.findIndex(a => a.id === id);
+    if(idx < 0) return;
+
+    const current = list[idx];
+    const note = prompt("Annotation text (leave empty to keep). Type DELETE to remove:", current.note || "");
+    if(note === null) return;
+
+    if(note.trim().toUpperCase() === "DELETE"){
+      list.splice(idx, 1);
+      setAnnosForPage(list);
+      renderAnnoLayer();
+      return;
+    }
+    current.note = note.trim();
+    list[idx] = current;
+    setAnnosForPage(list);
+    renderAnnoLayer();
+  }
+
+  function newAnnoId(){
+    return "a_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
+  }
+
+  // -------------------------
+  // Draw mode
+  // -------------------------
+  let isDragging = false;
+  let dragStart = null;
+  let tempRectEl = null;
+
+  function setDrawMode(on){
+    drawMode = on;
+    btnDraw.textContent = on ? "✏️ Draw: ON" : "✏️ Draw: OFF";
+    btnDraw.classList.toggle("green", on);
+    btnDraw.classList.toggle("warn", !on);
+    annoLayer.style.pointerEvents = on ? "none" : "auto"; // avoid clicking existing boxes while drawing
+    drawOverlay.style.pointerEvents = on ? "auto" : "none";
+    setState(on ? "Draw mode: drag to create a box" : "ready");
+  }
+
+  function getStagePoint(clientX, clientY){
+    const rect = pageStage.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    return {
+      x: clamp(x, 0, rect.width),
+      y: clamp(y, 0, rect.height),
+      w: rect.width,
+      h: rect.height
+    };
+  }
+
+  function beginDrag(ev){
+    if(!drawMode) return;
+    isDragging = true;
+    const p = getStagePoint(ev.clientX, ev.clientY);
+    dragStart = p;
+
+    tempRectEl = document.createElement("div");
+    tempRectEl.className = "drawRect";
+    tempRectEl.style.left = p.x + "px";
+    tempRectEl.style.top = p.y + "px";
+    tempRectEl.style.width = "0px";
+    tempRectEl.style.height = "0px";
+    drawOverlay.appendChild(tempRectEl);
+  }
+
+  function moveDrag(ev){
+    if(!drawMode || !isDragging || !dragStart || !tempRectEl) return;
+    const p = getStagePoint(ev.clientX, ev.clientY);
+
+    const x1 = dragStart.x, y1 = dragStart.y;
+    const x2 = p.x, y2 = p.y;
+
+    const left = Math.min(x1, x2);
+    const top  = Math.min(y1, y2);
+    const w = Math.abs(x2 - x1);
+    const h = Math.abs(y2 - y1);
+
+    tempRectEl.style.left = left + "px";
+    tempRectEl.style.top  = top + "px";
+    tempRectEl.style.width = w + "px";
+    tempRectEl.style.height = h + "px";
+  }
+
+  function endDrag(ev){
+    if(!drawMode || !isDragging || !dragStart) return;
+    isDragging = false;
+
+    const p = getStagePoint(ev.clientX, ev.clientY);
+    const x1 = dragStart.x, y1 = dragStart.y;
+    const x2 = p.x, y2 = p.y;
+
+    const left = Math.min(x1, x2);
+    const top  = Math.min(y1, y2);
+    const wpx = Math.abs(x2 - x1);
+    const hpx = Math.abs(y2 - y1);
+
+    // Clean up temp rect
+    if(tempRectEl){
+      tempRectEl.remove();
+      tempRectEl = null;
+    }
+    dragStart = null;
+
+    // Too small? ignore
+    if(wpx < 12 || hpx < 12){
+      setState("Box too small (ignored)");
+      return;
+    }
+
+    const W = canvas.width, H = canvas.height;
+    const note = prompt("Annotation text:", "");
+    if(note === null) return; // cancelled
+
+    const anno = {
+      id: newAnnoId(),
+      x: left / W,
+      y: top / H,
+      w: wpx / W,
+      h: hpx / H,
+      note: note.trim()
+    };
+
+    const list = getAnnosForPage();
+    list.push(anno);
+    setAnnosForPage(list);
+    renderAnnoLayer();
+    setState("Annotation added");
+  }
+
+  // Bind drawing events
+  pageStage.addEventListener("mousedown", (ev) => beginDrag(ev));
+  window.addEventListener("mousemove", (ev) => moveDrag(ev));
+  window.addEventListener("mouseup", (ev) => endDrag(ev));
+
+  // Also allow click on empty layer to exit draw state? (optional)
+  annoLayer.addEventListener("click", () => {
+    // Clicking blank area does nothing; keep.
+  });
+
+  // -------------------------
+  // Language toggle (right panel)
+  // -------------------------
+  function setLang(mode){
+    if(mode === "en"){
+      textPanel.classList.remove("text-bi");
+      textPanel.classList.add("text-en-only");
+      localStorage.setItem(LS_LANG, "en");
+    }else{
+      textPanel.classList.remove("text-en-only");
+      textPanel.classList.add("text-bi");
+      localStorage.setItem(LS_LANG, "bi");
+    }
+  }
+
+  // -------------------------
+  // Controls
+  // -------------------------
+  btnLoad.addEventListener("click", async () => {
+    try { await loadPdf(); }
+    catch(e){ console.error(e); setState("Failed to load PDF (check URL/CORS)"); }
+  });
+
+  btnPrev.addEventListener("click", async () => {
+    if(!pdfDoc) return;
+    pageNum = clamp(pageNum - 1, 1, pdfDoc.numPages);
+    pageInputEl.value = pageNum;
+    await renderPage();
+  });
+
+  btnNext.addEventListener("click", async () => {
+    if(!pdfDoc) return;
+    pageNum = clamp(pageNum + 1, 1, pdfDoc.numPages);
+    pageInputEl.value = pageNum;
+    await renderPage();
+  });
+
+  pageInputEl.addEventListener("keydown", async (e) => {
+    if(e.key !== "Enter") return;
+    if(!pdfDoc) return;
+    pageNum = clamp(toInt(pageInputEl.value, pageNum), 1, pdfDoc.numPages);
+    pageInputEl.value = pageNum;
+    await renderPage();
+  });
+
+  btnZoomIn.addEventListener("click", async () => {
+    scale = clamp(scale + 0.15, 0.5, 3.0);
+    await renderPage();
+  });
+
+  btnZoomOut.addEventListener("click", async () => {
+    scale = clamp(scale - 0.15, 0.5, 3.0);
+    await renderPage();
+  });
+
+  btnDraw.addEventListener("click", () => setDrawMode(!drawMode));
+
+  btnClearPage.addEventListener("click", async () => {
+    if(!confirm("Clear annotations for THIS page only?")) return;
+    clearPageAnnos();
+    renderAnnoLayer();
+    setState("Page annotations cleared");
+  });
+
+  btnClearAll.addEventListener("click", async () => {
+    if(!confirm("Clear ALL annotations for THIS PDF?")) return;
+    clearAllAnnosForPdf();
+    renderAnnoLayer();
+    setState("All annotations cleared for this PDF");
+  });
+
+  btnLangBi.addEventListener("click", () => setLang("bi"));
+  btnLangEn.addEventListener("click", () => setLang("en"));
+
+  // Load on start
+  (async function init(){
+    // Restore language
+    const savedLang = localStorage.getItem(LS_LANG) || "bi";
+    setLang(savedLang);
+
+    // Default draw off
+    setDrawMode(false);
+
+    // Load default PDF
+    try{
+      await loadPdf();
+    }catch(e){
+      console.error(e);
+      setState("Failed to load PDF (check URL/CORS)");
+    }
+  })();
+})();
+</script>
+</body>
+</html>
+
