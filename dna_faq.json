@@ -1,0 +1,272 @@
+[
+  {
+    "q": "What is DNA?",
+    "a": "A molecule that stores genetic information."
+  },
+  {
+    "q": "What is RNA?",
+    "a": "A molecule that helps use DNA’s instructions to make proteins."
+  },
+  {
+    "q": "What is Nucleic acid?",
+    "a": "A large molecule made of nucleotides (DNA or RNA)."
+  },
+  {
+    "q": "What is Nucleotide?",
+    "a": "The basic building block of DNA and RNA."
+  },
+  {
+    "q": "What is Phosphate group?",
+    "a": "A component of a nucleotide that forms part of DNA’s backbone."
+  },
+  {
+    "q": "What is Sugar (deoxyribose)?",
+    "a": "The sugar in DNA nucleotides; part of the DNA backbone."
+  },
+  {
+    "q": "What is Nitrogenous base?",
+    "a": "The part of a nucleotide that carries genetic information (A, T, C, G in DNA)."
+  },
+  {
+    "q": "What is Adenine (A)?",
+    "a": "A DNA base that pairs with thymine (T)."
+  },
+  {
+    "q": "What is Thymine (T)?",
+    "a": "A DNA base that pairs with adenine (A)."
+  },
+  {
+    "q": "What is Cytosine (C)?",
+    "a": "A DNA base that pairs with guanine (G)."
+  },
+  {
+    "q": "What is Guanine (G)?",
+    "a": "A DNA base that pairs with cytosine (C)."
+  },
+  {
+    "q": "What is Complementary bases?",
+    "a": "Bases that pair in a specific way: A–T and G–C."
+  },
+  {
+    "q": "What is Base pair?",
+    "a": "Two complementary bases bonded together across DNA strands."
+  },
+  {
+    "q": "What is Hydrogen bond?",
+    "a": "A weak bond that holds base pairs together between DNA strands."
+  },
+  {
+    "q": "What is Double helix?",
+    "a": "The twisted ladder shape of DNA made of two strands."
+  },
+  {
+    "q": "What is Genetic information?",
+    "a": "Instructions encoded in DNA base sequences that determine traits and cell functions."
+  },
+  {
+    "q": "What is Genome?",
+    "a": "The complete DNA sequence of an organism."
+  },
+  {
+    "q": "What is Protein?",
+    "a": "A molecule made of amino acids that performs many cell functions."
+  },
+  {
+    "q": "What is Amino acid?",
+    "a": "A building block of proteins."
+  },
+  {
+    "q": "What is Enzyme?",
+    "a": "A protein that helps chemical reactions happen faster in cells."
+  },
+  {
+    "q": "What is DNA replication?",
+    "a": "The process of making an exact copy of DNA."
+  },
+  {
+    "q": "What is Template strand?",
+    "a": "The original DNA strand used to build a complementary new strand."
+  },
+  {
+    "q": "What is Daughter strand?",
+    "a": "A newly built DNA strand produced during replication."
+  },
+  {
+    "q": "What is Cell cycle?",
+    "a": "The series of stages a cell goes through to grow and divide."
+  },
+  {
+    "q": "What is Transcription?",
+    "a": "Copying a gene’s DNA sequence into an RNA sequence."
+  },
+  {
+    "q": "What is Translation?",
+    "a": "Using RNA instructions to assemble amino acids into a protein."
+  },
+  {
+    "q": "What is Chromatin?",
+    "a": "DNA in a loose, uncondensed form in the nucleus (most of the cell cycle)."
+  },
+  {
+    "q": "What is Chromosome?",
+    "a": "A highly condensed form of DNA visible during cell division."
+  },
+  {
+    "q": "What is Gene?",
+    "a": "A section of DNA that contains instructions for a trait (often by coding for proteins)."
+  },
+  {
+    "q": "What is Allele?",
+    "a": "Different forms of the same gene."
+  },
+  {
+    "q": "What is Homologous chromosomes?",
+    "a": "A pair of chromosomes with the same genes in the same locations (one from each parent)."
+  },
+  {
+    "q": "What is Autosomes?",
+    "a": "Chromosomes that are not sex chromosomes."
+  },
+  {
+    "q": "What is Sex chromosomes (X and Y)?",
+    "a": "Chromosomes that help determine biological sex."
+  },
+  {
+    "q": "What is Karyotype?",
+    "a": "A photograph/arrangement of chromosomes in pairs for analysis."
+  },
+  {
+    "q": "What is Interphase?",
+    "a": "A stage of the cell cycle when the cell grows and DNA is in chromatin form."
+  },
+  {
+    "q": "What is Mitosis?",
+    "a": "A process where one cell divides to produce two genetically identical body cells."
+  },
+  {
+    "q": "What is Metaphase?",
+    "a": "A stage of mitosis when chromosomes line up and are easiest to see."
+  },
+  {
+    "q": "What is Central dogma (DNA → RNA → Protein)?",
+    "a": "The overall flow of genetic information in cells."
+  },
+
+  {
+    "q": "What is Unity?",
+    "a": "1) What “unity” means (core idea) Unity means everything works together as a whole."
+  },
+  {
+    "q": "What is microbes?",
+    "a": ""
+  },
+  {
+    "q": "What is Habitat?",
+    "a": "A habitat is the natural place where an organism lives."
+  },
+  {
+    "q": "What is Double helix?",
+    "a": "A double helix is the three-dimensional shape of DNA."
+  },
+  {
+    "q": "What is Stumbling?",
+    "a": "1) Literal meaning (physical) Stumbling literally means losing balance while walking—often because your foot hits an obstacle (a rock, step, root), causing you to almost fall or take awkward steps."
+  },
+  {
+    "q": "What is Organism?",
+    "a": "An organism is any individual living thing."
+  },
+  {
+    "q": "What is DNA?",
+    "a": "1) What DNA is (core idea) DNA (deoxyribonucleic acid) is the molecule that stores genetic information in almost all living organisms."
+  },
+  {
+    "q": "What is Gene?",
+    "a": "A gene is a specific segment of DNA that contains the instructions to make a functional product—usually a protein, or sometimes a functional RNA molecule."
+  },
+  {
+    "q": "What is Ethical?",
+    "a": "Ethical describes actions, decisions, or rules that follow moral principles—what is considered right, fair, and responsible."
+  },
+  {
+    "q": "What is Inherited traits?",
+    "a": "1) What “inherited traits” means Inherited traits are characteristics passed from parents to offspring through genes."
+  },
+  {
+    "q": "What is Punnett square?",
+    "a": "A Punnett square is a diagram used to predict the possible genetic outcomes of a cross between two parents."
+  },
+  {
+    "q": "What is Claims?",
+    "a": "A claim is a statement that asserts something is true."
+  },
+  {
+    "q": "What is Perspectives?",
+    "a": "1) What “perspectives” means (core idea) Perspectives are the ways people see, understand, or interpret a situation, issue, or event."
+  },
+  {
+    "q": "What is Reinforcement?",
+    "a": "1) What “reinforcement” means (core idea) Reinforcement is anything that increases the likelihood that a behavior will happen again in the future."
+  },
+  {
+    "q": "What is asexual?",
+    "a": ""
+  },
+  {
+    "q": "What is Eukaryotic?",
+    "a": "1) What “eukaryotic” means (core definition) Eukaryotic describes cells or organisms whose cells have a true nucleus and membrane-bound organelles."
+  },
+  {
+    "q": "What is Interphase?",
+    "a": "1) What interphase is (core idea) Interphase is the longest stage of the cell cycle, when a cell is not dividing but is actively growing, copying DNA, and preparing for division."
+  },
+  {
+    "q": "What is Mitosis?",
+    "a": "1) What mitosis is (core idea) Mitosis is the process by which a cell divides its nucleus to produce two genetically identical daughter cells."
+  },
+  {
+    "q": "What is Cytokinesis?",
+    "a": "1) What cytokinesis is (core idea) Cytokinesis is the final step of cell division in which the cytoplasm splits, producing two separate daughter cells."
+  },
+  {
+    "q": "What is replicated?",
+    "a": ""
+  },
+  {
+    "q": "What is Chromosomes?",
+    "a": "When a cell is dividing, chromatin condenses into visible chromosomes."
+  },
+  {
+    "q": "What is Meiosis?",
+    "a": "1) What meiosis is (core idea) Meiosis is a type of cell division that reduces the chromosome number by half, producing four genetically unique haploid cells (gametes)."
+  },
+  {
+    "q": "What is Homologous?",
+    "a": "1) What homologous means (core idea) Homologous means “similar in structure and function because of shared origin.”"
+  },
+  {
+    "q": "What is Crossing over?",
+    "a": "1) What crossing over is Crossing over is the exchange of DNA segments between homologous chromosomes during meiosis."
+  },
+  {
+    "q": "What is Zygote?",
+    "a": "A zygote is the single cell formed when a sperm cell fuses with an egg cell during fertilization."
+  },
+  {
+    "q": "What is Gamete?",
+    "a": "A gamete is a sex cell used in sexual reproduction."
+  },
+  {
+    "q": "What is Haploid?",
+    "a": "1) What haploid means (core definition) Haploid describes a cell that contains one complete set of chromosomes, written as n."
+  },
+  {
+    "q": "What is Diploid?",
+    "a": "1) What diploid means (core definition) Diploid describes a cell that contains two complete sets of chromosomes, written as 2n—one set inherited from each parent."
+  },
+  {
+    "q": "What is Sperm?",
+    "a": "1) What sperm is (core definition) Sperm is the male gamete (sex cell) used in sexual reproduction."
+  }
+]
+
