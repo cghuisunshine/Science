@@ -99,6 +99,22 @@
       box-shadow: 0 10px 30px rgba(0,0,0,.35);
       background: rgba(255,255,255,.02);
     }
+    .iframeStage{
+      width:100%;
+      height:100%;
+      border-radius:12px;
+      overflow:hidden;
+      display:none;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      background: rgba(255,255,255,.02);
+    }
+    .iframeStage iframe{
+      width:100%;
+      height:100%;
+      border:none;
+      display:block;
+      background:#111;
+    }
     canvas{display:block; border-radius:12px}
     .annoLayer{
       position:absolute; inset:0;
@@ -238,6 +254,9 @@
               <!-- drawing overlay -->
               <div class="drawOverlay" id="drawOverlay"></div>
             </div>
+            <div class="iframeStage" id="iframeStage">
+              <iframe id="pdfIframe" title="PDF viewer"></iframe>
+            </div>
           </div>
         </div>
       </div>
@@ -315,20 +334,6 @@
 <script>
 (() => {
   // -------------------------
-  // PDF.js setup
-  // -------------------------
-  const pdfjsLib = window.pdfjsLib || window['pdfjs-dist/build/pdf'];
-  if(!pdfjsLib){
-    console.error("PDF.js not found on window. Did the CDN script fail to load?");
-    const stateEl = document.getElementById("state");
-    if(stateEl) stateEl.textContent = "PDF.js failed to load (offline/CDN blocked)";
-    return;
-  }
-  // Worker (CDN matched version)
-  pdfjsLib.GlobalWorkerOptions.workerSrc =
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js";
-
-  // -------------------------
   // DOM
   // -------------------------
   const pdfUrlEl = document.getElementById('pdfUrl');
@@ -352,6 +357,8 @@
   const annoLayer = document.getElementById('annoLayer');
   const drawOverlay = document.getElementById('drawOverlay');
   const pdfWrap = document.getElementById('pdfWrap');
+  const iframeStage = document.getElementById('iframeStage');
+  const pdfIframe = document.getElementById('pdfIframe');
 
   const btnDraw = document.getElementById('btnDraw');
   const btnClearPage = document.getElementById('btnClearPage');
@@ -371,6 +378,21 @@
   let renderQueued = false;
   let drawMode = false;
   let localPdf = null; // { key, name, data: Uint8Array }
+  let localPdfObjectUrl = null;
+  let viewerMode = "pdfjs"; // "pdfjs" | "iframe"
+
+  // -------------------------
+  // PDF.js setup (lazy)
+  // -------------------------
+  function getPdfJs(){
+    const lib = window.pdfjsLib || window['pdfjs-dist/build/pdf'];
+    if(!lib) return null;
+    if(!lib.GlobalWorkerOptions?.workerSrc){
+      lib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js";
+    }
+    return lib;
+  }
 
   // -------------------------
   // Storage keys
@@ -428,6 +450,10 @@
   function formatErr(e){
     if(!e) return "unknown error";
     if(typeof e === "string") return e;
+    const name = e?.name ? String(e.name) : "";
+    const msg = e?.message ? String(e.message) : "";
+    const details = [name, msg].filter(Boolean).join(": ");
+    if(details) return details;
     if(e?.message) return e.message;
     try { return JSON.stringify(e); } catch { return String(e); }
   }
@@ -449,6 +475,49 @@
     pdfSourceLabel.textContent = "(local file)";
   }
 
+  function setViewerMode(mode){
+    viewerMode = mode;
+    if(mode === "iframe"){
+      pageStage.style.display = "none";
+      iframeStage.style.display = "block";
+      setDrawMode(false);
+      refreshControls();
+      return;
+    }
+    iframeStage.style.display = "none";
+    pageStage.style.display = "inline-block";
+    refreshControls();
+  }
+
+  function getIframeBaseUrl(){
+    if(pdfUrlEl.dataset.source === "local" && localPdfObjectUrl) return localPdfObjectUrl;
+    return (pdfUrlEl.value || "").trim().split("#")[0];
+  }
+
+  function setIframePdf(url){
+    setViewerMode("iframe");
+    const p = clamp(toInt(pageInputEl.value, 1), 1, 99999);
+    // Most built-in PDF viewers honor #page=.
+    pdfIframe.src = url.split("#")[0] + `#page=${p}`;
+    pdfMetaEl.textContent = "viewer=iframe";
+  }
+
+  function refreshControls(){
+    const inPdfjs = viewerMode === "pdfjs" && !!pdfDoc;
+    const inIframe = viewerMode === "iframe";
+
+    btnZoomIn.disabled = !inPdfjs;
+    btnZoomOut.disabled = !inPdfjs;
+
+    btnDraw.disabled = !inPdfjs;
+    btnClearPage.disabled = !inPdfjs;
+    btnClearAll.disabled = !inPdfjs;
+
+    // Page switching works in both modes (iframe mode has no max page knowledge).
+    btnPrev.disabled = !(inPdfjs || inIframe);
+    btnNext.disabled = !(inPdfjs || inIframe);
+  }
+
   // Convert between canvas px and stage CSS px:
   // We set stage size to canvas width/height in CSS pixels (1:1).
   function setStageSize(w, h){
@@ -468,17 +537,48 @@
     if(!key) return;
 
     setState("loading PDF…");
-    const docRequest =
+
+    const pdfjsLib = getPdfJs();
+    if(!pdfjsLib){
+      setState("PDF.js not available (offline/CDN blocked) — showing PDF in iframe");
+      if(pdfUrlEl.dataset.source === "local" && localPdfObjectUrl){
+        setIframePdf(localPdfObjectUrl);
+      }else{
+        setIframePdf(key);
+      }
+      return;
+    }
+
+    const isFileOrigin = location.protocol === "file:" || location.origin === "null";
+
+    // Always use an options object so we can pass flags (e.g., disableWorker).
+    const options =
       (pdfUrlEl.dataset.source === "local" && localPdf?.data)
         ? { data: localPdf.data }
-        : key;
+        : { url: key };
 
-    pdfDoc = await pdfjsLib.getDocument(docRequest).promise;
-    pdfMetaEl.textContent = `pages=${pdfDoc.numPages}`;
-    pageNum = clamp(toInt(pageInputEl.value, 1), 1, pdfDoc.numPages);
-    pageInputEl.value = pageNum;
-    setState("PDF loaded");
-    await renderPage();
+    // When opened via file://, some browsers block loading the worker from CDN due to origin "null".
+    // Fallback: run without a worker (main thread) so PDFs still render.
+    if(isFileOrigin) options.disableWorker = true;
+
+    try{
+      pdfDoc = await pdfjsLib.getDocument(options).promise;
+      setViewerMode("pdfjs");
+      pdfMetaEl.textContent = `pages=${pdfDoc.numPages}`;
+      pageNum = clamp(toInt(pageInputEl.value, 1), 1, pdfDoc.numPages);
+      pageInputEl.value = pageNum;
+      setState("PDF loaded");
+      await renderPage();
+    }catch(e){
+      console.error(e);
+      // CORS is common when loading a remote URL from file://, so fall back to iframe.
+      setState(`PDF.js blocked (${formatErr(e)}) — showing PDF in iframe`);
+      if(pdfUrlEl.dataset.source === "local" && localPdfObjectUrl){
+        setIframePdf(localPdfObjectUrl);
+      }else{
+        setIframePdf(key);
+      }
+    }
   }
 
   async function renderPage(){
@@ -591,6 +691,15 @@
   let tempRectEl = null;
 
   function setDrawMode(on){
+    if(viewerMode !== "pdfjs"){
+      drawMode = false;
+      btnDraw.textContent = "✏️ Draw: OFF";
+      btnDraw.classList.remove("green");
+      btnDraw.classList.add("warn");
+      annoLayer.style.pointerEvents = "auto";
+      drawOverlay.style.pointerEvents = "none";
+      return;
+    }
     drawMode = on;
     btnDraw.textContent = on ? "✏️ Draw: ON" : "✏️ Draw: OFF";
     btnDraw.classList.toggle("green", on);
@@ -725,6 +834,11 @@
     if(!file) return;
     try{
       setState("reading file…");
+      if(localPdfObjectUrl){
+        try{ URL.revokeObjectURL(localPdfObjectUrl); }catch{}
+        localPdfObjectUrl = null;
+      }
+      localPdfObjectUrl = URL.createObjectURL(file);
       const buf = await file.arrayBuffer();
       setLocalSource(file, new Uint8Array(buf));
       await loadPdf();
@@ -749,6 +863,13 @@
   });
 
   btnPrev.addEventListener("click", async () => {
+    if(viewerMode === "iframe"){
+      pageNum = Math.max(1, toInt(pageInputEl.value, pageNum) - 1);
+      pageInputEl.value = pageNum;
+      setIframePdf(getIframeBaseUrl());
+      setState(`ready (page ${pageNum}, iframe)`);
+      return;
+    }
     if(!pdfDoc) return;
     pageNum = clamp(pageNum - 1, 1, pdfDoc.numPages);
     pageInputEl.value = pageNum;
@@ -756,6 +877,13 @@
   });
 
   btnNext.addEventListener("click", async () => {
+    if(viewerMode === "iframe"){
+      pageNum = Math.max(1, toInt(pageInputEl.value, pageNum) + 1);
+      pageInputEl.value = pageNum;
+      setIframePdf(getIframeBaseUrl());
+      setState(`ready (page ${pageNum}, iframe)`);
+      return;
+    }
     if(!pdfDoc) return;
     pageNum = clamp(pageNum + 1, 1, pdfDoc.numPages);
     pageInputEl.value = pageNum;
@@ -764,6 +892,13 @@
 
   pageInputEl.addEventListener("keydown", async (e) => {
     if(e.key !== "Enter") return;
+    if(viewerMode === "iframe"){
+      pageNum = Math.max(1, toInt(pageInputEl.value, pageNum));
+      pageInputEl.value = pageNum;
+      setIframePdf(getIframeBaseUrl());
+      setState(`ready (page ${pageNum}, iframe)`);
+      return;
+    }
     if(!pdfDoc) return;
     pageNum = clamp(toInt(pageInputEl.value, pageNum), 1, pdfDoc.numPages);
     pageInputEl.value = pageNum;
@@ -771,11 +906,13 @@
   });
 
   btnZoomIn.addEventListener("click", async () => {
+    if(viewerMode !== "pdfjs") return;
     scale = clamp(scale + 0.15, 0.5, 3.0);
     await renderPage();
   });
 
   btnZoomOut.addEventListener("click", async () => {
+    if(viewerMode !== "pdfjs") return;
     scale = clamp(scale - 0.15, 0.5, 3.0);
     await renderPage();
   });
@@ -807,6 +944,7 @@
 
     // Default draw off
     setDrawMode(false);
+    refreshControls();
 
     // Load default PDF
     try{
