@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pedigrees &amp; Inheritance – Hemophilia (Queen Victoria)</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+  padding: 30px;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+details.settings {
+  margin-top: 14px;
+  margin-bottom: 18px;
+  background: #fafafa;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+details.settings summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.settings-row {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.settings-row label {
+  min-width: 120px;
+}
+
+.settings-row input {
+  flex: 1 1 320px;
+  min-width: 240px;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.settings-hint {
+  margin-top: 8px;
+  color: #555;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+h1, h2 {
+  color: #333;
+}
+
+.title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.page-title {
+  margin: 0;
+}
+
+.title-image {
+  width: 150px;
+  height: auto;
+  border-radius: 8px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+.hero-media {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+  margin-bottom: 16px;
+}
+
+.hero-media img {
+  width: 100%;
+  max-width: 900px;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+@media (max-width: 600px) {
+  .title-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .title-image {
+    display: block;
+    margin: 12px auto 0;
+    width: min(220px, 70%);
+  }
+
+  .page-title {
+    text-align: center;
+  }
+}
+
+.case {
+  background: #fafafa;
+  padding: 15px;
+  border-left: 5px solid #4CAF50;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.question {
+  margin-bottom: 30px;
+}
+
+textarea {
+  width: 100%;
+  height: 90px;
+  margin-top: 8px;
+  padding: 8px;
+  font-size: 14px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #2196F3;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1976D2;
+}
+
+.btn-row {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn-row button {
+  margin-top: 0;
+}
+
+.feedback {
+  font-size: 14px;
+}
+
+.feedback.ok {
+  color: #1b5e20;
+}
+
+.feedback.bad {
+  color: #b71c1c;
+}
+
+.answer {
+  margin-top: 10px;
+  padding: 12px;
+  background: #eef6ff;
+  border-left: 4px solid #2196F3;
+  display: none;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title-row">
+    <h1 class="page-title">Pedigrees &amp; Inheritance – Hemophilia in Queen Victoria’s Family</h1>
+  </div>
+
+  <div class="hero-media">
+    <img src="assets/Queen_Victoria.jpg" alt="Queen Victoria">
+  </div>
+
+  <div class="case">
+    <p><b>Pedigrees and inheritance:</b> A pedigree in genetics is a diagram showing the lineage (family relationships) of an individual and direct ancestors, used to analyze how a trait is inherited.</p>
+
+    <p><b>Hemophilia</b> has been called a “royal disease” because the hemophilia gene was passed from Queen Victoria (Queen of England in 1837) into the ruling families of <b>Spain</b>, <b>Germany</b>, and <b>Russia</b>. Queen Victoria’s hemophilia allele was caused by a <b>spontaneous mutation</b>.</p>
+
+    <p>Hemophilia is inherited in a <b>sex-linked recessive</b> pattern. The genes associated with this condition are located on the <b>X chromosome</b>.</p>
+
+    <ul>
+      <li><b>Males</b> (XY) have only one X chromosome, so <b>one altered copy</b> of the gene can cause the condition.</li>
+      <li><b>Females</b> (XX) have two X chromosomes, so they would usually need <b>two altered copies</b> to be affected. This makes hemophilia <b>rare in females</b>.</li>
+      <li>Fathers <b>cannot pass</b> an X-linked trait to their <b>sons</b> (sons inherit the Y from the father).</li>
+    </ul>
+
+    <p><b>Legend (common symbols):</b> ○ female without hemophilia; □ male without hemophilia; ◑ female carrier; ■ male with hemophilia; ? unknown/not enough info.</p>
+
+  </div>
+
+  <details class="settings">
+    <summary>AI grading (optional)</summary>
+    <div class="settings-row">
+      <label for="grade-api-url">Grade API URL</label>
+      <input id="grade-api-url" type="text" placeholder="https://example.com/grade">
+      <button type="button" id="btn-test-api">Test</button>
+      <span id="api-status" class="feedback"></span>
+    </div>
+    <div class="settings-hint">
+      If AI grading fails, the page falls back to a simple overlap check against the model answer.
+    </div>
+  </details>
+
+  <h2>Questions</h2>
+
+  <div class="btn-row" style="margin-top: 8px; margin-bottom: 18px;">
+    <button type="button" id="btn-check-all">Check All</button>
+    <span id="check-all-status" class="feedback"></span>
+  </div>
+
+  <div class="question" id="q1">
+    <p><b>1. In this pedigree, what does a half-shaded circle (◑) represent?</b></p>
+    <textarea placeholder="Type your answer here..."></textarea>
+    <div class="btn-row">
+      <button type="button" onclick="checkMyAnswer(1, this)">Check my answer</button>
+      <button type="button" id="toggleBtn1" onclick="toggleAnswer(1, this)">Show Answer</button>
+      <span id="feedback1" class="feedback"></span>
+    </div>
+    <div id="answer1" class="answer">
+      <p><b>Answer:</b> A carrier female (she carries one altered copy on one X chromosome).</p>
+      <p><b>Explanation:</b> The legend shows ◑ as “female carrier”. In X-linked recessive traits, carriers usually do not show the condition but can pass the allele to children.</p>
+    </div>
+  </div>
+
+  <div class="question" id="q2">
+    <p><b>2. What does the “?” symbol on an individual in the pedigree mean?</b></p>
+    <textarea placeholder="Type your answer here..."></textarea>
+    <div class="btn-row">
+      <button type="button" onclick="checkMyAnswer(2, this)">Check my answer</button>
+      <button type="button" id="toggleBtn2" onclick="toggleAnswer(2, this)">Show Answer</button>
+      <span id="feedback2" class="feedback"></span>
+    </div>
+    <div id="answer2" class="answer">
+      <p><b>Answer:</b> The person’s hemophilia status is unknown / not shown / can’t be determined from the diagram.</p>
+      <p><b>Explanation:</b> A “?” indicates missing information: the chart doesn’t label whether that person is affected, unaffected, or a carrier.</p>
+    </div>
+  </div>
+
+  <div class="question" id="q3">
+    <p><b>3. Hemophilia in this family is inherited as which pattern?</b></p>
+    <textarea placeholder="Type your answer here..."></textarea>
+    <div class="btn-row">
+      <button type="button" onclick="checkMyAnswer(3, this)">Check my answer</button>
+      <button type="button" id="toggleBtn3" onclick="toggleAnswer(3, this)">Show Answer</button>
+      <span id="feedback3" class="feedback"></span>
+    </div>
+    <div id="answer3" class="answer">
+      <p><b>Answer:</b> X-linked recessive.</p>
+      <p><b>Explanation:</b> The allele is on the X chromosome. Affected males appear more often because males have only one X chromosome.</p>
+    </div>
+  </div>
+
+  <div class="question" id="q4">
+    <p><b>4. From the pedigree, is Queen Victoria affected, unaffected, or a carrier?</b></p>
+    <textarea placeholder="Type your answer here..."></textarea>
+    <div class="btn-row">
+      <button type="button" onclick="checkMyAnswer(4, this)">Check my answer</button>
+      <button type="button" id="toggleBtn4" onclick="toggleAnswer(4, this)">Show Answer</button>
+      <span id="feedback4" class="feedback"></span>
+    </div>
+    <div id="answer4" class="answer">
+      <p><b>Answer:</b> Carrier.</p>
+      <p><b>Explanation:</b> Victoria is shown as a half-shaded circle, which the legend defines as a female carrier.</p>
+    </div>
+  </div>
+
+  <div class="question" id="q5">
+    <p><b>5. From the pedigree, is Prince Leopold affected, unaffected, or a carrier?</b></p>
+    <textarea placeholder="Type your answer here..."></textarea>
+    <div class="btn-row">
+      <button type="button" onclick="checkMyAnswer(5, this)">Check my answer</button>
+      <button type="button" id="toggleBtn5" onclick="toggleAnswer(5, this)">Show Answer</button>
+      <span id="feedback5" class="feedback"></span>
+    </div>
+    <div id="answer5" class="answer">
+      <p><b>Answer:</b> Affected (male with hemophilia).</p>
+      <p><b>Explanation:</b> Leopold is shown as a filled square (■), which indicates a male with hemophilia.</p>
+    </div>
+  </div>
+
+  <div class="question" id="q6">
+    <p><b>6. Why can an affected father NOT pass an X-linked trait to his sons?</b></p>
+    <textarea placeholder="Type your answer here..."></textarea>
+    <div class="btn-row">
+      <button type="button" onclick="checkMyAnswer(6, this)">Check my answer</button>
+      <button type="button" id="toggleBtn6" onclick="toggleAnswer(6, this)">Show Answer</button>
+      <span id="feedback6" class="feedback"></span>
+    </div>
+    <div id="answer6" class="answer">
+      <p><b>Answer:</b> Because sons inherit the Y chromosome from their father (and the X chromosome from their mother).</p>
+      <p><b>Explanation:</b> A father gives Y to sons and X to daughters, so an allele on the father’s X cannot go to his sons.</p>
+    </div>
+  </div>
+
+  <div class="question" id="q7">
+    <p><b>7. If a carrier mother (XᴴXʰ) has children with an unaffected father (XᴴY), what is the probability a SON has hemophilia?</b></p>
+    <textarea placeholder="Type your answer here..."></textarea>
+    <div class="btn-row">
+      <button type="button" onclick="checkMyAnswer(7, this)">Check my answer</button>
+      <button type="button" id="toggleBtn7" onclick="toggleAnswer(7, this)">Show Answer</button>
+      <span id="feedback7" class="feedback"></span>
+    </div>
+    <div id="answer7" class="answer">
+      <p><b>Answer:</b> 50%.</p>
+      <p><b>Explanation:</b> Sons receive Y from dad and one X from mom. A carrier mom has a 50% chance to pass the altered Xʰ to a son.</p>
+    </div>
+  </div>
+
+  <div class="question" id="q8">
+    <p><b>8. In the same cross (carrier mother XᴴXʰ × unaffected father XᴴY), what is the probability a DAUGHTER is a carrier?</b></p>
+    <textarea placeholder="Type your answer here..."></textarea>
+    <div class="btn-row">
+      <button type="button" onclick="checkMyAnswer(8, this)">Check my answer</button>
+      <button type="button" id="toggleBtn8" onclick="toggleAnswer(8, this)">Show Answer</button>
+      <span id="feedback8" class="feedback"></span>
+    </div>
+    <div id="answer8" class="answer">
+      <p><b>Answer:</b> 50%.</p>
+      <p><b>Explanation:</b> All daughters get the father’s normal Xᴴ. From the carrier mom, half of daughters get Xʰ (carriers) and half get Xᴴ (unaffected, not carriers).</p>
+    </div>
+  </div>
+
+  <div class="question" id="q9">
+    <p><b>9. Name ONE female shown as a carrier in the pedigree (besides Queen Victoria).</b></p>
+    <textarea placeholder="Type your answer here..."></textarea>
+    <div class="btn-row">
+      <button type="button" onclick="checkMyAnswer(9, this)">Check my answer</button>
+      <button type="button" id="toggleBtn9" onclick="toggleAnswer(9, this)">Show Answer</button>
+      <span id="feedback9" class="feedback"></span>
+    </div>
+    <div id="answer9" class="answer">
+      <p><b>Answer:</b> Examples include: Alice, Beatrice, Irene, Alexandra, or Ena (shown as half-shaded circles).</p>
+      <p><b>Explanation:</b> Any half-shaded circle (◑) in the pedigree is a carrier female according to the legend.</p>
+    </div>
+  </div>
+
+  <div class="question" id="q10">
+    <p><b>10. Why is hemophilia rare in females in an X-linked recessive trait?</b></p>
+    <textarea placeholder="Type your answer here..."></textarea>
+    <div class="btn-row">
+      <button type="button" onclick="checkMyAnswer(10, this)">Check my answer</button>
+      <button type="button" id="toggleBtn10" onclick="toggleAnswer(10, this)">Show Answer</button>
+      <span id="feedback10" class="feedback"></span>
+    </div>
+    <div id="answer10" class="answer">
+      <p><b>Answer:</b> Females would usually need two altered copies (one on each X) to be affected.</p>
+      <p><b>Explanation:</b> With two X chromosomes, one normal allele can mask the recessive allele. So most females with one altered allele are carriers, not affected.</p>
+    </div>
+  </div>
+
+  <div class="question" id="q11">
+    <p><b>11. Looking at the pedigree, which group appears MOST often as affected (filled symbols)?</b></p>
+    <textarea placeholder="Type your answer here..."></textarea>
+    <div class="btn-row">
+      <button type="button" onclick="checkMyAnswer(11, this)">Check my answer</button>
+      <button type="button" id="toggleBtn11" onclick="toggleAnswer(11, this)">Show Answer</button>
+      <span id="feedback11" class="feedback"></span>
+    </div>
+    <div id="answer11" class="answer">
+      <p><b>Answer:</b> Males (squares).</p>
+      <p><b>Explanation:</b> In X-linked recessive inheritance, males are affected more frequently because they have only one X chromosome.</p>
+    </div>
+  </div>
+
+  <div class="question" id="q12">
+    <p><b>12. If an affected male (XʰY) has an unaffected female partner who is NOT a carrier (XᴴXᴴ), will any sons have hemophilia? (yes/no)</b></p>
+    <textarea placeholder="Type your answer here..."></textarea>
+    <div class="btn-row">
+      <button type="button" onclick="checkMyAnswer(12, this)">Check my answer</button>
+      <button type="button" id="toggleBtn12" onclick="toggleAnswer(12, this)">Show Answer</button>
+      <span id="feedback12" class="feedback"></span>
+    </div>
+    <div id="answer12" class="answer">
+      <p><b>Answer:</b> No.</p>
+      <p><b>Explanation:</b> Sons get Y from dad and Xᴴ from mom, so they are XᴴY (unaffected). Dad cannot pass his X to sons.</p>
+    </div>
+  </div>
+
+  <div class="question" id="q13">
+    <p><b>13. In that same situation (affected father XʰY × non-carrier mother XᴴXᴴ), what happens to ALL daughters?</b></p>
+    <textarea placeholder="Type your answer here..."></textarea>
+    <div class="btn-row">
+      <button type="button" onclick="checkMyAnswer(13, this)">Check my answer</button>
+      <button type="button" id="toggleBtn13" onclick="toggleAnswer(13, this)">Show Answer</button>
+      <span id="feedback13" class="feedback"></span>
+    </div>
+    <div id="answer13" class="answer">
+      <p><b>Answer:</b> All daughters are carriers.</p>
+      <p><b>Explanation:</b> Daughters get the father’s affected Xʰ and the mother’s normal Xᴴ, making them XᴴXʰ (carriers).</p>
+    </div>
+  </div>
+
+  <div class="question" id="q14">
+    <p><b>14. The notes say Queen Victoria’s hemophilia allele was caused by a spontaneous mutation. What does that mean?</b></p>
+    <textarea placeholder="Type your answer here..."></textarea>
+    <div class="btn-row">
+      <button type="button" onclick="checkMyAnswer(14, this)">Check my answer</button>
+      <button type="button" id="toggleBtn14" onclick="toggleAnswer(14, this)">Show Answer</button>
+      <span id="feedback14" class="feedback"></span>
+    </div>
+    <div id="answer14" class="answer">
+      <p><b>Answer:</b> It appeared new in her family line (a new change in DNA), rather than being inherited from previous generations.</p>
+      <p><b>Explanation:</b> A spontaneous mutation means the allele arose newly.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const DEFAULT_GRADE_API_URL = "https://lakesideart.gochatus.org/grade-service/grade";
+
+const gradeApiUrlEl = document.getElementById("grade-api-url");
+const btnTestApi = document.getElementById("btn-test-api");
+const apiStatusEl = document.getElementById("api-status");
+
+function setApiStatus(text, kind) {
+  if (!apiStatusEl) return;
+  apiStatusEl.textContent = text || "";
+  apiStatusEl.className = "feedback" + (kind ? " " + kind : "");
+}
+
+function getGradeApiUrl() {
+  if (!gradeApiUrlEl) return null;
+  const url = (gradeApiUrlEl.value || "").trim();
+  return url || null;
+}
+
+function saveGradeApiUrl() {
+  if (!gradeApiUrlEl) return;
+  const url = (gradeApiUrlEl.value || "").trim();
+  try {
+    localStorage.setItem("gradeApiUrl", url);
+  } catch {
+    // ignore
+  }
+}
+
+async function fetchJsonWithTimeout(url, options, timeoutMs) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const resp = await fetch(url, { ...options, signal: controller.signal });
+    const text = await resp.text().catch(() => "");
+    let data = null;
+    try { data = text ? JSON.parse(text) : null; } catch { data = null; }
+    return { ok: resp.ok, status: resp.status, data, text };
+  } catch (err) {
+    if (err && err.name === "AbortError") return { ok: false, status: 0, data: null, text: "", aborted: true };
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function extractFirstGradeResult(data) {
+  if (!data) return null;
+  if (Array.isArray(data.results) && data.results[0]) return data.results[0];
+  if (data.result && Array.isArray(data.result.results) && data.result.results[0]) return data.result.results[0];
+  if (data.model_result && Array.isArray(data.model_result.results) && data.model_result.results[0]) return data.model_result.results[0];
+  return null;
+}
+
+function deriveHealthUrl(gradeUrl) {
+  try {
+    const u = new URL(gradeUrl);
+    u.search = "";
+    u.hash = "";
+    if (u.pathname.endsWith("/grade")) {
+      u.pathname = u.pathname.replace(/\/grade$/, "/health");
+    } else {
+      u.pathname = u.pathname.replace(/\/+$/, "") + "/health";
+    }
+    return u.toString();
+  } catch {
+    return null;
+  }
+}
+
+async function testApi() {
+  const gradeUrl = getGradeApiUrl();
+  if (!gradeUrl) {
+    setApiStatus("Set a URL first.", "bad");
+    return;
+  }
+
+  setApiStatus("Testing...");
+  try {
+    const healthUrl = deriveHealthUrl(gradeUrl);
+    if (!healthUrl) {
+      setApiStatus("Invalid URL.", "bad");
+      return;
+    }
+    const { ok, status, data, aborted } = await fetchJsonWithTimeout(healthUrl, { method: "GET" }, 4000);
+    if (aborted) {
+      setApiStatus("Health check timed out.", "bad");
+      return;
+    }
+    if (!ok) {
+      setApiStatus(`Health check failed (${status}).`, "bad");
+      return;
+    }
+    const looksHealthy = !!(data && (data.status === "ok" || data.ok === true));
+    setApiStatus(looksHealthy ? "OK" : "OK (nonstandard response)", looksHealthy ? "ok" : "");
+  } catch {
+    setApiStatus("Health check failed.", "bad");
+  }
+}
+
+if (gradeApiUrlEl) {
+  let savedGradeApiUrl = null;
+  try { savedGradeApiUrl = localStorage.getItem("gradeApiUrl"); } catch { savedGradeApiUrl = null; }
+  gradeApiUrlEl.value = savedGradeApiUrl === null ? DEFAULT_GRADE_API_URL : savedGradeApiUrl;
+  gradeApiUrlEl.addEventListener("change", () => {
+    saveGradeApiUrl();
+    setApiStatus("", "");
+  });
+}
+
+if (btnTestApi) {
+  btnTestApi.addEventListener("click", testApi);
+}
+
+function normalizeText(str) {
+  return String(str || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+function similarityScore(userText, targetText) {
+  const uWords = normalizeText(userText);
+  const tWords = normalizeText(targetText);
+  if (uWords.length === 0 || tWords.length === 0) return 0;
+
+  const uSet = new Set(uWords);
+  const tSet = new Set(tWords);
+  let intersection = 0;
+  tSet.forEach(w => { if (uSet.has(w)) intersection++; });
+  const union = uSet.size + tSet.size - intersection;
+  return union === 0 ? 0 : intersection / union;
+}
+
+function localOverlapCheck(userText, correctText) {
+  if (!correctText) {
+    return { verdict: "unknown", explanation: "No model answer provided; enable AI grading to validate." };
+  }
+  const score = similarityScore(userText, correctText);
+  const percent = Math.round(score * 100);
+  if (percent >= 70) return { verdict: "correct", explanation: `Overlap about ${percent}% with the model answer.` };
+  if (percent >= 40) return { verdict: "wrong", explanation: `Partial overlap (${percent}%). Compare with the model answer and refine.` };
+  return { verdict: "wrong", explanation: `Low overlap (~${percent}%). Compare with the model answer and try again.` };
+}
+
+async function gradeOne({ questionText, userText, correctText }) {
+  const gradeUrl = getGradeApiUrl();
+  const aiTimeoutMs = 60000;
+
+  if (gradeUrl) {
+    const pair = { question: questionText, answer: userText };
+    if (correctText) pair.reference_answer = correctText;
+    const payload = { pairs: [pair] };
+
+    const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+      gradeUrl,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      },
+      aiTimeoutMs
+    );
+
+    if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+
+    const first = extractFirstGradeResult(data);
+    if (!ok || !first) {
+      const reason = data && data.error ? data.error : `bad_response_${status}`;
+      const detail = text ? ` (${text.slice(0, 160)})` : "";
+      throw new Error(reason + detail);
+    }
+
+    const verdict = first.verdict === "correct" ? "correct" : "wrong";
+    const explanation = (first.explanation || "").trim();
+    return { verdict, explanation, mode: "ai" };
+  }
+
+  const local = localOverlapCheck(userText, correctText);
+  if (local.verdict === "unknown") return { verdict: "unknown", explanation: local.explanation, mode: "local" };
+  return { verdict: local.verdict, explanation: local.explanation, mode: "local" };
+}
+
+function setFeedback(id, text, kind) {
+  const el = document.getElementById("feedback" + id);
+  if (!el) return;
+  el.textContent = text || "";
+  el.className = "feedback" + (kind ? " " + kind : "");
+}
+
+async function checkMyAnswer(id, btn) {
+  const qEl = document.getElementById("q" + id);
+  const textarea = qEl ? qEl.querySelector("textarea") : null;
+  const userText = textarea ? textarea.value.trim() : "";
+  const answerEl = document.getElementById("answer" + id);
+  const correctText = answerEl ? answerEl.textContent.trim() : "";
+  const toggleBtn = document.getElementById("toggleBtn" + id);
+  const pEl = qEl ? qEl.querySelector("p") : null;
+  const questionText = pEl ? pEl.textContent.trim() : "";
+
+  if (!userText) {
+    if (answerEl) {
+      answerEl.style.display = "block";
+      if (toggleBtn) toggleBtn.textContent = "Hide Answer";
+      setFeedback(id, "No answer entered. Showing the model answer.", "bad");
+    } else {
+      setFeedback(id, "No answer entered.", "bad");
+    }
+    return;
+  }
+
+  const gradeUrl = getGradeApiUrl();
+  if (btn) btn.disabled = true;
+  setFeedback(id, gradeUrl ? "Checking with AI grader..." : "Checking...", "");
+
+  try {
+    const result = await gradeOne({ questionText, userText, correctText });
+    const isCorrect = result.verdict === "correct";
+    const prefix = result.verdict === "unknown" ? "" : (isCorrect ? "Correct. " : "Wrong. ");
+    setFeedback(id, prefix + (result.explanation || ""), isCorrect ? "ok" : "bad");
+  } catch (err) {
+    console.warn("Grading failed:", err);
+
+    const local = localOverlapCheck(userText, correctText);
+    if (local.verdict === "unknown") {
+      setFeedback(id, "AI grading unavailable; also no model answer to compare against.", "bad");
+    } else {
+      setFeedback(
+        id,
+        `AI grading unavailable; using overlap check. ${local.verdict === "correct" ? "Correct." : "Wrong."} ${local.explanation}`,
+        local.verdict === "correct" ? "ok" : "bad"
+      );
+    }
+  } finally {
+    if (btn) btn.disabled = false;
+    if (answerEl) {
+      answerEl.style.display = "block";
+      if (toggleBtn) toggleBtn.textContent = "Hide Answer";
+    }
+  }
+}
+
+function toggleAnswer(id, btn) {
+  const box = document.getElementById("answer" + id);
+  if (!box) return;
+  if (box.style.display === "none" || box.style.display === "") {
+    box.style.display = "block";
+    btn.textContent = "Hide Answer";
+  } else {
+    box.style.display = "none";
+    btn.textContent = "Show Answer";
+  }
+}
+
+function setCheckAllStatus(text, kind) {
+  const el = document.getElementById("check-all-status");
+  if (!el) return;
+  el.textContent = text || "";
+  el.className = "feedback" + (kind ? " " + kind : "");
+}
+
+async function checkAllQuestions() {
+  const btn = document.getElementById("btn-check-all");
+  if (btn) btn.disabled = true;
+  setCheckAllStatus("Checking all...", "");
+
+  try {
+    const ids = Array.from(document.querySelectorAll('.question[id^="q"]'))
+      .map((el) => {
+        const m = String(el.id || "").match(/^q(\d+)$/);
+        return m ? Number(m[1]) : null;
+      })
+      .filter((n) => Number.isFinite(n))
+      .sort((a, b) => a - b);
+
+    for (const id of ids) {
+      const checkBtn = document.querySelector(`#q${id} .btn-row button`);
+      await checkMyAnswer(id, checkBtn || null);
+      await new Promise((r) => setTimeout(r, 80));
+    }
+
+    setCheckAllStatus(`Done. Checked ${ids.length} question${ids.length === 1 ? "" : "s"}.`, "ok");
+  } catch (err) {
+    console.warn("Check All failed:", err);
+    setCheckAllStatus("Check All failed.", "bad");
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+(function wireCheckAll() {
+  const btn = document.getElementById("btn-check-all");
+  if (!btn) return;
+  btn.addEventListener("click", checkAllQuestions);
+})();
+</script>
+
+</body>
+</html>
