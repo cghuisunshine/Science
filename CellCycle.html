@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cell Cycle</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --paper: #ffffff;
+      --ink: #1f2937;
+      --muted: #4b5563;
+      --line: rgba(17, 24, 39, 0.12);
+      --shadow: 0 10px 28px rgba(17, 24, 39, 0.10);
+      --radius: 14px;
+      --max: 980px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 540px at 12% 4%, rgba(59, 130, 246, 0.10), transparent 60%),
+        radial-gradient(860px 520px at 88% 10%, rgba(16, 185, 129, 0.10), transparent 58%),
+        var(--bg);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 22px 16px 10px;
+    }
+
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 16px 40px;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-head {
+      padding: 18px 18px 12px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(249, 250, 251, 0.9), rgba(255, 255, 255, 0.6));
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.7rem;
+      letter-spacing: 0.01em;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .media {
+      padding: 14px 18px 0;
+    }
+
+    figure {
+      margin: 0;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+      border: 1px solid rgba(17, 24, 39, 0.10);
+      background: #fff;
+    }
+
+    figcaption {
+      margin-top: 10px;
+      color: rgba(75, 85, 99, 0.95);
+      font-size: 0.9rem;
+    }
+
+    .content {
+      padding: 14px 18px 20px;
+    }
+
+    .content p {
+      margin: 0 0 12px;
+      font-size: 1.02rem;
+    }
+
+    .content p:last-child {
+      margin-bottom: 0;
+    }
+
+    h2 {
+      margin: 18px 0 10px;
+      font-size: 1.2rem;
+      letter-spacing: 0.01em;
+    }
+
+    details.settings {
+      margin: 14px 0 16px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    details.settings summary {
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .settings-row {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .settings-row label {
+      min-width: 110px;
+      font-size: 0.95rem;
+    }
+
+    .settings-row input {
+      flex: 1 1 360px;
+      min-width: 240px;
+      padding: 8px;
+      font-size: 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(17, 24, 39, 0.16);
+      outline: none;
+    }
+
+    .settings-row input:focus {
+      border-color: rgba(59, 130, 246, 0.55);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+    }
+
+    .settings-hint {
+      margin-top: 8px;
+      color: #555;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .question {
+      margin: 0 0 18px;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(17, 24, 39, 0.10);
+      background: rgba(249, 250, 251, 0.7);
+    }
+
+    textarea {
+      width: 100%;
+      height: 110px;
+      margin-top: 8px;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(17, 24, 39, 0.16);
+      outline: none;
+      resize: vertical;
+      background: #fff;
+    }
+
+    textarea:focus {
+      border-color: rgba(16, 185, 129, 0.60);
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px 14px;
+      border: 1px solid rgba(17, 24, 39, 0.14);
+      border-radius: 999px;
+      background: #ffffff;
+      color: #111827;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: rgba(17, 24, 39, 0.04);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+
+    .btn-row {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-row button {
+      margin-top: 0;
+    }
+
+    .feedback {
+      font-size: 14px;
+    }
+
+    .feedback.ok {
+      color: #1b5e20;
+    }
+
+    .feedback.bad {
+      color: #b71c1c;
+    }
+
+    .answer {
+      margin-top: 10px;
+      padding: 12px;
+      background: #eef6ff;
+      border-left: 4px solid #2196F3;
+      display: none;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 520px) {
+      h1 { font-size: 1.45rem; }
+      .content p { font-size: 1rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap">
+      <div class="card">
+        <div class="card-head">
+          <h1>Cell Cycle</h1>
+          <p class="subtitle">How cells grow, copy DNA, and divide</p>
+        </div>
+
+        <div class="media">
+          <figure>
+            <img src="assets/CellCycle.png" alt="Cell cycle diagram" />
+            <figcaption>Diagram: interphase (G1, S, G2), mitosis, and cytokinesis</figcaption>
+          </figure>
+        </div>
+
+        <div class="content">
+          <p>
+            The cell cycle is the process that cells go through as they grow and divide. Most of the time, a cell is in interphase,
+            where it grows, carries out its normal functions, and duplicates its DNA so it's ready to divide. Interphase has three parts:
+            G1 (growth), S (synthesis/DNA replication), and G2 (final preparation before division).
+          </p>
+
+          <p>
+            After interphase, the cell enters mitosis, where the nucleus divides into two identical sets of chromosomes. This is followed by
+            cytokinesis, when the cell's cytoplasm splits and two new cells are formed.
+          </p>
+
+          <p>
+            The cell cycle is carefully controlled by checkpoints, which act like quality-control points. These checkpoints make sure the cell is
+            ready to continue dividing. If something goes wrong -- like DNA damage or errors during copying -- the cell can pause to fix the problem
+            or even self-destruct to protect the organism.
+          </p>
+
+          <p>
+            Sometimes cells don't respond to these signals and keep dividing uncontrollably. This can lead to cancer, where cells grow and spread in
+            ways they shouldn't. Mutations in genes that control the cell cycle -- such as those that normally slow growth or repair DNA -- are one of
+            the main causes of cancer.
+          </p>
+
+          <details class="settings">
+            <summary>AI grading (optional)</summary>
+            <div class="settings-row">
+              <label for="grade-api-url">Grade API URL</label>
+              <input id="grade-api-url" type="text" placeholder="https://example.com/grade" />
+              <button type="button" id="btn-test-api">Test</button>
+              <span id="api-status" class="feedback"></span>
+            </div>
+            <div class="settings-hint">
+              If AI grading fails, the page falls back to a simple overlap check against the model answer.
+            </div>
+          </details>
+
+          <h2>Questions</h2>
+
+          <div class="question" id="q1">
+            <p><b>1. Describe what happens in interphase. What happens in G1, S, and G2?</b></p>
+            <textarea placeholder="Type your answer here..."></textarea>
+            <div class="btn-row">
+              <button type="button" onclick="checkMyAnswer(1, this)">Check my answer</button>
+              <button type="button" id="toggleBtn1" onclick="toggleAnswer(1, this)">Show Answer</button>
+              <span id="feedback1" class="feedback"></span>
+            </div>
+            <div id="answer1" class="answer">
+              Interphase is when the cell grows, does its normal jobs, and copies its DNA so it can divide. In G1 the cell grows, in S it replicates
+              (copies) its DNA, and in G2 it makes final preparations for division.
+            </div>
+          </div>
+
+          <div class="question" id="q2">
+            <p><b>2. What is the difference between mitosis and cytokinesis?</b></p>
+            <textarea placeholder="Type your answer here..."></textarea>
+            <div class="btn-row">
+              <button type="button" onclick="checkMyAnswer(2, this)">Check my answer</button>
+              <button type="button" id="toggleBtn2" onclick="toggleAnswer(2, this)">Show Answer</button>
+              <span id="feedback2" class="feedback"></span>
+            </div>
+            <div id="answer2" class="answer">
+              Mitosis is when the nucleus divides into two identical sets of chromosomes. Cytokinesis happens after mitosis, when the cytoplasm splits
+              and two new cells form.
+            </div>
+          </div>
+
+          <div class="question" id="q3">
+            <p><b>3. What are checkpoints in the cell cycle, and what can happen if a problem is found?</b></p>
+            <textarea placeholder="Type your answer here..."></textarea>
+            <div class="btn-row">
+              <button type="button" onclick="checkMyAnswer(3, this)">Check my answer</button>
+              <button type="button" id="toggleBtn3" onclick="toggleAnswer(3, this)">Show Answer</button>
+              <span id="feedback3" class="feedback"></span>
+            </div>
+            <div id="answer3" class="answer">
+              Checkpoints are quality-control points that make sure the cell is ready to continue dividing. If DNA is damaged or copying errors happen,
+              the cell can pause to repair the problem, or it can self-destruct to protect the organism.
+            </div>
+          </div>
+
+          <div class="question" id="q4">
+            <p><b>4. Explain how uncontrolled cell division can lead to cancer.</b></p>
+            <textarea placeholder="Type your answer here..."></textarea>
+            <div class="btn-row">
+              <button type="button" onclick="checkMyAnswer(4, this)">Check my answer</button>
+              <button type="button" id="toggleBtn4" onclick="toggleAnswer(4, this)">Show Answer</button>
+              <span id="feedback4" class="feedback"></span>
+            </div>
+            <div id="answer4" class="answer">
+              If cells ignore cell-cycle signals and checkpoints, they can keep dividing even when they should stop. This uncontrolled growth can form
+              cancer, and the cells may spread in ways they should not.
+            </div>
+          </div>
+
+          <div class="question" id="q5">
+            <p><b>5. What kinds of gene mutations can cause loss of cell-cycle control?</b></p>
+            <textarea placeholder="Type your answer here..."></textarea>
+            <div class="btn-row">
+              <button type="button" onclick="checkMyAnswer(5, this)">Check my answer</button>
+              <button type="button" id="toggleBtn5" onclick="toggleAnswer(5, this)">Show Answer</button>
+              <span id="feedback5" class="feedback"></span>
+            </div>
+            <div id="answer5" class="answer">
+              Mutations in genes that normally slow cell growth/division or repair DNA can remove the normal "brakes" and allow cells to divide when
+              they should not.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <script>
+    const DEFAULT_GRADE_API_URL = "https://lakesideart.gochatus.org/grade-service/grade";
+
+    const gradeApiUrlEl = document.getElementById("grade-api-url");
+    const btnTestApi = document.getElementById("btn-test-api");
+    const apiStatusEl = document.getElementById("api-status");
+
+    function setApiStatus(text, kind) {
+      if (!apiStatusEl) return;
+      apiStatusEl.textContent = text || "";
+      apiStatusEl.className = "feedback" + (kind ? " " + kind : "");
+    }
+
+    function getGradeApiUrl() {
+      if (!gradeApiUrlEl) return null;
+      const url = (gradeApiUrlEl.value || "").trim();
+      return url || null;
+    }
+
+    function saveGradeApiUrl() {
+      if (!gradeApiUrlEl) return;
+      const url = (gradeApiUrlEl.value || "").trim();
+      try {
+        localStorage.setItem("gradeApiUrl", url);
+      } catch {
+        // ignore
+      }
+    }
+
+    async function fetchJsonWithTimeout(url, options, timeoutMs) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const resp = await fetch(url, { ...options, signal: controller.signal });
+        const text = await resp.text().catch(() => "");
+        let data = null;
+        try { data = text ? JSON.parse(text) : null; } catch { data = null; }
+        return { ok: resp.ok, status: resp.status, data, text };
+      } catch (err) {
+        if (err && err.name === "AbortError") return { ok: false, status: 0, data: null, text: "", aborted: true };
+        throw err;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function extractFirstGradeResult(data) {
+      if (!data) return null;
+      if (Array.isArray(data.results) && data.results[0]) return data.results[0];
+      if (data.result && Array.isArray(data.result.results) && data.result.results[0]) return data.result.results[0];
+      if (data.model_result && Array.isArray(data.model_result.results) && data.model_result.results[0]) return data.model_result.results[0];
+      return null;
+    }
+
+    function deriveHealthUrl(gradeUrl) {
+      try {
+        const u = new URL(gradeUrl);
+        u.search = "";
+        u.hash = "";
+        if (u.pathname.endsWith("/grade")) {
+          u.pathname = u.pathname.replace(/\/grade$/, "/health");
+        } else {
+          u.pathname = u.pathname.replace(/\/+$/, "") + "/health";
+        }
+        return u.toString();
+      } catch {
+        return null;
+      }
+    }
+
+    async function testApi() {
+      const gradeUrl = getGradeApiUrl();
+      if (!gradeUrl) {
+        setApiStatus("Set a URL first.", "bad");
+        return;
+      }
+
+      setApiStatus("Testing...");
+      try {
+        const healthUrl = deriveHealthUrl(gradeUrl);
+        if (!healthUrl) {
+          setApiStatus("Invalid URL.", "bad");
+          return;
+        }
+        const { ok, status, data, aborted } = await fetchJsonWithTimeout(healthUrl, { method: "GET" }, 4000);
+        if (aborted) {
+          setApiStatus("Health check timed out.", "bad");
+          return;
+        }
+        if (!ok) {
+          setApiStatus(`Health check failed (${status}).`, "bad");
+          return;
+        }
+        const looksHealthy = !!(data && (data.status === "ok" || data.ok === true));
+        setApiStatus(looksHealthy ? "OK" : "OK (nonstandard response)", looksHealthy ? "ok" : "");
+      } catch {
+        setApiStatus("Health check failed.", "bad");
+      }
+    }
+
+    if (gradeApiUrlEl) {
+      let savedGradeApiUrl = null;
+      try { savedGradeApiUrl = localStorage.getItem("gradeApiUrl"); } catch { savedGradeApiUrl = null; }
+      gradeApiUrlEl.value = savedGradeApiUrl === null ? DEFAULT_GRADE_API_URL : savedGradeApiUrl;
+      gradeApiUrlEl.addEventListener("change", () => {
+        saveGradeApiUrl();
+        setApiStatus("", "");
+      });
+    }
+
+    if (btnTestApi) {
+      btnTestApi.addEventListener("click", testApi);
+    }
+
+    function normalizeText(str) {
+      return String(str || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, " ")
+        .split(/\s+/)
+        .filter(Boolean);
+    }
+
+    function similarityScore(userText, targetText) {
+      const uWords = normalizeText(userText);
+      const tWords = normalizeText(targetText);
+      if (uWords.length === 0 || tWords.length === 0) return 0;
+
+      const uSet = new Set(uWords);
+      const tSet = new Set(tWords);
+      let intersection = 0;
+      tSet.forEach(w => { if (uSet.has(w)) intersection++; });
+      const union = uSet.size + tSet.size - intersection;
+      return union === 0 ? 0 : intersection / union;
+    }
+
+    function localOverlapCheck(userText, correctText) {
+      if (!correctText) {
+        return { verdict: "unknown", explanation: "No model answer provided; enable AI grading to validate." };
+      }
+      const score = similarityScore(userText, correctText);
+      const percent = Math.round(score * 100);
+      if (percent >= 70) return { verdict: "correct", explanation: `Overlap about ${percent}% with the model answer.` };
+      if (percent >= 40) return { verdict: "wrong", explanation: `Partial overlap (${percent}%). Compare with the model answer and refine.` };
+      return { verdict: "wrong", explanation: `Low overlap (~${percent}%). Compare with the model answer and try again.` };
+    }
+
+    async function gradeOne({ questionText, userText, correctText }) {
+      const gradeUrl = getGradeApiUrl();
+      const aiTimeoutMs = 60000;
+
+      if (gradeUrl) {
+        const pair = { question: questionText, answer: userText };
+        if (correctText) pair.reference_answer = correctText;
+        const payload = { pairs: [pair] };
+
+        const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+          gradeUrl,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          },
+          aiTimeoutMs
+        );
+
+        if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+
+        const first = extractFirstGradeResult(data);
+        if (!ok || !first) {
+          const reason = data && data.error ? data.error : `bad_response_${status}`;
+          const detail = text ? ` (${text.slice(0, 160)})` : "";
+          throw new Error(reason + detail);
+        }
+
+        const verdict = first.verdict === "correct" ? "correct" : "wrong";
+        const explanation = (first.explanation || "").trim();
+        return { verdict, explanation, mode: "ai" };
+      }
+
+      const local = localOverlapCheck(userText, correctText);
+      if (local.verdict === "unknown") return { verdict: "unknown", explanation: local.explanation, mode: "local" };
+      return { verdict: local.verdict, explanation: local.explanation, mode: "local" };
+    }
+
+    function setFeedback(id, text, kind) {
+      const el = document.getElementById("feedback" + id);
+      if (!el) return;
+      el.textContent = text || "";
+      el.className = "feedback" + (kind ? " " + kind : "");
+    }
+
+    async function checkMyAnswer(id, btn) {
+      const qEl = document.getElementById("q" + id);
+      const textarea = qEl ? qEl.querySelector("textarea") : null;
+      const userText = textarea ? textarea.value.trim() : "";
+      const answerEl = document.getElementById("answer" + id);
+      const correctText = answerEl ? answerEl.textContent.trim() : "";
+      const toggleBtn = document.getElementById("toggleBtn" + id);
+      const pEl = qEl ? qEl.querySelector("p") : null;
+      const questionText = pEl ? pEl.textContent.trim() : "";
+
+      if (!userText) {
+        if (answerEl) {
+          answerEl.style.display = "block";
+          if (toggleBtn) toggleBtn.textContent = "Hide Answer";
+          setFeedback(id, "No answer entered. Showing the model answer.", "bad");
+        } else {
+          setFeedback(id, "No answer entered.", "bad");
+        }
+        return;
+      }
+
+      const gradeUrl = getGradeApiUrl();
+      if (btn) btn.disabled = true;
+      setFeedback(id, gradeUrl ? "Checking with AI grader..." : "Checking...", "");
+
+      try {
+        const result = await gradeOne({ questionText, userText, correctText });
+        const isCorrect = result.verdict === "correct";
+        const prefix = result.verdict === "unknown" ? "" : (isCorrect ? "Correct. " : "Wrong. ");
+        setFeedback(id, prefix + (result.explanation || ""), isCorrect ? "ok" : "bad");
+      } catch (err) {
+        console.warn("Grading failed:", err);
+
+        const local = localOverlapCheck(userText, correctText);
+        if (local.verdict === "unknown") {
+          setFeedback(id, "AI grading unavailable; also no model answer to compare against.", "bad");
+        } else {
+          setFeedback(
+            id,
+            `AI grading unavailable; using overlap check. ${local.verdict === "correct" ? "Correct." : "Wrong."} ${local.explanation}`,
+            local.verdict === "correct" ? "ok" : "bad"
+          );
+        }
+      } finally {
+        if (btn) btn.disabled = false;
+        if (answerEl) {
+          answerEl.style.display = "block";
+          if (toggleBtn) toggleBtn.textContent = "Hide Answer";
+        }
+      }
+    }
+
+    function toggleAnswer(id, btn) {
+      const box = document.getElementById("answer" + id);
+      if (!box) return;
+      if (box.style.display === "none" || box.style.display === "") {
+        box.style.display = "block";
+        btn.textContent = "Hide Answer";
+      } else {
+        box.style.display = "none";
+        btn.textContent = "Show Answer";
+      }
+    }
+  </script>
+</body>
+</html>
