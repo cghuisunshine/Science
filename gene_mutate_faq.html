@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Genetics Practice Quiz</title>
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#0f172a;
+  color:#e5e7eb;
+  margin:0;
+  padding:20px;
+}
+h1{ text-align:center; }
+
+.topbar{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.card{
+  background:#111827;
+  border:1px solid #374151;
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:16px;
+}
+.question{ font-weight:bold; margin-bottom:10px; }
+.option{ margin:6px 0; }
+
+button{
+  margin-top:10px;
+  padding:8px 12px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  background:#2563eb;
+  color:white;
+}
+
+.result{
+  margin-top:10px;
+  padding:10px;
+  border-radius:8px;
+  font-weight:bold;
+}
+.correct{ background:#064e3b; color:#22c55e; }
+.wrong{ background:#4c0519; color:#f87171; }
+
+.explain{
+  margin-top:6px;
+  font-weight:normal;
+  color:#cbd5f5;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Genetics & Mutation Practice Quiz</h1>
+
+<div class="topbar">
+  <button onclick="checkAll()">Check All Answers</button>
+</div>
+
+<div id="quiz"></div>
+
+<script>
+const questions = [
+{
+q:"What different effects can mutations have on an organism?",
+options:["positive, neutral","positive, negative","positive, negative, neutral","neutral, negative"],
+answer:2,
+explain:"Mutations can be beneficial, harmful, or neutral."
+},
+{
+q:"Which of the following are considered contributing factors to developing cancer?",
+options:["Genetics","UV Light","Uncontrolled cell growth","All the above"],
+answer:3,
+explain:"Genetics and UV light can damage DNA, and uncontrolled cell growth defines cancer."
+},
+{
+q:"One way to identify a genetic disorder is",
+options:["Chemotherapy","Karyotyping","Gene Therapy","Hormone Therapy"],
+answer:1,
+explain:"Karyotyping checks chromosome structure and number."
+},
+{
+q:"Which of the following is the result of a mutation that causes uncontrolled cell division?",
+options:["Mutagenesis","Cancer","Radiation Sickness","Down Syndrome"],
+answer:1,
+explain:"Cancer occurs when mutations remove cell-cycle control."
+},
+{
+q:"How are gene mutations and chromosome mutations different?",
+options:[
+"Chromosomal mutations involve more DNA.",
+"Gene mutations are always passed on to offspring.",
+"Gene mutations have no effect on an organism.",
+"Chromosomal mutations are always fatal."
+],
+answer:0,
+explain:"Chromosome mutations affect large DNA sections; gene mutations are small."
+}
+];
+
+const quizDiv = document.getElementById("quiz");
+
+questions.forEach((item, index) => {
+  const card = document.createElement("div");
+  card.className="card";
+
+  const q=document.createElement("div");
+  q.className="question";
+  q.innerText=(index+1)+". "+item.q;
+  card.appendChild(q);
+
+  item.options.forEach((opt,i)=>{
+    const label=document.createElement("label");
+    label.className="option";
+
+    const radio=document.createElement("input");
+    radio.type="radio";
+    radio.name="q"+index;
+    radio.value=i;
+
+    label.appendChild(radio);
+    label.append(" "+opt);
+    card.appendChild(label);
+    card.appendChild(document.createElement("br"));
+  });
+
+  const btn=document.createElement("button");
+  btn.innerText="Check Answer";
+
+  const result=document.createElement("div");
+  result.id="result"+index;
+
+  btn.onclick=()=>checkOne(index);
+
+  card.appendChild(btn);
+  card.appendChild(result);
+  quizDiv.appendChild(card);
+});
+
+function checkOne(index){
+  const item=questions[index];
+  const selected=document.querySelector(`input[name="q${index}"]:checked`);
+  const result=document.getElementById("result"+index);
+  const correctText=item.options[item.answer];
+
+  if(!selected){
+    result.className="result wrong";
+    result.innerHTML=`No selection.<br>
+      Correct answer: <strong>${correctText}</strong>
+      <div class="explain">${item.explain}</div>`;
+    return;
+  }
+
+  if(parseInt(selected.value)===item.answer){
+    result.className="result correct";
+    result.innerHTML=`Correct!
+      <div class="explain">${item.explain}</div>`;
+  }else{
+    result.className="result wrong";
+    result.innerHTML=`Incorrect.<br>
+      Correct answer: <strong>${correctText}</strong>
+      <div class="explain">${item.explain}</div>`;
+  }
+}
+
+function checkAll(){
+  questions.forEach((_,i)=>checkOne(i));
+}
+</script>
+
+</body>
+</html>
+
