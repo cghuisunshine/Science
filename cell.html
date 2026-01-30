@@ -231,6 +231,9 @@
       <button type="button" class="caption-btn" id="animalCellLabelsToggle" aria-pressed="false">
         Hide labels / 隐藏标注
       </button>
+      <button type="button" class="caption-btn" id="animalCellCheckToggle" aria-pressed="false" disabled>
+        Check / 对照
+      </button>
     </figcaption>
   </figure>
 
@@ -472,6 +475,9 @@
       <button type="button" class="caption-btn" id="plantCellLabelsToggle" aria-pressed="false">
         Hide labels / 隐藏标注
       </button>
+      <button type="button" class="caption-btn" id="plantCellCheckToggle" aria-pressed="false" disabled>
+        Check / 对照
+      </button>
     </figcaption>
   </figure>
 
@@ -579,6 +585,7 @@
     function setupPracticeDiagram(opts) {
       const img = document.getElementById(opts.imgId);
       const btn = document.getElementById(opts.btnId);
+      const checkBtn = opts.checkBtnId ? document.getElementById(opts.checkBtnId) : null;
       const stage = document.getElementById(opts.stageId);
       const layer = document.getElementById(opts.layerId);
       const labels = Array.isArray(opts.labels) ? opts.labels : [];
@@ -593,6 +600,7 @@
       }
 
       let isMasked = false;
+      let isChecking = false;
       let labelsReady = false;
 
       enableDragging(stage, layer);
@@ -614,17 +622,36 @@
       }
 
       function sync() {
-        img.setAttribute('src', isMasked ? maskedSrc : labeledSrc);
+        if (!isMasked) isChecking = false;
+
+        const showMaskedImage = isMasked && !isChecking;
+        img.setAttribute('src', showMaskedImage ? maskedSrc : labeledSrc);
         btn.textContent = isMasked ? 'Show labels / 显示标注' : 'Hide labels / 隐藏标注';
         btn.setAttribute('aria-pressed', isMasked ? 'true' : 'false');
         // When the diagram labels are hidden (masked image), show draggable yellow labels.
         setPracticeMode(isMasked);
+
+        if (checkBtn) {
+          const canCheck = isMasked;
+          checkBtn.disabled = !canCheck;
+          checkBtn.textContent = isChecking ? 'Hide check / 隐藏对照' : 'Check / 对照';
+          checkBtn.setAttribute('aria-pressed', isChecking ? 'true' : 'false');
+        }
       }
 
       btn.addEventListener('click', () => {
         isMasked = !isMasked;
+        if (!isMasked) isChecking = false;
         sync();
       });
+
+      if (checkBtn) {
+        checkBtn.addEventListener('click', () => {
+          if (!isMasked) return;
+          isChecking = !isChecking;
+          sync();
+        });
+      }
 
       sync();
     }
@@ -632,6 +659,7 @@
     setupPracticeDiagram({
       imgId: 'animalCellDiagram',
       btnId: 'animalCellLabelsToggle',
+      checkBtnId: 'animalCellCheckToggle',
       stageId: 'animalCellStage',
       layerId: 'animalCellLabelsLayer',
       labels: [
@@ -656,6 +684,7 @@
     setupPracticeDiagram({
       imgId: 'plantCellDiagram',
       btnId: 'plantCellLabelsToggle',
+      checkBtnId: 'plantCellCheckToggle',
       stageId: 'plantCellStage',
       layerId: 'plantCellLabelsLayer',
       labels: [
