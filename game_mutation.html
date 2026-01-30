@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spider Love - Matching Game</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+    body { margin: 0; background: #0aa; display: grid; place-items: center; min-height: 100vh; }
+    .game {
+      width: min(920px, 96vw);
+      background: #0bb;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    header {
+      background: #f3d94f;
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    h1 { margin: 0; font-size: 28px; letter-spacing: .5px; }
+    .hint { margin: 6px 0 0; font-size: 14px; opacity: .85; }
+    .topright { display: flex; gap: 10px; align-items: center; }
+    button.iconbtn {
+      width: 40px; height: 40px; border: 0; border-radius: 10px;
+      cursor: pointer; background: rgba(0,0,0,.12);
+    }
+
+    .board {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .col {
+      background: rgba(255,255,255,.22);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .card {
+      user-select: none;
+      cursor: pointer;
+      background: #fff;
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 3px solid transparent;
+      box-shadow: 0 3px 0 rgba(0,0,0,.15);
+      transition: transform .05s ease, border-color .15s ease;
+    }
+    .card:active { transform: translateY(1px); }
+    .card.selected { border-color: #2b7cff; }
+    .card.locked { opacity: .9; }
+
+    .leftLabel { font-size: 20px; font-weight: 700; }
+    .badge {
+      font-size: 12px; font-weight: 700;
+      padding: 6px 10px; border-radius: 999px;
+      background: rgba(0,0,0,.08);
+    }
+
+    .rightImg {
+      width: 100%;
+      max-width: 280px;
+      aspect-ratio: 4 / 1.3;
+      object-fit: contain;
+      display: block;
+      margin-left: auto;
+    }
+
+    .footer {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .bigbtn {
+      background: #f3d94f;
+      border: 0;
+      border-radius: 14px;
+      font-size: 22px;
+      font-weight: 900;
+      padding: 12px 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 rgba(0,0,0,.2);
+    }
+    .bigbtn:active { transform: translateY(1px); }
+
+    .status { font-weight: 700; }
+    .ok { color: #0a7a26; }
+    .bad { color: #b00020; }
+
+    /* check results */
+    .card.correct { border-color: #17b45a; }
+    .card.wrong { border-color: #e53935; }
+  </style>
+</head>
+<body>
+  <div class="game">
+    <header>
+      <div>
+        <h1>Spider Love ❤️</h1>
+        <div class="hint">Click a left-hand box, then click its right-hand match.</div>
+      </div>
+      <div class="topright">
+        <button class="iconbtn" id="muteBtn" title="Mute/unmute">🔊</button>
+        <button class="iconbtn" id="resetBtn" title="Reset">↻</button>
+      </div>
+    </header>
+
+    <div class="board">
+      <section class="col">
+        <div class="list" id="leftList"></div>
+      </section>
+
+      <section class="col">
+        <div class="list" id="rightList"></div>
+      </section>
+    </div>
+
+    <div class="footer">
+      <button class="bigbtn" id="checkBtn">Check</button>
+      <div class="status" id="status">Make your matches.</div>
+    </div>
+  </div>
+
+<script>
+  // 1) Define your items (swap images with your real assets)
+  const leftItems = [
+    { id: "duplicate", label: "Duplicate x2" },
+    { id: "none",      label: "None!" },
+    { id: "flip",      label: "Flip" },
+    { id: "move",      label: "Move" },
+    { id: "delete",    label: "Delete" },
+  ];
+
+  const rightItems = [
+    { id: "img_duplicate", image: "assets/gene_duplicate.png", alt: "duplicate result" },
+    { id: "img_none",      image: "assets/gene_none.png",      alt: "no change result" },
+    { id: "img_flip",      image: "assets/gene_flip.png",      alt: "flip result" },
+    { id: "img_move",      image: "assets/gene_move.png",      alt: "move result" },
+    { id: "img_delete",    image: "assets/gene_delete.png",    alt: "delete result" },
+  ];
+
+  // 2) Answer key: leftId -> rightId
+  const answer = {
+    duplicate: "img_duplicate",
+    none: "img_none",
+    flip: "img_flip",
+    move: "img_move",
+    delete: "img_delete",
+  };
+
+  // --- state ---
+  let selectedLeftId = null;
+  const playerPairs = {}; // leftId -> rightId
+  let muted = false;
+
+  const leftList = document.getElementById("leftList");
+  const rightList = document.getElementById("rightList");
+  const statusEl = document.getElementById("status");
+
+  // Utility: shuffle
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // Simple sound (optional)
+  const audioCtx = (() => {
+    try { return new (window.AudioContext || window.webkitAudioContext)(); }
+    catch { return null; }
+  })();
+
+  function beep(freq=660, ms=60) {
+    if (muted || !audioCtx) return;
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.frequency.value = freq;
+    o.connect(g); g.connect(audioCtx.destination);
+    g.gain.value = 0.03;
+    o.start();
+    setTimeout(() => { o.stop(); }, ms);
+  }
+
+  function render() {
+    leftList.innerHTML = "";
+    rightList.innerHTML = "";
+
+    // Left side in fixed order
+    leftItems.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.dataset.leftId = item.id;
+
+      const label = document.createElement("div");
+      label.className = "leftLabel";
+      label.textContent = item.label;
+
+      const badge = document.createElement("div");
+      badge.className = "badge";
+      badge.textContent = playerPairs[item.id] ? "Matched" : "Pick";
+
+      div.appendChild(label);
+      div.appendChild(badge);
+
+      if (selectedLeftId === item.id) div.classList.add("selected");
+      if (playerPairs[item.id]) div.classList.add("locked");
+
+      div.addEventListener("click", () => {
+        // select / reselect left
+        selectedLeftId = item.id;
+        statusEl.textContent = `Selected: ${item.label}. Now click the matching picture.`;
+        beep(520, 50);
+        clearCheckStyles();
+        render();
+      });
+
+      leftList.appendChild(div);
+    });
+
+    // Right side shuffled each reset only (we’ll keep a global order)
+    currentRightOrder.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.dataset.rightId = item.id;
+
+      const img = document.createElement("img");
+      img.className = "rightImg";
+      img.src = item.image;
+      img.alt = item.alt;
+
+      const badge = document.createElement("div");
+      badge.className = "badge";
+      badge.textContent = isRightAlreadyPicked(item.id) ? "Used" : "Choose";
+
+      div.appendChild(img);
+      div.appendChild(badge);
+
+      div.addEventListener("click", () => {
+        if (!selectedLeftId) {
+          statusEl.textContent = "Pick a left card first.";
+          beep(220, 80);
+          return;
+        }
+
+        // Prevent using one right card for multiple left cards (like typical matching games)
+        if (isRightAlreadyPicked(item.id) && playerPairs[selectedLeftId] !== item.id) {
+          statusEl.textContent = "That picture is already used. Choose another.";
+          beep(220, 80);
+          return;
+        }
+
+        // Save pair
+        playerPairs[selectedLeftId] = item.id;
+        beep(740, 60);
+
+        // Auto-advance: select next unmatched left
+        selectedLeftId = nextUnmatchedLeft();
+        statusEl.textContent = selectedLeftId
+          ? "Good. Pick the next match."
+          : "All matched! Press Check.";
+
+        clearCheckStyles();
+        render();
+      });
+
+      rightList.appendChild(div);
+    });
+  }
+
+  function isRightAlreadyPicked(rightId) {
+    return Object.values(playerPairs).includes(rightId);
+  }
+
+  function nextUnmatchedLeft() {
+    const next = leftItems.find(x => !playerPairs[x.id]);
+    return next ? next.id : null;
+  }
+
+  function clearCheckStyles() {
+    document.querySelectorAll(".card").forEach(c => {
+      c.classList.remove("correct", "wrong");
+    });
+  }
+
+  // Check logic: mark left cards correct/wrong
+  function checkAnswers() {
+    clearCheckStyles();
+
+    let correct = 0;
+    leftItems.forEach(li => {
+      const chosen = playerPairs[li.id];
+      const isCorrect = chosen && chosen === answer[li.id];
+      const leftCard = document.querySelector(`.card[data-left-id="${li.id}"]`);
+      if (leftCard) leftCard.classList.add(isCorrect ? "correct" : "wrong");
+      if (isCorrect) correct++;
+    });
+
+    const total = leftItems.length;
+    if (correct === total) {
+      statusEl.innerHTML = `<span class="ok">✅ Perfect! ${correct}/${total}</span>`;
+      beep(880, 120);
+    } else {
+      statusEl.innerHTML = `<span class="bad">❌ ${correct}/${total} correct. Try again or reset.</span>`;
+      beep(180, 120);
+    }
+  }
+
+  // Reset
+  let currentRightOrder = shuffle(rightItems);
+
+  function resetGame() {
+    selectedLeftId = null;
+    for (const k of Object.keys(playerPairs)) delete playerPairs[k];
+    currentRightOrder = shuffle(rightItems);
+    statusEl.textContent = "Make your matches.";
+    clearCheckStyles();
+    render();
+  }
+
+  // Wire buttons
+  document.getElementById("checkBtn").addEventListener("click", checkAnswers);
+  document.getElementById("resetBtn").addEventListener("click", resetGame);
+  document.getElementById("muteBtn").addEventListener("click", () => {
+    muted = !muted;
+    document.getElementById("muteBtn").textContent = muted ? "🔇" : "🔊";
+  });
+
+  // init
+  render();
+</script>
+</body>
+</html>
+
