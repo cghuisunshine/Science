@@ -272,6 +272,7 @@
       <div class="lang-controls" role="group" aria-label="Language">
         <button type="button" class="lang-btn is-active" data-lang="en" aria-pressed="true">English</button>
         <button type="button" class="lang-btn" data-lang="bi" aria-pressed="false">English + 中文</button>
+        <button type="button" class="lang-btn" id="btn-check-all">Check All</button>
       </div>
     </div>
 
@@ -282,6 +283,9 @@
         <input id="grade-api-url" type="text" placeholder="https://example.com/grade">
         <button type="button" class="quiz-btn" id="btn-test-api">Test</button>
         <span id="api-status" class="feedback"></span>
+      </div>
+      <div class="settings-row">
+        <span id="checkall-status" class="feedback"></span>
       </div>
       <div class="settings-hint">
         If AI grading fails, the page falls back to a simple overlap check against the model answer.
@@ -593,7 +597,9 @@
 
     const gradeApiUrlEl = document.getElementById("grade-api-url");
     const btnTestApi = document.getElementById("btn-test-api");
+    const btnCheckAll = document.getElementById("btn-check-all");
     const apiStatusEl = document.getElementById("api-status");
+    const checkAllStatusEl = document.getElementById("checkall-status");
 
     function setApiStatus(text, kind) {
       if (!apiStatusEl) return;
@@ -698,6 +704,12 @@
 
     if (btnTestApi) {
       btnTestApi.addEventListener("click", testApi);
+    }
+
+    function setCheckAllStatus(text, kind) {
+      if (!checkAllStatusEl) return;
+      checkAllStatusEl.textContent = text || "";
+      checkAllStatusEl.className = "feedback" + (kind ? " " + kind : "");
     }
 
     function normalizeText(str) {
@@ -854,6 +866,28 @@
       const isVisible = !!(firstAnswer && firstAnswer.classList.contains("is-visible"));
       setAnswerVisible(qEl, !isVisible);
       if (btn) btn.textContent = isVisible ? "Show Answer" : "Hide Answer";
+    }
+
+    async function checkAll() {
+      const total = 9;
+      if (btnCheckAll) btnCheckAll.disabled = true;
+      setCheckAllStatus("Checking all...", "");
+      try {
+        for (let i = 1; i <= total; i++) {
+          setCheckAllStatus(`Checking ${i}/${total}...`, "");
+          await checkMyAnswer(i, null);
+        }
+        setCheckAllStatus("Done.", "ok");
+      } catch (err) {
+        console.warn("Check all failed:", err);
+        setCheckAllStatus("Check all failed.", "bad");
+      } finally {
+        if (btnCheckAll) btnCheckAll.disabled = false;
+      }
+    }
+
+    if (btnCheckAll) {
+      btnCheckAll.addEventListener("click", checkAll);
     }
   </script>
 </body>
