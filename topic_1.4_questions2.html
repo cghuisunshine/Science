@@ -1,0 +1,925 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Topic 1.4 Questions — Answers</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 30px;
+      margin: 0;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .wrap {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h1, h2 { color: #333; }
+    h1 { margin: 0 0 8px; font-size: 26px; }
+    .lead { margin: 0 0 18px; color: #555; }
+    .imgcard {
+      background: #fafafa;
+      border: 1px solid #e6e6e6;
+      border-radius: 10px;
+      padding: 12px;
+      margin: 18px 0 22px;
+    }
+    .imgcard img,
+    .imgcard iframe {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .imgcard iframe {
+      width: 100%;
+      height: 70vh;
+      min-height: 520px;
+      border: 0;
+      background: #fff;
+    }
+    .qa {
+      background: #fafafa;
+      border: 1px solid #e6e6e6;
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin: 12px 0;
+    }
+    .qrow { display: flex; gap: 10px; align-items: baseline; margin: 0 0 10px; }
+    .badge {
+      width: 32px; height: 32px; border-radius: 999px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: #eef6ff;
+      border: 1px solid #cfe3ff;
+      color: #1b3a7a;
+      font-weight: 800;
+    }
+    .qtitle { font-weight: 800; }
+
+    .ans {
+      margin-top: 10px;
+      padding: 12px;
+      background: #eef6ff;
+      border-left: 4px solid #2196F3;
+      color: #333;
+      display: none;
+    }
+    .ans.is-visible { display: block; }
+    .ans b { color: #333; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 14px; }
+    th, td { border: 1px solid #e6e6e6; padding: 10px; vertical-align: top; }
+    th { background: #f2f7ff; text-align: left; }
+    ol, ul { margin: 8px 0 0 22px; }
+    footer { margin-top: 22px; color: #777; font-size: 12px; }
+    hr.sep { border: 0; border-top: 1px solid #e6e6e6; margin: 20px 0; }
+
+    .topbar {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    details.settings {
+      margin-top: 14px;
+      margin-bottom: 18px;
+      background: #fafafa;
+      border: 1px solid #e6e6e6;
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    details.settings summary {
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .settings-row {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .settings-row label {
+      min-width: 120px;
+      color: #333;
+    }
+
+    .settings-row input {
+      flex: 1 1 340px;
+      min-width: 240px;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #333;
+      background: white;
+      border: 1px solid #d7d7e2;
+      border-radius: 12px;
+      outline: none;
+    }
+
+    .settings-row input:focus-visible {
+      outline: 3px solid rgba(90,167,255,.35);
+      outline-offset: 2px;
+    }
+
+    .settings-hint {
+      margin-top: 8px;
+      color: #555;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .sheet-row {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      margin: 18px 0 22px;
+    }
+    .sheet-media {
+      flex: 0 0 510px;
+      max-width: 560px;
+      max-height: 620px;
+      overflow: auto;
+      padding-right: 6px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .sheet-content {
+      flex: 1 1 0%;
+      min-width: 280px;
+      max-height: 620px;
+      overflow: auto;
+      padding-right: 6px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .sheet-row .imgcard { margin: 0; }
+
+    @media (max-width: 920px) {
+      .sheet-row { flex-direction: column; }
+      .sheet-media { flex-basis: auto; max-width: 100%; width: 100%; }
+      .sheet-content { min-width: 0; width: 100%; max-height: none; overflow: visible; padding-right: 0; }
+      .sheet-media { max-height: none; overflow: visible; padding-right: 0; }
+    }
+
+    textarea.user-answer {
+      width: 100%;
+      height: 90px;
+      margin-top: 8px;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #333;
+      background: white;
+      border: 1px solid #d7d7e2;
+      border-radius: 12px;
+      outline: none;
+      resize: vertical;
+    }
+
+    textarea.user-answer:focus-visible {
+      outline: 3px solid rgba(90,167,255,.35);
+      outline-offset: 2px;
+    }
+
+    .btn-row {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    button.quiz-btn {
+      margin-top: 0;
+      padding: 9px 14px;
+      border: none;
+      border-radius: 6px;
+      background: #2196F3;
+      color: white;
+      cursor: pointer;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+
+    button.quiz-btn:hover {
+      background: #1976D2;
+    }
+
+    button.quiz-btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .feedback {
+      font-size: 13px;
+      color: #555;
+    }
+
+    .feedback.ok {
+      color: #1b5e20;
+    }
+
+    .feedback.bad {
+      color: #b71c1c;
+    }
+
+    .lang-btn {
+      appearance: none;
+      border: 1px solid #cfd6ee;
+      background: #f6f7fb;
+      color: #333;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      letter-spacing: .2px;
+    }
+    .lang-btn.is-active {
+      background: #2196F3;
+      border-color: #2196F3;
+      color: white;
+    }
+    .lang-btn:focus-visible {
+      outline: 3px solid rgba(33,150,243,.35);
+      outline-offset: 2px;
+    }
+
+    .lang-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .zh-block,
+    .zh-inline {
+      display: none;
+    }
+    body.lang-bi .zh-block { display: block; }
+    body.lang-bi .zh-inline { display: inline; }
+    body.lang-bi .page-title .zh-inline,
+    body.lang-bi .qtitle .zh-inline,
+    body.lang-bi footer .zh-inline {
+      display: block;
+    }
+    body.lang-bi .page-title .zh-inline {
+      margin-top: 4px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #555;
+    }
+    body.lang-bi .qtitle .zh-inline {
+      margin-top: 2px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #555;
+    }
+    body.lang-bi footer .zh-inline { margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div>
+        <h1 class="page-title">Check Your Understanding of Topic 1.4 — Answers<span class="zh-inline" lang="zh-Hans">主题 1.4 理解自测 — 答案</span></h1>
+        <p class="lead">
+          Toggle “English + 中文” to show Chinese translations for the answers.
+          <span class="zh-inline" lang="zh-Hans">切换到“English + 中文”可显示答案的中文翻译。</span>
+        </p>
+      </div>
+      <div class="lang-controls" role="group" aria-label="Language">
+        <button type="button" class="lang-btn is-active" data-lang="en" aria-pressed="true">English</button>
+        <button type="button" class="lang-btn" data-lang="bi" aria-pressed="false">English + 中文</button>
+        <button type="button" class="lang-btn" id="btn-check-all">Check All</button>
+      </div>
+    </div>
+
+    <details class="settings">
+      <summary>AI grading (optional)</summary>
+      <div class="settings-row">
+        <label for="grade-api-url">Grade API URL</label>
+        <input id="grade-api-url" type="text" placeholder="https://example.com/grade">
+        <button type="button" class="quiz-btn" id="btn-test-api">Test</button>
+        <span id="api-status" class="feedback"></span>
+      </div>
+      <div class="settings-row">
+        <span id="checkall-status" class="feedback"></span>
+      </div>
+      <div class="settings-hint">
+        If AI grading fails, the page falls back to a simple overlap check against the model answer.
+      </div>
+    </details>
+
+
+    <div class="sheet-row">
+      <aside class="sheet-media">
+        <div class="imgcard">
+          <iframe
+            src="BC_Science_Connections_10_split/topic_1.4_questions.pdf"
+            title="Topic 1.4 Questions PDF"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </aside>
+      <div class="sheet-content">
+
+    <div class="qa" id="q1">
+      <div class="qrow"><span class="badge">1</span><div class="qtitle">Use a flowchart with diagrams to summarize gene cloning.<span class="zh-inline" lang="zh-Hans">用流程图（配合示意图）总结基因克隆。</span></div></div>
+      <textarea class="user-answer" placeholder="Type your answer here..."></textarea>
+      <div class="btn-row">
+        <button type="button" class="quiz-btn" onclick="checkMyAnswer(1, this)">Check my answer</button>
+        <button type="button" class="quiz-btn" id="toggleBtn1" onclick="toggleAnswer(1, this)">Show Answer</button>
+        <span id="feedback1" class="feedback"></span>
+      </div>
+      <div class="ans">
+<ol>
+  <li>Select the target gene (e.g., insulin gene).</li>
+  <li>Use a <b>restriction enzyme</b> to cut donor DNA and isolate the gene.</li>
+  <li>Use the same restriction enzyme to cut a bacterial <b>plasmid</b>.</li>
+  <li>Use <b>DNA ligase</b> to join the gene into the plasmid → recombinant plasmid.</li>
+  <li>Put the recombinant plasmid into bacteria (<b>transformation</b>).</li>
+  <li>Grow the bacteria; as they reproduce, they copy the plasmid (clone the gene).</li>
+  <li>Collect the cloned DNA or the protein made from the gene.</li>
+</ol>
+<ol class="zh-block" lang="zh-Hans">
+  <li>选择目标基因（例如胰岛素基因）。</li>
+  <li>用<b>限制性内切酶</b>切割供体 DNA 并分离出该基因。</li>
+  <li>用同一种限制性内切酶切开细菌<b>质粒</b>。</li>
+  <li>用<b>DNA 连接酶</b>把基因连接进质粒 → 形成重组质粒。</li>
+  <li>将重组质粒导入细菌（<b>转化</b>）。</li>
+  <li>培养细菌；细菌繁殖时会复制质粒（实现基因克隆）。</li>
+  <li>收集克隆得到的 DNA 或该基因表达产生的蛋白质。</li>
+</ol>
+</div>
+    </div>
+
+    <div class="qa" id="q2">
+      <div class="qrow"><span class="badge">2</span><div class="qtitle">Benefit of producing insulin from transgenic plants rather than transgenic bacteria.<span class="zh-inline" lang="zh-Hans">用转基因植物而不是转基因细菌生产胰岛素的好处。</span></div></div>
+      <textarea class="user-answer" placeholder="Type your answer here..."></textarea>
+      <div class="btn-row">
+        <button type="button" class="quiz-btn" onclick="checkMyAnswer(2, this)">Check my answer</button>
+        <button type="button" class="quiz-btn" id="toggleBtn2" onclick="toggleAnswer(2, this)">Show Answer</button>
+        <span id="feedback2" class="feedback"></span>
+      </div>
+      <div class="ans">
+<ul>
+  <li>Plants can be cheaper/easier to scale up (grown like crops).</li>
+  <li>Lower risk of some bacterial toxin/endotoxin contamination.</li>
+  <li>Storage/transport can be simpler depending on the plant system.</li>
+</ul>
+<ul class="zh-block" lang="zh-Hans">
+  <li>植物可像农作物一样种植，成本更低、扩大规模更容易。</li>
+  <li>部分细菌毒素/内毒素污染风险更低。</li>
+  <li>视植物系统而定，储存/运输可能更方便。</li>
+</ul>
+</div>
+    </div>
+
+    <div class="qa" id="q3">
+      <div class="qrow"><span class="badge">3</span><div class="qtitle">Transgenic carrot that secretes toxins that kill damaging insects and worms.<span class="zh-inline" lang="zh-Hans">转基因胡萝卜分泌毒素以杀死有害昆虫和线虫。</span></div></div>
+      <textarea class="user-answer" placeholder="Type your answer here..."></textarea>
+      <div class="btn-row">
+        <button type="button" class="quiz-btn" onclick="checkMyAnswer(3, this)">Check my answer</button>
+        <button type="button" class="quiz-btn" id="toggleBtn3" onclick="toggleAnswer(3, this)">Show Answer</button>
+        <span id="feedback3" class="feedback"></span>
+      </div>
+      <div class="ans">
+<ul>
+  <li><b>Benefits:</b> less pesticide spraying; less crop loss; higher yields; potentially less chemical runoff.</li>
+  <li><b>Risks/concerns:</b> harm to non‑target organisms; pests evolve resistance; gene flow to wild relatives; ecosystem impacts; food safety/allergen checks; monitoring + public acceptance.</li>
+</ul>
+<ul class="zh-block" lang="zh-Hans">
+  <li><b>好处：</b>减少喷洒农药；减少作物损失；提高产量；可能减少化学物质径流。</li>
+  <li><b>风险/顾虑：</b>可能伤害非目标生物；害虫可能演化出抗性；基因流向野生近缘种；生态系统影响；食品安全/致敏性检测；持续监测与公众接受度。</li>
+</ul>
+</div>
+      <div class="ans">
+<ul>
+  <li><b>Advantages:</b> fewer pests → better yield/quality; reduced pesticide cost and labor.</li>
+  <li><b>Drawbacks:</b> higher seed cost; dependence on seed companies; some buyers avoid GM products; resistance may develop over time.</li>
+</ul>
+<ul class="zh-block" lang="zh-Hans">
+  <li><b>优点：</b>害虫更少 → 产量/品质更好；减少农药成本与喷洒劳力。</li>
+  <li><b>缺点：</b>种子成本更高；对种子公司依赖增加；部分消费者/买家回避转基因产品；长期可能出现抗性。</li>
+</ul>
+</div>
+      <div class="ans">
+<ul>
+  <li><b>For labelling:</b> right‑to‑know; informed choice; transparency and trust; helps ethical/diet preferences.</li>
+  <li><b>Against labelling:</b> may imply risk; adds cost; can confuse consumers.</li>
+</ul>
+<ul class="zh-block" lang="zh-Hans">
+  <li><b>支持标注：</b>知情权；便于做出知情选择；提高透明度与信任；帮助满足伦理/饮食偏好。</li>
+  <li><b>反对标注：</b>可能暗示存在风险；增加成本；可能让消费者困惑。</li>
+</ul>
+</div>
+    </div>
+
+    <div class="qa" id="q4">
+      <div class="qrow"><span class="badge">4</span><div class="qtitle">Explain the steps involved in in vitro fertilization (IVF).<span class="zh-inline" lang="zh-Hans">解释体外受精（IVF）的步骤。</span></div></div>
+      <textarea class="user-answer" placeholder="Type your answer here..."></textarea>
+      <div class="btn-row">
+        <button type="button" class="quiz-btn" onclick="checkMyAnswer(4, this)">Check my answer</button>
+        <button type="button" class="quiz-btn" id="toggleBtn4" onclick="toggleAnswer(4, this)">Show Answer</button>
+        <span id="feedback4" class="feedback"></span>
+      </div>
+      <div class="ans">
+<ol>
+  <li>Hormones stimulate ovaries to produce multiple eggs.</li>
+  <li>Eggs are collected from the ovaries.</li>
+  <li>Sperm is collected and prepared.</li>
+  <li>Egg and sperm are combined in the lab (or sperm injected into egg).</li>
+  <li>Embryos develop for several days.</li>
+  <li>One or more embryos are transferred into the uterus.</li>
+  <li>If implantation occurs, pregnancy begins; extra embryos may be frozen.</li>
+</ol>
+<ol class="zh-block" lang="zh-Hans">
+  <li>用激素刺激卵巢产生多个卵子。</li>
+  <li>从卵巢取出卵子。</li>
+  <li>采集并处理精子样本。</li>
+  <li>在实验室将卵子与精子结合（或将精子注入卵子）。</li>
+  <li>胚胎发育数天。</li>
+  <li>将一个或多个胚胎移植到子宫内。</li>
+  <li>若成功着床则开始妊娠；多余胚胎可冷冻保存。</li>
+</ol>
+</div>
+    </div>
+
+    <div class="qa" id="q5">
+      <div class="qrow"><span class="badge">5</span><div class="qtitle">Explain how gene therapy works (graphic organizer).<span class="zh-inline" lang="zh-Hans">解释基因治疗如何起作用（图示整理）。</span></div></div>
+      <textarea class="user-answer" placeholder="Type your answer here..."></textarea>
+      <div class="btn-row">
+        <button type="button" class="quiz-btn" onclick="checkMyAnswer(5, this)">Check my answer</button>
+        <button type="button" class="quiz-btn" id="toggleBtn5" onclick="toggleAnswer(5, this)">Show Answer</button>
+        <span id="feedback5" class="feedback"></span>
+      </div>
+      <div class="ans">
+<ul>
+  <li><b>Problem:</b> faulty gene → wrong/missing protein → disease.</li>
+  <li><b>Solution:</b> deliver a working gene (or edit the gene) into target cells.</li>
+  <li><b>Carrier:</b> often a modified virus (vector) that can enter cells.</li>
+  <li><b>Outcome:</b> cells make the correct protein → symptoms improve.</li>
+  <li><b>Concerns:</b> delivery to enough cells, immune reactions, long‑term safety.</li>
+</ul>
+<ul class="zh-block" lang="zh-Hans">
+  <li><b>问题：</b>基因缺陷 → 蛋白质错误/缺失 → 疾病。</li>
+  <li><b>解决：</b>把正常基因（或进行基因编辑）送入目标细胞。</li>
+  <li><b>载体：</b>常用改造过的病毒（载体）帮助进入细胞。</li>
+  <li><b>结果：</b>细胞产生正确蛋白 → 症状改善。</li>
+  <li><b>顾虑：</b>能否递送到足够多细胞、免疫反应、长期安全性。</li>
+</ul>
+</div>
+    </div>
+
+    <div class="qa" id="q6">
+      <div class="qrow"><span class="badge">6</span><div class="qtitle">Applications of Biotechnology — complete the table.<span class="zh-inline" lang="zh-Hans">生物技术的应用——完成表格。</span></div></div>
+      <textarea class="user-answer" placeholder="Type your answer here..."></textarea>
+      <div class="btn-row">
+        <button type="button" class="quiz-btn" onclick="checkMyAnswer(6, this)">Check my answer</button>
+        <button type="button" class="quiz-btn" id="toggleBtn6" onclick="toggleAnswer(6, this)">Show Answer</button>
+        <span id="feedback6" class="feedback"></span>
+      </div>
+      <div class="ans">
+<table>
+  <thead>
+    <tr>
+      <th>Application<span class="zh-inline" lang="zh-Hans">（应用）</span></th>
+      <th>Benefits<span class="zh-inline" lang="zh-Hans">（益处）</span></th>
+      <th>Risks / Concerns<span class="zh-inline" lang="zh-Hans">（风险/顾虑）</span></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>Cloning</b><span class="zh-inline" lang="zh-Hans">（克隆）</span></td>
+      <td>
+        Research and conservation; can create identical organisms/cells for study.
+        <div class="zh-block" lang="zh-Hans">用于研究与保护；可生成相同的个体/细胞供研究。</div>
+      </td>
+      <td>
+        Ethical issues; low success rate; health problems; reduced genetic diversity if overused.
+        <div class="zh-block" lang="zh-Hans">涉及伦理问题；成功率低；可能出现健康问题；若过度使用会降低遗传多样性。</div>
+      </td>
+    </tr>
+    <tr>
+      <td><b>Genetically modified organisms (GMOs)</b><span class="zh-inline" lang="zh-Hans">（转基因生物）</span></td>
+      <td>
+        Higher yields; pest/disease resistance; improved nutrition; sometimes less pesticide use.
+        <div class="zh-block" lang="zh-Hans">更高产量；抗虫/抗病；提高营养；有时减少农药使用。</div>
+      </td>
+      <td>
+        Ecosystem impacts; resistance in pests/weeds; gene flow; public acceptance/market issues.
+        <div class="zh-block" lang="zh-Hans">生态系统影响；害虫/杂草产生抗性；基因流动；公众接受度/市场问题。</div>
+      </td>
+    </tr>
+    <tr>
+      <td><b>Gene therapy</b><span class="zh-inline" lang="zh-Hans">（基因治疗）</span></td>
+      <td>
+        Treats the cause of genetic disease; can restore needed proteins; long‑lasting benefits in some cases.
+        <div class="zh-block" lang="zh-Hans">针对遗传病根本原因；可恢复所需蛋白质；某些情况下效果持久。</div>
+      </td>
+      <td>
+        Immune reactions; incorrect insertion/editing; uneven delivery; unknown long‑term effects; cost.
+        <div class="zh-block" lang="zh-Hans">免疫反应；插入/编辑错误；递送不均；长期影响未知；成本高。</div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    </div>
+
+    <hr class="sep" />
+
+    <div class="qa" id="q7">
+      <div class="qrow"><span class="badge">7</span><div class="qtitle">How can transgenic organisms help achieve goals? Give one example.<span class="zh-inline" lang="zh-Hans">转基因生物如何帮助实现目标？举一个例子。</span></div></div>
+      <textarea class="user-answer" placeholder="Type your answer here..."></textarea>
+      <div class="btn-row">
+        <button type="button" class="quiz-btn" onclick="checkMyAnswer(7, this)">Check my answer</button>
+        <button type="button" class="quiz-btn" id="toggleBtn7" onclick="toggleAnswer(7, this)">Show Answer</button>
+        <span id="feedback7" class="feedback"></span>
+      </div>
+      <div class="ans">
+<p>Transgenic organisms can support <b>social</b> goals (better health/nutrition), <b>economic</b> goals (higher yield/lower losses), and <b>environmental</b> goals (reduced pesticide use).</p>
+<p><b>Example:</b> Golden rice is engineered to produce beta‑carotene (vitamin A precursor) to reduce vitamin A deficiency.</p>
+<p class="zh-block" lang="zh-Hans">转基因生物可以支持<b>社会</b>目标（改善健康/营养）、<b>经济</b>目标（更高产量/更少损失）以及<b>环境</b>目标（减少农药使用）。</p>
+ <p class="zh-block" lang="zh-Hans"><b>例子：</b>黄金大米被改造以产生 β‑胡萝卜素（维生素 A 的前体），以减少维生素 A 缺乏。</p>
+</div>
+    </div>
+
+    <div class="qa" id="q8">
+      <div class="qrow"><span class="badge">8</span><div class="qtitle">Transgenic peanuts that do not produce allergic reactions: good use of research money?<span class="zh-inline" lang="zh-Hans">不引起过敏反应的转基因花生：是否值得投入研究经费？</span></div></div>
+      <textarea class="user-answer" placeholder="Type your answer here..."></textarea>
+      <div class="btn-row">
+        <button type="button" class="quiz-btn" onclick="checkMyAnswer(8, this)">Check my answer</button>
+        <button type="button" class="quiz-btn" id="toggleBtn8" onclick="toggleAnswer(8, this)">Show Answer</button>
+        <span id="feedback8" class="feedback"></span>
+      </div>
+      <div class="ans">
+<p><b>Yes, likely.</b> Severe food allergies can be life‑threatening. If transgenic peanuts reduce allergic reactions, it could prevent emergencies and improve quality of life. It still needs strong safety testing and clear labelling/communication.</p>
+<p class="zh-block" lang="zh-Hans"><b>很可能是值得的。</b> 严重食物过敏可能危及生命。若转基因花生能降低过敏反应，就可能减少急症并提高生活质量。但仍需要严格的安全测试以及清晰的标签与沟通。</p>
+</div>
+    </div>
+
+    <div class="qa" id="q9">
+      <div class="qrow"><span class="badge">9</span><div class="qtitle">Study the diagram: what does it show?<span class="zh-inline" lang="zh-Hans">观察图示：它展示了什么？</span></div></div>
+      <textarea class="user-answer" placeholder="Type your answer here..."></textarea>
+      <div class="btn-row">
+        <button type="button" class="quiz-btn" onclick="checkMyAnswer(9, this)">Check my answer</button>
+        <button type="button" class="quiz-btn" id="toggleBtn9" onclick="toggleAnswer(9, this)">Show Answer</button>
+        <span id="feedback9" class="feedback"></span>
+      </div>
+      <div class="ans">
+<p>The diagram shows <b>gene therapy for an inherited retinal disease</b>. A mutation causes light‑sensing retinal cells to die. Doctors inject fluid to lift the affected layer and then inject <b>normal copies of the gene</b> (DNA) to help cells make the correct protein and survive, slowing or stopping vision loss.</p>
+ <p class="zh-block" lang="zh-Hans">图示展示的是<b>针对遗传性视网膜疾病的基因治疗</b>。突变会导致感光视网膜细胞死亡。医生先注入液体抬起受影响的组织层，然后注入<b>正常的基因拷贝</b>（DNA），帮助细胞制造正确的蛋白并存活，从而减缓或阻止视力丧失。</p>
+</div>
+    </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    (function () {
+      const LANG_STORAGE_KEY = "topic14QuestionsLang";
+      const langButtons = Array.from(document.querySelectorAll(".lang-btn"));
+
+      const setLanguage = (lang) => {
+        const isBilingual = lang === "bi";
+        document.body.classList.toggle("lang-bi", isBilingual);
+
+        for (const btn of langButtons) {
+          const active = btn.dataset.lang === lang;
+          btn.classList.toggle("is-active", active);
+          btn.setAttribute("aria-pressed", active ? "true" : "false");
+        }
+
+        try {
+          localStorage.setItem(LANG_STORAGE_KEY, lang);
+        } catch {}
+      };
+
+      try {
+        const saved = localStorage.getItem(LANG_STORAGE_KEY);
+        setLanguage(saved === "bi" ? "bi" : "en");
+      } catch {
+        setLanguage("en");
+      }
+
+      for (const btn of langButtons) {
+        btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
+      }
+    })();
+
+    const DEFAULT_GRADE_API_URL = "https://lakesideart.gochatus.org/grade-service/grade";
+
+    const gradeApiUrlEl = document.getElementById("grade-api-url");
+    const btnTestApi = document.getElementById("btn-test-api");
+    const btnCheckAll = document.getElementById("btn-check-all");
+    const apiStatusEl = document.getElementById("api-status");
+    const checkAllStatusEl = document.getElementById("checkall-status");
+
+    function setApiStatus(text, kind) {
+      if (!apiStatusEl) return;
+      apiStatusEl.textContent = text || "";
+      apiStatusEl.className = "feedback" + (kind ? " " + kind : "");
+    }
+
+    function getGradeApiUrl() {
+      if (!gradeApiUrlEl) return null;
+      const url = (gradeApiUrlEl.value || "").trim();
+      return url || null;
+    }
+
+    function saveGradeApiUrl() {
+      if (!gradeApiUrlEl) return;
+      const url = (gradeApiUrlEl.value || "").trim();
+      try {
+        localStorage.setItem("gradeApiUrl", url);
+      } catch {}
+    }
+
+    async function fetchJsonWithTimeout(url, options, timeoutMs) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const resp = await fetch(url, { ...options, signal: controller.signal });
+        const text = await resp.text().catch(() => "");
+        let data = null;
+        try { data = text ? JSON.parse(text) : null; } catch { data = null; }
+        return { ok: resp.ok, status: resp.status, data, text };
+      } catch (err) {
+        if (err && err.name === "AbortError") return { ok: false, status: 0, data: null, text: "", aborted: true };
+        throw err;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function extractFirstGradeResult(data) {
+      if (!data) return null;
+      if (Array.isArray(data.results) && data.results[0]) return data.results[0];
+      if (data.result && Array.isArray(data.result.results) && data.result.results[0]) return data.result.results[0];
+      if (data.model_result && Array.isArray(data.model_result.results) && data.model_result.results[0]) return data.model_result.results[0];
+      return null;
+    }
+
+    function deriveHealthUrl(gradeUrl) {
+      try {
+        const u = new URL(gradeUrl);
+        u.search = "";
+        u.hash = "";
+        if (u.pathname.endsWith("/grade")) {
+          u.pathname = u.pathname.replace(/\/grade$/, "/health");
+        } else {
+          u.pathname = u.pathname.replace(/\/+$/, "") + "/health";
+        }
+        return u.toString();
+      } catch {
+        return null;
+      }
+    }
+
+    async function testApi() {
+      const gradeUrl = getGradeApiUrl();
+      if (!gradeUrl) {
+        setApiStatus("Set a URL first.", "bad");
+        return;
+      }
+
+      setApiStatus("Testing...");
+      try {
+        const healthUrl = deriveHealthUrl(gradeUrl);
+        if (!healthUrl) {
+          setApiStatus("Invalid URL.", "bad");
+          return;
+        }
+        const { ok, status, data, aborted } = await fetchJsonWithTimeout(healthUrl, { method: "GET" }, 4000);
+        if (aborted) {
+          setApiStatus("Health check timed out.", "bad");
+          return;
+        }
+        if (!ok) {
+          setApiStatus(`Health check failed (${status}).`, "bad");
+          return;
+        }
+        const looksHealthy = !!(data && (data.status === "ok" || data.ok === true));
+        setApiStatus(looksHealthy ? "OK" : "OK (nonstandard response)", looksHealthy ? "ok" : "");
+      } catch {
+        setApiStatus("Health check failed.", "bad");
+      }
+    }
+
+    if (gradeApiUrlEl) {
+      let savedGradeApiUrl = null;
+      try { savedGradeApiUrl = localStorage.getItem("gradeApiUrl"); } catch { savedGradeApiUrl = null; }
+      gradeApiUrlEl.value = savedGradeApiUrl === null ? DEFAULT_GRADE_API_URL : savedGradeApiUrl;
+      gradeApiUrlEl.addEventListener("change", () => {
+        saveGradeApiUrl();
+        setApiStatus("", "");
+      });
+    }
+
+    if (btnTestApi) {
+      btnTestApi.addEventListener("click", testApi);
+    }
+
+    function setCheckAllStatus(text, kind) {
+      if (!checkAllStatusEl) return;
+      checkAllStatusEl.textContent = text || "";
+      checkAllStatusEl.className = "feedback" + (kind ? " " + kind : "");
+    }
+
+    function normalizeText(str) {
+      return String(str || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, " ")
+        .split(/\s+/)
+        .filter(Boolean);
+    }
+
+    function similarityScore(userText, targetText) {
+      const uWords = normalizeText(userText);
+      const tWords = normalizeText(targetText);
+      if (uWords.length === 0 || tWords.length === 0) return 0;
+
+      const uSet = new Set(uWords);
+      const tSet = new Set(tWords);
+      let intersection = 0;
+      tSet.forEach(w => { if (uSet.has(w)) intersection++; });
+      const union = uSet.size + tSet.size - intersection;
+      return union === 0 ? 0 : intersection / union;
+    }
+
+    function localOverlapCheck(userText, correctText) {
+      if (!correctText) {
+        return { verdict: "unknown", explanation: "No model answer provided; enable AI grading to validate." };
+      }
+      const score = similarityScore(userText, correctText);
+      const percent = Math.round(score * 100);
+      if (percent >= 70) return { verdict: "correct", explanation: `Overlap about ${percent}% with the model answer.` };
+      if (percent >= 40) return { verdict: "wrong", explanation: `Partial overlap (${percent}%). Compare with the model answer and refine.` };
+      return { verdict: "wrong", explanation: `Low overlap (~${percent}%). Compare with the model answer and try again.` };
+    }
+
+    async function gradeOne({ questionText, userText, correctText }) {
+      const gradeUrl = getGradeApiUrl();
+      const aiTimeoutMs = 60000;
+
+      if (gradeUrl) {
+        const pair = { question: questionText, answer: userText };
+        if (correctText) pair.reference_answer = correctText;
+        const payload = { pairs: [pair] };
+
+        const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+          gradeUrl,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          },
+          aiTimeoutMs
+        );
+
+        if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+
+        const first = extractFirstGradeResult(data);
+        if (!ok || !first) {
+          const reason = data && data.error ? data.error : `bad_response_${status}`;
+          const detail = text ? ` (${text.slice(0, 160)})` : "";
+          throw new Error(reason + detail);
+        }
+
+        const verdict = first.verdict === "correct" ? "correct" : "wrong";
+        const explanation = (first.explanation || "").trim();
+        return { verdict, explanation, mode: "ai" };
+      }
+
+      const local = localOverlapCheck(userText, correctText);
+      if (local.verdict === "unknown") return { verdict: "unknown", explanation: local.explanation, mode: "local" };
+      return { verdict: local.verdict, explanation: local.explanation, mode: "local" };
+    }
+
+    function setFeedback(id, text, kind) {
+      const el = document.getElementById("feedback" + id);
+      if (!el) return;
+      el.textContent = text || "";
+      el.className = "feedback" + (kind ? " " + kind : "");
+    }
+
+    function extractEnglishText(el) {
+      if (!el) return "";
+      const clone = el.cloneNode(true);
+      const nodes = clone.querySelectorAll ? clone.querySelectorAll(".zh-inline,.zh-block") : [];
+      if (nodes && nodes.forEach) nodes.forEach(n => n.remove());
+      return clone.textContent.replace(/\s+/g, " ").trim();
+    }
+
+    function getCorrectTextFromQuestion(qEl) {
+      if (!qEl) return "";
+      const answerEls = Array.from(qEl.querySelectorAll(".ans"));
+      return answerEls
+        .map(el => extractEnglishText(el))
+        .join("\n")
+        .replace(/\s+\n/g, "\n")
+        .trim();
+    }
+
+    function setAnswerVisible(qEl, visible) {
+      if (!qEl) return;
+      const answerEls = Array.from(qEl.querySelectorAll(".ans"));
+      for (const el of answerEls) {
+        el.classList.toggle("is-visible", !!visible);
+      }
+    }
+
+    async function checkMyAnswer(id, btn) {
+      const qEl = document.getElementById("q" + id);
+      const textarea = qEl ? qEl.querySelector("textarea.user-answer") : null;
+      const userText = textarea ? textarea.value.trim() : "";
+      const toggleBtn = document.getElementById("toggleBtn" + id);
+      const qTitleEl = qEl ? qEl.querySelector(".qtitle") : null;
+      const questionText = extractEnglishText(qTitleEl);
+      const correctText = getCorrectTextFromQuestion(qEl);
+
+      if (!userText) {
+        setAnswerVisible(qEl, true);
+        if (toggleBtn) toggleBtn.textContent = "Hide Answer";
+        setFeedback(id, "No answer entered. Showing the model answer.", "bad");
+        return;
+      }
+
+      const gradeUrl = getGradeApiUrl();
+      if (btn) btn.disabled = true;
+      setFeedback(id, gradeUrl ? "Checking with AI grader..." : "Checking...", "");
+
+      try {
+        const result = await gradeOne({ questionText, userText, correctText });
+        const isCorrect = result.verdict === "correct";
+        const prefix = result.verdict === "unknown" ? "" : (isCorrect ? "Correct. " : "Wrong. ");
+        setFeedback(id, prefix + (result.explanation || ""), isCorrect ? "ok" : "bad");
+      } catch (err) {
+        console.warn("Grading failed:", err);
+
+        const local = localOverlapCheck(userText, correctText);
+        if (local.verdict === "unknown") {
+          setFeedback(id, "AI grading unavailable; also no model answer to compare against.", "bad");
+        } else {
+          setFeedback(
+            id,
+            `AI grading unavailable; using overlap check. ${local.verdict === "correct" ? "Correct." : "Wrong."} ${local.explanation}`,
+            local.verdict === "correct" ? "ok" : "bad"
+          );
+        }
+      } finally {
+        if (btn) btn.disabled = false;
+        setAnswerVisible(qEl, true);
+        if (toggleBtn) toggleBtn.textContent = "Hide Answer";
+      }
+    }
+
+    function toggleAnswer(id, btn) {
+      const qEl = document.getElementById("q" + id);
+      const firstAnswer = qEl ? qEl.querySelector(".ans") : null;
+      const isVisible = !!(firstAnswer && firstAnswer.classList.contains("is-visible"));
+      setAnswerVisible(qEl, !isVisible);
+      if (btn) btn.textContent = isVisible ? "Show Answer" : "Hide Answer";
+    }
+
+    async function checkAll() {
+      const total = 9;
+      if (btnCheckAll) btnCheckAll.disabled = true;
+      setCheckAllStatus("Checking all...", "");
+      try {
+        for (let i = 1; i <= total; i++) {
+          setCheckAllStatus(`Checking ${i}/${total}...`, "");
+          await checkMyAnswer(i, null);
+        }
+        setCheckAllStatus("Done.", "ok");
+      } catch (err) {
+        console.warn("Check all failed:", err);
+        setCheckAllStatus("Check all failed.", "bad");
+      } finally {
+        if (btnCheckAll) btnCheckAll.disabled = false;
+      }
+    }
+
+    if (btnCheckAll) {
+      btnCheckAll.addEventListener("click", checkAll);
+    }
+  </script>
+</body>
+</html>
