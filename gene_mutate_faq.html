@@ -4,66 +4,103 @@
 <meta charset="UTF-8">
 <title>Genetics Practice Quiz</title>
 <style>
-body{
+body {
   font-family: Arial, sans-serif;
-  background:#0f172a;
-  color:#e5e7eb;
-  margin:0;
-  padding:20px;
-}
-h1{ text-align:center; }
-
-.topbar{
-  text-align:center;
-  margin-bottom:20px;
+  background: #f2f2f2;
+  padding: 30px;
+  margin: 0;
+  color: #333;
 }
 
-.card{
-  background:#111827;
-  border:1px solid #374151;
-  border-radius:12px;
-  padding:16px;
-  margin-bottom:16px;
-}
-.question{ font-weight:bold; margin-bottom:10px; }
-.option{ margin:6px 0; }
-
-button{
-  margin-top:10px;
-  padding:8px 12px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  background:#2563eb;
-  color:white;
+.container {
+  max-width: 900px;
+  margin: auto;
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.result{
-  margin-top:10px;
-  padding:10px;
-  border-radius:8px;
-  font-weight:bold;
+h1, h2 {
+  color: #333;
 }
-.correct{ background:#064e3b; color:#22c55e; }
-.wrong{ background:#4c0519; color:#f87171; }
 
-.explain{
-  margin-top:6px;
-  font-weight:normal;
-  color:#cbd5f5;
+h1 { margin-top: 0; }
+
+.topbar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 8px 0 18px;
+}
+
+.card {
+  background: #fafafa;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+
+.question {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.option { margin: 6px 0; }
+
+button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #2196F3;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1976D2;
+}
+
+.result {
+  margin-top: 10px;
+  padding: 12px;
+  background: #eef6ff;
+  border-left: 4px solid #2196F3;
+}
+
+.result.correct {
+  background: #e8f5e9;
+  border-left-color: #4CAF50;
+  color: #1b5e20;
+}
+
+.result.wrong {
+  background: #ffebee;
+  border-left-color: #e53935;
+  color: #b71c1c;
+}
+
+.explain {
+  margin-top: 6px;
+  font-weight: normal;
+  color: #333;
 }
 </style>
 </head>
 
 <body>
 
-<h1>Genetics & Mutation Practice Quiz</h1>
+<div class="container">
+  <h1>Genetics & Mutation Practice Quiz</h1>
 
-<div class="topbar">
-  <button onclick="checkAll()">Check All Answers</button>
+  <div class="topbar">
+    <button onclick="checkAll()">Check All Answers</button>
+  </div>
+
+  <div id="quiz"></div>
 </div>
-
-<div id="quiz"></div>
 
 <script>
 const questions = [
@@ -176,4 +213,3 @@ function checkAll(){
 
 </body>
 </html>
-
