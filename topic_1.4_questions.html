@@ -895,7 +895,13 @@
           setCheckAllStatus(`Checking ${i}/${total}...`, "");
           await checkMyAnswer(i, null);
         }
-        setCheckAllStatus("Done.", "ok");
+        let correct = 0;
+        for (let i = 1; i <= total; i++) {
+          const fb = document.getElementById("feedback" + i);
+          if (fb && fb.classList.contains("ok")) correct++;
+        }
+        const pct = total ? Math.round((correct / total) * 100) : 0;
+        setCheckAllStatus(`Done. Score: ${correct}/${total} (${pct}%).`, correct === total ? "ok" : "");
       } catch (err) {
         console.warn("Check all failed:", err);
         setCheckAllStatus("Check all failed.", "bad");

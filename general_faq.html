@@ -2217,9 +2217,10 @@
       }
 
       if (reviewSubEl) {
-        const denom = answeredCount || 1;
-        const pct = Math.round((correct / denom) * 100);
-        reviewSubEl.textContent = `Done. Answered: ${answeredCount}/${totalCount}. Correct: ${correct}. Wrong: ${wrong}. Unknown: ${unknown}. Not answered: ${notAnswered}. Correct rate: ${pct}% (of answered).`;
+        const pctTotal = totalCount ? Math.round((correct / totalCount) * 100) : 0;
+        const denomAnswered = answeredCount || 1;
+        const pctAnswered = Math.round((correct / denomAnswered) * 100);
+        reviewSubEl.textContent = `Done. Score: ${correct}/${totalCount} (${pctTotal}%). Answered: ${answeredCount}/${totalCount}. Correct: ${correct}. Wrong: ${wrong}. Unknown: ${unknown}. Not answered: ${notAnswered}. Correct rate: ${pctAnswered}% (of answered).`;
       }
 
       if (btnCheckAll) btnCheckAll.disabled = false;

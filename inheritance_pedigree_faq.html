@@ -711,7 +711,14 @@ async function checkAllQuestions() {
       await new Promise((r) => setTimeout(r, 80));
     }
 
-    setCheckAllStatus(`Done. Checked ${ids.length} question${ids.length === 1 ? "" : "s"}.`, "ok");
+    let correct = 0;
+    for (const id of ids) {
+      const fb = document.getElementById("feedback" + id);
+      if (fb && fb.classList.contains("ok")) correct++;
+    }
+    const total = ids.length;
+    const pct = total ? Math.round((correct / total) * 100) : 0;
+    setCheckAllStatus(`Done. Score: ${correct}/${total} (${pct}%).`, correct === total ? "ok" : "");
   } catch (err) {
     console.warn("Check All failed:", err);
     setCheckAllStatus("Check All failed.", "bad");

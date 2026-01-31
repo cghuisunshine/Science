@@ -29,8 +29,15 @@ h1 { margin-top: 0; }
 
 .topbar {
   display: flex;
+  gap: 10px;
+  align-items: center;
   justify-content: flex-end;
   margin: 8px 0 18px;
+}
+
+.score {
+  font-size: 14px;
+  color: #555;
 }
 
 .card {
@@ -97,6 +104,7 @@ button:hover {
 
   <div class="topbar">
     <button onclick="checkAll()">Check All Answers</button>
+    <span class="score" id="checkall-score"></span>
   </div>
 
   <div id="quiz"></div>
@@ -191,23 +199,32 @@ function checkOne(index){
     result.innerHTML=`No selection.<br>
       Correct answer: <strong>${correctText}</strong>
       <div class="explain">${item.explain}</div>`;
-    return;
+    return false;
   }
 
   if(parseInt(selected.value)===item.answer){
     result.className="result correct";
     result.innerHTML=`Correct!
       <div class="explain">${item.explain}</div>`;
+    return true;
   }else{
     result.className="result wrong";
     result.innerHTML=`Incorrect.<br>
       Correct answer: <strong>${correctText}</strong>
       <div class="explain">${item.explain}</div>`;
+    return false;
   }
 }
 
 function checkAll(){
-  questions.forEach((_,i)=>checkOne(i));
+  let correct = 0;
+  const total = questions.length;
+  for (let i = 0; i < total; i++) {
+    if (checkOne(i)) correct++;
+  }
+  const pct = total ? Math.round((correct / total) * 100) : 0;
+  const scoreEl = document.getElementById("checkall-score");
+  if (scoreEl) scoreEl.textContent = `Score: ${correct}/${total} (${pct}%)`;
 }
 </script>
 

@@ -1443,7 +1443,15 @@
 	            setCheckAllStatus(`Checking ${i + 1}/${checkers.length}...`, "");
 	            await checkers[i]();
 	          }
-	          setCheckAllStatus("Done.", "ok");
+	          const qaBlocks = Array.from(document.querySelectorAll(".qa"));
+	          let correct = 0;
+	          for (const qa of qaBlocks) {
+	            const fb = qa.querySelector(".btn-row .feedback");
+	            if (fb && fb.classList.contains("ok")) correct++;
+	          }
+	          const total = qaBlocks.length;
+	          const pct = total ? Math.round((correct / total) * 100) : 0;
+	          setCheckAllStatus(`Done. Score: ${correct}/${total} (${pct}%).`, correct === total ? "ok" : "");
 	        } catch (err) {
 	          console.warn("Check all failed:", err);
 	          setCheckAllStatus("Check all failed.", "bad");
