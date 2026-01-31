@@ -8,19 +8,32 @@
     body {
       font-family: Arial, sans-serif;
       background: #f2f2f2;
-      padding: 30px;
+      padding: 14px;
       margin: 0;
       color: #333;
       line-height: 1.6;
     }
 
     .wrap {
+      width: 100%;
       max-width: 900px;
-      margin: auto;
+      margin: 0 auto;
       background: white;
       padding: 25px;
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    @media (min-width: 820px) {
+      body { padding: 18px; }
+      .wrap {
+        max-width: none;
+        padding: 22px;
+      }
+
+      .imgcard iframe {
+        height: calc(100vh - 280px);
+      }
     }
 
     h1, h2 { color: #333; }
@@ -149,10 +162,14 @@
       align-items: flex-start;
       margin: 18px 0 22px;
     }
+
+    .splitter {
+      display: none;
+    }
     .sheet-media {
-      flex: 0 0 510px;
-      max-width: 560px;
-      max-height: 620px;
+      flex: 0 0 clamp(360px, 45vw, 760px);
+      max-width: none;
+      max-height: calc(100vh - 240px);
       overflow: auto;
       padding-right: 6px;
       -webkit-overflow-scrolling: touch;
@@ -160,7 +177,7 @@
     .sheet-content {
       flex: 1 1 0%;
       min-width: 280px;
-      max-height: 620px;
+      max-height: calc(100vh - 240px);
       overflow: auto;
       padding-right: 6px;
       -webkit-overflow-scrolling: touch;
@@ -172,6 +189,53 @@
       .sheet-media { flex-basis: auto; max-width: 100%; width: 100%; }
       .sheet-content { min-width: 0; width: 100%; max-height: none; overflow: visible; padding-right: 0; }
       .sheet-media { max-height: none; overflow: visible; padding-right: 0; }
+    }
+
+    @media (min-width: 820px) {
+      .sheet-row {
+        display: grid;
+        grid-template-columns: minmax(320px, var(--left-width, 45vw)) 12px minmax(320px, 1fr);
+        gap: 0;
+        align-items: start;
+      }
+
+      .sheet-media {
+        padding-right: 14px;
+      }
+
+      .sheet-content {
+        padding-left: 14px;
+      }
+
+      .splitter {
+        display: block;
+        width: 12px;
+        border-radius: 999px;
+        cursor: col-resize;
+        background: rgba(33,150,243,.14);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+        position: relative;
+        user-select: none;
+        touch-action: none;
+        align-self: stretch;
+      }
+
+      .splitter::after {
+        content: "";
+        position: absolute;
+        top: 18px;
+        bottom: 18px;
+        left: 50%;
+        width: 2px;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        background: rgba(33,150,243,.35);
+      }
+
+      .splitter:focus-visible {
+        outline: 3px solid rgba(33,150,243,.35);
+        outline-offset: 4px;
+      }
     }
 
     textarea.user-answer {
@@ -335,6 +399,7 @@
           ></iframe>
         </div>
       </aside>
+      <div class="splitter" tabindex="0" role="separator" aria-label="Resize PDF and answers columns"></div>
       <div class="sheet-content">
 
     <div class="qa" id="q1">
@@ -621,6 +686,88 @@
 
       for (const btn of langButtons) {
         btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
+      }
+    })();
+
+    (function () {
+      const SPLIT_WIDTH_STORAGE_KEY = "topic14SplitLeftWidth";
+      const sheetRow = document.querySelector(".sheet-row");
+      const splitter = document.querySelector(".splitter");
+
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+      const setLeftWidth = (px) => {
+        if (!sheetRow) return;
+        sheetRow.style.setProperty("--left-width", `${Math.round(px)}px`);
+      };
+
+      const getBounds = () => {
+        if (!sheetRow) return null;
+        const rect = sheetRow.getBoundingClientRect();
+        const minLeft = 320;
+        const minRight = 320;
+        const splitterWidth = 12;
+        const maxLeft = Math.max(minLeft, rect.width - minRight - splitterWidth);
+        return { rect, minLeft, maxLeft };
+      };
+
+      const applySavedSplit = () => {
+        const bounds = getBounds();
+        if (!bounds) return;
+        let desired = Math.round(bounds.rect.width * 0.48);
+        try {
+          const saved = Number(localStorage.getItem(SPLIT_WIDTH_STORAGE_KEY));
+          if (Number.isFinite(saved) && saved > 0) desired = saved;
+        } catch {}
+        setLeftWidth(clamp(desired, bounds.minLeft, bounds.maxLeft));
+      };
+
+      applySavedSplit();
+      window.addEventListener("resize", applySavedSplit);
+
+      if (splitter && sheetRow) {
+        const onPointerDown = (event) => {
+          event.preventDefault();
+          splitter.setPointerCapture(event.pointerId);
+          splitter.dataset.dragging = "1";
+        };
+
+        const onPointerMove = (event) => {
+          if (splitter.dataset.dragging !== "1") return;
+          const bounds = getBounds();
+          if (!bounds) return;
+          const proposed = event.clientX - bounds.rect.left;
+          const next = clamp(proposed, bounds.minLeft, bounds.maxLeft);
+          setLeftWidth(next);
+          try {
+            localStorage.setItem(SPLIT_WIDTH_STORAGE_KEY, String(Math.round(next)));
+          } catch {}
+        };
+
+        const stopDragging = () => {
+          delete splitter.dataset.dragging;
+        };
+
+        splitter.addEventListener("pointerdown", onPointerDown);
+        splitter.addEventListener("pointermove", onPointerMove);
+        splitter.addEventListener("pointerup", stopDragging);
+        splitter.addEventListener("pointercancel", stopDragging);
+
+        splitter.addEventListener("keydown", (event) => {
+          if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+          const bounds = getBounds();
+          if (!bounds) return;
+          const current =
+            parseFloat(getComputedStyle(sheetRow).getPropertyValue("--left-width")) ||
+            Math.round(bounds.rect.width * 0.48);
+          const delta = event.key === "ArrowLeft" ? -24 : 24;
+          const next = clamp(current + delta, bounds.minLeft, bounds.maxLeft);
+          setLeftWidth(next);
+          try {
+            localStorage.setItem(SPLIT_WIDTH_STORAGE_KEY, String(Math.round(next)));
+          } catch {}
+          event.preventDefault();
+        });
       }
     })();
 
