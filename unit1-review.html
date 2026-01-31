@@ -162,6 +162,25 @@
         object-fit: contain;
       }
 
+      /* Make the answers column scroll independently so you can keep the question image visible. */
+      body:not(.hide-answers) .spread .answers-pane {
+        max-height: calc(100vh - 8rem);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        padding-right: 0.5rem;
+      }
+
+      /* Keep the answers section title visible while scrolling. */
+      body:not(.hide-answers) .spread .answers-pane > h2 {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: white;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+      }
+
       body.hide-answers .spread {
         grid-template-columns: 1fr;
       }
@@ -245,6 +264,12 @@
       }
       .spread .page-image img {
         max-height: none !important;
+      }
+
+      .answers-pane {
+        max-height: none !important;
+        overflow: visible !important;
+        padding-right: 0 !important;
       }
     }
     ul {
@@ -405,9 +430,9 @@
         </div>
       </section>
 
-      <!-- ANSWERS 8–18 -->
+      <!-- ANSWERS 8–25 -->
       <section class="answers-pane">
-        <h2>Answers 8–18</h2>
+        <h2>Answers 8–25</h2>
 
 	      <div class="qa">
 	        <h3>8. Analogy for DNA, chromosomes, genes, and nucleotides<span class="zh-inline" lang="zh-Hans"><br>DNA、染色体、基因与核苷酸的类比</span></h3>
@@ -524,21 +549,6 @@
 		          <li>Economic and social fairness (access, patents).<span class="zh-inline" lang="zh-Hans"><br>经济与社会公平（获取门槛、专利等）。</span></li>
 		        </ul>
 		      </div>
-      </section>
-    </div>
-
-    <div class="spread">
-      <!-- PAGE 3 IMAGE -->
-      <section class="page-pane">
-        <h2>Textbook Page 3</h2>
-        <div class="page-image">
-          <img src="unit1-review-3.png" alt="Unit 1 Review page 3" />
-        </div>
-      </section>
-
-      <!-- ANSWERS 19–34 -->
-      <section class="answers-pane">
-        <h2>Answers 19–34</h2>
 
 	      <div class="qa">
 	        <h3>19. Black × white true-breeding guinea pigs<span class="zh-inline" lang="zh-Hans"><br>黑色 × 白色 纯合豚鼠</span></h3>
@@ -604,6 +614,21 @@
 	        <p><strong>Answer (sample idea):</strong> A child is born with a rare immune disorder that leaves them vulnerable to infections. Scientists use CRISPR-based gene therapy to fix the faulty gene in stem cells taken from the child. The corrected cells are returned, and the immune system gradually recovers. The story follows the science, the clinical trials, and the family’s ethical worries about side-effects and long-term risks, showing real possibilities and limits of modern gene therapy.</p>
 	        <p class="zh-block" lang="zh-Hans"><strong>答案（示例想法）：</strong>一个孩子出生时患有罕见的免疫缺陷，极易感染。科学家用基于 CRISPR 的基因治疗，在从孩子体内取出的干细胞中修复缺陷基因，再把修复后的细胞回输，免疫系统逐步恢复。故事可以跟随科学原理、临床试验过程，以及家庭对副作用与长期风险的伦理担忧，展现现代基因治疗真实的可能性与局限。</p>
 	      </div>
+      </section>
+    </div>
+
+    <div class="spread">
+      <!-- PAGE 3 IMAGE -->
+      <section class="page-pane">
+        <h2>Textbook Page 3</h2>
+        <div class="page-image">
+          <img src="unit1-review-3.png" alt="Unit 1 Review page 3" />
+        </div>
+      </section>
+
+      <!-- ANSWERS 26–34 -->
+      <section class="answers-pane">
+        <h2>Answers 26–34</h2>
 
 	      <div class="qa">
 	        <h3>26. Incomplete dominance in radishes<span class="zh-inline" lang="zh-Hans"><br>萝卜中的不完全显性</span></h3>
