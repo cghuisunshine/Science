@@ -5,36 +5,39 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Topic 1.4 Questions — Answers</title>
   <style>
-    :root {
-      --bg: #0b1220;
-      --card: rgba(255,255,255,.03);
-      --ink: #eaf0ff;
-      --muted: rgba(234,240,255,.78);
-      --border: rgba(255,255,255,.14);
-      --accent: #5aa7ff;
-    }
     body {
-      margin: 0; padding: 26px;
-      background: linear-gradient(180deg, #081023, #070b14 55%, #060814);
-      color: var(--ink);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      line-height: 1.55;
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 30px;
+      margin: 0;
+      color: #333;
+      line-height: 1.6;
     }
-    .wrap { max-width: 1000px; margin: 0 auto; }
+
+    .wrap {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h1, h2 { color: #333; }
     h1 { margin: 0 0 8px; font-size: 26px; }
-    .lead { margin: 0 0 18px; color: var(--muted); }
+    .lead { margin: 0 0 18px; color: #555; }
     .imgcard {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
+      background: #fafafa;
+      border: 1px solid #e6e6e6;
+      border-radius: 10px;
       padding: 12px;
       margin: 18px 0 22px;
     }
-    .imgcard img { width: 100%; height: auto; display: block; border-radius: 12px; }
+    .imgcard img { width: 100%; height: auto; display: block; border-radius: 8px; }
     .qa {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
+      background: #fafafa;
+      border: 1px solid #e6e6e6;
+      border-radius: 10px;
       padding: 16px 18px;
       margin: 12px 0;
     }
@@ -42,19 +45,30 @@
     .badge {
       width: 32px; height: 32px; border-radius: 999px;
       display: inline-flex; align-items: center; justify-content: center;
-      background: rgba(90,167,255,.16);
-      border: 1px solid rgba(90,167,255,.35);
+      background: #eef6ff;
+      border: 1px solid #cfe3ff;
+      color: #1b3a7a;
       font-weight: 800;
     }
     .qtitle { font-weight: 800; }
-    .ans { color: var(--muted); }
-    .ans b { color: var(--ink); }
+
+    .ans {
+      margin-top: 10px;
+      padding: 12px;
+      background: #eef6ff;
+      border-left: 4px solid #2196F3;
+      color: #333;
+      display: none;
+    }
+    .ans.is-visible { display: block; }
+    .ans b { color: #333; }
+
     table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 14px; }
-    th, td { border: 1px solid var(--border); padding: 10px; vertical-align: top; }
-    th { background: rgba(90,167,255,.12); text-align: left; }
+    th, td { border: 1px solid #e6e6e6; padding: 10px; vertical-align: top; }
+    th { background: #f2f7ff; text-align: left; }
     ol, ul { margin: 8px 0 0 22px; }
-    footer { margin-top: 22px; color: rgba(234,240,255,.55); font-size: 12px; }
-    hr.sep { border: 0; border-top: 1px solid var(--border); margin: 20px 0; }
+    footer { margin-top: 22px; color: #777; font-size: 12px; }
+    hr.sep { border: 0; border-top: 1px solid #e6e6e6; margin: 20px 0; }
 
     .topbar {
       display: flex;
@@ -67,9 +81,9 @@
     details.settings {
       margin-top: 14px;
       margin-bottom: 18px;
-      background: rgba(255,255,255,.03);
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: 16px;
+      background: #fafafa;
+      border: 1px solid #e6e6e6;
+      border-radius: 10px;
       padding: 10px 12px;
     }
 
@@ -88,7 +102,7 @@
 
     .settings-row label {
       min-width: 120px;
-      color: rgba(234,240,255,.85);
+      color: #333;
     }
 
     .settings-row input {
@@ -96,9 +110,9 @@
       min-width: 240px;
       padding: 10px 12px;
       font-size: 14px;
-      color: var(--ink);
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.14);
+      color: #333;
+      background: white;
+      border: 1px solid #d7d7e2;
       border-radius: 12px;
       outline: none;
     }
@@ -110,7 +124,7 @@
 
     .settings-hint {
       margin-top: 8px;
-      color: rgba(234,240,255,.7);
+      color: #555;
       font-size: 13px;
       line-height: 1.4;
     }
@@ -152,9 +166,9 @@
       margin-top: 8px;
       padding: 10px 12px;
       font-size: 14px;
-      color: var(--ink);
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.14);
+      color: #333;
+      background: white;
+      border: 1px solid #d7d7e2;
       border-radius: 12px;
       outline: none;
       resize: vertical;
@@ -176,18 +190,17 @@
     button.quiz-btn {
       margin-top: 0;
       padding: 9px 14px;
-      border: 1px solid rgba(255,255,255,.16);
-      border-radius: 999px;
-      background: rgba(255,255,255,.06);
-      color: var(--ink);
+      border: none;
+      border-radius: 6px;
+      background: #2196F3;
+      color: white;
       cursor: pointer;
       font-weight: 800;
       letter-spacing: .2px;
     }
 
     button.quiz-btn:hover {
-      background: rgba(90,167,255,.16);
-      border-color: rgba(90,167,255,.35);
+      background: #1976D2;
     }
 
     button.quiz-btn:disabled {
@@ -197,40 +210,45 @@
 
     .feedback {
       font-size: 13px;
-      color: rgba(234,240,255,.72);
+      color: #555;
     }
 
     .feedback.ok {
-      color: #97f3b5;
+      color: #1b5e20;
     }
 
     .feedback.bad {
-      color: #ff8f8f;
+      color: #b71c1c;
     }
 
-    .ans { display: none; }
-    .ans.is-visible { display: block; }
-
-    .lang-controls { display: flex; gap: 8px; align-items: center; }
     .lang-btn {
       appearance: none;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.06);
-      color: var(--ink);
+      border: 1px solid #cfd6ee;
+      background: #f6f7fb;
+      color: #333;
       padding: 8px 10px;
-      border-radius: 999px;
+      border-radius: 8px;
       font-weight: 700;
       font-size: 12px;
       cursor: pointer;
       letter-spacing: .2px;
     }
     .lang-btn.is-active {
-      border-color: rgba(90,167,255,.55);
-      background: rgba(90,167,255,.22);
+      background: #2196F3;
+      border-color: #2196F3;
+      color: white;
     }
     .lang-btn:focus-visible {
-      outline: 3px solid rgba(90,167,255,.35);
+      outline: 3px solid rgba(33,150,243,.35);
       outline-offset: 2px;
+    }
+
+    .lang-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
     .zh-block,
@@ -248,13 +266,13 @@
       margin-top: 4px;
       font-size: 16px;
       font-weight: 700;
-      color: var(--muted);
+      color: #555;
     }
     body.lang-bi .qtitle .zh-inline {
       margin-top: 2px;
       font-size: 14px;
       font-weight: 700;
-      color: rgba(234,240,255,.72);
+      color: #555;
     }
     body.lang-bi footer .zh-inline { margin-top: 4px; }
   </style>
