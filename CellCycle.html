@@ -53,6 +53,51 @@
       background: linear-gradient(180deg, rgba(249, 250, 251, 0.9), rgba(255, 255, 255, 0.6));
     }
 
+    .head-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .lang-controls {
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .lang-btn {
+      margin-top: 0;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(17, 24, 39, 0.03);
+      border: 1px solid rgba(17, 24, 39, 0.14);
+      font-weight: 600;
+    }
+
+    .lang-btn.is-active {
+      background: rgba(59, 130, 246, 0.14);
+      border-color: rgba(59, 130, 246, 0.45);
+    }
+
+    .zh-block,
+    .zh-inline {
+      display: none;
+    }
+
+    body.lang-bi .zh-block { display: block; }
+    body.lang-bi .zh-inline { display: inline; }
+
+    body.lang-bi .page-title .zh-inline {
+      display: block;
+      margin-top: 6px;
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
     h1 {
       margin: 0;
       font-size: 1.7rem;
@@ -245,16 +290,27 @@
 <body>
   <header>
     <div class="wrap">
-      <div class="card">
-        <div class="card-head">
-          <h1>Cell Cycle</h1>
-          <p class="subtitle">How cells grow, copy DNA, and divide</p>
-        </div>
+        <div class="card">
+          <div class="card-head">
+            <div class="head-row">
+              <div>
+                <h1 class="page-title">Cell Cycle<span class="zh-inline" lang="zh-Hans">细胞周期</span></h1>
+                <p class="subtitle">How cells grow, copy DNA, and divide<span class="zh-inline" lang="zh-Hans">细胞如何生长、复制 DNA 并分裂</span></p>
+              </div>
+              <div class="lang-controls" role="group" aria-label="Language">
+                <button type="button" class="lang-btn is-active" data-lang="en" aria-pressed="true">English</button>
+                <button type="button" class="lang-btn" data-lang="bi" aria-pressed="false">English + 中文</button>
+              </div>
+            </div>
+          </div>
 
         <div class="media">
           <figure>
             <img src="assets/CellCycle.png" alt="Cell cycle diagram" />
-            <figcaption>Diagram: interphase (G1, S, G2), mitosis, and cytokinesis</figcaption>
+            <figcaption>
+              Diagram: interphase (G1, S, G2), mitosis, and cytokinesis
+              <span class="zh-inline" lang="zh-Hans"><br>图示：间期（G1、S、G2）、有丝分裂与细胞质分裂</span>
+            </figcaption>
           </figure>
         </div>
 
@@ -265,9 +321,17 @@
             G1 (growth), S (synthesis/DNA replication), and G2 (final preparation before division).
           </p>
 
+          <p class="zh-block" lang="zh-Hans">
+            细胞周期是细胞在生长与分裂过程中经历的一系列步骤。大多数时候，细胞处于<strong>间期</strong>：细胞生长、进行正常生命活动，并复制 DNA 以准备分裂。间期分为三部分：G1（生长）、S（合成/ DNA 复制）和 G2（分裂前的最后准备）。
+          </p>
+
           <p>
             After interphase, the cell enters mitosis, where the nucleus divides into two identical sets of chromosomes. This is followed by
             cytokinesis, when the cell's cytoplasm splits and two new cells are formed.
+          </p>
+
+          <p class="zh-block" lang="zh-Hans">
+            间期结束后，细胞进入<strong>有丝分裂</strong>（mitosis），细胞核分裂形成两套完全相同的染色体。随后发生<strong>细胞质分裂</strong>（cytokinesis），细胞质分开，形成两个新细胞。
           </p>
 
           <p>
@@ -276,10 +340,18 @@
             or even self-destruct to protect the organism.
           </p>
 
+          <p class="zh-block" lang="zh-Hans">
+            细胞周期受到<strong>检查点</strong>的严格控制，这些检查点就像质量控制关卡，确保细胞准备好再继续分裂。如果出现问题（例如 DNA 损伤或复制错误），细胞可以暂停并进行修复，必要时甚至会自我销毁，以保护整个生物体。
+          </p>
+
           <p>
             Sometimes cells don't respond to these signals and keep dividing uncontrollably. This can lead to cancer, where cells grow and spread in
             ways they shouldn't. Mutations in genes that control the cell cycle -- such as those that normally slow growth or repair DNA -- are one of
             the main causes of cancer.
+          </p>
+
+          <p class="zh-block" lang="zh-Hans">
+            有时细胞不会响应这些信号，而是继续不受控制地分裂。这可能导致<strong>癌症</strong>：细胞异常生长并扩散。控制细胞周期的基因（例如本应减缓生长或修复 DNA 的基因）发生突变，是癌症的主要原因之一。
           </p>
 
           <details class="settings">
@@ -295,10 +367,10 @@
             </div>
           </details>
 
-          <h2>Questions</h2>
+          <h2>Questions<span class="zh-inline" lang="zh-Hans">（问题）</span></h2>
 
           <div class="question" id="q1">
-            <p><b>1. Describe what happens in interphase. What happens in G1, S, and G2?</b></p>
+            <p><b>1. Describe what happens in interphase. What happens in G1, S, and G2?<span class="zh-inline" lang="zh-Hans"><br>描述间期发生了什么。G1、S、G2 各发生什么？</span></b></p>
             <textarea placeholder="Type your answer here..."></textarea>
             <div class="btn-row">
               <button type="button" onclick="checkMyAnswer(1, this)">Check my answer</button>
@@ -308,11 +380,14 @@
             <div id="answer1" class="answer">
               Interphase is when the cell grows, does its normal jobs, and copies its DNA so it can divide. In G1 the cell grows, in S it replicates
               (copies) its DNA, and in G2 it makes final preparations for division.
+              <div class="zh-block" lang="zh-Hans">
+                间期是细胞生长、进行正常生命活动并复制 DNA 以准备分裂的阶段。G1：细胞生长；S：DNA 复制；G2：分裂前的最后准备。
+              </div>
             </div>
           </div>
 
           <div class="question" id="q2">
-            <p><b>2. What is the difference between mitosis and cytokinesis?</b></p>
+            <p><b>2. What is the difference between mitosis and cytokinesis?<span class="zh-inline" lang="zh-Hans"><br>有丝分裂与细胞质分裂有什么区别？</span></b></p>
             <textarea placeholder="Type your answer here..."></textarea>
             <div class="btn-row">
               <button type="button" onclick="checkMyAnswer(2, this)">Check my answer</button>
@@ -322,11 +397,14 @@
             <div id="answer2" class="answer">
               Mitosis is when the nucleus divides into two identical sets of chromosomes. Cytokinesis happens after mitosis, when the cytoplasm splits
               and two new cells form.
+              <div class="zh-block" lang="zh-Hans">
+                有丝分裂是<strong>细胞核</strong>分裂，形成两套相同的染色体；细胞质分裂发生在有丝分裂之后，<strong>细胞质</strong>分开，形成两个新细胞。
+              </div>
             </div>
           </div>
 
           <div class="question" id="q3">
-            <p><b>3. What are checkpoints in the cell cycle, and what can happen if a problem is found?</b></p>
+            <p><b>3. What are checkpoints in the cell cycle, and what can happen if a problem is found?<span class="zh-inline" lang="zh-Hans"><br>细胞周期中的检查点是什么？如果发现问题会发生什么？</span></b></p>
             <textarea placeholder="Type your answer here..."></textarea>
             <div class="btn-row">
               <button type="button" onclick="checkMyAnswer(3, this)">Check my answer</button>
@@ -336,11 +414,14 @@
             <div id="answer3" class="answer">
               Checkpoints are quality-control points that make sure the cell is ready to continue dividing. If DNA is damaged or copying errors happen,
               the cell can pause to repair the problem, or it can self-destruct to protect the organism.
+              <div class="zh-block" lang="zh-Hans">
+                检查点是质量控制关卡，用来确认细胞是否准备好继续分裂。如果 DNA 受损或复制出错，细胞可以暂停并修复，必要时也可能自我销毁以保护生物体。
+              </div>
             </div>
           </div>
 
           <div class="question" id="q4">
-            <p><b>4. Explain how uncontrolled cell division can lead to cancer.</b></p>
+            <p><b>4. Explain how uncontrolled cell division can lead to cancer.<span class="zh-inline" lang="zh-Hans"><br>解释为什么细胞不受控制的分裂会导致癌症。</span></b></p>
             <textarea placeholder="Type your answer here..."></textarea>
             <div class="btn-row">
               <button type="button" onclick="checkMyAnswer(4, this)">Check my answer</button>
@@ -350,11 +431,14 @@
             <div id="answer4" class="answer">
               If cells ignore cell-cycle signals and checkpoints, they can keep dividing even when they should stop. This uncontrolled growth can form
               cancer, and the cells may spread in ways they should not.
+              <div class="zh-block" lang="zh-Hans">
+                如果细胞忽视细胞周期信号和检查点，就可能在该停止时仍继续分裂。这样的失控生长会形成癌症，癌细胞还可能异常扩散。
+              </div>
             </div>
           </div>
 
           <div class="question" id="q5">
-            <p><b>5. What kinds of gene mutations can cause loss of cell-cycle control?</b></p>
+            <p><b>5. What kinds of gene mutations can cause loss of cell-cycle control?<span class="zh-inline" lang="zh-Hans"><br>哪些类型的基因突变会导致细胞周期失控？</span></b></p>
             <textarea placeholder="Type your answer here..."></textarea>
             <div class="btn-row">
               <button type="button" onclick="checkMyAnswer(5, this)">Check my answer</button>
@@ -364,6 +448,9 @@
             <div id="answer5" class="answer">
               Mutations in genes that normally slow cell growth/division or repair DNA can remove the normal "brakes" and allow cells to divide when
               they should not.
+              <div class="zh-block" lang="zh-Hans">
+                本应减缓细胞生长/分裂或修复 DNA 的基因发生突变，会移除正常的“刹车”机制，让细胞在不该分裂时仍继续分裂。
+              </div>
             </div>
           </div>
         </div>
@@ -372,6 +459,37 @@
   </header>
 
   <script>
+    (function () {
+      const LANG_STORAGE_KEY = "cellCycleLang";
+      const langButtons = Array.from(document.querySelectorAll(".lang-btn[data-lang]"));
+
+      const setLanguage = (lang) => {
+        const isBilingual = lang === "bi";
+        document.body.classList.toggle("lang-bi", isBilingual);
+
+        for (const btn of langButtons) {
+          const active = btn.dataset.lang === lang;
+          btn.classList.toggle("is-active", active);
+          btn.setAttribute("aria-pressed", active ? "true" : "false");
+        }
+
+        try {
+          localStorage.setItem(LANG_STORAGE_KEY, lang);
+        } catch {}
+      };
+
+      try {
+        const saved = localStorage.getItem(LANG_STORAGE_KEY);
+        setLanguage(saved === "bi" ? "bi" : "en");
+      } catch {
+        setLanguage("en");
+      }
+
+      for (const btn of langButtons) {
+        btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
+      }
+    })();
+
     const DEFAULT_GRADE_API_URL = "https://lakesideart.gochatus.org/grade-service/grade";
 
     const gradeApiUrlEl = document.getElementById("grade-api-url");

@@ -71,6 +71,46 @@ h1, h2 {
   gap: 16px;
 }
 
+.lang-controls {
+  display: inline-flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+button.lang-btn {
+  margin-top: 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 24, 39, 0.14);
+  background: rgba(17, 24, 39, 0.03);
+  color: #111827;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button.lang-btn:hover {
+  background: rgba(17, 24, 39, 0.06);
+}
+
+button.lang-btn.is-active {
+  background: rgba(33,150,243,.14);
+  border-color: rgba(33,150,243,.45);
+}
+
+button.lang-btn:focus-visible {
+  outline: 3px solid rgba(33,150,243,.35);
+  outline-offset: 2px;
+}
+
+.zh-block,
+.zh-inline {
+  display: none;
+}
+
+body.lang-bi .zh-block { display: block; }
+body.lang-bi .zh-inline { display: inline; }
+
 .page-title {
   margin: 0;
 }
@@ -188,7 +228,11 @@ button:hover {
 
 <div class="container">
   <div class="title-row">
-    <h1 class="page-title">Pedigrees &amp; Inheritance – Hemophilia in Queen Victoria’s Family</h1>
+    <h1 class="page-title">Pedigrees &amp; Inheritance – Hemophilia in Queen Victoria’s Family<span class="zh-inline" lang="zh-Hans"><br>家谱与遗传——维多利亚女王家族中的血友病</span></h1>
+    <div class="lang-controls" role="group" aria-label="Language">
+      <button type="button" class="lang-btn is-active" data-lang="en" aria-pressed="true">English</button>
+      <button type="button" class="lang-btn" data-lang="bi" aria-pressed="false">English + 中文</button>
+    </div>
   </div>
 
   <div class="hero-media">
@@ -198,17 +242,34 @@ button:hover {
   <div class="case">
     <p><b>Pedigrees and inheritance:</b> A pedigree in genetics is a diagram showing the lineage (family relationships) of an individual and direct ancestors, used to analyze how a trait is inherited.</p>
 
+    <p class="zh-block" lang="zh-Hans"><b>家谱与遗传：</b>遗传学中的家谱图是一种用来展示个体及其直系祖先的血缘关系（家族关系）的图表，用于分析某种性状如何在家族中遗传。</p>
+
     <p><b>Hemophilia</b> has been called a “royal disease” because the hemophilia gene was passed from Queen Victoria (Queen of England in 1837) into the ruling families of <b>Spain</b>, <b>Germany</b>, and <b>Russia</b>. Queen Victoria’s hemophilia allele was caused by a <b>spontaneous mutation</b>.</p>
+
+    <p class="zh-block" lang="zh-Hans"><b>血友病</b>被称为“皇室疾病”，因为血友病相关基因从维多利亚女王（1837 年成为英国女王）传入了<b>西班牙</b>、<b>德国</b>和<b>俄罗斯</b>等王室家族。维多利亚女王的血友病等位基因源于一次<b>自发突变</b>。</p>
 
     <p>Hemophilia is inherited in a <b>sex-linked recessive</b> pattern. The genes associated with this condition are located on the <b>X chromosome</b>.</p>
 
+    <p class="zh-block" lang="zh-Hans">血友病属于<b>X 连锁隐性</b>遗传（性连锁隐性遗传）。相关基因位于<b>X 染色体</b>上。</p>
+
     <ul>
-      <li><b>Males</b> (XY) have only one X chromosome, so <b>one altered copy</b> of the gene can cause the condition.</li>
-      <li><b>Females</b> (XX) have two X chromosomes, so they would usually need <b>two altered copies</b> to be affected. This makes hemophilia <b>rare in females</b>.</li>
-      <li>Fathers <b>cannot pass</b> an X-linked trait to their <b>sons</b> (sons inherit the Y from the father).</li>
+      <li>
+        <b>Males</b> (XY) have only one X chromosome, so <b>one altered copy</b> of the gene can cause the condition.
+        <div class="zh-block" lang="zh-Hans"><b>男性</b>（XY）只有一条 X 染色体，因此只要 X 上有<b>一个突变等位基因</b>就可能发病。</div>
+      </li>
+      <li>
+        <b>Females</b> (XX) have two X chromosomes, so they would usually need <b>two altered copies</b> to be affected. This makes hemophilia <b>rare in females</b>.
+        <div class="zh-block" lang="zh-Hans"><b>女性</b>（XX）有两条 X 染色体，通常需要<b>两个突变等位基因</b>（两条 X 都携带）才会发病，因此血友病在女性中<b>更罕见</b>。</div>
+      </li>
+      <li>
+        Fathers <b>cannot pass</b> an X-linked trait to their <b>sons</b> (sons inherit the Y from the father).
+        <div class="zh-block" lang="zh-Hans">父亲<b>不能</b>把 X 连锁性状传给<b>儿子</b>（儿子从父亲获得 Y 染色体）。</div>
+      </li>
     </ul>
 
     <p><b>Legend (common symbols):</b> ○ female without hemophilia; □ male without hemophilia; ◑ female carrier; ■ male with hemophilia; ? unknown/not enough info.</p>
+
+    <p class="zh-block" lang="zh-Hans"><b>图例（常用符号）：</b>○ 无血友病女性；□ 无血友病男性；◑ 女性携带者；■ 血友病男性；? 未知/信息不足。</p>
 
   </div>
 
@@ -225,7 +286,7 @@ button:hover {
     </div>
   </details>
 
-  <h2>Questions</h2>
+  <h2>Questions<span class="zh-inline" lang="zh-Hans">（问题）</span></h2>
 
   <div class="btn-row" style="margin-top: 8px; margin-bottom: 18px;">
     <button type="button" id="btn-check-all">Check All</button>
@@ -233,7 +294,7 @@ button:hover {
   </div>
 
   <div class="question" id="q1">
-    <p><b>1. In this pedigree, what does a half-shaded circle (◑) represent?</b></p>
+    <p><b>1. In this pedigree, what does a half-shaded circle (◑) represent?<span class="zh-inline" lang="zh-Hans"><br>在这个家谱图中，半涂色的圆（◑）表示什么？</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(1, this)">Check my answer</button>
@@ -243,11 +304,15 @@ button:hover {
     <div id="answer1" class="answer">
       <p><b>Answer:</b> A carrier female (she carries one altered copy on one X chromosome).</p>
       <p><b>Explanation:</b> The legend shows ◑ as “female carrier”. In X-linked recessive traits, carriers usually do not show the condition but can pass the allele to children.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>答案：</b>女性携带者（在其中一条 X 染色体上携带一个突变等位基因）。</p>
+        <p><b>解释：</b>图例中 ◑ 表示“女性携带者”。在 X 连锁隐性遗传中，携带者通常不发病，但可以把等位基因传给子女。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q2">
-    <p><b>2. What does the “?” symbol on an individual in the pedigree mean?</b></p>
+    <p><b>2. What does the “?” symbol on an individual in the pedigree mean?<span class="zh-inline" lang="zh-Hans"><br>家谱图中个体旁的“？”表示什么？</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(2, this)">Check my answer</button>
@@ -257,11 +322,15 @@ button:hover {
     <div id="answer2" class="answer">
       <p><b>Answer:</b> The person’s hemophilia status is unknown / not shown / can’t be determined from the diagram.</p>
       <p><b>Explanation:</b> A “?” indicates missing information: the chart doesn’t label whether that person is affected, unaffected, or a carrier.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>答案：</b>该个体的血友病状态未知/未标注/无法从图中确定。</p>
+        <p><b>解释：</b>“？”表示信息缺失：家谱图没有说明该个体是患病、正常还是携带者。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q3">
-    <p><b>3. Hemophilia in this family is inherited as which pattern?</b></p>
+    <p><b>3. Hemophilia in this family is inherited as which pattern?<span class="zh-inline" lang="zh-Hans"><br>这个家族的血友病属于哪种遗传方式？</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(3, this)">Check my answer</button>
@@ -271,11 +340,15 @@ button:hover {
     <div id="answer3" class="answer">
       <p><b>Answer:</b> X-linked recessive.</p>
       <p><b>Explanation:</b> The allele is on the X chromosome. Affected males appear more often because males have only one X chromosome.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>答案：</b>X 连锁隐性遗传。</p>
+        <p><b>解释：</b>等位基因位于 X 染色体上。由于男性只有一条 X 染色体，因此患病男性出现得更频繁。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q4">
-    <p><b>4. From the pedigree, is Queen Victoria affected, unaffected, or a carrier?</b></p>
+    <p><b>4. From the pedigree, is Queen Victoria affected, unaffected, or a carrier?<span class="zh-inline" lang="zh-Hans"><br>从家谱图看，维多利亚女王是患病者、正常者还是携带者？</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(4, this)">Check my answer</button>
@@ -285,11 +358,15 @@ button:hover {
     <div id="answer4" class="answer">
       <p><b>Answer:</b> Carrier.</p>
       <p><b>Explanation:</b> Victoria is shown as a half-shaded circle, which the legend defines as a female carrier.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>答案：</b>携带者。</p>
+        <p><b>解释：</b>维多利亚女王被画成半涂色圆，图例说明这代表女性携带者。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q5">
-    <p><b>5. From the pedigree, is Prince Leopold affected, unaffected, or a carrier?</b></p>
+    <p><b>5. From the pedigree, is Prince Leopold affected, unaffected, or a carrier?<span class="zh-inline" lang="zh-Hans"><br>从家谱图看，利奥波德王子是患病者、正常者还是携带者？</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(5, this)">Check my answer</button>
@@ -299,11 +376,15 @@ button:hover {
     <div id="answer5" class="answer">
       <p><b>Answer:</b> Affected (male with hemophilia).</p>
       <p><b>Explanation:</b> Leopold is shown as a filled square (■), which indicates a male with hemophilia.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>答案：</b>患病（血友病男性）。</p>
+        <p><b>解释：</b>利奥波德被画成实心方块（■），表示血友病男性。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q6">
-    <p><b>6. Why can an affected father NOT pass an X-linked trait to his sons?</b></p>
+    <p><b>6. Why can an affected father NOT pass an X-linked trait to his sons?<span class="zh-inline" lang="zh-Hans"><br>为什么患病父亲不能把 X 连锁性状传给儿子？</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(6, this)">Check my answer</button>
@@ -313,11 +394,15 @@ button:hover {
     <div id="answer6" class="answer">
       <p><b>Answer:</b> Because sons inherit the Y chromosome from their father (and the X chromosome from their mother).</p>
       <p><b>Explanation:</b> A father gives Y to sons and X to daughters, so an allele on the father’s X cannot go to his sons.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>答案：</b>因为儿子从父亲继承的是 Y 染色体（X 染色体来自母亲）。</p>
+        <p><b>解释：</b>父亲把 Y 传给儿子，把 X 传给女儿，因此父亲 X 上的等位基因不会传给儿子。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q7">
-    <p><b>7. If a carrier mother (XᴴXʰ) has children with an unaffected father (XᴴY), what is the probability a SON has hemophilia?</b></p>
+    <p><b>7. If a carrier mother (XᴴXʰ) has children with an unaffected father (XᴴY), what is the probability a SON has hemophilia?<span class="zh-inline" lang="zh-Hans"><br>如果携带者母亲（XᴴXʰ）与正常父亲（XᴴY）生育，儿子患血友病的概率是多少？</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(7, this)">Check my answer</button>
@@ -327,11 +412,15 @@ button:hover {
     <div id="answer7" class="answer">
       <p><b>Answer:</b> 50%.</p>
       <p><b>Explanation:</b> Sons receive Y from dad and one X from mom. A carrier mom has a 50% chance to pass the altered Xʰ to a son.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>答案：</b>50%。</p>
+        <p><b>解释：</b>儿子从父亲获得 Y，从母亲获得一条 X。携带者母亲有 50% 的概率把突变的 Xʰ 传给儿子。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q8">
-    <p><b>8. In the same cross (carrier mother XᴴXʰ × unaffected father XᴴY), what is the probability a DAUGHTER is a carrier?</b></p>
+    <p><b>8. In the same cross (carrier mother XᴴXʰ × unaffected father XᴴY), what is the probability a DAUGHTER is a carrier?<span class="zh-inline" lang="zh-Hans"><br>在同样的杂交（携带者母亲 XᴴXʰ × 正常父亲 XᴴY）中，女儿成为携带者的概率是多少？</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(8, this)">Check my answer</button>
@@ -341,11 +430,15 @@ button:hover {
     <div id="answer8" class="answer">
       <p><b>Answer:</b> 50%.</p>
       <p><b>Explanation:</b> All daughters get the father’s normal Xᴴ. From the carrier mom, half of daughters get Xʰ (carriers) and half get Xᴴ (unaffected, not carriers).</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>答案：</b>50%。</p>
+        <p><b>解释：</b>所有女儿都从父亲获得正常的 Xᴴ。携带者母亲有一半概率给 Xʰ（女儿为携带者），另一半给 Xᴴ（女儿正常且不是携带者）。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q9">
-    <p><b>9. Name ONE female shown as a carrier in the pedigree (besides Queen Victoria).</b></p>
+    <p><b>9. Name ONE female shown as a carrier in the pedigree (besides Queen Victoria).<span class="zh-inline" lang="zh-Hans"><br>在家谱图中（除维多利亚女王外）说出一位女性携带者的名字。</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(9, this)">Check my answer</button>
@@ -355,11 +448,15 @@ button:hover {
     <div id="answer9" class="answer">
       <p><b>Answer:</b> Examples include: Alice, Beatrice, Irene, Alexandra, or Ena (shown as half-shaded circles).</p>
       <p><b>Explanation:</b> Any half-shaded circle (◑) in the pedigree is a carrier female according to the legend.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>答案：</b>例如：Alice、Beatrice、Irene、Alexandra 或 Ena（她们在图中是半涂色圆）。</p>
+        <p><b>解释：</b>根据图例，家谱图中的任何半涂色圆（◑）都表示女性携带者。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q10">
-    <p><b>10. Why is hemophilia rare in females in an X-linked recessive trait?</b></p>
+    <p><b>10. Why is hemophilia rare in females in an X-linked recessive trait?<span class="zh-inline" lang="zh-Hans"><br>为什么在 X 连锁隐性遗传中，血友病在女性中很罕见？</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(10, this)">Check my answer</button>
@@ -369,11 +466,15 @@ button:hover {
     <div id="answer10" class="answer">
       <p><b>Answer:</b> Females would usually need two altered copies (one on each X) to be affected.</p>
       <p><b>Explanation:</b> With two X chromosomes, one normal allele can mask the recessive allele. So most females with one altered allele are carriers, not affected.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>答案：</b>女性通常需要两个突变等位基因（两条 X 上各一个）才会患病。</p>
+        <p><b>解释：</b>女性有两条 X，正常等位基因可以遮蔽隐性等位基因，因此多数只带一个突变等位基因的女性是携带者而不是患者。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q11">
-    <p><b>11. Looking at the pedigree, which group appears MOST often as affected (filled symbols)?</b></p>
+    <p><b>11. Looking at the pedigree, which group appears MOST often as affected (filled symbols)?<span class="zh-inline" lang="zh-Hans"><br>从家谱图看，哪一类人最常表现为患病（实心符号）？</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(11, this)">Check my answer</button>
@@ -383,11 +484,15 @@ button:hover {
     <div id="answer11" class="answer">
       <p><b>Answer:</b> Males (squares).</p>
       <p><b>Explanation:</b> In X-linked recessive inheritance, males are affected more frequently because they have only one X chromosome.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>答案：</b>男性（方块）。</p>
+        <p><b>解释：</b>在 X 连锁隐性遗传中，男性只有一条 X 染色体，因此更容易表现为患病。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q12">
-    <p><b>12. If an affected male (XʰY) has an unaffected female partner who is NOT a carrier (XᴴXᴴ), will any sons have hemophilia? (yes/no)</b></p>
+    <p><b>12. If an affected male (XʰY) has an unaffected female partner who is NOT a carrier (XᴴXᴴ), will any sons have hemophilia? (yes/no)<span class="zh-inline" lang="zh-Hans"><br>如果患病男性（XʰY）与正常且非携带的女性（XᴴXᴴ）生育，儿子会患血友病吗？（是/否）</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(12, this)">Check my answer</button>
@@ -397,11 +502,15 @@ button:hover {
     <div id="answer12" class="answer">
       <p><b>Answer:</b> No.</p>
       <p><b>Explanation:</b> Sons get Y from dad and Xᴴ from mom, so they are XᴴY (unaffected). Dad cannot pass his X to sons.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>答案：</b>否。</p>
+        <p><b>解释：</b>儿子从父亲获得 Y，从母亲获得 Xᴴ，因此为 XᴴY（正常）。父亲不能把自己的 X 传给儿子。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q13">
-    <p><b>13. In that same situation (affected father XʰY × non-carrier mother XᴴXᴴ), what happens to ALL daughters?</b></p>
+    <p><b>13. In that same situation (affected father XʰY × non-carrier mother XᴴXᴴ), what happens to ALL daughters?<span class="zh-inline" lang="zh-Hans"><br>在同样情况下（患病父亲 XʰY × 非携带母亲 XᴴXᴴ），所有女儿会怎样？</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(13, this)">Check my answer</button>
@@ -411,11 +520,15 @@ button:hover {
     <div id="answer13" class="answer">
       <p><b>Answer:</b> All daughters are carriers.</p>
       <p><b>Explanation:</b> Daughters get the father’s affected Xʰ and the mother’s normal Xᴴ, making them XᴴXʰ (carriers).</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>答案：</b>所有女儿都是携带者。</p>
+        <p><b>解释：</b>女儿从父亲获得患病的 Xʰ，从母亲获得正常的 Xᴴ，因此为 XᴴXʰ（携带者）。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q14">
-    <p><b>14. The notes say Queen Victoria’s hemophilia allele was caused by a spontaneous mutation. What does that mean?</b></p>
+    <p><b>14. The notes say Queen Victoria’s hemophilia allele was caused by a spontaneous mutation. What does that mean?<span class="zh-inline" lang="zh-Hans"><br>笔记说维多利亚女王的血友病等位基因由自发突变造成，这是什么意思？</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(14, this)">Check my answer</button>
@@ -425,11 +538,46 @@ button:hover {
     <div id="answer14" class="answer">
       <p><b>Answer:</b> It appeared new in her family line (a new change in DNA), rather than being inherited from previous generations.</p>
       <p><b>Explanation:</b> A spontaneous mutation means the allele arose newly.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>答案：</b>这表示该等位基因是在她的家系中“新出现”的（DNA 发生了新的改变），而不是从更早的世代遗传而来。</p>
+        <p><b>解释：</b>自发突变指该等位基因是新产生的。</p>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
+(function () {
+  const LANG_STORAGE_KEY = "inheritancePedigreeLang";
+  const langButtons = Array.from(document.querySelectorAll('.lang-btn[data-lang]'));
+
+  const setLanguage = (lang) => {
+    const isBilingual = lang === "bi";
+    document.body.classList.toggle("lang-bi", isBilingual);
+
+    for (const btn of langButtons) {
+      const active = btn.dataset.lang === lang;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    }
+
+    try {
+      localStorage.setItem(LANG_STORAGE_KEY, lang);
+    } catch {}
+  };
+
+  try {
+    const saved = localStorage.getItem(LANG_STORAGE_KEY);
+    setLanguage(saved === "bi" ? "bi" : "en");
+  } catch {
+    setLanguage("en");
+  }
+
+  for (const btn of langButtons) {
+    btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
+  }
+})();
+
 const DEFAULT_GRADE_API_URL = "https://lakesideart.gochatus.org/grade-service/grade";
 
 const gradeApiUrlEl = document.getElementById("grade-api-url");

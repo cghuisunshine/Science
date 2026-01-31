@@ -11,6 +11,49 @@ body {
   padding: 30px;
 }
 
+.topbar {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.lang-controls {
+  display: inline-flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.lang-btn {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 24, 39, 0.14);
+  background: rgba(17, 24, 39, 0.03);
+  color: #111827;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.lang-btn.is-active {
+  background: rgba(33,150,243,.14);
+  border-color: rgba(33,150,243,.45);
+}
+
+.lang-btn:focus-visible {
+  outline: 3px solid rgba(33,150,243,.35);
+  outline-offset: 2px;
+}
+
+.zh-block,
+.zh-inline {
+  display: none;
+}
+
+body.lang-bi .zh-block { display: block; }
+body.lang-bi .zh-inline { display: inline; }
+
 .container {
   max-width: 900px;
   margin: auto;
@@ -138,10 +181,21 @@ button:hover {
 <body>
 
 <div class="container">
-  <h1>Punnett Square Vocabulary Review</h1>
+  <div class="topbar">
+    <div>
+      <h1>Punnett Square Vocabulary Review<span class="zh-inline" lang="zh-Hans">（庞尼特方格词汇复习）</span></h1>
+    </div>
+    <div class="lang-controls" role="group" aria-label="Language">
+      <button type="button" class="lang-btn is-active" data-lang="en" aria-pressed="true">English</button>
+      <button type="button" class="lang-btn" data-lang="bi" aria-pressed="false">English + 中文</button>
+    </div>
+  </div>
   <div class="intro">
     Review the vocabulary introduced with the monohybrid and dihybrid crosses you just learned.
     Type your own definition/example, then check your answer and reveal the model answer.
+    <div class="zh-block" lang="zh-Hans">
+      复习你刚学习的单因子与双因子杂交中出现的遗传学词汇。先写下你自己的定义/例子，然后检查答案并查看参考答案。
+    </div>
   </div>
 
   <details class="settings">
@@ -157,10 +211,10 @@ button:hover {
     </div>
   </details>
 
-  <h2>Questions</h2>
+  <h2>Questions<span class="zh-inline" lang="zh-Hans">（问题）</span></h2>
 
   <div class="question" id="q1">
-    <p><b>1. Define: Recessive</b></p>
+    <p><b>1. Define: Recessive<span class="zh-inline" lang="zh-Hans">（隐性）</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(1, this)">Check my answer</button>
@@ -170,11 +224,15 @@ button:hover {
     <div id="answer1" class="answer">
       <p><b>Definition:</b> A trait that is masked in the presence of the dominant trait.</p>
       <p><b>Example:</b> The allele for hitchhiker's thumbs is recessive, meaning that the trait for a “non-hitchhiker's thumb” will mask it if both are present.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>定义：</b>当显性性状存在时会被遮蔽的性状。</p>
+        <p><b>例子：</b>“搭车拇指”的等位基因是隐性的；如果同时存在“非搭车拇指”的显性等位基因，隐性性状就不会表现出来。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q2">
-    <p><b>2. Define: Dominant</b></p>
+    <p><b>2. Define: Dominant<span class="zh-inline" lang="zh-Hans">（显性）</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(2, this)">Check my answer</button>
@@ -184,11 +242,15 @@ button:hover {
     <div id="answer2" class="answer">
       <p><b>Definition:</b> A trait that is always expressed if present. It will mask the recessive trait.</p>
       <p><b>Example:</b> The allele for tongue rolling ability is dominant to the allele for not having the ability, meaning that it will always show.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>定义：</b>只要存在就会表现出来的性状；它会遮蔽隐性性状。</p>
+        <p><b>例子：</b>“会卷舌”的等位基因对“不会卷舌”的等位基因是显性的，因此只要有显性等位基因就会表现出卷舌能力。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q3">
-    <p><b>3. Define: Probability</b></p>
+    <p><b>3. Define: Probability<span class="zh-inline" lang="zh-Hans">（概率）</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(3, this)">Check my answer</button>
@@ -198,11 +260,15 @@ button:hover {
     <div id="answer3" class="answer">
       <p><b>Definition:</b> The possibility of an event occurring, usually expressed as a percentage or ratio.</p>
       <p><b>Example:</b> The probability of flipping a coin and it landing on heads is 50%.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>定义：</b>某个事件发生的可能性，通常用百分比或比率表示。</p>
+        <p><b>例子：</b>抛硬币出现正面的概率是 50%。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q4">
-    <p><b>4. Define: Genotype</b></p>
+    <p><b>4. Define: Genotype<span class="zh-inline" lang="zh-Hans">（基因型）</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(4, this)">Check my answer</button>
@@ -212,11 +278,15 @@ button:hover {
     <div id="answer4" class="answer">
       <p><b>Definition:</b> The genetic makeup of an individual.</p>
       <p><b>Example:</b> HH, Hh, or hh.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>定义：</b>个体的遗传组成（所携带的等位基因组合）。</p>
+        <p><b>例子：</b>HH、Hh 或 hh。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q5">
-    <p><b>5. Define: Phenotype</b></p>
+    <p><b>5. Define: Phenotype<span class="zh-inline" lang="zh-Hans">（表现型）</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(5, this)">Check my answer</button>
@@ -226,11 +296,15 @@ button:hover {
     <div id="answer5" class="answer">
       <p><b>Definition:</b> The physical expression of a trait determined by the individual's genotype.</p>
       <p><b>Example:</b> Having (or not having) a hitchhiker's thumb.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>定义：</b>由基因型决定、可以观察到的性状表现。</p>
+        <p><b>例子：</b>是否具有“搭车拇指”。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q6">
-    <p><b>6. Define: Heterozygous</b></p>
+    <p><b>6. Define: Heterozygous<span class="zh-inline" lang="zh-Hans">（杂合）</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(6, this)">Check my answer</button>
@@ -240,11 +314,15 @@ button:hover {
     <div id="answer6" class="answer">
       <p><b>Definition:</b> An individual who possesses two different alleles for a trait.</p>
       <p><b>Example:</b> Hh.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>定义：</b>某性状拥有两个不同等位基因的个体。</p>
+        <p><b>例子：</b>Hh。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q7">
-    <p><b>7. Define: Homozygous</b></p>
+    <p><b>7. Define: Homozygous<span class="zh-inline" lang="zh-Hans">（纯合）</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(7, this)">Check my answer</button>
@@ -254,11 +332,15 @@ button:hover {
     <div id="answer7" class="answer">
       <p><b>Definition:</b> An individual who possesses two of the same allele for a trait.</p>
       <p><b>Example:</b> HH or hh.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>定义：</b>某性状拥有两个相同等位基因的个体。</p>
+        <p><b>例子：</b>HH 或 hh。</p>
+      </div>
     </div>
   </div>
 
   <div class="question" id="q8">
-    <p><b>8. Define: Punnett Square</b></p>
+    <p><b>8. Define: Punnett Square<span class="zh-inline" lang="zh-Hans">（庞尼特方格）</span></b></p>
     <textarea placeholder="Type your answer here..."></textarea>
     <div class="btn-row">
       <button type="button" onclick="checkMyAnswer(8, this)">Check my answer</button>
@@ -268,11 +350,46 @@ button:hover {
     <div id="answer8" class="answer">
       <p><b>Definition:</b> A diagram used to determine the probability that the offspring of two individuals will have certain genotypes.</p>
       <p><b>Example:</b> A Punnett square can show the chances of offspring being HH, Hh, or hh when crossing two parents.</p>
+      <div class="zh-block" lang="zh-Hans">
+        <p><b>定义：</b>一种用于计算两亲本后代出现某些基因型概率的图表。</p>
+        <p><b>例子：</b>用庞尼特方格可以计算两个亲本杂交时，后代成为 HH、Hh 或 hh 的几率。</p>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
+(function () {
+  const LANG_STORAGE_KEY = "inheritanceFaqLang";
+  const langButtons = Array.from(document.querySelectorAll('.lang-btn[data-lang]'));
+
+  const setLanguage = (lang) => {
+    const isBilingual = lang === "bi";
+    document.body.classList.toggle("lang-bi", isBilingual);
+
+    for (const btn of langButtons) {
+      const active = btn.dataset.lang === lang;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    }
+
+    try {
+      localStorage.setItem(LANG_STORAGE_KEY, lang);
+    } catch {}
+  };
+
+  try {
+    const saved = localStorage.getItem(LANG_STORAGE_KEY);
+    setLanguage(saved === "bi" ? "bi" : "en");
+  } catch {
+    setLanguage("en");
+  }
+
+  for (const btn of langButtons) {
+    btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
+  }
+})();
+
 const DEFAULT_GRADE_API_URL = "https://lakesideart.gochatus.org/grade-service/grade";
 
 const gradeApiUrlEl = document.getElementById("grade-api-url");
