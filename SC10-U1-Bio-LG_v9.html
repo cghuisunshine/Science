@@ -102,6 +102,12 @@
   font-size:1rem;
 }
 
+/* Inline fill-in questions (e.g., 1.3 Q1) */
+p[data-ai-inline-group] {
+  position: relative;
+  padding-bottom: 34px;
+}
+
 /* Remove input borders inside table cells (table already provides frame) */
 .doc-table .cell-input,
 .doc-table .cell-textarea {
@@ -179,6 +185,13 @@
   align-items: flex-end;
 }
 
+.ai-check-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 .ai-check-btn {
   padding: 4px 10px;
   border: 1px solid #1b74d1;
@@ -189,19 +202,112 @@
   font-weight: 600;
 }
 
+.ai-reset-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid rgba(20, 20, 20, 0.18);
+  border-radius: 999px;
+  background: rgba(20, 20, 20, 0.04);
+  color: #222;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-reset-btn:hover {
+  background: rgba(20, 20, 20, 0.07);
+  border-color: rgba(20, 20, 20, 0.24);
+}
+
+.ai-reset-btn:active {
+  background: rgba(20, 20, 20, 0.10);
+}
+
+.ai-reset-btn svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.ai-reset-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .ai-check-btn:disabled {
   opacity: 0.55;
   cursor: not-allowed;
 }
 
-.ai-feedback {
+.ai-tip {
+  position: absolute;
+  right: 0;
+  bottom: 34px;
+  width: 320px;
+  max-width: min(360px, 75vw);
+  max-height: 180px;
+  overflow: auto;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(20, 20, 20, 0.16);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.16);
   font-size: 0.92rem;
-  max-width: 320px;
-  text-align: right;
+  line-height: 1.25;
+
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity 140ms ease, transform 140ms ease;
 }
 
-.ai-feedback.ok { color: #1b5e20; }
-.ai-feedback.bad { color: #b71c1c; }
+.ai-tip::after {
+  content: "";
+  position: absolute;
+  right: 22px;
+  bottom: -6px;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.96);
+  border-right: 1px solid rgba(20, 20, 20, 0.16);
+  border-bottom: 1px solid rgba(20, 20, 20, 0.16);
+  transform: rotate(45deg);
+}
+
+.ai-tip.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.ai-tip.ok { border-color: rgba(27, 94, 32, 0.28); }
+.ai-tip.bad { border-color: rgba(183, 28, 28, 0.30); }
+
+.ai-tip-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(20, 20, 20, 0.14);
+  background: rgba(20, 20, 20, 0.04);
+  color: #222;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.ai-tip-close:hover {
+  background: rgba(20, 20, 20, 0.07);
+}
+
+.ai-tip-body {
+  padding-right: 26px;
+  white-space: pre-wrap;
+}
 </style>
 </head>
  <body>
@@ -227,7 +333,7 @@
     <span class="zh-inline" lang="zh-Hans">（每个答案框右下角会出现“Check”按钮，会把题目+你的答案发送到评分服务。）</span>
   </p>
 </details>
-<h2>INSTRUCTIONS</h2><p>Download this document to your computer or your own Google Drive. Do NOT ask for editing privileges.</p><p>Open the file in Google Docs, MS Word, Pages or OpenOffice.</p><p>To make it easier for you to show your work, you have a few flexible options:</p><p>You can adjust the layout of the Learning Guide (LG) to create more space between the questions, allowing ample room for your answers and solutions.</p><p>Feel free to use blank or lined paper to write down your answers and solutions; there's no need to rewrite the questions.</p><p>You need to handwrite your answers or use a stylus on a tablet (like an iPad).</p><p>Learning guides are an essential component of your learning within this course. To succeed, take your time with your learning guide and treat it as your own set of notes and examples. It is your learning guide. Yes, your learning guides will be reviewed by your teacher and will be used as part of your final grade, but their real value lies in how they help you organize your learning.</p><p>Ensure that you clearly outline all possible steps in your work and provide a concise explanation of your related thoughts on the topics. If you have any trouble with a question, review your lessons and then ask your teacher.</p><p>Once your learning guide is complete, it's time to submit it to your teacher as one file at the bottom of the unit. How can you submit the learning guide? Here are some options. 1. If you have access to a scanner, you can scan the pages, producing one PDF file to upload at the end of the unit. Suggested settings for your scanner are included in the submission area.</p><p>If you don't have access to a scanner, you can take pictures of the pages, then paste them into one Word or Google Docs file. This will again enable you to submit it as a single file.</p><p>If you're dropping in to see your teacher regularly, you can always drop off the learning guide with them. Whichever method you choose should result in the submission of one file to your teacher.</p><p>For a document of 10 pages, aiming for a total size of around 10 MB would be ideal. To assist you in this, may I suggest trying Adobe's online PDF compression tool at .</p><p>You are required to have this Learning Guide (and the Earth Science LG) completed BEFORE you write the F2F Test 1. Do your best and ask questions about anything that you don't understand BEFORE you write Test 1.</p><p>Your name needs to be at the top of each page.</p><p>You need to handwrite your answers or use a stylus on a tablet (like an iPad).</p><p>Be neat and tidy and show all work.</p><p>Personalize your answers</p><p>with diagrams,</p><p>stars or arrows for key points, and</p><p>little side notes, circling or highlighting thoughts.</p><p>The document was last updated on November 6, 2025.</p><table class="doc-table"><tr><td>I read the above instructions. Yes or No.</td><td class="answer-cell"><input class="cell-input" name="t1_r0_c3" type="text"/></td></tr></table><h2>1.1 - Reintroducing the Cell</h2><table class="doc-table"><tr><td>1. Watch the video that reviews cell structures and functions that you learned in Science 8.</td><td class="answer-cell"><input class="cell-input" name="t2_r0_c3" type="text"/></td></tr></table><p>2. Reflect on what you just learned and write:</p><table class="doc-table"><tr><td>Why this information matters.</td><td class="answer-cell"><input class="cell-input" name="t3_r0_c3" type="text"/></td></tr><tr><td>Connections to other topics you’ve studied.</td><td class="answer-cell"><input class="cell-input" name="t3_r1_c3" type="text"/></td></tr><tr><td>Write quiz questions to test your memory later.</td><td class="answer-cell"><input class="cell-input" name="t3_r2_c3" type="text"/></td></tr><tr><td>Do you have any questions that came up for you while going through the content?</td><td class="answer-cell"><input class="cell-input" name="t3_r3_c3" type="text"/></td></tr></table><h2>1.2 - The Nucleus and DNA</h2><p>1. Watch the video ‘Learn Biology: Cells-The Nucleus’ and ‘Nucleus’ and answer the following questions:</p><table class="doc-table"><tr><td>a. What is stored within the nucleus?</td><td class="answer-cell"><input class="cell-input" name="t4_r0_c3" type="text"/></td></tr><tr><td>b. Explain why the nucleus is considered the control centre of the cell.</td><td class="answer-cell"><input class="cell-input" name="t4_r1_c3" type="text"/></td></tr><tr><td>c. What part of the cell makes ribosomes?</td><td class="answer-cell"><input class="cell-input" name="t4_r2_c3" type="text"/></td></tr><tr><td>d. Describe the structure of the membrane surrounding the nucleus.</td><td class="answer-cell"><input class="cell-input" name="t4_r3_c3" type="text"/></td></tr><tr><td>e. What is the function of chromatin? Describe how chromosomes are formed from DNA and describe how proteins are involved.</td><td class="answer-cell"><input class="cell-input" name="t4_r4_c3" type="text"/></td></tr><tr><td>f. Why is the nuclear membrane porous?</td><td class="answer-cell"><input class="cell-input" name="t4_r5_c3" type="text"/></td></tr><tr><td>g. Do all living organisms contain the same number of chromosomes?</td><td class="answer-cell"><input class="cell-input" name="t4_r6_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>2. Describe the structure of DNA, including its components.</td><td class="answer-cell"><input class="cell-input" name="t5_r0_c3" type="text"/></td></tr></table><p>3. Reflect on what you just learned and write:</p><table class="doc-table"><tr><td>Why does this information matter?</td><td class="answer-cell"><input class="cell-input" name="t6_r0_c3" type="text"/></td></tr><tr><td>Connections to other topics you’ve studied.</td><td class="answer-cell"><input class="cell-input" name="t6_r1_c3" type="text"/></td></tr><tr><td>Write quiz questions to test your memory later.</td><td class="answer-cell"><input class="cell-input" name="t6_r2_c3" type="text"/></td></tr><tr><td>Do you have any questions that arose while reviewing the content?</td><td class="answer-cell"><input class="cell-input" name="t6_r3_c3" type="text"/></td></tr></table><p>1.3 - Genes and Chromosomes</p><p>1. <input class="inline-input" type="text"/> are sections of <input class="inline-input" type="text"/> that code for the production of <input class="inline-input" type="text"/>. Proteins determine the <input class="inline-input" type="text"/> in humans. DNA is compacted into structures called <input class="inline-input" type="text"/>.</p><table class="doc-table"><tr><td>2. What is the “blueprint” for living things, and why is it considered that?</td><td class="answer-cell"><input class="cell-input" name="t7_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>3. Traits are said to be either inherited or shaped by the environment. What is the difference between the two, and provide an example of each?</td><td class="answer-cell"><input class="cell-input" name="t8_r0_c3" type="text"/></td></tr></table><p>4. Reflect on what you just learned and write:</p><table class="doc-table"><tr><td>Why does this information matter?</td><td class="answer-cell"><input class="cell-input" name="t9_r0_c3" type="text"/></td></tr><tr><td>Connections to other topics you’ve studied.</td><td class="answer-cell"><input class="cell-input" name="t9_r1_c3" type="text"/></td></tr><tr><td>Write quiz questions to test your memory later.</td><td class="answer-cell"><input class="cell-input" name="t9_r2_c3" type="text"/></td></tr><tr><td>Do you have any questions that arose while reviewing the content?</td><td class="answer-cell"><input class="cell-input" name="t9_r3_c3" type="text"/></td></tr></table><h2>1.4 - Mendelian Genetics and Inherited Traits</h2><table class="doc-table"><tr><td>1. Why is selective breeding used?</td><td class="answer-cell"><input class="cell-input" name="t10_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>2. Mendel’s conclusions from his genetic research in the 1800s use the term ‘units’ or ‘factors’. What was he describing?</td><td class="answer-cell"><input class="cell-input" name="t11_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td></td><td>3. Watch the Amoeba Sisters video explaining a ‘monohybrid cross’ and complete the accompanying worksheet. Include the worksheet with your completed learning guide.</td><td class="answer-cell"><input class="cell-input" name="t12_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td></td><td>4. Watch the Amoeba Sisters video explaining a ‘dihybrid cross’ and complete the accompanying worksheet. Include the worksheet with your completed learning guide.</td><td class="answer-cell"><input class="cell-input" name="t13_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>5. Use a Punnett Square to show the probability of 1 heterozygous Black Bear and one homozygous Black Bear producing a Kermode Bear. Include the phenotype and genotype ratio and percentage of the offspring. You must show your work.</td><td>Genotype Ratio:
+<h2>INSTRUCTIONS</h2><p>Download this document to your computer or your own Google Drive. Do NOT ask for editing privileges.</p><p>Open the file in Google Docs, MS Word, Pages or OpenOffice.</p><p>To make it easier for you to show your work, you have a few flexible options:</p><p>You can adjust the layout of the Learning Guide (LG) to create more space between the questions, allowing ample room for your answers and solutions.</p><p>Feel free to use blank or lined paper to write down your answers and solutions; there's no need to rewrite the questions.</p><p>You need to handwrite your answers or use a stylus on a tablet (like an iPad).</p><p>Learning guides are an essential component of your learning within this course. To succeed, take your time with your learning guide and treat it as your own set of notes and examples. It is your learning guide. Yes, your learning guides will be reviewed by your teacher and will be used as part of your final grade, but their real value lies in how they help you organize your learning.</p><p>Ensure that you clearly outline all possible steps in your work and provide a concise explanation of your related thoughts on the topics. If you have any trouble with a question, review your lessons and then ask your teacher.</p><p>Once your learning guide is complete, it's time to submit it to your teacher as one file at the bottom of the unit. How can you submit the learning guide? Here are some options. 1. If you have access to a scanner, you can scan the pages, producing one PDF file to upload at the end of the unit. Suggested settings for your scanner are included in the submission area.</p><p>If you don't have access to a scanner, you can take pictures of the pages, then paste them into one Word or Google Docs file. This will again enable you to submit it as a single file.</p><p>If you're dropping in to see your teacher regularly, you can always drop off the learning guide with them. Whichever method you choose should result in the submission of one file to your teacher.</p><p>For a document of 10 pages, aiming for a total size of around 10 MB would be ideal. To assist you in this, may I suggest trying Adobe's online PDF compression tool at .</p><p>You are required to have this Learning Guide (and the Earth Science LG) completed BEFORE you write the F2F Test 1. Do your best and ask questions about anything that you don't understand BEFORE you write Test 1.</p><p>Your name needs to be at the top of each page.</p><p>You need to handwrite your answers or use a stylus on a tablet (like an iPad).</p><p>Be neat and tidy and show all work.</p><p>Personalize your answers</p><p>with diagrams,</p><p>stars or arrows for key points, and</p><p>little side notes, circling or highlighting thoughts.</p><p>The document was last updated on November 6, 2025.</p><table class="doc-table"><tr><td>I read the above instructions. Yes or No.</td><td class="answer-cell"><input class="cell-input" name="t1_r0_c3" type="text"/></td></tr></table><h2>1.1 - Reintroducing the Cell</h2><table class="doc-table"><tr><td>1. Watch the video that reviews cell structures and functions that you learned in Science 8.</td><td class="answer-cell"><input class="cell-input" name="t2_r0_c3" type="text"/></td></tr></table><p>2. Reflect on what you just learned and write:</p><table class="doc-table"><tr><td>Why this information matters.</td><td class="answer-cell"><input class="cell-input" name="t3_r0_c3" type="text"/></td></tr><tr><td>Connections to other topics you’ve studied.</td><td class="answer-cell"><input class="cell-input" name="t3_r1_c3" type="text"/></td></tr><tr><td>Write quiz questions to test your memory later.</td><td class="answer-cell"><input class="cell-input" name="t3_r2_c3" type="text"/></td></tr><tr><td>Do you have any questions that came up for you while going through the content?</td><td class="answer-cell"><input class="cell-input" name="t3_r3_c3" type="text"/></td></tr></table><h2>1.2 - The Nucleus and DNA</h2><p>1. Watch the video ‘Learn Biology: Cells-The Nucleus’ and ‘Nucleus’ and answer the following questions:</p><table class="doc-table"><tr><td>a. What is stored within the nucleus?</td><td class="answer-cell"><input class="cell-input" name="t4_r0_c3" type="text"/></td></tr><tr><td>b. Explain why the nucleus is considered the control centre of the cell.</td><td class="answer-cell"><input class="cell-input" name="t4_r1_c3" type="text"/></td></tr><tr><td>c. What part of the cell makes ribosomes?</td><td class="answer-cell"><input class="cell-input" name="t4_r2_c3" type="text"/></td></tr><tr><td>d. Describe the structure of the membrane surrounding the nucleus.</td><td class="answer-cell"><input class="cell-input" name="t4_r3_c3" type="text"/></td></tr><tr><td>e. What is the function of chromatin? Describe how chromosomes are formed from DNA and describe how proteins are involved.</td><td class="answer-cell"><input class="cell-input" name="t4_r4_c3" type="text"/></td></tr><tr><td>f. Why is the nuclear membrane porous?</td><td class="answer-cell"><input class="cell-input" name="t4_r5_c3" type="text"/></td></tr><tr><td>g. Do all living organisms contain the same number of chromosomes?</td><td class="answer-cell"><input class="cell-input" name="t4_r6_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>2. Describe the structure of DNA, including its components.</td><td class="answer-cell"><input class="cell-input" name="t5_r0_c3" type="text"/></td></tr></table><p>3. Reflect on what you just learned and write:</p><table class="doc-table"><tr><td>Why does this information matter?</td><td class="answer-cell"><input class="cell-input" name="t6_r0_c3" type="text"/></td></tr><tr><td>Connections to other topics you’ve studied.</td><td class="answer-cell"><input class="cell-input" name="t6_r1_c3" type="text"/></td></tr><tr><td>Write quiz questions to test your memory later.</td><td class="answer-cell"><input class="cell-input" name="t6_r2_c3" type="text"/></td></tr><tr><td>Do you have any questions that arose while reviewing the content?</td><td class="answer-cell"><input class="cell-input" name="t6_r3_c3" type="text"/></td></tr></table><p>1.3 - Genes and Chromosomes</p><p data-ai-inline-group="lg_1_3_q1">1. <input class="inline-input" name="lg_1_3_q1_blank1" type="text"/> are sections of <input class="inline-input" name="lg_1_3_q1_blank2" type="text"/> that code for the production of <input class="inline-input" name="lg_1_3_q1_blank3" type="text"/>. Proteins determine the <input class="inline-input" name="lg_1_3_q1_blank4" type="text"/> in humans. DNA is compacted into structures called <input class="inline-input" name="lg_1_3_q1_blank5" type="text"/>.</p><table class="doc-table"><tr><td>2. What is the “blueprint” for living things, and why is it considered that?</td><td class="answer-cell"><input class="cell-input" name="t7_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>3. Traits are said to be either inherited or shaped by the environment. What is the difference between the two, and provide an example of each?</td><td class="answer-cell"><input class="cell-input" name="t8_r0_c3" type="text"/></td></tr></table><p>4. Reflect on what you just learned and write:</p><table class="doc-table"><tr><td>Why does this information matter?</td><td class="answer-cell"><input class="cell-input" name="t9_r0_c3" type="text"/></td></tr><tr><td>Connections to other topics you’ve studied.</td><td class="answer-cell"><input class="cell-input" name="t9_r1_c3" type="text"/></td></tr><tr><td>Write quiz questions to test your memory later.</td><td class="answer-cell"><input class="cell-input" name="t9_r2_c3" type="text"/></td></tr><tr><td>Do you have any questions that arose while reviewing the content?</td><td class="answer-cell"><input class="cell-input" name="t9_r3_c3" type="text"/></td></tr></table><h2>1.4 - Mendelian Genetics and Inherited Traits</h2><table class="doc-table"><tr><td>1. Why is selective breeding used?</td><td class="answer-cell"><input class="cell-input" name="t10_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>2. Mendel’s conclusions from his genetic research in the 1800s use the term ‘units’ or ‘factors’. What was he describing?</td><td class="answer-cell"><input class="cell-input" name="t11_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td></td><td>3. Watch the Amoeba Sisters video explaining a ‘monohybrid cross’ and complete the accompanying worksheet. Include the worksheet with your completed learning guide.</td><td class="answer-cell"><input class="cell-input" name="t12_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td></td><td>4. Watch the Amoeba Sisters video explaining a ‘dihybrid cross’ and complete the accompanying worksheet. Include the worksheet with your completed learning guide.</td><td class="answer-cell"><input class="cell-input" name="t13_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>5. Use a Punnett Square to show the probability of 1 heterozygous Black Bear and one homozygous Black Bear producing a Kermode Bear. Include the phenotype and genotype ratio and percentage of the offspring. You must show your work.</td><td>Genotype Ratio:
 Genotype Percentage:
 
 
@@ -580,8 +686,20 @@ function initBilingualTranslations() {
 
   function setInlineFeedback(el, text, kind) {
     if (!el) return;
-    el.textContent = text || "";
-    el.className = "ai-feedback" + (kind ? " " + kind : "");
+
+    const body = el.querySelector ? el.querySelector('.ai-tip-body') : null;
+    if (!body) return;
+
+    if (el._hideTimer) {
+      clearTimeout(el._hideTimer);
+      el._hideTimer = null;
+    }
+
+    body.textContent = text || "";
+    el.className = "ai-tip" + (kind ? " " + kind : "");
+
+    const hasText = !!(text && String(text).trim());
+    el.classList.toggle("is-visible", hasText);
   }
 
   function getQuestionTextForAnswer(answerEl) {
@@ -656,6 +774,141 @@ function initBilingualTranslations() {
     }
   }
 
+  function collectEnglishTextWithInputs(rootEl, useInputValues) {
+    const parts = [];
+    const walk = (node) => {
+      if (!node) return;
+      if (node.nodeType === Node.TEXT_NODE) {
+        parts.push(node.nodeValue || "");
+        return;
+      }
+      if (node.nodeType !== Node.ELEMENT_NODE) return;
+
+      const el = node;
+      if (el.classList && (el.classList.contains('zh-inline') || el.classList.contains('zh-block'))) return;
+      if (el.classList && el.classList.contains('ai-check-wrap')) return;
+      if ((el.getAttribute && (el.getAttribute('lang') || '')).toLowerCase().startsWith('zh')) return;
+
+      if (el.tagName === 'INPUT') {
+        const v = (el.value || "").trim();
+        parts.push(useInputValues ? (v || "____") : "____");
+        return;
+      }
+
+      for (const child of Array.from(el.childNodes || [])) walk(child);
+    };
+
+    walk(rootEl);
+    return normalizeTextForLookup(parts.join(''));
+  }
+
+  async function checkInlineGroupAnswer(groupEl, tipEl, btn) {
+    if (!groupEl) return;
+    const inputs = Array.from(groupEl.querySelectorAll('input.inline-input'));
+    const hasAny = inputs.some(i => (i.value || '').trim());
+    if (!hasAny) {
+      setInlineFeedback(tipEl, "No answer entered.", "bad");
+      return;
+    }
+
+    const questionText = collectEnglishTextWithInputs(groupEl, false);
+    const userText = collectEnglishTextWithInputs(groupEl, true);
+
+    if (btn) btn.disabled = true;
+    setInlineFeedback(tipEl, "Checking with AI grader...", "");
+    try {
+      const result = await gradeOne({ questionText, userText });
+      const verdictLower = (result.verdict || "").toLowerCase();
+      const isCorrect = verdictLower === "correct";
+      const isWrong = verdictLower === "wrong";
+      const kind = isCorrect ? "ok" : (isWrong ? "bad" : "");
+      const prefix = result.verdict ? (result.verdict + ": ") : "";
+      setInlineFeedback(tipEl, prefix + (result.explanation || ""), kind);
+    } catch (err) {
+      console.warn("Grading failed:", err);
+      setInlineFeedback(tipEl, "AI grading unavailable (check URL in AI answer check settings).", "bad");
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  function initAiInlineGroups() {
+    const groups = document.querySelectorAll('p[data-ai-inline-group]');
+    let idx = 0;
+    groups.forEach(groupEl => {
+      if (!groupEl || groupEl.dataset.aiGroupAttached === "1") return;
+      const inputs = groupEl.querySelectorAll('input.inline-input');
+      if (!inputs || inputs.length === 0) return;
+
+      groupEl.dataset.aiGroupAttached = "1";
+      idx++;
+
+      // Ensure inputs are saved by our localStorage mechanism
+      inputs.forEach((inp, i) => {
+        if (!inp.getAttribute('name')) {
+          inp.setAttribute('name', (groupEl.getAttribute('data-ai-inline-group') || 'inline_group') + '_blank' + (i + 1));
+        }
+      });
+
+      const wrap = document.createElement('div');
+      wrap.className = 'ai-check-wrap';
+
+      const row = document.createElement('div');
+      row.className = 'ai-check-row';
+
+      const btnReset = document.createElement('button');
+      btnReset.type = 'button';
+      btnReset.className = 'ai-reset-btn';
+      btnReset.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 16h10l1-16"/><path d="M10 11v7"/><path d="M14 11v7"/></svg>';
+      btnReset.title = 'Reset (\u6e05\u7a7a)';
+      btnReset.setAttribute('aria-label', 'Reset (\u6e05\u7a7a)');
+
+      const btnCheck = document.createElement('button');
+      btnCheck.type = 'button';
+      btnCheck.className = 'ai-check-btn';
+      btnCheck.textContent = 'Check';
+      btnCheck.title = 'Send your answer to the AI grader';
+
+      const tip = document.createElement('div');
+      tip.className = 'ai-tip';
+      tip.setAttribute('role', 'status');
+      tip.setAttribute('aria-live', 'polite');
+      tip.id = 'ai-tip-inline-' + idx;
+
+      const tipClose = document.createElement('button');
+      tipClose.type = 'button';
+      tipClose.className = 'ai-tip-close';
+      tipClose.textContent = '\u00d7';
+      tipClose.title = 'Close';
+      tipClose.setAttribute('aria-label', 'Close');
+
+      const tipBody = document.createElement('div');
+      tipBody.className = 'ai-tip-body';
+
+      tipClose.addEventListener('click', () => setInlineFeedback(tip, '', ''));
+      tip.appendChild(tipClose);
+      tip.appendChild(tipBody);
+
+      btnReset.addEventListener('click', () => {
+        inputs.forEach(inp => { inp.value = ''; });
+        setInlineFeedback(tip, '', '');
+        try {
+          inputs.forEach(inp => inp.dispatchEvent(new Event('input', { bubbles: true })));
+        } catch {}
+        const first = inputs[0];
+        if (first) first.focus();
+      });
+
+      btnCheck.addEventListener('click', () => checkInlineGroupAnswer(groupEl, tip, btnCheck));
+
+      row.appendChild(btnReset);
+      row.appendChild(btnCheck);
+      wrap.appendChild(row);
+      wrap.appendChild(tip);
+      groupEl.appendChild(wrap);
+    });
+  }
+
   function initAiChecks() {
     const targets = document.querySelectorAll('.answer-cell input[name], .answer-cell textarea[name]');
     let idx = 0;
@@ -667,21 +920,58 @@ function initBilingualTranslations() {
       const wrap = document.createElement("div");
       wrap.className = "ai-check-wrap";
 
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "ai-check-btn";
-      btn.innerHTML = 'Check<span class="zh-inline" lang="zh-Hans">\uff08\u68c0\u67e5\uff09</span>';
-      btn.title = "Send your answer to the AI grader";
+      const row = document.createElement("div");
+      row.className = "ai-check-row";
 
-      const feedback = document.createElement("span");
-      feedback.className = "ai-feedback";
-      feedback.setAttribute("aria-live", "polite");
-      feedback.id = "ai-feedback-" + idx;
+      const btnReset = document.createElement("button");
+      btnReset.type = "button";
+      btnReset.className = "ai-reset-btn";
+      btnReset.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 16h10l1-16"/><path d="M10 11v7"/><path d="M14 11v7"/></svg>';
+      btnReset.title = "Reset (\u6e05\u7a7a)";
+      btnReset.setAttribute("aria-label", "Reset (\u6e05\u7a7a)");
 
-      btn.addEventListener("click", () => checkCellAnswer(answerEl, feedback, btn));
+      const btnCheck = document.createElement("button");
+      btnCheck.type = "button";
+      btnCheck.className = "ai-check-btn";
+      btnCheck.textContent = "Check";
+      btnCheck.title = "Send your answer to the AI grader";
 
-      wrap.appendChild(btn);
-      wrap.appendChild(feedback);
+      const tip = document.createElement("div");
+      tip.className = "ai-tip";
+      tip.setAttribute("role", "status");
+      tip.setAttribute("aria-live", "polite");
+      tip.id = "ai-tip-" + idx;
+
+      const tipClose = document.createElement("button");
+      tipClose.type = "button";
+      tipClose.className = "ai-tip-close";
+      tipClose.textContent = "\u00d7";
+      tipClose.title = "Close";
+      tipClose.setAttribute("aria-label", "Close");
+
+      const tipBody = document.createElement("div");
+      tipBody.className = "ai-tip-body";
+
+      tipClose.addEventListener("click", () => {
+        setInlineFeedback(tip, "", "");
+      });
+
+      tip.appendChild(tipClose);
+      tip.appendChild(tipBody);
+
+      btnReset.addEventListener("click", () => {
+        answerEl.value = "";
+        setInlineFeedback(tip, "", "");
+        try { answerEl.dispatchEvent(new Event('input', { bubbles: true })); } catch {}
+        answerEl.focus();
+      });
+
+      btnCheck.addEventListener("click", () => checkCellAnswer(answerEl, tip, btnCheck));
+
+      row.appendChild(btnReset);
+      row.appendChild(btnCheck);
+      wrap.appendChild(row);
+      wrap.appendChild(tip);
       answerEl.insertAdjacentElement("afterend", wrap);
     });
   }
@@ -792,12 +1082,23 @@ function initBilingualTranslations() {
   document.addEventListener('input', (e) => {
     if (e.target.matches('input[name], textarea[name]')) save();
   });
+
+  document.addEventListener('click', (e) => {
+    const cell = e.target && e.target.closest ? e.target.closest('td.answer-cell') : null;
+    if (!cell) return;
+    if (e.target.closest && e.target.closest('.ai-check-wrap')) return;
+    if (e.target.matches && e.target.matches('input, textarea')) return;
+    const field = cell.querySelector('input, textarea');
+    if (!field) return;
+    field.focus();
+  });
   window.addEventListener('load', () => {
     load();
     embedImages();
     initBilingualTranslations();
     initAiUi();
     initAiChecks();
+    initAiInlineGroups();
   });
 </script>
 </body>
