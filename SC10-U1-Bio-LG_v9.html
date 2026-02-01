@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>SC10 Biology – Learning Guide 1</title>
+<style>
+  body { margin:0; background:#f5f5f5; font-family:Calibri, Arial, sans-serif; color:#111; }
+  .page { width:8.5in; margin:24px auto; background:#fff; padding:0.7in; box-shadow:0 2px 12px rgba(0,0,0,.12); }
+  h1 { margin:0 0 10px; font-size:1.35rem; }
+  h2 { margin:0.6rem 0 0.35rem; font-size:1.1rem; }
+  p { margin:0.2rem 0; font-size:0.98rem; line-height:1.25; }
+
+  .topbar {
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    margin-bottom: 6px;
+  }
+
+  .lang-controls {
+    display:inline-flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+  }
+
+  .lang-btn {
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(17, 24, 39, 0.14);
+    background: rgba(17, 24, 39, 0.03);
+    color: #111827;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .lang-btn.is-active {
+    background: rgba(30, 136, 229, 0.14);
+    border-color: rgba(30, 136, 229, 0.45);
+  }
+
+  .lang-btn:focus-visible {
+    outline: 3px solid rgba(30, 136, 229, 0.35);
+    outline-offset: 2px;
+  }
+
+  .zh-block,
+  .zh-inline {
+    display:none;
+  }
+
+  body.lang-bi .zh-block { display:block; }
+  body.lang-bi .zh-inline { display:inline; }
+  .doc-image { max-width:100%; height:auto; display:block; margin:10px 0; }
+  .doc-table { width:100%; border-collapse:collapse; margin:12px 0 16px; }
+  .doc-table td { border:1px solid #9a9a9a; padding:8px; vertical-align:top; }
+  .doc-table td.answer-cell { padding-bottom:34px; }
+  .answer-cell { background:#fff; position:relative; }
+  .cell-input {
+    width:100%;
+    box-sizing:border-box;
+    border:1px solid #9a9a9a;
+    border-radius:4px;
+    padding:6px 8px;
+    font-size:1rem;
+    outline:none;
+    background:#fff;
+  }
+  .cell-textarea {
+    width:100%;
+    box-sizing:border-box;
+    border:1px solid #9a9a9a;
+    border-radius:4px;
+    padding:6px 8px;
+    font-size:1rem;
+    outline:none;
+    resize:vertical;
+    background:#fff;
+  }
+  @media print {
+    body { background:#fff; }
+    .page { margin:0; box-shadow:none; width:auto; padding:0.5in; page-break-after:always; }
+    .ai-tools, .ai-check-wrap { display:none !important; }
+  }
+
+.inline-input{
+  border:1px solid #9a9a9a;
+  border-radius:4px;
+  padding:2px 6px;
+  margin:0 4px;
+  min-width:120px;
+  font-size:1rem;
+}
+
+/* Remove input borders inside table cells (table already provides frame) */
+.doc-table .cell-input,
+.doc-table .cell-textarea {
+  border: none !important;
+  outline: none;
+  background: transparent;
+  padding: 4px 2px;
+}
+
+/* Optional AI answer checking */
+.ai-tools {
+  margin: 10px 0 14px;
+  padding: 10px 12px;
+  border: 1px solid #d7d7d7;
+  border-radius: 10px;
+  background: #fafafa;
+}
+
+.ai-tools summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.ai-tools .row {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.ai-tools label {
+  min-width: 120px;
+}
+
+.ai-tools input {
+  flex: 1 1 320px;
+  min-width: 240px;
+  padding: 6px 8px;
+  font-size: 0.95rem;
+  border: 1px solid #cfcfcf;
+  border-radius: 6px;
+}
+
+.ai-tools button {
+  padding: 6px 10px;
+  border: 1px solid #1b74d1;
+  border-radius: 8px;
+  background: #1e88e5;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.ai-tools button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ai-status {
+  font-size: 0.92rem;
+}
+
+.ai-status.ok { color: #1b5e20; }
+.ai-status.bad { color: #b71c1c; }
+
+.ai-check-wrap {
+  position: absolute;
+  right: 8px;
+  bottom: 6px;
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.ai-check-btn {
+  padding: 4px 10px;
+  border: 1px solid #1b74d1;
+  border-radius: 999px;
+  background: rgba(30, 136, 229, 0.10);
+  color: #0b3f78;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.ai-check-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ai-feedback {
+  font-size: 0.92rem;
+  max-width: 320px;
+  text-align: right;
+}
+
+.ai-feedback.ok { color: #1b5e20; }
+.ai-feedback.bad { color: #b71c1c; }
+</style>
+</head>
+ <body>
+ <div class="page">
+<div class="topbar">
+  <div>
+    <h1>SC10 Biology – Learning Guide 1<span class="zh-inline" lang="zh-Hans">（生物学习指南 1）</span></h1>
+  </div>
+  <div class="lang-controls" role="group" aria-label="Language">
+    <button type="button" class="lang-btn is-active" data-lang="en" aria-pressed="true">English</button>
+    <button type="button" class="lang-btn" data-lang="bi" aria-pressed="false">English + 中文</button>
+  </div>
+</div>
+<details class="ai-tools">
+  <summary>AI answer check (optional)<span class="zh-inline" lang="zh-Hans">（AI 检查答案，可选）</span></summary>
+  <div class="row">
+    <label for="grade-api-url">Grade API URL<span class="zh-inline" lang="zh-Hans">（评分接口）</span></label>
+    <input id="grade-api-url" type="text" placeholder="https://example.com/grade"/>
+    <button type="button" id="btn-test-api">Test<span class="zh-inline" lang="zh-Hans">（测试）</span></button>
+    <span id="api-status" class="ai-status"></span>
+  </div>
+  <p class="ai-status" id="ai-tools-hint">Adds a Check button to each answer box. Sends the question + your answer to the grader service.
+    <span class="zh-inline" lang="zh-Hans">（每个答案框右下角会出现“Check”按钮，会把题目+你的答案发送到评分服务。）</span>
+  </p>
+</details>
+<h2>INSTRUCTIONS</h2><p>Download this document to your computer or your own Google Drive. Do NOT ask for editing privileges.</p><p>Open the file in Google Docs, MS Word, Pages or OpenOffice.</p><p>To make it easier for you to show your work, you have a few flexible options:</p><p>You can adjust the layout of the Learning Guide (LG) to create more space between the questions, allowing ample room for your answers and solutions.</p><p>Feel free to use blank or lined paper to write down your answers and solutions; there's no need to rewrite the questions.</p><p>You need to handwrite your answers or use a stylus on a tablet (like an iPad).</p><p>Learning guides are an essential component of your learning within this course. To succeed, take your time with your learning guide and treat it as your own set of notes and examples. It is your learning guide. Yes, your learning guides will be reviewed by your teacher and will be used as part of your final grade, but their real value lies in how they help you organize your learning.</p><p>Ensure that you clearly outline all possible steps in your work and provide a concise explanation of your related thoughts on the topics. If you have any trouble with a question, review your lessons and then ask your teacher.</p><p>Once your learning guide is complete, it's time to submit it to your teacher as one file at the bottom of the unit. How can you submit the learning guide? Here are some options. 1. If you have access to a scanner, you can scan the pages, producing one PDF file to upload at the end of the unit. Suggested settings for your scanner are included in the submission area.</p><p>If you don't have access to a scanner, you can take pictures of the pages, then paste them into one Word or Google Docs file. This will again enable you to submit it as a single file.</p><p>If you're dropping in to see your teacher regularly, you can always drop off the learning guide with them. Whichever method you choose should result in the submission of one file to your teacher.</p><p>For a document of 10 pages, aiming for a total size of around 10 MB would be ideal. To assist you in this, may I suggest trying Adobe's online PDF compression tool at .</p><p>You are required to have this Learning Guide (and the Earth Science LG) completed BEFORE you write the F2F Test 1. Do your best and ask questions about anything that you don't understand BEFORE you write Test 1.</p><p>Your name needs to be at the top of each page.</p><p>You need to handwrite your answers or use a stylus on a tablet (like an iPad).</p><p>Be neat and tidy and show all work.</p><p>Personalize your answers</p><p>with diagrams,</p><p>stars or arrows for key points, and</p><p>little side notes, circling or highlighting thoughts.</p><p>The document was last updated on November 6, 2025.</p><table class="doc-table"><tr><td>I read the above instructions. Yes or No.</td><td class="answer-cell"><input class="cell-input" name="t1_r0_c3" type="text"/></td></tr></table><h2>1.1 - Reintroducing the Cell</h2><table class="doc-table"><tr><td>1. Watch the video that reviews cell structures and functions that you learned in Science 8.</td><td class="answer-cell"><input class="cell-input" name="t2_r0_c3" type="text"/></td></tr></table><p>2. Reflect on what you just learned and write:</p><table class="doc-table"><tr><td>Why this information matters.</td><td class="answer-cell"><input class="cell-input" name="t3_r0_c3" type="text"/></td></tr><tr><td>Connections to other topics you’ve studied.</td><td class="answer-cell"><input class="cell-input" name="t3_r1_c3" type="text"/></td></tr><tr><td>Write quiz questions to test your memory later.</td><td class="answer-cell"><input class="cell-input" name="t3_r2_c3" type="text"/></td></tr><tr><td>Do you have any questions that came up for you while going through the content?</td><td class="answer-cell"><input class="cell-input" name="t3_r3_c3" type="text"/></td></tr></table><h2>1.2 - The Nucleus and DNA</h2><p>1. Watch the video ‘Learn Biology: Cells-The Nucleus’ and ‘Nucleus’ and answer the following questions:</p><table class="doc-table"><tr><td>a. What is stored within the nucleus?</td><td class="answer-cell"><input class="cell-input" name="t4_r0_c3" type="text"/></td></tr><tr><td>b. Explain why the nucleus is considered the control centre of the cell.</td><td class="answer-cell"><input class="cell-input" name="t4_r1_c3" type="text"/></td></tr><tr><td>c. What part of the cell makes ribosomes?</td><td class="answer-cell"><input class="cell-input" name="t4_r2_c3" type="text"/></td></tr><tr><td>d. Describe the structure of the membrane surrounding the nucleus.</td><td class="answer-cell"><input class="cell-input" name="t4_r3_c3" type="text"/></td></tr><tr><td>e. What is the function of chromatin? Describe how chromosomes are formed from DNA and describe how proteins are involved.</td><td class="answer-cell"><input class="cell-input" name="t4_r4_c3" type="text"/></td></tr><tr><td>f. Why is the nuclear membrane porous?</td><td class="answer-cell"><input class="cell-input" name="t4_r5_c3" type="text"/></td></tr><tr><td>g. Do all living organisms contain the same number of chromosomes?</td><td class="answer-cell"><input class="cell-input" name="t4_r6_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>2. Describe the structure of DNA, including its components.</td><td class="answer-cell"><input class="cell-input" name="t5_r0_c3" type="text"/></td></tr></table><p>3. Reflect on what you just learned and write:</p><table class="doc-table"><tr><td>Why does this information matter?</td><td class="answer-cell"><input class="cell-input" name="t6_r0_c3" type="text"/></td></tr><tr><td>Connections to other topics you’ve studied.</td><td class="answer-cell"><input class="cell-input" name="t6_r1_c3" type="text"/></td></tr><tr><td>Write quiz questions to test your memory later.</td><td class="answer-cell"><input class="cell-input" name="t6_r2_c3" type="text"/></td></tr><tr><td>Do you have any questions that arose while reviewing the content?</td><td class="answer-cell"><input class="cell-input" name="t6_r3_c3" type="text"/></td></tr></table><p>1.3 - Genes and Chromosomes</p><p>1. <input class="inline-input" type="text"/> are sections of <input class="inline-input" type="text"/> that code for the production of <input class="inline-input" type="text"/>. Proteins determine the <input class="inline-input" type="text"/> in humans. DNA is compacted into structures called <input class="inline-input" type="text"/>.</p><table class="doc-table"><tr><td>2. What is the “blueprint” for living things, and why is it considered that?</td><td class="answer-cell"><input class="cell-input" name="t7_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>3. Traits are said to be either inherited or shaped by the environment. What is the difference between the two, and provide an example of each?</td><td class="answer-cell"><input class="cell-input" name="t8_r0_c3" type="text"/></td></tr></table><p>4. Reflect on what you just learned and write:</p><table class="doc-table"><tr><td>Why does this information matter?</td><td class="answer-cell"><input class="cell-input" name="t9_r0_c3" type="text"/></td></tr><tr><td>Connections to other topics you’ve studied.</td><td class="answer-cell"><input class="cell-input" name="t9_r1_c3" type="text"/></td></tr><tr><td>Write quiz questions to test your memory later.</td><td class="answer-cell"><input class="cell-input" name="t9_r2_c3" type="text"/></td></tr><tr><td>Do you have any questions that arose while reviewing the content?</td><td class="answer-cell"><input class="cell-input" name="t9_r3_c3" type="text"/></td></tr></table><h2>1.4 - Mendelian Genetics and Inherited Traits</h2><table class="doc-table"><tr><td>1. Why is selective breeding used?</td><td class="answer-cell"><input class="cell-input" name="t10_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>2. Mendel’s conclusions from his genetic research in the 1800s use the term ‘units’ or ‘factors’. What was he describing?</td><td class="answer-cell"><input class="cell-input" name="t11_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td></td><td>3. Watch the Amoeba Sisters video explaining a ‘monohybrid cross’ and complete the accompanying worksheet. Include the worksheet with your completed learning guide.</td><td class="answer-cell"><input class="cell-input" name="t12_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td></td><td>4. Watch the Amoeba Sisters video explaining a ‘dihybrid cross’ and complete the accompanying worksheet. Include the worksheet with your completed learning guide.</td><td class="answer-cell"><input class="cell-input" name="t13_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>5. Use a Punnett Square to show the probability of 1 heterozygous Black Bear and one homozygous Black Bear producing a Kermode Bear. Include the phenotype and genotype ratio and percentage of the offspring. You must show your work.</td><td>Genotype Ratio:
+Genotype Percentage:
+
+
+
+
+
+Phenotype Ratio:
+Phenotype Percentage:</td><td class="answer-cell"><input class="cell-input" name="t14_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>6. Use a Punnett Square to determine the probable offspring by crossing a heterozygous Black Bear with a Kermode Bear. You must show your work.</td><td>Genotype Ratio:
+Genotype Percentage:
+
+
+
+
+
+Phenotype Ratio:
+Phenotype Percentage:</td><td class="answer-cell"><input class="cell-input" name="t15_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>7. Use a Punnett Square to determine the probable offspring by crossing a homozygous Black Bear with a Kermode Bear. You must show your work.</td><td>Genotype Ratio:
+Genotype Percentage:
+
+
+
+
+
+Phenotype Ratio:
+Phenotype Percentage:</td><td class="answer-cell"><input class="cell-input" name="t16_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>8. Complete the Punnett Square practice questions. A key is provided for you to check your work and understanding of Mendelian Genetics.</td><td class="answer-cell"><input class="cell-input" name="t17_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>9. Answer the following questions using the ‘Pedigree of the Royal Family’ and the inheritance
+of the sex-linked trait, Hemophilia.</td><td class="answer-cell"><input class="cell-input" name="t18_r0_c3" type="text"/></td></tr><tr><td>a. Which of Victoria’s sons had hemophilia?</td><td class="answer-cell"><input class="cell-input" name="t18_r1_c3" type="text"/></td></tr><tr><td>b. How many of Queen Victoria’s grandchildren had hemophilia:</td><td class="answer-cell"><input class="cell-input" name="t18_r2_c3" type="text"/></td></tr><tr><td>c. Do any females have hemophilia?</td><td class="answer-cell"><input class="cell-input" name="t18_r3_c3" type="text"/></td></tr><tr><td>d. Draw a Punnett Square to show Queen Victoria and her husband, Albert. Queen Victoria’s genotype will be XXH, and Albert will be XY. XH indicates the female sex chromosome carrying the gene for hemophilia.</td><td class="answer-cell"><input class="cell-input" name="t18_r4_c3" type="text"/></td></tr><tr><td>e. We do not know if any of the daughters of Alexandra, wife of the Tsar of Russia, were
+carriers of hemophilia. How many of the daughters would be predicted to be carriers
+based on the pedigree?</td><td class="answer-cell"><input class="cell-input" name="t18_r5_c3" type="text"/></td></tr><tr><td>f. Draw a pedigree using the following information. (Hint: Draw a Punnett square for the first generation parents!):
+i.  A man with hemophilia married a woman without it.
+ii. They had two daughters and two sons.
+iii. The first daughter had a son with hemophilia.</td><td class="answer-cell"><input class="cell-input" name="t18_r6_c3" type="text"/></td></tr></table><p>10. Reflect on what you just learned and write:</p><table class="doc-table"><tr><td>Why does this information matter?</td><td class="answer-cell"><input class="cell-input" name="t19_r0_c3" type="text"/></td></tr><tr><td>Connections to other topics you’ve studied.</td><td class="answer-cell"><input class="cell-input" name="t19_r1_c3" type="text"/></td></tr><tr><td>Write quiz questions to test your memory later.</td><td class="answer-cell"><input class="cell-input" name="t19_r2_c3" type="text"/></td></tr><tr><td>Do you have any questions that arose while reviewing the content?</td><td class="answer-cell"><input class="cell-input" name="t19_r3_c3" type="text"/></td></tr></table><h2>1.5 - Genetic Mutations and Inheritance</h2><table class="doc-table"><tr><td>1. Define ‘mutation’ and compare a ‘gene mutation’ to a ‘chromosomal mutation’.</td><td class="answer-cell"><input class="cell-input" name="t20_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>2. Do you think ‘curly wings’ on a fly would be a positive, negative or neutral mutation? Explain your answer.</td><td class="answer-cell"><input class="cell-input" name="t21_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>3. Describe how an ‘ebony’ colored body could be considered a positive mutation for a fly.</td><td class="answer-cell"><input class="cell-input" name="t22_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>4. What is your position on testing for genetic disorders? Should life insurance companies be
+allowed to request genetic testing to determine the rate to charge individuals? Explain your answer.</td><td class="answer-cell"><input class="cell-input" name="t23_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>5. Should couples wanting to start a family undergo genetic testing to minimize risk to their offspring? Explain your answer.</td><td class="answer-cell"><input class="cell-input" name="t24_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>6. Try the ‘mutations – guided practice quiz’. Redo the quiz until you get the 5 questions
+correct.</td><td class="answer-cell"><input class="cell-input" name="t25_r0_c3" type="text"/></td></tr></table><p>7. Reflect on what you just learned and write:</p><table class="doc-table"><tr><td>Why this information matters.</td><td class="answer-cell"><input class="cell-input" name="t26_r0_c3" type="text"/></td></tr><tr><td>Connections to other topics you’ve studied.</td><td class="answer-cell"><input class="cell-input" name="t26_r1_c3" type="text"/></td></tr><tr><td>Write quiz questions to test your memory later.</td><td class="answer-cell"><input class="cell-input" name="t26_r2_c3" type="text"/></td></tr><tr><td>Do you have any questions that came up for you while going through the content?</td><td class="answer-cell"><input class="cell-input" name="t26_r3_c3" type="text"/></td></tr></table><h2>1.6 - Genetic Mutations and Adaptability of Organisms</h2><table class="doc-table"><tr><td>1. Explain ‘natural selection’ in your own words.</td><td class="answer-cell"><input class="cell-input" name="t27_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>2. What role does the environment play in natural selection?</td><td class="answer-cell"><input class="cell-input" name="t28_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>3. What is the source of genetic variation?</td><td class="answer-cell"><input class="cell-input" name="t29_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>4. Read the ‘Case Study on the Cheetah’ and answer the following questions. You can check
+your answers using the links provided.</td><td class="answer-cell"><input class="cell-input" name="t30_r0_c3" type="text"/></td></tr><tr><td>a. Why is genetic diversity important?</td><td class="answer-cell"><input class="cell-input" name="t30_r1_c3" type="text"/></td></tr><tr><td>b. What is the likely cause for the Cheetah losing genetic diversity?</td><td class="answer-cell"><input class="cell-input" name="t30_r2_c3" type="text"/></td></tr><tr><td>c. What are some examples of genetic diversity in humans?</td><td class="answer-cell"><input class="cell-input" name="t30_r3_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>5. Define ‘genetically modified organism’ or ‘GMO’.</td><td class="answer-cell"><input class="cell-input" name="t31_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>6. Define ‘recombinant DNA’.</td><td class="answer-cell"><input class="cell-input" name="t32_r0_c3" type="text"/></td></tr></table><table class="doc-table"><tr><td>7. You are preparing for a debate on the pros and cons of genetically modified organisms.
+Make a chart showing the points you might encounter in this debate and how you will support or counter them.</td><td class="answer-cell"><input class="cell-input" name="t33_r0_c3" type="text"/></td></tr></table><p>8. Reflect on what you just learned and write:</p><table class="doc-table"><tr><td>Why does this information matter?</td><td class="answer-cell"><input class="cell-input" name="t34_r0_c3" type="text"/></td></tr><tr><td>Connections to other topics you’ve studied.</td><td class="answer-cell"><input class="cell-input" name="t34_r1_c3" type="text"/></td></tr><tr><td>Write quiz questions to test your memory later.</td><td class="answer-cell"><input class="cell-input" name="t34_r2_c3" type="text"/></td></tr><tr><td>Do you have any questions that arose while reviewing the content?</td><td class="answer-cell"><input class="cell-input" name="t34_r3_c3" type="text"/></td></tr></table><h2>Finally, answer yes or no to the following.</h2><table class="doc-table"><tr><td>I added my name to the top of each page.</td><td class="answer-cell"><input class="cell-input" name="t35_r0_c3" type="text"/></td></tr><tr><td>I hand-wrote my answers or used a stylus on a tablet.</td><td class="answer-cell"><input class="cell-input" name="t35_r1_c3" type="text"/></td></tr><tr><td>My work is neat, and I've shown all of it.</td><td class="answer-cell"><input class="cell-input" name="t35_r2_c3" type="text"/></td></tr><tr><td>I personalize my answers with diagrams, stars or arrows for key points, and I added little side notes.</td><td class="answer-cell"><input class="cell-input" name="t35_r3_c3" type="text"/></td></tr></table><p>This concludes the Learning Guide.</p>
+</div>
+<script>
+(function () {
+  const LANG_STORAGE_KEY = "sc10LgLang";
+  const langButtons = Array.from(document.querySelectorAll('.lang-btn[data-lang]'));
+
+  const setLanguage = (lang) => {
+    const isBilingual = lang === "bi";
+    document.body.classList.toggle("lang-bi", isBilingual);
+
+    for (const btn of langButtons) {
+      const active = btn.dataset.lang === lang;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    }
+
+    try {
+      localStorage.setItem(LANG_STORAGE_KEY, lang);
+    } catch {}
+  };
+
+  try {
+    const saved = localStorage.getItem(LANG_STORAGE_KEY);
+    setLanguage(saved === "bi" ? "bi" : "en");
+  } catch {
+    setLanguage("en");
+  }
+
+  for (const btn of langButtons) {
+    btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
+  }
+})();
+
+  // Save/restore inputs so you don't lose progress on refresh
+  const KEY = "sc10_lg1_answers_v3";
+
+  // AI grading (optional)
+  const DEFAULT_GRADE_API_URL = "https://lakesideart.gochatus.org/grade-service/grade";
+  const gradeApiUrlEl = document.getElementById("grade-api-url");
+  const btnTestApi = document.getElementById("btn-test-api");
+  const apiStatusEl = document.getElementById("api-status");
+
+  function setApiStatus(text, kind) {
+    if (!apiStatusEl) return;
+    apiStatusEl.textContent = text || "";
+    apiStatusEl.className = "ai-status" + (kind ? " " + kind : "");
+  }
+
+  function getGradeApiUrl() {
+    if (!gradeApiUrlEl) return DEFAULT_GRADE_API_URL;
+    const url = (gradeApiUrlEl.value || "").trim();
+    return url || DEFAULT_GRADE_API_URL;
+  }
+
+  function saveGradeApiUrl() {
+    if (!gradeApiUrlEl) return;
+    const url = (gradeApiUrlEl.value || "").trim();
+    try {
+      localStorage.setItem("gradeApiUrl", url);
+    } catch {
+      // ignore
+    }
+  }
+
+  async function fetchJsonWithTimeout(url, options, timeoutMs) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const resp = await fetch(url, { ...options, signal: controller.signal });
+      const text = await resp.text().catch(() => "");
+      let data = null;
+      try { data = text ? JSON.parse(text) : null; } catch { data = null; }
+      return { ok: resp.ok, status: resp.status, data, text };
+    } catch (err) {
+      if (err && err.name === "AbortError") return { ok: false, status: 0, data: null, text: "", aborted: true };
+      throw err;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  function extractFirstGradeResult(data) {
+    if (!data) return null;
+    if (Array.isArray(data.results) && data.results[0]) return data.results[0];
+    if (data.result && Array.isArray(data.result.results) && data.result.results[0]) return data.result.results[0];
+    if (data.model_result && Array.isArray(data.model_result.results) && data.model_result.results[0]) return data.model_result.results[0];
+    return null;
+  }
+
+  function deriveHealthUrl(gradeUrl) {
+    try {
+      const u = new URL(gradeUrl);
+      u.search = "";
+      u.hash = "";
+      if (u.pathname.endsWith("/grade")) {
+        u.pathname = u.pathname.replace(/\/grade$/, "/health");
+      } else {
+        u.pathname = u.pathname.replace(/\/+$/, "") + "/health";
+      }
+      return u.toString();
+    } catch {
+      return null;
+    }
+  }
+
+  async function testApi() {
+    const gradeUrl = getGradeApiUrl();
+    setApiStatus("Testing...");
+    try {
+      const healthUrl = deriveHealthUrl(gradeUrl);
+      if (!healthUrl) {
+        setApiStatus("Invalid URL.", "bad");
+        return;
+      }
+      const { ok, status, data, aborted } = await fetchJsonWithTimeout(healthUrl, { method: "GET" }, 4000);
+      if (aborted) {
+        setApiStatus("Health check timed out.", "bad");
+        return;
+      }
+      if (!ok) {
+        setApiStatus(`Health check failed (${status}).`, "bad");
+        return;
+      }
+      const looksHealthy = !!(data && (data.status === "ok" || data.ok === true));
+      setApiStatus(looksHealthy ? "OK" : "OK (nonstandard response)", looksHealthy ? "ok" : "");
+    } catch {
+      setApiStatus("Health check failed.", "bad");
+    }
+  }
+
+  function initAiUi() {
+    if (!gradeApiUrlEl) return;
+    let saved = null;
+    try { saved = localStorage.getItem("gradeApiUrl"); } catch { saved = null; }
+    gradeApiUrlEl.value = saved === null ? DEFAULT_GRADE_API_URL : (saved || "");
+    gradeApiUrlEl.addEventListener("change", () => {
+      saveGradeApiUrl();
+      setApiStatus("", "");
+    });
+    if (btnTestApi) btnTestApi.addEventListener("click", testApi);
+  }
+
+  function setInlineFeedback(el, text, kind) {
+    if (!el) return;
+    el.textContent = text || "";
+    el.className = "ai-feedback" + (kind ? " " + kind : "");
+  }
+
+  function getQuestionTextForAnswer(answerEl) {
+    const tr = answerEl ? answerEl.closest("tr") : null;
+    if (tr) {
+      const tds = Array.from(tr.querySelectorAll("td")).filter(td => !td.classList.contains("answer-cell"));
+      const parts = tds.map(td => (td.textContent || "").trim()).filter(Boolean);
+      if (parts.length) return parts.join("\n");
+    }
+    const table = answerEl ? answerEl.closest("table") : null;
+    if (table) {
+      const prev = table.querySelector("tr td:not(.answer-cell)");
+      const t = prev ? (prev.textContent || "").trim() : "";
+      if (t) return t;
+    }
+    return "";
+  }
+
+  async function gradeOne({ questionText, userText }) {
+    const gradeUrl = getGradeApiUrl();
+    const aiTimeoutMs = 60000;
+    const payload = { pairs: [{ question: questionText || "", answer: userText || "" }] };
+
+    const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+      gradeUrl,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      },
+      aiTimeoutMs
+    );
+
+    if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+    const first = extractFirstGradeResult(data);
+    if (!ok || !first) {
+      const reason = data && data.error ? data.error : `bad_response_${status}`;
+      const detail = text ? ` (${text.slice(0, 160)})` : "";
+      throw new Error(reason + detail);
+    }
+
+    return {
+      verdict: (first.verdict || "").trim(),
+      explanation: (first.explanation || "").trim()
+    };
+  }
+
+  async function checkCellAnswer(answerEl, feedbackEl, btn) {
+    const userText = (answerEl && answerEl.value ? answerEl.value : "").trim();
+    if (!userText) {
+      setInlineFeedback(feedbackEl, "No answer entered.", "bad");
+      return;
+    }
+
+    const questionText = getQuestionTextForAnswer(answerEl);
+    if (btn) btn.disabled = true;
+    setInlineFeedback(feedbackEl, "Checking with AI grader...", "");
+
+    try {
+      const result = await gradeOne({ questionText, userText });
+      const verdictLower = (result.verdict || "").toLowerCase();
+      const isCorrect = verdictLower === "correct";
+      const isWrong = verdictLower === "wrong";
+      const kind = isCorrect ? "ok" : (isWrong ? "bad" : "");
+      const prefix = result.verdict ? (result.verdict + ": ") : "";
+      setInlineFeedback(feedbackEl, prefix + (result.explanation || ""), kind);
+    } catch (err) {
+      console.warn("Grading failed:", err);
+      setInlineFeedback(feedbackEl, "AI grading unavailable (check URL in AI answer check settings).", "bad");
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  function initAiChecks() {
+    const targets = document.querySelectorAll('.answer-cell input[name], .answer-cell textarea[name]');
+    let idx = 0;
+    targets.forEach(answerEl => {
+      if (!answerEl || answerEl.dataset.aiCheckAttached === "1") return;
+      answerEl.dataset.aiCheckAttached = "1";
+      idx++;
+
+      const wrap = document.createElement("div");
+      wrap.className = "ai-check-wrap";
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "ai-check-btn";
+      btn.textContent = "Check";
+      btn.title = "Send your answer to the AI grader";
+
+      const feedback = document.createElement("span");
+      feedback.className = "ai-feedback";
+      feedback.setAttribute("aria-live", "polite");
+      feedback.id = "ai-feedback-" + idx;
+
+      btn.addEventListener("click", () => checkCellAnswer(answerEl, feedback, btn));
+
+      wrap.appendChild(btn);
+      wrap.appendChild(feedback);
+      answerEl.insertAdjacentElement("afterend", wrap);
+    });
+  }
+
+  function embedImages() {
+    const cellTargets = [
+      {
+        match: "Describe the structure of DNA, including its components.",
+        src: "sc10_lg1_assets_v3/img_2.png",
+        alt: "DNA structure diagram",
+      },
+      {
+        match: "Watch the video that reviews cell structures and functions that you learned in Science 8",
+        src: "sc10_lg1_assets_v3/img_1.png",
+        alt: "Cell structures review image",
+      },
+      {
+        match: "Use a Punnett Square to show the probability of 1 heterozygous Black Bear and one homozygous Black Bear producing a Kermode Bear.",
+        src: "sc10_lg1_assets_v3/img_4.png",
+        alt: "Punnett square reference image",
+      },
+      {
+        match: "Complete the Punnett Square practice questions. A key is provided for you to check your work and understanding of Mendelian Genetics.",
+        src: "sc10_lg1_assets_v3/img_5.png",
+        alt: "Punnett square practice key",
+      },
+      {
+        match: "Answer the following questions using the ‘Pedigree of the Royal Family’ and the inheritance",
+        src: "sc10_lg1_assets_v3/img_6.png",
+        alt: "Royal family pedigree (hemophilia)",
+      },
+    ];
+
+    const afterTargets = [
+      {
+        match: "Mendelian Genetics and Inherited Traits",
+        src: "sc10_lg1_assets_v3/img_3.png",
+        alt: "Mendelian genetics overview",
+      },
+    ];
+
+    document.querySelectorAll('td').forEach(td => {
+      const raw = (td.textContent || "").trim();
+      for (const t of cellTargets) {
+        let already = false;
+        for (const img of td.querySelectorAll('img[data-embed-for]')) {
+          if (img.getAttribute('data-embed-for') === t.match) {
+            already = true;
+            break;
+          }
+        }
+
+        if (raw.includes(t.match) && !already) {
+          const img = document.createElement('img');
+          img.className = 'doc-image';
+          img.src = t.src;
+          img.alt = t.alt;
+          img.setAttribute('data-embed-for', t.match);
+          td.appendChild(img);
+        }
+      }
+    });
+
+    document.querySelectorAll('h1, h2, h3').forEach(h => {
+      const raw = (h.textContent || "").trim();
+      for (const t of afterTargets) {
+        if (!raw.includes(t.match)) continue;
+
+        let already = false;
+        const next = h.nextElementSibling;
+        if (next) {
+          if (next.matches && next.matches('img[data-embed-after]') && next.getAttribute('data-embed-after') === t.match) {
+            already = true;
+          } else if (next.querySelector) {
+            const img = next.querySelector('img[data-embed-after]');
+            if (img && img.getAttribute('data-embed-after') === t.match) already = true;
+          }
+        }
+        if (already) continue;
+
+        const p = document.createElement('p');
+        const img = document.createElement('img');
+        img.className = 'doc-image';
+        img.src = t.src;
+        img.alt = t.alt;
+        img.setAttribute('data-embed-after', t.match);
+        p.appendChild(img);
+        h.insertAdjacentElement('afterend', p);
+      }
+    });
+  }
+  function save() {
+    const data = {};
+    document.querySelectorAll('input[name], textarea[name]').forEach(el => {
+      data[el.name] = el.value;
+    });
+    localStorage.setItem(KEY, JSON.stringify(data));
+  }
+  function load() {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    Object.entries(data).forEach(([k,v]) => {
+      const el = document.querySelector(`[name="${CSS.escape(k)}"]`);
+      if (el) el.value = v;
+    });
+  }
+  document.addEventListener('input', (e) => {
+    if (e.target.matches('input[name], textarea[name]')) save();
+  });
+  window.addEventListener('load', () => {
+    load();
+    embedImages();
+    initAiUi();
+    initAiChecks();
+  });
+</script>
+</body>
+</html>
