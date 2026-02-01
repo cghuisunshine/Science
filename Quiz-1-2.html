@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Science 10 – Practice Quiz (Cells, DNA, Genetics)</title>
+  <style>
+    :root{
+      /* Match the lighter blue/green palette used in CellCycle.html */
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --muted:#4b5563;
+      --text:#1f2937;
+      --accent:#3b82f6;
+      --good:#10b981;
+      --bad:#ef4444;
+      --border:rgba(17,24,39,.12);
+      --shadow: 0 10px 28px rgba(17,24,39,.10);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(900px 540px at 12% 4%, rgba(59,130,246,.10), transparent 60%),
+        radial-gradient(860px 520px at 88% 10%, rgba(16,185,129,.10), transparent 58%),
+        var(--bg);
+      color:var(--text);
+    }
+    header{
+      max-width: 980px;
+      margin: 28px auto 10px;
+      padding: 0 16px;
+    }
+    .head-row{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .lang-controls{
+      display:inline-flex;
+      gap:8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .lang-btn{
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+    .lang-btn.is-active{
+      background: rgba(59,130,246,.14);
+      border-color: rgba(59,130,246,.45);
+    }
+
+    .zh-block,
+    .zh-inline{
+      display:none;
+    }
+    body.lang-bi .zh-block{display:block;}
+    body.lang-bi .zh-inline{display:inline;}
+    body.lang-bi h1 .zh-inline{
+      display:block;
+      margin-top: 6px;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--muted);
+      letter-spacing: 0;
+    }
+    h1{margin:0 0 6px; font-size: 22px; letter-spacing:.2px;}
+    p.sub{margin:0; color:var(--muted); font-size: 14px;}
+    .wrap{
+      max-width: 980px;
+      margin: 14px auto 40px;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .toolbar{
+      display:flex;
+      gap:10px;
+      flex-wrap: wrap;
+      align-items:center;
+      padding: 12px 14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.78);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    button{
+      cursor:pointer;
+      border:1px solid rgba(17,24,39,.14);
+      background: #ffffff;
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 600;
+      letter-spacing:.15px;
+      transition: transform .04s ease, background .15s ease, border-color .15s ease;
+    }
+    button:hover{background: rgba(17,24,39,.04)}
+    button:active{transform: translateY(1px)}
+    button.primary{
+      border-color: rgba(59,130,246,.45);
+      background: rgba(59,130,246,.10);
+    }
+    button.primary:hover{background: rgba(59,130,246,.14)}
+    button.danger{
+      border-color: rgba(239,68,68,.40);
+      background: rgba(239,68,68,.10);
+    }
+    button.danger:hover{background: rgba(239,68,68,.16)}
+    .score{
+      margin-left:auto;
+      color: var(--muted);
+      font-size: 14px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      flex-wrap: wrap;
+    }
+    .pill{
+      padding: 6px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(17,24,39,.14);
+      background: rgba(17,24,39,.03);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .card{
+      border:1px solid var(--border);
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .head{
+      padding: 14px 16px 10px;
+      border-bottom:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(249,250,251,.90), rgba(255,255,255,.60));
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content: space-between;
+    }
+    .qnum{
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      display:grid; place-items:center;
+      background: rgba(59,130,246,.10);
+      border:1px solid rgba(59,130,246,.25);
+      color: var(--accent);
+      font-weight: 800;
+      flex: 0 0 auto;
+    }
+    .qtitle{
+      flex: 1 1 auto;
+      margin:0;
+      font-size: 15px;
+      line-height: 1.35;
+    }
+    .meta{
+      flex: 0 0 auto;
+      color: var(--muted);
+      font-size: 12px;
+      padding-top: 6px;
+    }
+
+    .body{padding: 12px 16px 14px;}
+    .options{
+      display:grid;
+      gap:8px;
+      margin: 6px 0 12px;
+    }
+    label.opt{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(17,24,39,.10);
+      background: rgba(249,250,251,.70);
+      cursor:pointer;
+    }
+    label.opt:hover{background: rgba(17,24,39,.04)}
+    input[type="radio"]{
+      margin-top: 2px;
+      transform: scale(1.05);
+      accent-color: var(--accent);
+    }
+    input[type="text"], textarea{
+      width: min(820px, 100%);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(17,24,39,.16);
+      background: #ffffff;
+      color: var(--text);
+      outline:none;
+      font: inherit;
+    }
+    textarea{min-height: 110px; resize: vertical;}
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap: wrap;
+      align-items:center;
+    }
+
+    .result{
+      margin-top: 10px;
+      border-radius: 14px;
+      border:1px solid rgba(17,24,39,.12);
+      background: rgba(249,250,251,.70);
+      padding: 10px 12px;
+      display:none;
+    }
+    .result.show{display:block}
+    .result.good{border-color: rgba(16,185,129,.35); background: rgba(16,185,129,.08)}
+    .result.bad{border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.08)}
+    .result .line{
+      display:flex; gap:10px; align-items:flex-start; flex-wrap: wrap;
+      margin: 0 0 6px;
+    }
+    .badge{
+      font-weight: 900;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid rgba(17,24,39,.14);
+      background: rgba(17,24,39,.03);
+    }
+    .badge.good{color: var(--good); border-color: rgba(16,185,129,.35); background: rgba(16,185,129,.08)}
+    .badge.bad{color: var(--bad); border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.08)}
+    .badge.info{color: var(--accent); border-color: rgba(59,130,246,.35); background: rgba(59,130,246,.08)}
+    .solution{
+      color: var(--text);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+    .muted{color: var(--muted)}
+    .divider{height: 1px; background: rgba(17,24,39,.10); margin: 10px 0;}
+
+    /* Punnett */
+    .punnett{
+      display:none;
+      margin-top: 10px;
+      border-radius: 14px;
+      border:1px solid rgba(17,24,39,.12);
+      background: rgba(255,255,255,.78);
+      padding: 12px;
+    }
+    .punnett .ptitle{
+      margin:0 0 8px;
+      font-size: 13px;
+      color: var(--muted);
+      display:flex;
+      justify-content: space-between;
+      gap:10px;
+      flex-wrap: wrap;
+    }
+    table.pgrid{
+      border-collapse: separate;
+      border-spacing: 6px;
+      width: 100%;
+      max-width: 520px;
+    }
+    .pgrid th,.pgrid td{
+      text-align:center;
+      padding: 10px 8px;
+      border-radius: 12px;
+      border:1px solid rgba(17,24,39,.12);
+      background: #ffffff;
+      font-weight: 700;
+    }
+    .pgrid th{
+      background: rgba(59,130,246,.10);
+      border-color: rgba(59,130,246,.25);
+      color: var(--accent);
+    }
+    .legend{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height:1.4;
+    }
+    footer{
+      max-width:980px;
+      margin: 0 auto 28px;
+      padding: 0 16px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+  </style>
+</head>
+  <body>
+  <header>
+    <div class="head-row">
+      <div>
+        <h1>
+          Science 10 Practice Quiz – Cells, DNA, Genetics
+          <span class="zh-inline" lang="zh-Hans">科学 10 练习测验——细胞、DNA、遗传</span>
+        </h1>
+        <p class="sub">
+          Pick an answer (or type one), then click <b>Check</b>. Use <b>Check All</b> to mark everything at once. Punnett squares appear where needed.
+          <span class="zh-inline" lang="zh-Hans"><br>选择答案（或输入答案），然后点击 <b>Check</b>。使用 <b>Check All</b> 一次性批改。需要时会显示潘尼特方格。</span>
+        </p>
+      </div>
+      <div class="lang-controls" role="group" aria-label="Language">
+        <button type="button" class="lang-btn is-active" data-lang="en" aria-pressed="true">English</button>
+        <button type="button" class="lang-btn" data-lang="bi" aria-pressed="false">English + 中文</button>
+      </div>
+    </div>
+  </header>
+
+    <div class="wrap">
+      <div class="toolbar">
+        <button class="primary" id="checkAllBtn">Check All<span class="zh-inline" lang="zh-Hans">（全部检查）</span></button>
+        <button id="showAllSolutionsBtn">Show All Solutions<span class="zh-inline" lang="zh-Hans">（显示所有解析）</span></button>
+        <button class="danger" id="resetBtn">Reset<span class="zh-inline" lang="zh-Hans">（重置）</span></button>
+        <div class="score">
+          <span class="pill" id="progressPill">Answered: 0/11</span>
+          <span class="pill" id="scorePill">Score: 0/11</span>
+        </div>
+      </div>
+
+    <!-- (First 6 extracts) -->
+
+    <!-- Q1 RNA stands for -->
+    <section class="card" data-qid="q1" data-type="mc" data-answer="ribonucleic acid">
+      <div class="head">
+        <div class="qnum">1</div>
+        <h2 class="qtitle">RNA stands for…</h2>
+        <div class="meta">Vocabulary</div>
+      </div>
+      <div class="body">
+        <div class="options">
+          <label class="opt"><input type="radio" name="q1" value="really nice array" />really nice array</label>
+          <label class="opt"><input type="radio" name="q1" value="restored nucleic acids" />restored nucleic acids</label>
+          <label class="opt"><input type="radio" name="q1" value="ribonucleic acid" />ribonucleic acid</label>
+          <label class="opt"><input type="radio" name="q1" value="none of these" />none of these</label>
+        </div>
+        <div class="actions">
+          <button class="primary" data-check>Check<span class="zh-inline" lang="zh-Hans">（检查）</span></button>
+          <button data-toggle-solution>Show/Hide Solution<span class="zh-inline" lang="zh-Hans">（显示/隐藏解析）</span></button>
+        </div>
+        <div class="result" data-result>
+          <div class="line">
+            <span class="badge" data-badge>—</span>
+            <span class="muted" data-youranswer></span>
+          </div>
+          <div class="divider"></div>
+          <div class="solution" data-solution>
+            <b>Solution:</b> RNA stands for <b>ribonucleic acid</b>. RNA is made of nucleotides (ribose sugar + phosphate + nitrogen base) and is found in most living organisms and many viruses.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q2 nucleus contains -->
+    <section class="card" data-qid="q2" data-type="mc" data-answer="All of these">
+      <div class="head">
+        <div class="qnum">2</div>
+        <h2 class="qtitle">Which of these is found in the cell nucleus?</h2>
+        <div class="meta">Cell nucleus</div>
+      </div>
+      <div class="body">
+        <div class="options">
+          <label class="opt"><input type="radio" name="q2" value="RNA" />RNA</label>
+          <label class="opt"><input type="radio" name="q2" value="Chromatin" />Chromatin</label>
+          <label class="opt"><input type="radio" name="q2" value="All of these" />All of these</label>
+          <label class="opt"><input type="radio" name="q2" value="DNA" />DNA</label>
+        </div>
+        <div class="actions">
+          <button class="primary" data-check>Check<span class="zh-inline" lang="zh-Hans">（检查）</span></button>
+          <button data-toggle-solution>Show/Hide Solution<span class="zh-inline" lang="zh-Hans">（显示/隐藏解析）</span></button>
+        </div>
+        <div class="result" data-result>
+          <div class="line">
+            <span class="badge" data-badge>—</span>
+            <span class="muted" data-youranswer></span>
+          </div>
+          <div class="divider"></div>
+          <div class="solution" data-solution>
+            <b>Solution:</b> <b>All of these</b>. The nucleus contains <b>DNA</b> packaged as <b>chromatin</b>, and <b>RNA</b> is made there during transcription (and some RNA is present/processed in the nucleus).
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q3 plant vs animal -->
+    <section class="card" data-qid="q3" data-type="mc" data-answer="Animal cells do not have chloroplasts.">
+      <div class="head">
+        <div class="qnum">3</div>
+        <h2 class="qtitle">How do plant cells differ from animal cells?</h2>
+        <div class="meta">Cells</div>
+      </div>
+      <div class="body">
+        <div class="options">
+          <label class="opt"><input type="radio" name="q3" value="Animal cells do not have chloroplasts." />Animal cells do not have chloroplasts.</label>
+          <label class="opt"><input type="radio" name="q3" value="Animal cells have cell membranes." />Animal cells have cell membranes.</label>
+          <label class="opt"><input type="radio" name="q3" value="Animal cells can have more than one nucleus." />Animal cells can have more than one nucleus.</label>
+          <label class="opt"><input type="radio" name="q3" value="Animal cells have a cell wall; plant cells do not." />Animal cells have a cell wall; plant cells do not.</label>
+        </div>
+        <div class="actions">
+          <button class="primary" data-check>Check<span class="zh-inline" lang="zh-Hans">（检查）</span></button>
+          <button data-toggle-solution>Show/Hide Solution<span class="zh-inline" lang="zh-Hans">（显示/隐藏解析）</span></button>
+        </div>
+        <div class="result" data-result>
+          <div class="line">
+            <span class="badge" data-badge>—</span>
+            <span class="muted" data-youranswer></span>
+          </div>
+          <div class="divider"></div>
+          <div class="solution" data-solution>
+            <b>Solution:</b> <b>Animal cells do not have chloroplasts</b>. Plant cells have chloroplasts for photosynthesis, plus a cell wall and a large central vacuole.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q4 cell walls support animal cells -->
+    <section class="card" data-qid="q4" data-type="mc" data-answer="false">
+      <div class="head">
+        <div class="qnum">4</div>
+        <h2 class="qtitle">True or False: Cell walls provide support for animal cells.</h2>
+        <div class="meta">Cell structures</div>
+      </div>
+      <div class="body">
+        <div class="options">
+          <label class="opt"><input type="radio" name="q4" value="true" />true</label>
+          <label class="opt"><input type="radio" name="q4" value="false" />false</label>
+        </div>
+        <div class="actions">
+          <button class="primary" data-check>Check<span class="zh-inline" lang="zh-Hans">（检查）</span></button>
+          <button data-toggle-solution>Show/Hide Solution<span class="zh-inline" lang="zh-Hans">（显示/隐藏解析）</span></button>
+        </div>
+        <div class="result" data-result>
+          <div class="line">
+            <span class="badge" data-badge>—</span>
+            <span class="muted" data-youranswer></span>
+          </div>
+          <div class="divider"></div>
+          <div class="solution" data-solution>
+            <b>Solution:</b> <b>False.</b> Animal cells do <b>not</b> have cell walls. Cell walls are rigid structures in plant cells that provide structure, shape, support, and protection.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q5 genes are sections of DNA -->
+    <section class="card" data-qid="q5" data-type="text" data-answer="genes">
+      <div class="head">
+        <div class="qnum">5</div>
+        <h2 class="qtitle"><span class="muted">________</span> are sections of DNA that code for specific traits.</h2>
+        <div class="meta">DNA → traits</div>
+      </div>
+      <div class="body">
+        <input type="text" name="q5" placeholder="Type your answer (e.g., genes)" autocomplete="off" />
+        <div class="actions" style="margin-top:10px;">
+          <button class="primary" data-check>Check<span class="zh-inline" lang="zh-Hans">（检查）</span></button>
+          <button data-toggle-solution>Show/Hide Solution<span class="zh-inline" lang="zh-Hans">（显示/隐藏解析）</span></button>
+        </div>
+        <div class="result" data-result>
+          <div class="line">
+            <span class="badge" data-badge>—</span>
+            <span class="muted" data-youranswer></span>
+          </div>
+          <div class="divider"></div>
+          <div class="solution" data-solution>
+            <b>Solution:</b> The answer is <b>genes</b>. Genes are segments of DNA that contain instructions for making proteins, and proteins help produce traits.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q6 enzymes short response -->
+    <section class="card" data-qid="q6" data-type="longtext" data-answer="">
+      <div class="head">
+        <div class="qnum">6</div>
+        <h2 class="qtitle">What are enzymes and why are they important?</h2>
+        <div class="meta">Short answer</div>
+      </div>
+      <div class="body">
+        <textarea name="q6" placeholder="Write your answer here..."></textarea>
+        <div class="actions" style="margin-top:10px;">
+          <button class="primary" data-check>Check<span class="zh-inline" lang="zh-Hans">（检查）</span></button>
+          <button data-toggle-solution>Show/Hide Solution<span class="zh-inline" lang="zh-Hans">（显示/隐藏解析）</span></button>
+        </div>
+        <div class="result" data-result>
+          <div class="line">
+            <span class="badge info" data-badge>Model answer</span>
+            <span class="muted" data-youranswer>Short answers are not auto-graded. Compare with the solution.</span>
+          </div>
+          <div class="divider"></div>
+          <div class="solution" data-solution>
+            <b>Solution:</b> Enzymes are biological molecules (typically <b>proteins</b>) that act as <b>catalysts</b>, meaning they speed up chemical reactions in cells. They are vital for life because they make reactions happen fast enough for processes like digestion, metabolism, respiration, and DNA copying.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- (Later extracts you requested before) -->
+
+    <!-- Q7 carriers odds -->
+    <section class="card" data-qid="q7" data-type="mc" data-answer="2 out of 4">
+      <div class="head">
+        <div class="qnum">7</div>
+        <h2 class="qtitle">If two people who are both carriers for a genetically inherited fatal recessive disease decide to become parents, what are the odds that their children will also be carriers?</h2>
+        <div class="meta">Recessive</div>
+      </div>
+      <div class="body">
+        <div class="options">
+          <label class="opt"><input type="radio" name="q7" value="2 out of 4"/>2 out of 4</label>
+          <label class="opt"><input type="radio" name="q7" value="1 out of 4"/>1 out of 4</label>
+          <label class="opt"><input type="radio" name="q7" value="3 out of 4"/>3 out of 4</label>
+          <label class="opt"><input type="radio" name="q7" value="4 out of 4"/>4 out of 4</label>
+        </div>
+
+        <div class="actions">
+          <button class="primary" data-check>Check<span class="zh-inline" lang="zh-Hans">（检查）</span></button>
+          <button data-toggle-solution>Show/Hide Solution<span class="zh-inline" lang="zh-Hans">（显示/隐藏解析）</span></button>
+        </div>
+
+        <div class="punnett" data-punnett>
+          <p class="ptitle">
+            <span>Punnett Square (parents are carriers: <b>Aa × Aa</b>)</span>
+            <span class="mini">A = normal allele, a = recessive disease allele</span>
+          </p>
+          <table class="pgrid" aria-label="Punnett square Aa x Aa">
+            <tr>
+              <th></th><th>A</th><th>a</th>
+            </tr>
+            <tr>
+              <th>A</th><td>AA</td><td>Aa</td>
+            </tr>
+            <tr>
+              <th>a</th><td>Aa</td><td>aa</td>
+            </tr>
+          </table>
+          <div class="legend">
+            Outcomes: <b>1 AA</b> (not a carrier) • <b>2 Aa</b> (carriers) • <b>1 aa</b> (affected).<br/>
+            Carrier chance = <b>2/4 = 50%</b>.
+          </div>
+        </div>
+
+        <div class="result" data-result>
+          <div class="line">
+            <span class="badge" data-badge>—</span>
+            <span class="muted" data-youranswer></span>
+          </div>
+          <div class="divider"></div>
+          <div class="solution" data-solution>
+            <b>Solution:</b> If both parents are carriers (<b>Aa</b>), offspring genotypes are <b>AA, Aa, Aa, aa</b>.
+            Carriers are <b>Aa</b> → <b>2 out of 4</b> children (50%) are carriers.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q8 flower color -->
+    <section class="card" data-qid="q8" data-type="mc" data-answer="50%">
+      <div class="head">
+        <div class="qnum">8</div>
+        <h2 class="qtitle">One flower is heterozygous red (<b>Rr</b>) and it is crossed with a homozygous white (<b>rr</b>) plant. What is the probability an offspring is <b>red</b>?</h2>
+        <div class="meta">Punnett</div>
+      </div>
+      <div class="body">
+        <div class="options">
+          <label class="opt"><input type="radio" name="q8" value="75%"/>75%</label>
+          <label class="opt"><input type="radio" name="q8" value="100%"/>100%</label>
+          <label class="opt"><input type="radio" name="q8" value="25%"/>25%</label>
+          <label class="opt"><input type="radio" name="q8" value="50%"/>50%</label>
+        </div>
+
+        <div class="actions">
+          <button class="primary" data-check>Check<span class="zh-inline" lang="zh-Hans">（检查）</span></button>
+          <button data-toggle-solution>Show/Hide Solution<span class="zh-inline" lang="zh-Hans">（显示/隐藏解析）</span></button>
+        </div>
+
+        <div class="punnett" data-punnett>
+          <p class="ptitle">
+            <span>Punnett Square (<b>Rr × rr</b>)</span>
+            <span class="mini">R = red (dominant), r = white (recessive)</span>
+          </p>
+          <table class="pgrid" aria-label="Punnett square Rr x rr">
+            <tr>
+              <th></th><th>r</th><th>r</th>
+            </tr>
+            <tr>
+              <th>R</th><td>Rr</td><td>Rr</td>
+            </tr>
+            <tr>
+              <th>r</th><td>rr</td><td>rr</td>
+            </tr>
+          </table>
+          <div class="legend">
+            Red phenotypes: <b>Rr</b> and <b>Rr</b> → <b>2 out of 4 = 50%</b> red.
+          </div>
+        </div>
+
+        <div class="result" data-result>
+          <div class="line">
+            <span class="badge" data-badge>—</span>
+            <span class="muted" data-youranswer></span>
+          </div>
+          <div class="divider"></div>
+          <div class="solution" data-solution>
+            <b>Solution:</b> Cross <b>Rr × rr</b>. Offspring are <b>50% Rr (red)</b> and <b>50% rr (white)</b>. So probability of red = <b>50%</b>.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q9 dominant phenotype -->
+    <section class="card" data-qid="q9" data-type="mc" data-answer="75%">
+      <div class="head">
+        <div class="qnum">9</div>
+        <h2 class="qtitle">If two parents are heterozygous for a genetically inherited dominant trait, what is the probability their child shows the trait in the <b>phenotype</b>?</h2>
+        <div class="meta">Dominant</div>
+      </div>
+      <div class="body">
+        <div class="options">
+          <label class="opt"><input type="radio" name="q9" value="75%"/>75%</label>
+          <label class="opt"><input type="radio" name="q9" value="50%"/>50%</label>
+          <label class="opt"><input type="radio" name="q9" value="100%"/>100%</label>
+          <label class="opt"><input type="radio" name="q9" value="25%"/>25%</label>
+        </div>
+
+        <div class="actions">
+          <button class="primary" data-check>Check<span class="zh-inline" lang="zh-Hans">（检查）</span></button>
+          <button data-toggle-solution>Show/Hide Solution<span class="zh-inline" lang="zh-Hans">（显示/隐藏解析）</span></button>
+        </div>
+
+        <div class="punnett" data-punnett>
+          <p class="ptitle">
+            <span>Punnett Square (<b>Aa × Aa</b>)</span>
+            <span class="mini">A = dominant allele, a = recessive allele</span>
+          </p>
+          <table class="pgrid" aria-label="Punnett square Aa x Aa">
+            <tr>
+              <th></th><th>A</th><th>a</th>
+            </tr>
+            <tr>
+              <th>A</th><td>AA</td><td>Aa</td>
+            </tr>
+            <tr>
+              <th>a</th><td>Aa</td><td>aa</td>
+            </tr>
+          </table>
+          <div class="legend">
+            Dominant phenotype appears with <b>AA</b> or <b>Aa</b> → <b>3/4 = 75%</b>.
+          </div>
+        </div>
+
+        <div class="result" data-result>
+          <div class="line">
+            <span class="badge" data-badge>—</span>
+            <span class="muted" data-youranswer></span>
+          </div>
+          <div class="divider"></div>
+          <div class="solution" data-solution>
+            <b>Solution:</b> Offspring genotypes: <b>AA, Aa, Aa, aa</b>. Any genotype with at least one dominant allele (<b>A</b>) shows the trait → <b>3 out of 4 = 75%</b>.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q10 DNA packaged into genes -->
+    <section class="card" data-qid="q10" data-type="mc" data-answer="false">
+      <div class="head">
+        <div class="qnum">10</div>
+        <h2 class="qtitle">True or False: DNA is tightly packaged into structures called <b>genes</b>.</h2>
+        <div class="meta">DNA structure</div>
+      </div>
+      <div class="body">
+        <div class="options">
+          <label class="opt"><input type="radio" name="q10" value="true"/>true</label>
+          <label class="opt"><input type="radio" name="q10" value="false"/>false</label>
+        </div>
+
+        <div class="actions">
+          <button class="primary" data-check>Check<span class="zh-inline" lang="zh-Hans">（检查）</span></button>
+          <button data-toggle-solution>Show/Hide Solution<span class="zh-inline" lang="zh-Hans">（显示/隐藏解析）</span></button>
+        </div>
+
+        <div class="result" data-result>
+          <div class="line">
+            <span class="badge" data-badge>—</span>
+            <span class="muted" data-youranswer></span>
+          </div>
+          <div class="divider"></div>
+          <div class="solution" data-solution>
+            <b>Solution:</b> <b>False.</b> DNA is packaged into thread-like structures called <b>chromosomes</b>.
+            Chromosomes are DNA tightly coiled around proteins called <b>histones</b>. Genes are <b>segments of DNA</b>, not the packaging structure.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q11 base pairing -->
+    <section class="card" data-qid="q11" data-type="text" data-answer="adenine">
+      <div class="head">
+        <div class="qnum">11</div>
+        <h2 class="qtitle">As a base pair, <b>thymine</b> always pairs up with…</h2>
+        <div class="meta">Base pairing</div>
+      </div>
+      <div class="body">
+        <input type="text" name="q11" placeholder="Type your answer (e.g., adenine)" autocomplete="off" />
+        <div class="actions" style="margin-top:10px;">
+          <button class="primary" data-check>Check<span class="zh-inline" lang="zh-Hans">（检查）</span></button>
+          <button data-toggle-solution>Show/Hide Solution<span class="zh-inline" lang="zh-Hans">（显示/隐藏解析）</span></button>
+        </div>
+
+        <div class="result" data-result>
+          <div class="line">
+            <span class="badge" data-badge>—</span>
+            <span class="muted" data-youranswer></span>
+          </div>
+          <div class="divider"></div>
+          <div class="solution" data-solution>
+            <b>Solution:</b> <b>A pairs with T</b> (adenine with thymine) using <b>two</b> hydrogen bonds.
+            Also, <b>G pairs with C</b> (guanine with cytosine) using <b>three</b> hydrogen bonds.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADD THIS QUESTION (copy-paste anywhere inside <div class="wrap"> ... </div>) -->
+<section class="card" data-qid="q12" data-type="longtext" data-answer="">
+  <div class="head">
+    <div class="qnum">12</div>
+    <h2 class="qtitle">What is enzyme and why it is important?</h2>
+    <div class="meta">Short answer</div>
+  </div>
+
+  <div class="body">
+    <textarea name="q12" placeholder="Write your answer here..."></textarea>
+
+        <div class="actions" style="margin-top:10px;">
+          <button class="primary" data-check>Check<span class="zh-inline" lang="zh-Hans">（检查）</span></button>
+          <button data-toggle-solution>Show/Hide Solution<span class="zh-inline" lang="zh-Hans">（显示/隐藏解析）</span></button>
+        </div>
+
+    <div class="result" data-result>
+      <div class="line">
+        <span class="badge info" data-badge>Model answer</span>
+        <span class="muted" data-youranswer>Short answers are not auto-graded. Compare with the solution.</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="solution" data-solution>
+        <b>Answer (from your screenshot):</b><br/>
+        Enzymes are biological molecules (typically <b>proteins</b>) that significantly speed up the rate of virtually all of the <b>chemical reactions</b> that take place within cells. They are vital for life and serve a wide range of important functions in the body, such as aiding in <b>digestion</b> and <b>metabolism</b>.
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  </div>
+
+  <footer>
+    If you want, send more screenshots and I’ll append them into this same quiz format.
+    <span class="zh-inline" lang="zh-Hans"><br>如果你愿意，可以继续发更多截图，我会按相同的测验格式添加到这个页面里。</span>
+  </footer>
+
+  <script>
+    (function () {
+      const LANG_STORAGE_KEY = "quiz12Lang";
+      const langButtons = Array.from(document.querySelectorAll('.lang-btn[data-lang]'));
+
+      const setLanguage = (lang) => {
+        const isBilingual = lang === 'bi';
+        document.body.classList.toggle('lang-bi', isBilingual);
+
+        for (const btn of langButtons) {
+          const active = btn.dataset.lang === lang;
+          btn.classList.toggle('is-active', active);
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        }
+
+        try {
+          localStorage.setItem(LANG_STORAGE_KEY, lang);
+        } catch {}
+      };
+
+      try {
+        const saved = localStorage.getItem(LANG_STORAGE_KEY);
+        setLanguage(saved === 'bi' ? 'bi' : 'en');
+      } catch {
+        setLanguage('en');
+      }
+
+      for (const btn of langButtons) {
+        btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+      }
+    })();
+
+    const quizCards = Array.from(document.querySelectorAll('.card'));
+    const progressPill = document.getElementById('progressPill');
+    const scorePill = document.getElementById('scorePill');
+
+    function normalize(str){
+      return (str ?? '')
+        .toString()
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g,' ');
+    }
+
+    function getUserAnswer(card){
+      const type = card.dataset.type;
+      const qid = card.dataset.qid;
+
+      if(type === 'mc'){
+        const checked = card.querySelector(`input[name="${qid}"]:checked`);
+        return checked ? checked.value : '';
+      }
+      if(type === 'text'){
+        const input = card.querySelector(`input[name="${qid}"]`);
+        return input ? input.value : '';
+      }
+      if(type === 'longtext'){
+        const ta = card.querySelector(`textarea[name="${qid}"]`);
+        return ta ? ta.value : '';
+      }
+      return '';
+    }
+
+    function setSolutionVisibility(card, visible){
+      const solution = card.querySelector('[data-solution]');
+      const punnett = card.querySelector('[data-punnett]');
+
+      if(solution) solution.style.display = visible ? 'block' : 'none';
+      if(punnett) punnett.style.display = visible ? 'block' : 'none';
+    }
+
+    function setResult(card, status, userAnswer, opts = {}){
+      const result = card.querySelector('[data-result]');
+      const badge = card.querySelector('[data-badge]');
+      const your = card.querySelector('[data-youranswer]');
+      const showSolution = !!opts.showSolution;
+
+      const correct = card.dataset.answer || '(see solution)';
+      result.classList.add('show');
+      result.classList.remove('good','bad');
+
+      if(status === 'good'){
+        result.classList.add('good');
+        badge.textContent = 'Correct';
+        badge.className = 'badge good';
+      }else if(status === 'bad'){
+        result.classList.add('bad');
+        badge.textContent = 'Incorrect';
+        badge.className = 'badge bad';
+      }else{
+        badge.textContent = 'Not answered / Not graded';
+        badge.className = 'badge info';
+      }
+
+      if(card.dataset.type === 'longtext'){
+        your.textContent = 'Short answers are not auto-graded. Compare with the model solution.';
+      }else{
+        const ua = userAnswer ? `Your answer: ${userAnswer}` : 'Your answer: (blank)';
+        your.textContent = ua + ` • Correct: ${correct}`;
+      }
+
+      // Solutions (and Punnett squares) only appear when the user requests them.
+      setSolutionVisibility(card, showSolution);
+    }
+
+    function checkOne(card){
+      const type = card.dataset.type;
+      const correct = card.dataset.answer;
+      const userAnswer = getUserAnswer(card);
+
+      // Long text: show solution, do not grade
+      if(type === 'longtext'){
+        card.dataset.answered = userAnswer.trim() ? '1' : '0';
+        card.dataset.correct = '0';
+        setResult(card, 'na', userAnswer, { showSolution: false });
+        return;
+      }
+
+      if(!userAnswer){
+        setResult(card, 'na', userAnswer, { showSolution: false });
+        card.dataset.answered = '0';
+        card.dataset.correct = '0';
+        return;
+      }
+
+      let ok = false;
+      if(type === 'mc'){
+        ok = normalize(userAnswer) === normalize(correct);
+      }else if(type === 'text'){
+        ok = normalize(userAnswer) === normalize(correct);
+      }
+
+      card.dataset.answered = '1';
+      card.dataset.correct = ok ? '1' : '0';
+      setResult(card, ok ? 'good' : 'bad', userAnswer, { showSolution: false });
+    }
+
+    function updateScore(){
+      const answered = quizCards.reduce((acc,c)=> acc + (c.dataset.answered === '1' ? 1 : 0), 0);
+      const correct = quizCards.reduce((acc,c)=> acc + (c.dataset.correct === '1' ? 1 : 0), 0);
+      progressPill.textContent = `Answered: ${answered}/${quizCards.length}`;
+      scorePill.textContent = `Score: ${correct}/${quizCards.length}`;
+    }
+
+    // Per-card buttons
+    quizCards.forEach(card=>{
+      const checkBtn = card.querySelector('[data-check]');
+      const toggleBtn = card.querySelector('[data-toggle-solution]');
+      const result = card.querySelector('[data-result]');
+      const solution = card.querySelector('[data-solution]');
+
+      if(checkBtn){
+        checkBtn.addEventListener('click', ()=>{
+          checkOne(card);
+          updateScore();
+        });
+      }
+
+      if(toggleBtn){
+        toggleBtn.addEventListener('click', ()=>{
+          if(!result.classList.contains('show')){
+            // show without grading
+            const ua = getUserAnswer(card);
+            setResult(card, 'na', ua, { showSolution: true });
+            updateScore();
+          }else{
+            const isVisible = solution && solution.style.display !== 'none';
+            setSolutionVisibility(card, !isVisible);
+          }
+        });
+      }
+
+      // Update progress display on interaction
+      card.querySelectorAll('input,textarea').forEach(inp=>{
+        inp.addEventListener('input', ()=> updateScore());
+        inp.addEventListener('change', ()=> updateScore());
+      });
+    });
+
+    // Toolbar buttons
+    document.getElementById('checkAllBtn').addEventListener('click', ()=>{
+      quizCards.forEach(checkOne);
+      updateScore();
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+
+    document.getElementById('showAllSolutionsBtn').addEventListener('click', ()=>{
+      quizCards.forEach(card=>{
+        const result = card.querySelector('[data-result]');
+        if(!result.classList.contains('show')){
+          const ua = getUserAnswer(card);
+          setResult(card, 'na', ua, { showSolution: true });
+        }else{
+          setSolutionVisibility(card, true);
+        }
+      });
+      updateScore();
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', ()=>{
+      quizCards.forEach(card=>{
+        card.querySelectorAll('input[type="radio"]').forEach(r=> r.checked = false);
+        const t = card.querySelector('input[type="text"]');
+        if(t) t.value = '';
+        const ta = card.querySelector('textarea');
+        if(ta) ta.value = '';
+
+        const result = card.querySelector('[data-result]');
+        result.classList.remove('show','good','bad');
+
+        setSolutionVisibility(card, false);
+
+        card.dataset.answered = '0';
+        card.dataset.correct = '0';
+      });
+      updateScore();
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+
+    // init
+    quizCards.forEach(c=>{ c.dataset.answered='0'; c.dataset.correct='0'; });
+    updateScore();
+  </script>
+</body>
+</html>
