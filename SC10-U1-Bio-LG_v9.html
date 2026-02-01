@@ -509,6 +509,86 @@ function getEnglishOnlyText(el) {
   return normalizeTextForLookup(clone.textContent || "");
 }
 
+function isBefore(a, b) {
+  if (!a || !b || !a.compareDocumentPosition) return false;
+  return !!(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+}
+
+function findNearestSectionTitle(fromEl) {
+  const anchor = fromEl || document.body;
+  const candidates = Array.from(document.querySelectorAll('h2, p'));
+  const isSectionHeader = (txt) => {
+    if (!txt) return false;
+    if (/^\d+\.\d+\s*-\s+/.test(txt)) return true;
+    if (txt === 'INSTRUCTIONS') return true;
+    if (/^Finally,\s*answer\s+yes\s+or\s+no\s+to\s+the\s+following\.?$/i.test(txt)) return true;
+    return false;
+  };
+
+  for (let i = candidates.length - 1; i >= 0; i--) {
+    const el = candidates[i];
+    if (!isBefore(el, anchor)) continue;
+    if (el.closest && el.closest('.ai-tools')) continue;
+    const t = getEnglishOnlyText(el);
+    if (isSectionHeader(t)) return t;
+  }
+  return '';
+}
+
+function extractSectionId(sectionTitle) {
+  const m = /^\s*(\d+\.\d+)\b/.exec(String(sectionTitle || ""));
+  return m ? m[1] : "";
+}
+
+function getRowPromptText(tr) {
+  if (!tr) return '';
+  const tds = Array.from(tr.querySelectorAll('td')).filter(td => !td.classList.contains('answer-cell'));
+  const parts = tds.map(td => getEnglishOnlyText(td)).filter(Boolean);
+  return parts.join("\n");
+}
+
+function findNearestNumberedParagraph(fromEl) {
+  const anchor = fromEl || document.body;
+  const paras = Array.from(document.querySelectorAll('p'));
+  for (let i = paras.length - 1; i >= 0; i--) {
+    const p = paras[i];
+    if (!isBefore(p, anchor)) continue;
+    if (p.closest && p.closest('.ai-tools')) continue;
+    const t = getEnglishOnlyText(p);
+    // Match "1." / "2." / "10." but NOT section titles like "1.3 - ..."
+    if (/^\d+\.(?!\d)/.test(t)) return t;
+  }
+  return '';
+}
+
+function findNearestNumberedScopeRow(answerEl) {
+  const tr = answerEl ? answerEl.closest('tr') : null;
+  if (!tr) return '';
+  const parent = tr.parentElement;
+  if (!parent) return '';
+
+  let cur = tr.previousElementSibling;
+  while (cur) {
+    const t = getRowPromptText(cur);
+    if (/^\d+\.(?!\d)/.test(t)) return t;
+    cur = cur.previousElementSibling;
+  }
+  return '';
+}
+
+function uniqNonEmptyLines(lines) {
+  const out = [];
+  const seen = new Set();
+  for (const raw of lines) {
+    const t = normalizeTextForLookup(raw);
+    if (!t) continue;
+    if (seen.has(t)) continue;
+    seen.add(t);
+    out.push(t);
+  }
+  return out;
+}
+
 function appendTranslationSpan(el, cn, mode) {
   if (!el || !cn) return;
   const span = document.createElement("span");
@@ -704,18 +784,25 @@ function initBilingualTranslations() {
 
   function getQuestionTextForAnswer(answerEl) {
     const tr = answerEl ? answerEl.closest("tr") : null;
-    if (tr) {
-      const tds = Array.from(tr.querySelectorAll("td")).filter(td => !td.classList.contains("answer-cell"));
-      const parts = tds.map(td => getEnglishOnlyText(td)).filter(Boolean);
-      if (parts.length) return parts.join("\n");
-    }
     const table = answerEl ? answerEl.closest("table") : null;
-    if (table) {
-      const prev = table.querySelector("tr td:not(.answer-cell)");
-      const t = prev ? getEnglishOnlyText(prev) : "";
-      if (t) return t;
-    }
-    return "";
+
+    const sectionTitle = findNearestSectionTitle(table || tr || answerEl);
+    const sectionId = extractSectionId(sectionTitle);
+    const outerScope = findNearestNumberedParagraph(table || tr || answerEl);
+    const innerScope = findNearestNumberedScopeRow(answerEl);
+
+    const rowText = tr ? getRowPromptText(tr) : "";
+    const base = rowText || (table ? getEnglishOnlyText(table.querySelector("tr td:not(.answer-cell)")) : "") || "";
+
+    const lines = uniqNonEmptyLines([
+      sectionId ? ("Section: " + sectionId) : "",
+      sectionTitle,
+      outerScope,
+      innerScope,
+      base
+    ]);
+
+    return lines.join("\n");
   }
 
   async function gradeOne({ questionText, userText }) {
@@ -747,10 +834,64 @@ function initBilingualTranslations() {
     };
   }
 
+  async function requestOneCorrectAnswer(questionText) {
+    const gradeUrl = getGradeApiUrl();
+    const aiTimeoutMs = 60000;
+    const prompt = String(questionText || "").trim();
+    if (!prompt) throw new Error('missing_question');
+
+    const q = prompt + "\n\nProvide ONE correct answer as a model answer. Keep it concise. Do NOT mention that the student did not answer.";
+    // Some grader backends respond with "The student provided no answer" when answer is empty.
+    // Use a neutral placeholder to force generation of a real model answer.
+    const payload = { pairs: [{ question: q, answer: "N/A" }] };
+
+    const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+      gradeUrl,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      },
+      aiTimeoutMs
+    );
+
+    if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+    const first = extractFirstGradeResult(data);
+    if (!ok || !first) {
+      const reason = data && data.error ? data.error : `bad_response_${status}`;
+      const detail = text ? ` (${text.slice(0, 160)})` : "";
+      throw new Error(reason + detail);
+    }
+
+    let raw = (first.model_answer || first.suggested_answer || first.answer || first.explanation || "").trim();
+    if (!raw) throw new Error('empty_model_answer');
+
+    // Filter out unhelpful meta-responses.
+    if (/\bprovided\s+no\s+answer\b/i.test(raw) || /\bstudent\s+provided\s+no\s+answer\b/i.test(raw)) {
+      throw new Error('unhelpful_model_answer');
+    }
+
+    // Strip common leading labels.
+    raw = raw.replace(/^\s*(?:example\s+answer|model\s+answer|answer)\s*:\s*/i, "").trim();
+    return raw;
+  }
+
   async function checkCellAnswer(answerEl, feedbackEl, btn) {
     const userText = (answerEl && answerEl.value ? answerEl.value : "").trim();
     if (!userText) {
-      setInlineFeedback(feedbackEl, "No answer entered.", "bad");
+      const questionText = getQuestionTextForAnswer(answerEl);
+      if (btn) btn.disabled = true;
+      // Empty answer: return only a possible answer (no extra text).
+      setInlineFeedback(feedbackEl, "", "");
+      try {
+        const model = await requestOneCorrectAnswer(questionText);
+        setInlineFeedback(feedbackEl, model, "");
+      } catch (err) {
+        console.warn("Model-answer request failed:", err);
+        setInlineFeedback(feedbackEl, "No answer entered.", "bad");
+      } finally {
+        if (btn) btn.disabled = false;
+      }
       return;
     }
 
@@ -807,11 +948,38 @@ function initBilingualTranslations() {
     const inputs = Array.from(groupEl.querySelectorAll('input.inline-input'));
     const hasAny = inputs.some(i => (i.value || '').trim());
     if (!hasAny) {
-      setInlineFeedback(tipEl, "No answer entered.", "bad");
+      const sectionTitle = findNearestSectionTitle(groupEl);
+      const sectionId = extractSectionId(sectionTitle);
+      const baseQuestion = collectEnglishTextWithInputs(groupEl, false);
+      const questionText = uniqNonEmptyLines([
+        sectionId ? ("Section: " + sectionId) : "",
+        sectionTitle,
+        baseQuestion
+      ]).join("\n");
+
+      if (btn) btn.disabled = true;
+      // Empty answer: return only a possible answer (no extra text).
+      setInlineFeedback(tipEl, "", "");
+      try {
+        const model = await requestOneCorrectAnswer(questionText);
+        setInlineFeedback(tipEl, model, "");
+      } catch (err) {
+        console.warn("Model-answer request failed:", err);
+        setInlineFeedback(tipEl, "No answer entered.", "bad");
+      } finally {
+        if (btn) btn.disabled = false;
+      }
       return;
     }
 
-    const questionText = collectEnglishTextWithInputs(groupEl, false);
+    const sectionTitle = findNearestSectionTitle(groupEl);
+    const sectionId = extractSectionId(sectionTitle);
+    const baseQuestion = collectEnglishTextWithInputs(groupEl, false);
+    const questionText = uniqNonEmptyLines([
+      sectionId ? ("Section: " + sectionId) : "",
+      sectionTitle,
+      baseQuestion
+    ]).join("\n");
     const userText = collectEnglishTextWithInputs(groupEl, true);
 
     if (btn) btn.disabled = true;
