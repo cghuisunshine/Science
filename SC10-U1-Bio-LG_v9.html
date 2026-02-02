@@ -834,6 +834,84 @@ function initBilingualTranslations() {
     };
   }
 
+  // Hand-authored model answers for pedigree questions (image-based)
+  const PEDIGREE_MODEL_BY_INPUT_NAME = {
+    // 9a
+    "t18_r1_c3": "Leopold.",
+    // 9b
+    "t18_r2_c3": (
+      "Total = 3 grandchildren with hemophilia.\n\n" +
+      "Count the black squares (affected males) in the grandchildren generation:\n" +
+      "- From Alice: 1 affected son\n" +
+      "- From Beatrice: 2 affected sons\n" +
+      "- From Leopold: child shown is a carrier daughter (not affected)"
+    ),
+    // 9c
+    "t18_r3_c3": "No. The pedigree shows female carriers (half-shaded circles) but no affected females.",
+    // 9d
+    "t18_r4_c3": (
+      "Punnett square: Victoria (X XH) x Albert (X Y)\n\n" +
+      "Victoria gametes: X, XH\n" +
+      "Albert gametes: X, Y\n\n" +
+      "XX = normal daughter\n" +
+      "XHX = carrier daughter\n" +
+      "XY = normal son\n" +
+      "XHY = son with hemophilia\n\n" +
+      "So:\n" +
+      "- Daughters: 50% normal, 50% carriers\n" +
+      "- Sons: 50% normal, 50% affected"
+    ),
+    // 9e
+    "t18_r5_c3": (
+      "Each daughter has a 50% chance to be a carrier.\n" +
+      "4 daughters shown -> predicted carriers = 50% of 4 = 2."
+    ),
+    // 9f
+    "t18_r6_c3": (
+      "Gen I: Father XHY (hemophilia) x Mother XX (unaffected, not a carrier)\n\n" +
+      "Outcome:\n" +
+      "- All daughters: XHX (carriers)\n" +
+      "- All sons: XY (unaffected)\n\n" +
+      "Gen II: 2 carrier daughters and 2 normal sons\n" +
+      "Gen III: The first carrier daughter (XHX) has a son with hemophilia (XHY)."
+    )
+  };
+
+  async function gradeAgainstModelAnswer({ questionText, userText, modelAnswer }) {
+    const gradeUrl = getGradeApiUrl();
+    const aiTimeoutMs = 60000;
+
+    const prompt = [
+      String(questionText || "").trim(),
+      "Reference/model answer (for the teacher):\n" + String(modelAnswer || "").trim(),
+      "Judge whether the student's answer is correct compared to the reference. Return verdict Correct/Wrong and a short explanation."
+    ].filter(Boolean).join("\n\n");
+
+    const payload = { pairs: [{ question: prompt, answer: String(userText || "") }] };
+    const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+      gradeUrl,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      },
+      aiTimeoutMs
+    );
+
+    if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+    const first = extractFirstGradeResult(data);
+    if (!ok || !first) {
+      const reason = data && data.error ? data.error : `bad_response_${status}`;
+      const detail = text ? ` (${text.slice(0, 160)})` : "";
+      throw new Error(reason + detail);
+    }
+
+    return {
+      verdict: (first.verdict || "").trim(),
+      explanation: (first.explanation || "").trim()
+    };
+  }
+
   async function requestOneCorrectAnswer(questionText) {
     const gradeUrl = getGradeApiUrl();
     const aiTimeoutMs = 60000;
@@ -878,6 +956,40 @@ function initBilingualTranslations() {
 
   async function checkCellAnswer(answerEl, feedbackEl, btn) {
     const userText = (answerEl && answerEl.value ? answerEl.value : "").trim();
+
+    // Pedigree image-based questions: use hand-authored model answers for reference.
+    const inputName = answerEl && answerEl.name ? String(answerEl.name) : "";
+    const pedigreeModel = PEDIGREE_MODEL_BY_INPUT_NAME[inputName];
+    if (pedigreeModel) {
+      if (btn) btn.disabled = true;
+      try {
+        if (!userText) {
+          setInlineFeedback(feedbackEl, pedigreeModel, "");
+          return;
+        }
+        const questionText = getQuestionTextForAnswer(answerEl);
+        const result = await gradeAgainstModelAnswer({ questionText, userText, modelAnswer: pedigreeModel });
+
+        const verdictLower = (result.verdict || "").toLowerCase();
+        const isCorrect = verdictLower === "correct";
+        const isWrong = verdictLower === "wrong";
+        const kind = isCorrect ? "ok" : (isWrong ? "bad" : "");
+
+        if (isCorrect) {
+          setInlineFeedback(feedbackEl, result.explanation || "Correct.", kind);
+        } else {
+          const msg = (result.explanation || "") + (result.explanation ? "\n\n" : "") + "Model answer:\n" + pedigreeModel;
+          setInlineFeedback(feedbackEl, msg, kind || "bad");
+        }
+      } catch (err) {
+        console.warn("Pedigree AI grading failed:", err);
+        setInlineFeedback(feedbackEl, "Model answer:\n" + pedigreeModel, "bad");
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+      return;
+    }
+
     if (!userText) {
       const questionText = getQuestionTextForAnswer(answerEl);
       if (btn) btn.disabled = true;
