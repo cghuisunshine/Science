@@ -727,6 +727,74 @@ function initBilingualTranslations() {
     }
   }
 
+  function deriveQaUrl(gradeUrl) {
+    try {
+      const u = new URL(gradeUrl);
+      u.search = "";
+      u.hash = "";
+      // Common pattern: /grade -> /qa
+      u.pathname = u.pathname.replace(/\/grade$/, "/qa");
+      if (!u.pathname.endsWith("/qa")) {
+        u.pathname = u.pathname.replace(/\/+$/, "") + "/qa";
+      }
+      return u.toString();
+    } catch {
+      return null;
+    }
+  }
+
+  function extractQaPairs(data) {
+    if (!data) return null;
+    if (Array.isArray(data.pairs)) return data.pairs;
+    if (Array.isArray(data.results)) return data.results;
+    if (Array.isArray(data.items)) return data.items;
+    if (Array.isArray(data)) return data;
+    return null;
+  }
+
+  function normalizeQaPair(p) {
+    if (!p || typeof p !== "object") return null;
+    const question = String(p.question ?? p.q ?? "").trim();
+    const answer = String(p.answer ?? p.a ?? "").trim();
+    if (!question && !answer) return null;
+    return { question, answer };
+  }
+
+  async function requestQaAnswer(questionText) {
+    const gradeUrl = getGradeApiUrl();
+    const qaUrl = deriveQaUrl(gradeUrl);
+    if (!qaUrl) throw new Error("no_qa_url");
+
+    const q = String(questionText || "").trim();
+    if (!q) throw new Error("empty_question");
+
+    const payload = { questions: [q] };
+    const aiTimeoutMs = 60000;
+
+    const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+      qaUrl,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      },
+      aiTimeoutMs
+    );
+
+    if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+
+    const pairs = extractQaPairs(data);
+    const firstRaw = Array.isArray(pairs) && pairs.length ? pairs[0] : null;
+    const first = normalizeQaPair(firstRaw);
+    if (!ok || !first || !first.answer) {
+      const reason = (data && data.error) ? data.error : `bad_response_${status}`;
+      const detail = text ? ` (${text.slice(0, 160)})` : "";
+      throw new Error(reason + detail);
+    }
+
+    return first.answer;
+  }
+
   async function testApi() {
     const gradeUrl = getGradeApiUrl();
     setApiStatus("Testing...");
@@ -887,13 +955,40 @@ function initBilingualTranslations() {
     "t6_r2_c3": "1. What is the function of the nucleus?\n2. What is chromatin and where is it found?\n3. What is the role of the nucleolus?\n4. What does the nuclear envelope do?\n5. Why are nuclear pores important?",
     "t6_r3_c3": "How does DNA change from chromatin into chromosomes? Why do some cells not have a nucleus? How does the nucleus communicate with other parts of the cell?"
   };
+
+  // Fallback model-answer lookup by section + prompt text (handles cases where input names change)
+  const MODEL_ANSWER_BY_SECTION_PROMPT = {
+    // 1.2 - The Nucleus and DNA (Reflect)
+    "1.2|why does this information matter": MODEL_ANSWER_BY_INPUT_NAME["t6_r0_c3"],
+    "1.2|connections to other topics you’ve studied": MODEL_ANSWER_BY_INPUT_NAME["t6_r1_c3"],
+    "1.2|connections to other topics you've studied": MODEL_ANSWER_BY_INPUT_NAME["t6_r1_c3"],
+    "1.2|write quiz questions to test your memory later": MODEL_ANSWER_BY_INPUT_NAME["t6_r2_c3"],
+    "1.2|do you have any questions that arose while reviewing the content": MODEL_ANSWER_BY_INPUT_NAME["t6_r3_c3"]
+  };
+
+  function normalizePromptKey(s) {
+    return normalizeTextForLookup(String(s || ""))
+      .toLowerCase()
+      .replace(/[\?\.]$/, "")
+      .trim();
+  }
   const MODEL_ANSWER_BY_INLINE_GROUP = {
     // e.g., "lg_1_3_q1": "..."
   };
 
   function getModelAnswerForAnswerEl(answerEl) {
     const name = answerEl && answerEl.name ? String(answerEl.name) : "";
-    return MODEL_ANSWER_BY_INPUT_NAME[name] || "";
+    const direct = MODEL_ANSWER_BY_INPUT_NAME[name] || "";
+    if (direct) return direct;
+
+    // Fallback: section + prompt text
+    const tr = answerEl ? answerEl.closest('tr') : null;
+    const prompt = tr ? getRowPromptText(tr) : "";
+    const sectionTitle = findNearestSectionTitle(answerEl);
+    const sectionId = extractSectionId(sectionTitle);
+    if (!sectionId || !prompt) return "";
+    const key = sectionId + "|" + normalizePromptKey(prompt);
+    return MODEL_ANSWER_BY_SECTION_PROMPT[key] || "";
   }
 
   function getModelAnswerForInlineGroup(groupEl) {
@@ -999,7 +1094,13 @@ function initBilingualTranslations() {
         if (modelAnswer) {
           setInlineFeedback(feedbackEl, modelAnswer, "");
         } else {
-          const generated = await requestOneCorrectAnswer(questionText);
+          // Prefer /qa for generating a correct answer.
+          let generated = "";
+          try {
+            generated = await requestQaAnswer(questionText);
+          } catch {
+            generated = await requestOneCorrectAnswer(questionText);
+          }
           setInlineFeedback(feedbackEl, generated, "");
         }
       } catch (err) {
@@ -1011,58 +1112,25 @@ function initBilingualTranslations() {
       return;
     }
 
-    // Non-empty answer: always run AI checking.
+    // Non-empty answer: show the model answer if present; otherwise generate an AI answer.
     if (btn) btn.disabled = true;
-    setInlineFeedback(feedbackEl, "Checking with AI grader...", "");
-
+    setInlineFeedback(feedbackEl, "Generating answer...", "");
     try {
       if (modelAnswer) {
-        const result = await gradeAgainstModelAnswer({ questionText, userText, modelAnswer });
-        const verdictLower = (result.verdict || "").toLowerCase();
-        const isCorrect = verdictLower === "correct";
-        const isWrong = verdictLower === "wrong";
-        const kind = isCorrect ? "ok" : (isWrong ? "bad" : "");
-        const msg = formatVerdictExplanation(result.verdict, result.explanation) + "\n\nModel answer:\n" + modelAnswer;
-        setInlineFeedback(feedbackEl, msg.trim(), kind);
+        setInlineFeedback(feedbackEl, modelAnswer, "");
       } else {
-        const [gradeRes, genRes] = await Promise.allSettled([
-          gradeOne({ questionText, userText }),
-          requestOneCorrectAnswer(questionText)
-        ]);
-
-        if (gradeRes.status === 'rejected' && genRes.status === 'rejected') {
-          throw gradeRes.reason || genRes.reason;
+        // Use /qa to answer the question.
+        let generated = "";
+        try {
+          generated = await requestQaAnswer(questionText);
+        } catch {
+          generated = await requestOneCorrectAnswer(questionText);
         }
-
-        let verdict = "";
-        let explanation = "";
-        let kind = "";
-        if (gradeRes.status === 'fulfilled') {
-          verdict = (gradeRes.value.verdict || "").trim();
-          explanation = (gradeRes.value.explanation || "").trim();
-          const verdictLower = verdict.toLowerCase();
-          const isCorrect = verdictLower === "correct";
-          const isWrong = verdictLower === "wrong";
-          kind = isCorrect ? "ok" : (isWrong ? "bad" : "");
-        }
-
-        let possible = "";
-        if (genRes.status === 'fulfilled') possible = String(genRes.value || "").trim();
-
-        const parts = [];
-        const gradedText = formatVerdictExplanation(verdict, explanation);
-        if (gradedText) parts.push(gradedText);
-        if (possible) parts.push("Possible answer:\n" + possible);
-
-        setInlineFeedback(feedbackEl, parts.join("\n\n").trim(), kind);
+        setInlineFeedback(feedbackEl, generated, "");
       }
     } catch (err) {
-      console.warn("Grading failed:", err);
-      if (modelAnswer) {
-        setInlineFeedback(feedbackEl, "Model answer:\n" + modelAnswer, "bad");
-      } else {
-        setInlineFeedback(feedbackEl, "AI grading unavailable (check URL in AI answer check settings).", "bad");
-      }
+      console.warn("Answer generation failed:", err);
+      setInlineFeedback(feedbackEl, "AI grading unavailable (check URL in AI answer check settings).", "bad");
     } finally {
       if (btn) btn.disabled = false;
     }
@@ -1119,7 +1187,13 @@ function initBilingualTranslations() {
         if (modelAnswer) {
           setInlineFeedback(tipEl, modelAnswer, "");
         } else {
-          const generated = await requestOneCorrectAnswer(questionText);
+          // Prefer /qa for generating a correct answer.
+          let generated = "";
+          try {
+            generated = await requestQaAnswer(questionText);
+          } catch {
+            generated = await requestOneCorrectAnswer(questionText);
+          }
           setInlineFeedback(tipEl, generated, "");
         }
       } catch (err) {
@@ -1133,57 +1207,25 @@ function initBilingualTranslations() {
 
     const userText = collectEnglishTextWithInputs(groupEl, true);
 
+    // Non-empty answer: show the model answer if present; otherwise generate an AI answer.
     if (btn) btn.disabled = true;
-    setInlineFeedback(tipEl, "Checking with AI grader...", "");
-
+    setInlineFeedback(tipEl, "Generating answer...", "");
     try {
       if (modelAnswer) {
-        const result = await gradeAgainstModelAnswer({ questionText, userText, modelAnswer });
-        const verdictLower = (result.verdict || "").toLowerCase();
-        const isCorrect = verdictLower === "correct";
-        const isWrong = verdictLower === "wrong";
-        const kind = isCorrect ? "ok" : (isWrong ? "bad" : "");
-        const msg = formatVerdictExplanation(result.verdict, result.explanation) + "\n\nModel answer:\n" + modelAnswer;
-        setInlineFeedback(tipEl, msg.trim(), kind);
+        setInlineFeedback(tipEl, modelAnswer, "");
       } else {
-        const [gradeRes, genRes] = await Promise.allSettled([
-          gradeOne({ questionText, userText }),
-          requestOneCorrectAnswer(questionText)
-        ]);
-
-        if (gradeRes.status === 'rejected' && genRes.status === 'rejected') {
-          throw gradeRes.reason || genRes.reason;
+        // Use /qa to answer the question.
+        let generated = "";
+        try {
+          generated = await requestQaAnswer(questionText);
+        } catch {
+          generated = await requestOneCorrectAnswer(questionText);
         }
-
-        let verdict = "";
-        let explanation = "";
-        let kind = "";
-        if (gradeRes.status === 'fulfilled') {
-          verdict = (gradeRes.value.verdict || "").trim();
-          explanation = (gradeRes.value.explanation || "").trim();
-          const verdictLower = verdict.toLowerCase();
-          const isCorrect = verdictLower === "correct";
-          const isWrong = verdictLower === "wrong";
-          kind = isCorrect ? "ok" : (isWrong ? "bad" : "");
-        }
-
-        let possible = "";
-        if (genRes.status === 'fulfilled') possible = String(genRes.value || "").trim();
-
-        const parts = [];
-        const gradedText = formatVerdictExplanation(verdict, explanation);
-        if (gradedText) parts.push(gradedText);
-        if (possible) parts.push("Possible answer:\n" + possible);
-
-        setInlineFeedback(tipEl, parts.join("\n\n").trim(), kind);
+        setInlineFeedback(tipEl, generated, "");
       }
     } catch (err) {
-      console.warn("Grading failed:", err);
-      if (modelAnswer) {
-        setInlineFeedback(tipEl, "Model answer:\n" + modelAnswer, "bad");
-      } else {
-        setInlineFeedback(tipEl, "AI grading unavailable (check URL in AI answer check settings).", "bad");
-      }
+      console.warn("Answer generation failed:", err);
+      setInlineFeedback(tipEl, "AI grading unavailable (check URL in AI answer check settings).", "bad");
     } finally {
       if (btn) btn.disabled = false;
     }
