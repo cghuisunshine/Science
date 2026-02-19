@@ -1,0 +1,873 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Biology Study – Mutations, GMOs, Diversity (Bilingual Quiz)</title>
+  <style>
+    :root{
+      /* Daylight (light) mode */
+      --bg: #f7fafc;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --shadow: 0 10px 25px rgba(0,0,0,.06);
+      --accent: #2563eb;
+      --accent-2: #16a34a;
+      --warn: #b45309;
+      --bad: #dc2626;
+      --good: #16a34a;
+      --chip: #eff6ff;
+      --chipText:#1d4ed8;
+      --hl: #fff7d6;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: linear-gradient(180deg, #f7fafc 0%, #f3f6fb 100%);
+      color:var(--text);
+    }
+    header{
+      padding:24px 16px 8px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+    .title{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+    }
+    h1{
+      font-size: 22px;
+      margin:0;
+      letter-spacing:-0.02em;
+    }
+    .sub{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.4;
+    }
+    main{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 12px 16px 56px;
+      display:grid;
+      gap:14px;
+    }
+    .toolbar{
+      background: var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      box-shadow: var(--shadow);
+      padding:12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .group{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+    .label{
+      font-size:12px;
+      color:var(--muted);
+      margin-right:4px;
+    }
+    select, button{
+      border:1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+      cursor:pointer;
+      transition: transform .02s ease, border-color .15s ease, background .15s ease;
+    }
+    button:hover, select:hover{ border-color:#cbd5e1 }
+    button:active{ transform: translateY(1px); }
+    .primary{
+      background: var(--accent);
+      border-color: var(--accent);
+      color:#fff;
+    }
+    .primary:hover{ filter: brightness(0.98); }
+    .ghost{
+      background: #fff;
+    }
+    .pill{
+      padding:8px 10px;
+      border-radius: 999px;
+      background: var(--chip);
+      color: var(--chipText);
+      border:1px solid #dbeafe;
+      font-size:12px;
+    }
+
+    .card{
+      background: var(--card);
+      border:1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 14px 14px 12px;
+    }
+    .qhead{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      justify-content:space-between;
+    }
+    .qnum{
+      min-width: 44px;
+      height: 30px;
+      border-radius: 999px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background:#f1f5f9;
+      color:#334155;
+      font-weight: 700;
+      font-size: 13px;
+      border: 1px solid var(--border);
+    }
+    .qtext{
+      flex:1;
+      margin-top: 2px;
+      line-height: 1.35;
+      font-size: 16px;
+      font-weight: 650;
+      letter-spacing:-0.01em;
+    }
+    .muted{
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.5;
+      font-weight: 500;
+    }
+
+    .opts{
+      margin-top: 10px;
+      display:grid;
+      gap:8px;
+    }
+    .opt{
+      border:1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 10px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      background:#fff;
+    }
+    .opt:hover{ border-color:#cbd5e1; }
+    .opt input{ margin-top: 3px; }
+    .opt .otext{
+      line-height:1.35;
+      font-size: 14px;
+    }
+
+    .actions{
+      margin-top: 10px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .mini{
+      padding: 8px 10px;
+      font-size: 13px;
+      border-radius: 12px;
+    }
+    .result{
+      font-size: 13px;
+      color: var(--muted);
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .badge{
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 6px 10px;
+      border:1px solid var(--border);
+      background:#fff;
+    }
+    .ok{ color: var(--good); border-color: #bbf7d0; background:#f0fdf4; }
+    .no{ color: var(--bad); border-color: #fecaca; background:#fef2f2; }
+    .warn{ color: var(--warn); border-color:#fde68a; background:#fffbeb; }
+
+    .explain{
+      margin-top: 10px;
+      border-top:1px dashed var(--border);
+      padding-top: 10px;
+      display:none;
+    }
+    .explain .box{
+      background: var(--hl);
+      border: 1px solid #fde68a;
+      border-radius: 14px;
+      padding: 10px 12px;
+      line-height: 1.5;
+      font-size: 13px;
+      color:#4b5563;
+    }
+
+    /* Language display rules */
+    [data-lang="en"] .zh{ display:none; }
+    [data-lang="zh"] .en{ display:none; }
+    [data-lang="bi"] .en, [data-lang="bi"] .zh{ display:block; }
+    .en{ display:block; }
+    .zh{ display:block; }
+
+    footer{
+      max-width: 980px;
+      margin:0 auto;
+      padding: 0 16px 28px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height:1.45;
+    }
+    .smalllink{
+      color: var(--accent);
+      text-decoration:none;
+      font-weight:600;
+    }
+    .smalllink:hover{ text-decoration:underline; }
+  </style>
+</head>
+
+<body data-lang="bi">
+  <header>
+    <div class="title">
+      <h1>
+        <span class="en">Biology Study Quiz: Mutations • GMOs • Genetic Diversity</span>
+        <span class="zh">生物学习测验：突变 • 转基因 • 遗传多样性</span>
+      </h1>
+      <span class="pill" id="scorePill">
+        <span class="en">Score: 0/6</span>
+        <span class="zh">得分：0/6</span>
+      </span>
+    </div>
+    <p class="sub">
+      <span class="en">Choose answers, then check. Use the language switch to study in English, 中文, or bilingual mode.</span>
+      <span class="zh">选择答案后点击检查。可切换英文、中文或双语模式学习。</span>
+    </p>
+  </header>
+
+  <main>
+    <section class="toolbar">
+      <div class="group">
+        <span class="label">
+          <span class="en">Language</span><span class="zh">语言</span>
+        </span>
+        <select id="langSelect" aria-label="Language">
+          <option value="bi">Bilingual / 双语</option>
+          <option value="en">English</option>
+          <option value="zh">中文</option>
+        </select>
+
+        <button class="ghost" id="toggleExplainBtn" type="button">
+          <span class="en">Show explanations</span>
+          <span class="zh">显示解析</span>
+        </button>
+      </div>
+
+      <div class="group">
+        <button class="primary" id="checkAllBtn" type="button">
+          <span class="en">Check all</span>
+          <span class="zh">全部检查</span>
+        </button>
+        <button class="ghost" id="revealAllBtn" type="button">
+          <span class="en">Reveal answers</span>
+          <span class="zh">显示答案</span>
+        </button>
+        <button class="ghost" id="resetBtn" type="button">
+          <span class="en">Reset</span>
+          <span class="zh">重置</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Q1 -->
+    <article class="card" data-q="1" data-answer="A">
+      <div class="qhead">
+        <span class="qnum">Q1</span>
+        <div class="qtext">
+          <div class="en">Which of the following is a form of chromosome mutation?</div>
+          <div class="zh">以下哪一项属于染色体突变的类型？</div>
+          <div class="muted">
+            <span class="en">Tip: Think of “duplication / translocation / deletion / inversion”.</span>
+            <span class="zh">提示：想想“重复 / 易位 / 缺失 / 倒位”。</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="opts">
+        <label class="opt">
+          <input type="radio" name="q1" value="A" />
+          <div class="otext">
+            <div class="en">a piece of the chromosome is copied and attaches to the chromosome</div>
+            <div class="zh">染色体的一段被复制，并附加到染色体上</div>
+          </div>
+        </label>
+
+        <label class="opt">
+          <input type="radio" name="q1" value="B" />
+          <div class="otext">
+            <div class="en">the chromosome is replaced by a different chromosome</div>
+            <div class="zh">该染色体被另一条不同的染色体替代</div>
+          </div>
+        </label>
+
+        <label class="opt">
+          <input type="radio" name="q1" value="C" />
+          <div class="otext">
+            <div class="en">the chromosome attaches itself to a different chromosome</div>
+            <div class="zh">染色体连接到另一条不同的染色体上</div>
+          </div>
+        </label>
+
+        <label class="opt">
+          <input type="radio" name="q1" value="D" />
+          <div class="otext">
+            <div class="en">a piece of the chromosome becomes larger</div>
+            <div class="zh">染色体的一段变得更大</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="actions">
+        <div class="group">
+          <button class="mini primary" type="button" data-action="check">
+            <span class="en">Check</span><span class="zh">检查</span>
+          </button>
+          <button class="mini ghost" type="button" data-action="reveal">
+            <span class="en">Reveal</span><span class="zh">答案</span>
+          </button>
+        </div>
+        <div class="result" data-result>
+          <span class="badge warn">
+            <span class="en">Not checked</span><span class="zh">未检查</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="explain" data-explain>
+        <div class="box">
+          <div class="en"><b>Answer: A (Duplication)</b> — A chromosome segment is copied and added again, creating extra genetic material.</div>
+          <div class="zh"><b>答案：A（重复）</b>—— 染色体片段被复制并再次加上去，导致遗传物质“多了一份”。</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Q2 -->
+    <article class="card" data-q="2" data-answer="C">
+      <div class="qhead">
+        <span class="qnum">Q2</span>
+        <div class="qtext">
+          <div class="en">Most GMO foods are produced in order to</div>
+          <div class="zh">大多数转基因（GMO）食品被生产出来是为了</div>
+          <div class="muted">
+            <span class="en">Think: pest resistance, higher yield, better nutrition, longer shelf life.</span>
+            <span class="zh">想想：抗虫、增产、营养改良、保质期更长。</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="opts">
+        <label class="opt">
+          <input type="radio" name="q2" value="A" />
+          <div class="otext">
+            <div class="en">make them less expensive.</div>
+            <div class="zh">让它们更便宜。</div>
+          </div>
+        </label>
+        <label class="opt">
+          <input type="radio" name="q2" value="B" />
+          <div class="otext">
+            <div class="en">determine the effects of genes.</div>
+            <div class="zh">研究基因的作用。</div>
+          </div>
+        </label>
+        <label class="opt">
+          <input type="radio" name="q2" value="C" />
+          <div class="otext">
+            <div class="en">improve desirable traits.</div>
+            <div class="zh">改良（增强）理想性状。</div>
+          </div>
+        </label>
+        <label class="opt">
+          <input type="radio" name="q2" value="D" />
+          <div class="otext">
+            <div class="en">create new organisms.</div>
+            <div class="zh">创造全新的生物。</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="actions">
+        <div class="group">
+          <button class="mini primary" type="button" data-action="check"><span class="en">Check</span><span class="zh">检查</span></button>
+          <button class="mini ghost" type="button" data-action="reveal"><span class="en">Reveal</span><span class="zh">答案</span></button>
+        </div>
+        <div class="result" data-result>
+          <span class="badge warn"><span class="en">Not checked</span><span class="zh">未检查</span></span>
+        </div>
+      </div>
+
+      <div class="explain" data-explain>
+        <div class="box">
+          <div class="en"><b>Answer: C</b> — GMOs are commonly designed to improve useful traits (e.g., resistance to pests, drought tolerance, nutrition).</div>
+          <div class="zh"><b>答案：C</b>—— 转基因常用于增强有用性状（如抗虫、抗旱、提升营养等）。</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Q3 -->
+    <article class="card" data-q="3" data-answer="C">
+      <div class="qhead">
+        <span class="qnum">Q3</span>
+        <div class="qtext">
+          <div class="en">Cheetahs only have one species which</div>
+          <div class="zh">猎豹只有一个物种，这意味着</div>
+          <div class="muted">
+            <span class="en">Low diversity = higher risk when environments change.</span>
+            <span class="zh">多样性低 = 环境变化时风险更高。</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="opts">
+        <label class="opt">
+          <input type="radio" name="q3" value="A" />
+          <div class="otext">
+            <div class="en">means that more species will evolve.</div>
+            <div class="zh">意味着会进化出更多物种。</div>
+          </div>
+        </label>
+        <label class="opt">
+          <input type="radio" name="q3" value="B" />
+          <div class="otext">
+            <div class="en">means there will be limited inbreeding</div>
+            <div class="zh">意味着近亲繁殖会受到限制</div>
+          </div>
+        </label>
+        <label class="opt">
+          <input type="radio" name="q3" value="C" />
+          <div class="otext">
+            <div class="en">means that there is limited genetic diversity in the species</div>
+            <div class="zh">意味着该物种的遗传多样性有限</div>
+          </div>
+        </label>
+        <label class="opt">
+          <input type="radio" name="q3" value="D" />
+          <div class="otext">
+            <div class="en">means they are more apt to survive as a species</div>
+            <div class="zh">意味着它们更容易作为物种生存下去</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="actions">
+        <div class="group">
+          <button class="mini primary" type="button" data-action="check"><span class="en">Check</span><span class="zh">检查</span></button>
+          <button class="mini ghost" type="button" data-action="reveal"><span class="en">Reveal</span><span class="zh">答案</span></button>
+        </div>
+        <div class="result" data-result>
+          <span class="badge warn"><span class="en">Not checked</span><span class="zh">未检查</span></span>
+        </div>
+      </div>
+
+      <div class="explain" data-explain>
+        <div class="box">
+          <div class="en"><b>Answer: C</b> — Having only one species (and a history of bottlenecks) is associated with <b>low genetic variation</b>.</div>
+          <div class="zh"><b>答案：C</b>—— 只有一个物种（且经历过种群瓶颈）通常意味着<b>遗传变异较少</b>。</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Q4 -->
+    <article class="card" data-q="4" data-answer="B">
+      <div class="qhead">
+        <span class="qnum">Q4</span>
+        <div class="qtext">
+          <div class="en">Sexually reproduced offspring have greater diversity amongst individuals which does not allow them to easily adapt to change.</div>
+          <div class="zh">有性繁殖的后代个体差异更大，这反而不利于它们适应变化。</div>
+          <div class="muted">
+            <span class="en">Greater diversity usually helps adaptation, not blocks it.</span>
+            <span class="zh">多样性一般更有利于适应环境变化，而不是阻碍。</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="opts">
+        <label class="opt">
+          <input type="radio" name="q4" value="A" />
+          <div class="otext">
+            <div class="en">true</div>
+            <div class="zh">正确</div>
+          </div>
+        </label>
+        <label class="opt">
+          <input type="radio" name="q4" value="B" />
+          <div class="otext">
+            <div class="en">false</div>
+            <div class="zh">错误</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="actions">
+        <div class="group">
+          <button class="mini primary" type="button" data-action="check"><span class="en">Check</span><span class="zh">检查</span></button>
+          <button class="mini ghost" type="button" data-action="reveal"><span class="en">Reveal</span><span class="zh">答案</span></button>
+        </div>
+        <div class="result" data-result>
+          <span class="badge warn"><span class="en">Not checked</span><span class="zh">未检查</span></span>
+        </div>
+      </div>
+
+      <div class="explain" data-explain>
+        <div class="box">
+          <div class="en"><b>Answer: false</b> — Sexual reproduction increases variation, and variation helps populations adapt to environmental change.</div>
+          <div class="zh"><b>答案：错误</b>—— 有性繁殖增加变异，而变异通常能帮助种群更好地适应环境变化。</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Q5 -->
+    <article class="card" data-q="5" data-answer="B">
+      <div class="qhead">
+        <span class="qnum">Q5</span>
+        <div class="qtext">
+          <div class="en">All mutations result in negative changes to the organism.</div>
+          <div class="zh">所有突变都会给生物带来负面变化。</div>
+          <div class="muted">
+            <span class="en">Some mutations are neutral, some harmful, and some helpful.</span>
+            <span class="zh">突变可能是中性、有害，也可能有利。</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="opts">
+        <label class="opt">
+          <input type="radio" name="q5" value="A" />
+          <div class="otext">
+            <div class="en">true</div>
+            <div class="zh">正确</div>
+          </div>
+        </label>
+        <label class="opt">
+          <input type="radio" name="q5" value="B" />
+          <div class="otext">
+            <div class="en">false</div>
+            <div class="zh">错误</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="actions">
+        <div class="group">
+          <button class="mini primary" type="button" data-action="check"><span class="en">Check</span><span class="zh">检查</span></button>
+          <button class="mini ghost" type="button" data-action="reveal"><span class="en">Reveal</span><span class="zh">答案</span></button>
+        </div>
+        <div class="result" data-result>
+          <span class="badge warn"><span class="en">Not checked</span><span class="zh">未检查</span></span>
+        </div>
+      </div>
+
+      <div class="explain" data-explain>
+        <div class="box">
+          <div class="en"><b>Answer: false</b> — Mutations can be harmful, neutral, or beneficial depending on where they occur and the environment.</div>
+          <div class="zh"><b>答案：错误</b>—— 突变可能有害、中性或有利，取决于发生位置以及环境条件。</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Q6 -->
+    <article class="card" data-q="6" data-answer="B">
+      <div class="qhead">
+        <span class="qnum">Q6</span>
+        <div class="qtext">
+          <div class="en">Genetic mutations:</div>
+          <div class="zh">基因突变：</div>
+        </div>
+      </div>
+
+      <div class="opts">
+        <label class="opt">
+          <input type="radio" name="q6" value="A" />
+          <div class="otext">
+            <div class="en">are concentrated in specific areas of the Earth</div>
+            <div class="zh">集中发生在地球的某些特定区域</div>
+          </div>
+        </label>
+
+        <label class="opt">
+          <input type="radio" name="q6" value="B" />
+          <div class="otext">
+            <div class="en">can have positive or negative effects</div>
+            <div class="zh">可能带来正面或负面影响</div>
+          </div>
+        </label>
+
+        <label class="opt">
+          <input type="radio" name="q6" value="C" />
+          <div class="otext">
+            <div class="en">affect people who have been exposed to chemicals</div>
+            <div class="zh">只影响接触过化学物质的人</div>
+          </div>
+        </label>
+
+        <label class="opt">
+          <input type="radio" name="q6" value="D" />
+          <div class="otext">
+            <div class="en">always have negative effects</div>
+            <div class="zh">总是产生负面影响</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="actions">
+        <div class="group">
+          <button class="mini primary" type="button" data-action="check"><span class="en">Check</span><span class="zh">检查</span></button>
+          <button class="mini ghost" type="button" data-action="reveal"><span class="en">Reveal</span><span class="zh">答案</span></button>
+        </div>
+        <div class="result" data-result>
+          <span class="badge warn"><span class="en">Not checked</span><span class="zh">未检查</span></span>
+        </div>
+      </div>
+
+      <div class="explain" data-explain>
+        <div class="box">
+          <div class="en"><b>Answer: B</b> — Mutations can be harmful, neutral, or beneficial. Their “effect” depends on function + environment.</div>
+          <div class="zh"><b>答案：B</b>—— 突变可能有害、中性或有利；其“结果”取决于基因功能与环境。</div>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="en">
+      <b>Study tip:</b> After checking, read the explanation and restate it in your own words (1 sentence). That improves recall.
+    </div>
+    <div class="zh">
+      <b>学习建议：</b> 检查后阅读解析，并用自己的话复述一句话（1 句即可），记忆会更牢。
+    </div>
+  </footer>
+
+  <script>
+    (function(){
+      const STORAGE_KEY = "bio_quiz_mutations_gmo_v1";
+      const langSelect = document.getElementById("langSelect");
+      const scorePill = document.getElementById("scorePill");
+      const toggleExplainBtn = document.getElementById("toggleExplainBtn");
+      const checkAllBtn = document.getElementById("checkAllBtn");
+      const revealAllBtn = document.getElementById("revealAllBtn");
+      const resetBtn = document.getElementById("resetBtn");
+
+      function setLang(lang){
+        document.body.setAttribute("data-lang", lang);
+        langSelect.value = lang;
+        saveState({ lang });
+      }
+
+      function getCards(){
+        return Array.from(document.querySelectorAll(".card[data-q]"));
+      }
+
+      function getSelectedValue(qNum){
+        const checked = document.querySelector(`input[name="q${qNum}"]:checked`);
+        return checked ? checked.value : null;
+      }
+
+      function setSelectedValue(qNum, val){
+        const input = document.querySelector(`input[name="q${qNum}"][value="${val}"]`);
+        if(input) input.checked = true;
+      }
+
+      function setResult(card, status, msgEN, msgZH){
+        const box = card.querySelector("[data-result]");
+        let badgeClass = "warn";
+        if(status === "ok") badgeClass = "ok";
+        if(status === "no") badgeClass = "no";
+        box.innerHTML = `
+          <span class="badge ${badgeClass}">
+            <span class="en">${msgEN}</span>
+            <span class="zh">${msgZH}</span>
+          </span>
+        `;
+      }
+
+      function checkCard(card){
+        const q = card.getAttribute("data-q");
+        const answer = card.getAttribute("data-answer");
+        const selected = getSelectedValue(q);
+
+        if(!selected){
+          setResult(card, "warn", "Select an answer", "请选择一个答案");
+          return false;
+        }
+        const correct = selected === answer;
+        if(correct){
+          setResult(card, "ok", "Correct ✅", "正确 ✅");
+        }else{
+          setResult(card, "no", `Incorrect ❌ (Correct: ${answer})`, `错误 ❌（正确：${answer}）`);
+        }
+        return correct;
+      }
+
+      function revealCard(card){
+        const q = card.getAttribute("data-q");
+        const answer = card.getAttribute("data-answer");
+        setSelectedValue(q, answer);
+        setResult(card, "warn", `Revealed (Answer: ${answer})`, `已显示（答案：${answer}）`);
+      }
+
+      function updateScore(){
+        const cards = getCards();
+        let correctCount = 0;
+        for(const card of cards){
+          const q = card.getAttribute("data-q");
+          const answer = card.getAttribute("data-answer");
+          const selected = getSelectedValue(q);
+          if(selected && selected === answer) correctCount++;
+        }
+        scorePill.innerHTML = `
+          <span class="en">Score: ${correctCount}/6</span>
+          <span class="zh">得分：${correctCount}/6</span>
+        `;
+      }
+
+      function setAllExplanationsVisible(visible){
+        const explains = document.querySelectorAll("[data-explain]");
+        explains.forEach(e => e.style.display = visible ? "block" : "none");
+        toggleExplainBtn.dataset.on = visible ? "1" : "0";
+        toggleExplainBtn.innerHTML = visible
+          ? `<span class="en">Hide explanations</span><span class="zh">隐藏解析</span>`
+          : `<span class="en">Show explanations</span><span class="zh">显示解析</span>`;
+        saveState({ showExplain: visible });
+      }
+
+      function setCardExplanationVisible(card, visible){
+        const explain = card.querySelector("[data-explain]");
+        if(explain) explain.style.display = visible ? "block" : "none";
+      }
+
+      function saveState(patch){
+        const current = loadState();
+        const next = { ...current, ...patch };
+
+        // Save answers
+        const answers = {};
+        getCards().forEach(card => {
+          const q = card.getAttribute("data-q");
+          answers[q] = getSelectedValue(q);
+        });
+        next.answers = answers;
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+        updateScore();
+      }
+
+      function loadState(){
+        try{
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? JSON.parse(raw) : {};
+        }catch(e){
+          return {};
+        }
+      }
+
+      function applyState(){
+        const state = loadState();
+        if(state.lang) document.body.setAttribute("data-lang", state.lang);
+        if(state.lang) langSelect.value = state.lang;
+
+        if(state.answers){
+          Object.entries(state.answers).forEach(([q, val]) => {
+            if(val) setSelectedValue(q, val);
+          });
+        }
+        setAllExplanationsVisible(!!state.showExplain);
+        updateScore();
+      }
+
+      // Wire up per-card buttons
+      document.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-action]");
+        if(!btn) return;
+        const card = e.target.closest(".card");
+        if(!card) return;
+
+        const action = btn.getAttribute("data-action");
+        if(action === "check"){
+          checkCard(card);
+          // Show only this card's explanation (do not toggle all).
+          setCardExplanationVisible(card, true);
+          saveState({});
+        }
+        if(action === "reveal"){
+          revealCard(card);
+          setCardExplanationVisible(card, true);
+          saveState({});
+        }
+      });
+
+      // Language
+      langSelect.addEventListener("change", () => setLang(langSelect.value));
+
+      // Toggle explanations
+      toggleExplainBtn.addEventListener("click", () => {
+        const isOn = toggleExplainBtn.dataset.on === "1";
+        setAllExplanationsVisible(!isOn);
+      });
+
+      // Check all
+      checkAllBtn.addEventListener("click", () => {
+        getCards().forEach(c => checkCard(c));
+        setAllExplanationsVisible(true);
+      });
+
+      // Reveal all
+      revealAllBtn.addEventListener("click", () => {
+        getCards().forEach(c => revealCard(c));
+        setAllExplanationsVisible(true);
+      });
+
+      // Reset
+      resetBtn.addEventListener("click", () => {
+        localStorage.removeItem(STORAGE_KEY);
+        // clear selections
+        document.querySelectorAll('input[type="radio"]').forEach(i => i.checked = false);
+        // reset result badges
+        getCards().forEach(card => setResult(card, "warn", "Not checked", "未检查"));
+        setAllExplanationsVisible(false);
+        setLang("bi");
+        updateScore();
+      });
+
+      // Persist when selecting options
+      document.addEventListener("change", (e) => {
+        if(e.target && e.target.matches('input[type="radio"]')){
+          saveState({});
+        }
+      });
+
+      applyState();
+    })();
+  </script>
+</body>
+</html>
