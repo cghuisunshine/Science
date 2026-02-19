@@ -248,7 +248,7 @@
   </style>
 </head>
 
-<body data-lang="bi">
+<body data-lang="en">
   <header>
     <div class="title">
       <h1>
@@ -273,8 +273,8 @@
           <span class="en">Language</span><span class="zh">语言</span>
         </span>
         <select id="langSelect" aria-label="Language">
+          <option value="en" selected>English</option>
           <option value="bi">Bilingual / 双语</option>
-          <option value="en">English</option>
           <option value="zh">中文</option>
         </select>
 
@@ -824,7 +824,7 @@
         // reset result badges
         getCards().forEach(card => setResult(card, "warn", "Not checked", "未检查"));
         setAllExplanationsVisible(false);
-        setLang("bi");
+        setLang("en");
         updateScore();
       });
 
