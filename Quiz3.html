@@ -289,10 +289,6 @@
           <span class="en">Check all</span>
           <span class="zh">全部检查</span>
         </button>
-        <button class="ghost" id="revealAllBtn" type="button">
-          <span class="en">Reveal answers</span>
-          <span class="zh">显示答案</span>
-        </button>
         <button class="ghost" id="resetBtn" type="button">
           <span class="en">Reset</span>
           <span class="zh">重置</span>
@@ -352,9 +348,6 @@
         <div class="group">
           <button class="mini primary" type="button" data-action="check">
             <span class="en">Check</span><span class="zh">检查</span>
-          </button>
-          <button class="mini ghost" type="button" data-action="reveal">
-            <span class="en">Reveal</span><span class="zh">答案</span>
           </button>
         </div>
         <div class="result" data-result>
@@ -420,7 +413,6 @@
       <div class="actions">
         <div class="group">
           <button class="mini primary" type="button" data-action="check"><span class="en">Check</span><span class="zh">检查</span></button>
-          <button class="mini ghost" type="button" data-action="reveal"><span class="en">Reveal</span><span class="zh">答案</span></button>
         </div>
         <div class="result" data-result>
           <span class="badge warn"><span class="en">Not checked</span><span class="zh">未检查</span></span>
@@ -483,7 +475,6 @@
       <div class="actions">
         <div class="group">
           <button class="mini primary" type="button" data-action="check"><span class="en">Check</span><span class="zh">检查</span></button>
-          <button class="mini ghost" type="button" data-action="reveal"><span class="en">Reveal</span><span class="zh">答案</span></button>
         </div>
         <div class="result" data-result>
           <span class="badge warn"><span class="en">Not checked</span><span class="zh">未检查</span></span>
@@ -532,7 +523,6 @@
       <div class="actions">
         <div class="group">
           <button class="mini primary" type="button" data-action="check"><span class="en">Check</span><span class="zh">检查</span></button>
-          <button class="mini ghost" type="button" data-action="reveal"><span class="en">Reveal</span><span class="zh">答案</span></button>
         </div>
         <div class="result" data-result>
           <span class="badge warn"><span class="en">Not checked</span><span class="zh">未检查</span></span>
@@ -581,7 +571,6 @@
       <div class="actions">
         <div class="group">
           <button class="mini primary" type="button" data-action="check"><span class="en">Check</span><span class="zh">检查</span></button>
-          <button class="mini ghost" type="button" data-action="reveal"><span class="en">Reveal</span><span class="zh">答案</span></button>
         </div>
         <div class="result" data-result>
           <span class="badge warn"><span class="en">Not checked</span><span class="zh">未检查</span></span>
@@ -643,7 +632,6 @@
       <div class="actions">
         <div class="group">
           <button class="mini primary" type="button" data-action="check"><span class="en">Check</span><span class="zh">检查</span></button>
-          <button class="mini ghost" type="button" data-action="reveal"><span class="en">Reveal</span><span class="zh">答案</span></button>
         </div>
         <div class="result" data-result>
           <span class="badge warn"><span class="en">Not checked</span><span class="zh">未检查</span></span>
@@ -675,7 +663,6 @@
       const scorePill = document.getElementById("scorePill");
       const toggleExplainBtn = document.getElementById("toggleExplainBtn");
       const checkAllBtn = document.getElementById("checkAllBtn");
-      const revealAllBtn = document.getElementById("revealAllBtn");
       const resetBtn = document.getElementById("resetBtn");
 
       function setLang(lang){
@@ -727,13 +714,6 @@
           setResult(card, "no", `Incorrect ❌ (Correct: ${answer})`, `错误 ❌（正确：${answer}）`);
         }
         return correct;
-      }
-
-      function revealCard(card){
-        const q = card.getAttribute("data-q");
-        const answer = card.getAttribute("data-answer");
-        setSelectedValue(q, answer);
-        setResult(card, "warn", `Revealed (Answer: ${answer})`, `已显示（答案：${answer}）`);
       }
 
       function updateScore(){
@@ -819,11 +799,6 @@
           setCardExplanationVisible(card, true);
           saveState({});
         }
-        if(action === "reveal"){
-          revealCard(card);
-          setCardExplanationVisible(card, true);
-          saveState({});
-        }
       });
 
       // Language
@@ -838,12 +813,6 @@
       // Check all
       checkAllBtn.addEventListener("click", () => {
         getCards().forEach(c => checkCard(c));
-        setAllExplanationsVisible(true);
-      });
-
-      // Reveal all
-      revealAllBtn.addEventListener("click", () => {
-        getCards().forEach(c => revealCard(c));
         setAllExplanationsVisible(true);
       });
 
