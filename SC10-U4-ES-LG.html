@@ -690,15 +690,14 @@
       </tr>
     </table>
 
-    <table class="doc-table">
-      <tr>
-        <td>4. Make a Venn Diagram to compare space satellites and space probes</td>
-        <td class="answer-cell"><textarea class="cell-textarea" name="es_t352_r0_c1" rows="3"></textarea></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td class="answer-cell"><textarea class="cell-textarea" name="es_t352_r1_c1" rows="3"></textarea></td>
-      </tr>
+	    <table class="doc-table">
+	      <tr>
+	        <td colspan="2">4. Make a Venn Diagram to compare space satellites and space probes</td>
+	      </tr>
+	      <tr>
+	        <td></td>
+	        <td class="answer-cell"><textarea class="cell-textarea" name="es_t352_r1_c1" rows="3"></textarea></td>
+	      </tr>
     </table>
 
     <table class="doc-table">
@@ -1039,6 +1038,32 @@
     "This concludes the Learning Guide.": "学习指南到此结束。"
   };
 
+  const CN_INLINE_BLANK_PROMPT_BY_INPUT_NAME = {
+    "lg_blank1": "1. 宇宙由 ____、____ 和大量的 ____ 组成。",
+    "lg_blank4": "2. ____ 包含恒星、____ 和 ____，并由引力把它们维系在一起。",
+    "lg_blank7": "3. 星系可以按其 ____ 进行分类（归类）。",
+    "cell_blank8": "b) 该理论支持这样的观点：宇宙是突然 ____ 的，并不是 ____。",
+    "cell_blank12": "4. 自 1965 年以来，宇宙学家一直在研究 ____；它是大爆炸的“余辉”。",
+    "cell_blank14": "2. 恒星的亮度称为其 ____。\n恒星可按其 ____ 星等（看起来多亮）或 ____ 星等（实际有多亮）分类。",
+    "cell_blank20": "3. 恒星的一切（大小、颜色、以及其一生中的演化）都由其 ____ 决定。",
+    "cell_blank22": "4. 质量最大的恒星是 ____。它们比 ____ 质量大 40 倍。",
+    "cell_blank26": "5. 低质量恒星是 ____ 和 ____，其表面温度较 ____。",
+    "cell_blank32": "6. 橙色星、蓝色星、黄色星：按从冷到热排序：____、____、____。",
+    "cell_blank38": "1. 我们对宇宙的认识建立在对太空天体 ____ 及其彼此 ____ 的研究上。"
+  };
+
+  function getInlineBlankPromptTranslation(el) {
+    if (!el || !el.querySelectorAll) return "";
+    const names = Array.from(el.querySelectorAll('input.inline-input[name]'))
+      .map(inp => String(inp.getAttribute('name') || "").trim())
+      .filter(Boolean);
+    for (const name of names) {
+      const cn = CN_INLINE_BLANK_PROMPT_BY_INPUT_NAME[name];
+      if (cn) return cn;
+    }
+    return "";
+  }
+
   function getEnglishOnlyText(el) {
     if (!el) return "";
     const clone = el.cloneNode(true);
@@ -1142,9 +1167,9 @@
       if (el.closest('.ai-tools, .ai-check-wrap')) return;
       if (el.classList && el.classList.contains('answer-cell')) return;
       if (el.dataset && el.dataset.cnDone === "1") return;
-      if (el.querySelector && el.querySelector('input, textarea')) return;
+      if (el.querySelector && el.querySelector('textarea')) return;
       const key = getEnglishOnlyText(el);
-      const cn = CN_TRANSLATIONS[key];
+      const cn = CN_TRANSLATIONS[key] || getInlineBlankPromptTranslation(el);
       if (!cn) return;
       if (el.querySelector && el.querySelector('.zh-inline, .zh-block')) return;
 
