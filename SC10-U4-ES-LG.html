@@ -1051,16 +1051,16 @@
     return !!(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
   }
 
-  function findNearestSectionTitle(fromEl) {
-    const anchor = fromEl || document.body;
-    const candidates = Array.from(document.querySelectorAll('h2, p'));
-    const isSectionHeader = (txt) => {
-      if (!txt) return false;
-      if (/^\d+\.\d+\s*-\s+/.test(txt)) return true;
-      if (txt === 'INSTRUCTIONS') return true;
-      if (/^Finally,\s*answer\s+yes\s+or\s+no\s+to\s+the\s+following\.?$/i.test(txt)) return true;
-      return false;
-    };
+	  function findNearestSectionTitle(fromEl) {
+	    const anchor = fromEl || document.body;
+	    const candidates = Array.from(document.querySelectorAll('h2, p'));
+	    const isSectionHeader = (txt) => {
+	      if (!txt) return false;
+	      if (/^\d+\.\d+\s*(?:-|–|—|−)\s+/.test(txt)) return true;
+	      if (txt === 'INSTRUCTIONS') return true;
+	      if (/^Finally,\s*answer\s+yes\s+or\s+no\s+to\s+the\s+following\.?$/i.test(txt)) return true;
+	      return false;
+	    };
 
     for (let i = candidates.length - 1; i >= 0; i--) {
       const el = candidates[i];
@@ -1941,4 +1941,3 @@
   </script>
 </body>
 </html>
-
