@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <title>SC10 Earth Science – Learning Guide 4</title>
+  <style>
+  body { margin:0; background:#f5f5f5; font-family:Calibri, Arial, sans-serif; color:#111; }
+  .page { width:8.5in; margin:24px auto; background:#fff; padding:0.7in; box-shadow:0 2px 12px rgba(0,0,0,.12); }
+  h1 { margin:0 0 10px; font-size:1.35rem; }
+  h2 { margin:0.6rem 0 0.35rem; font-size:1.1rem; }
+  p { margin:0.2rem 0; font-size:0.98rem; line-height:1.25; }
+
+  .topbar {
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    margin-bottom: 6px;
+  }
+
+  .lang-controls {
+    display:inline-flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+  }
+
+  .lang-btn {
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(17, 24, 39, 0.14);
+    background: rgba(17, 24, 39, 0.03);
+    color: #111827;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .lang-btn.is-active {
+    background: rgba(30, 136, 229, 0.14);
+    border-color: rgba(30, 136, 229, 0.45);
+  }
+
+  .lang-btn:focus-visible {
+    outline: 3px solid rgba(30, 136, 229, 0.35);
+    outline-offset: 2px;
+  }
+
+  .zh-block,
+  .zh-inline {
+    display:none;
+  }
+
+  body.lang-bi .zh-block { display:block; }
+  body.lang-bi .zh-inline { display:inline; }
+
+  .zh-block {
+    margin-top: 4px;
+    color: #2b2b2b;
+  }
+  .doc-image { max-width:100%; height:auto; display:block; margin:10px 0; }
+  .doc-table { width:100%; border-collapse:collapse; margin:12px 0 16px; }
+  .doc-table td { border:1px solid #9a9a9a; padding:8px; vertical-align:top; }
+  .doc-table td.answer-cell { padding-bottom:34px; }
+  .doc-table td.galaxy-image-cell { width: 190px; }
+  .galaxy-thumb-link { display:block; text-align:center; color: inherit; text-decoration: none; }
+  .galaxy-thumb { max-width: 170px; width: 100%; height:auto; display:block; margin: 0 auto; border: 1px solid rgba(0,0,0,0.12); border-radius: 8px; background: #fff; }
+  .galaxy-caption { margin-top: 6px; font-size: 0.9rem; line-height: 1.15; color: #333; }
+  .answer-cell { background:#fff; position:relative; }
+  .cell-input {
+    width:100%;
+    box-sizing:border-box;
+    border:1px solid #9a9a9a;
+    border-radius:4px;
+    padding:6px 8px;
+    font-size:1rem;
+    outline:none;
+    background:#fff;
+  }
+  .cell-textarea {
+    width:100%;
+    box-sizing:border-box;
+    border:1px solid #9a9a9a;
+    border-radius:4px;
+    padding:6px 8px;
+    font-size:1rem;
+    outline:none;
+    resize:vertical;
+    background:#fff;
+  }
+  @media print {
+    body { background:#fff; }
+    .page { margin:0; box-shadow:none; width:auto; padding:0.5in; page-break-after:always; }
+    .ai-tools, .ai-check-wrap { display:none !important; }
+  }
+
+  .inline-input{
+  border:1px solid #9a9a9a;
+  border-radius:4px;
+  padding:2px 6px;
+  margin:0 4px;
+  min-width:120px;
+  font-size:1rem;
+  }
+
+  /* Inline fill-in questions (e.g., 1.3 Q1) */
+  p[data-ai-inline-group] {
+  position: relative;
+  padding-bottom: 34px;
+  }
+
+  /* Remove input borders inside table cells (table already provides frame) */
+  .doc-table .cell-input,
+  .doc-table .cell-textarea {
+  border: none !important;
+  outline: none;
+  background: transparent;
+  padding: 4px 2px;
+  }
+
+  /* Optional AI answer checking */
+  .ai-tools {
+  margin: 10px 0 14px;
+  padding: 10px 12px;
+  border: 1px solid #d7d7d7;
+  border-radius: 10px;
+  background: #fafafa;
+  }
+
+  .ai-tools summary {
+  cursor: pointer;
+  font-weight: 600;
+  }
+
+  .ai-tools .row {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  }
+
+  .ai-tools label {
+  min-width: 120px;
+  }
+
+  .ai-tools input {
+  flex: 1 1 320px;
+  min-width: 240px;
+  padding: 6px 8px;
+  font-size: 0.95rem;
+  border: 1px solid #cfcfcf;
+  border-radius: 6px;
+  }
+
+  .ai-tools button {
+  padding: 6px 10px;
+  border: 1px solid #1b74d1;
+  border-radius: 8px;
+  background: #1e88e5;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  }
+
+  .ai-tools button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  }
+
+  .ai-status {
+  font-size: 0.92rem;
+  }
+
+  .ai-status.ok { color: #1b5e20; }
+  .ai-status.bad { color: #b71c1c; }
+
+  .ai-check-wrap {
+  position: absolute;
+  right: 8px;
+  bottom: 6px;
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+  }
+
+  .ai-check-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  }
+
+  .ai-check-btn {
+  padding: 4px 10px;
+  border: 1px solid #1b74d1;
+  border-radius: 999px;
+  background: rgba(30, 136, 229, 0.10);
+  color: #0b3f78;
+  cursor: pointer;
+  font-weight: 600;
+  }
+
+  .ai-reset-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid rgba(20, 20, 20, 0.18);
+  border-radius: 999px;
+  background: rgba(20, 20, 20, 0.04);
+  color: #222;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  }
+
+  .ai-reset-btn:hover {
+  background: rgba(20, 20, 20, 0.07);
+  border-color: rgba(20, 20, 20, 0.24);
+  }
+
+  .ai-reset-btn:active {
+  background: rgba(20, 20, 20, 0.10);
+  }
+
+  .ai-reset-btn svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+  }
+
+  .ai-reset-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  }
+
+  .ai-check-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  }
+
+  .ai-tip {
+  position: absolute;
+  right: 0;
+  bottom: 34px;
+  width: 320px;
+  max-width: min(360px, 75vw);
+  max-height: 180px;
+  overflow: auto;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(20, 20, 20, 0.16);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.16);
+  font-size: 0.92rem;
+  line-height: 1.25;
+
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity 140ms ease, transform 140ms ease;
+  }
+
+  .ai-tip::after {
+  content: "";
+  position: absolute;
+  right: 22px;
+  bottom: -6px;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.96);
+  border-right: 1px solid rgba(20, 20, 20, 0.16);
+  border-bottom: 1px solid rgba(20, 20, 20, 0.16);
+  transform: rotate(45deg);
+  }
+
+  .ai-tip.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  }
+
+  .ai-tip.ok { border-color: rgba(27, 94, 32, 0.28); }
+  .ai-tip.bad { border-color: rgba(183, 28, 28, 0.30); }
+
+  .ai-tip-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(20, 20, 20, 0.14);
+  background: rgba(20, 20, 20, 0.04);
+  color: #222;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  }
+
+  .ai-tip-close:hover {
+  background: rgba(20, 20, 20, 0.07);
+  }
+
+  .ai-tip-body {
+  padding-right: 26px;
+  white-space: pre-wrap;
+  }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div>
+        <h1>SC10 Earth Science – Learning Guide 4<span class="zh-inline" lang="zh-Hans">（地球科学学习指南 4）</span></h1>
+      </div>
+      <div aria-label="Language" class="lang-controls" role="group">
+        <button aria-pressed="true" class="lang-btn is-active" data-lang="en" type="button">English</button>
+        <button aria-pressed="false" class="lang-btn" data-lang="bi" type="button">English + 中文</button>
+      </div>
+    </div>
+    <details class="ai-tools">
+      <summary>
+        AI answer check (optional)<span class="zh-inline" lang="zh-Hans">（AI 检查答案，可选）</span>
+      </summary>
+      <div class="row">
+        <label for="grade-api-url">Grade API URL<span class="zh-inline" lang="zh-Hans">（评分接口）</span></label> <input id=
+        "grade-api-url" placeholder="https://example.com/grade" type="text"> <button id="btn-test-api" type=
+        "button">Test<span class="zh-inline" lang="zh-Hans">（测试）</span></button> <span class="ai-status" id=
+        "api-status"></span>
+      </div>
+      <p class="ai-status" id="ai-tools-hint">Adds a Check button to each answer box. Sends the question + your answer
+      to the grader service. <span class="zh-inline" lang="zh-Hans">（每个答案框右下角会出现“Check”按钮，会把题目+你的答案发送到评分服务。）</span></p>
+    </details>
+    <h2>INSTRUCTIONS</h2>
+    <p>Download this document to your computer or your own Google Drive. Do NOT ask for editing privileges.</p>
+    <p>Open the file in Google Docs, MS Word, Pages or OpenOffice.</p>
+    <p>To make it easier for you to show your work, you have a few flexible options:</p>
+    <p>You can adjust the layout of the Learning Guide (LG) to create more space between the questions, allowing ample
+    room for your answers and solutions.</p>
+    <p>Feel free to use blank or lined paper to write down your answers and solutions; there's no need to rewrite the
+    questions.</p>
+    <p>You need to handwrite your answers or use a stylus on a tablet (like an iPad).</p>
+    <p>Learning guides are an essential component of your learning within this course. To do well, take your time with
+    your learning guide and treat it as your set of notes and examples. It is your learning guide. Yes, your learning
+    guides will be checked by your teacher and will be used as part of your final grade, but their real value is how
+    they'll help you organize your learning.</p>
+    <p>Make sure you show all possible steps in your work, and neatly explain your related thoughts on the topics. If
+    you have any trouble with a question, check your lessons, then ask your teacher.</p>
+    <p>Once your learning guide is complete, it's time to submit it to your teacher as one file at the bottom of the
+    unit. How can you submit the learning guide? Here are some options. 1. If you have access to a scanner, you can
+    scan the pages, producing one PDF file to upload at the end of the unit. Suggested settings for your scanner are
+    included in the submission area.</p>
+    <p>If you don't have access to a scanner, you can take pictures of the pages, then paste them into one Word or
+    Google Docs file. This, again, will enable you to submit it as one file.</p>
+    <p>If you're dropping in to see your teacher regularly, you can always drop off the learning guide with them.
+    Whichever method you choose should result in the submission of one file to your teacher.</p>
+    <p>For a document of 10 pages, aiming for a total size of around 10 MB would be ideal. To assist you in this, may I
+    suggest trying Adobe's online PDF compression tool at
+    https://www.adobe.com/ca/acrobat/online/compress-pdf.html.</p>
+    <p>You are required to have this Learning Guide (and the Biology LG) completed BEFORE you write the F2F Test 1. Do
+    your best and ask questions about anything that you don't understand BEFORE you write Test 1.</p>
+    <p>Your name needs to be at the top of each page.</p>
+    <p>You need to handwrite your answers or use a stylus on a tablet (like an iPad).</p>
+    <p>Be neat and tidy and show all work.</p>
+    <p>Personalize your answers</p>
+    <p>with diagrams,</p>
+    <p>stars or arrows for key points, and</p>
+    <p>little side notes, circling or highlighting thoughts.</p>
+    <p>The document was last updated on November 6, 2025.</p>
+    <table class="doc-table">
+      <tr>
+        <td>I read the above instructions. Yes or No.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t30496_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <h2>4.1 – Dissecting the Universe</h2>
+    <table class="doc-table">
+      <tr>
+        <td>1. The Universe is made up of <input class="inline-input" name="lg_blank1" type="text">, <input class=
+        "inline-input" name="lg_blank2" type="text"> and a whole lot of <input class="inline-input" name="lg_blank3"
+        type="text">.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t65504_r0_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>2. A <input class="inline-input" name="lg_blank4" type="text"> contains stars, <input class="inline-input"
+        name="lg_blank5" type="text"> and <input class="inline-input" name="lg_blank6" type="text"> all held together
+        by gravity.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t65504_r1_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>3. Galaxies can be classified, or sorted, by their <input class="inline-input" name="lg_blank7" type=
+        "text">.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t65504_r2_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td colspan="2">4. Identify the following three types of Galaxy shapes:</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>Include the full name of the pattern used to identify this shape and describe the typical characteristics
+        of this cluster.</td>
+      </tr>
+      <tr>
+        <td class="galaxy-image-cell">
+          <a class="galaxy-thumb-link" href="assets/Spiral_Galaxy.png" rel="noopener" target="_blank"><img alt=
+          "Spiral galaxy" class="galaxy-thumb" src="assets/Spiral_Galaxy.png">
+          <div class="galaxy-caption">
+            Spiral
+          </div></a>
+        </td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t41056_r2_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td class="galaxy-image-cell">
+          <a class="galaxy-thumb-link" href="assets/Elliptical_Galaxy.png" rel="noopener" target="_blank"><img alt=
+          "Elliptical galaxy" class="galaxy-thumb" src="assets/Elliptical_Galaxy.png">
+          <div class="galaxy-caption">
+            Elliptical
+          </div></a>
+        </td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t41056_r3_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td class="galaxy-image-cell">
+          <a class="galaxy-thumb-link" href="assets/Irregular_Galaxy.png" rel="noopener" target="_blank"><img alt=
+          "Irregular galaxy" class="galaxy-thumb" src="assets/Irregular_Galaxy.png">
+          <div class="galaxy-caption">
+            Irregular
+          </div></a>
+        </td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t41056_r4_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <p>5. Reflect on what you just learned and write:</p>
+    <table class="doc-table">
+      <tr>
+        <td>a) Why does this information matter?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t14176_r0_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>b) Connections to other topics you’ve studied.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t14176_r1_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>c) Write a quiz question to test your memory later.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t14176_r2_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>d) Do you have any questions that came up for you while going through the content?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t14176_r3_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <h2>4.2 – Formation of the Universe</h2>
+    <table class="doc-table">
+      <tr>
+        <td>1. Watch the video ‘The Beginning of Everything’ and answer the following questions:</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62560_r0_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>a) The Big Bang Theory is one explanation of the formation of the</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62560_r1_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>b) The theory supports the notion that the universe was suddenly <input class="inline-input" name=
+        "cell_blank8" type="text">and is not <input class="inline-input" name="cell_blank9" type="text">.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62560_r2_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>c) What discovery in 1964 was key to supporting the Big Bang Theory?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62560_r3_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>d) Name the technological tool that has played a significant role in cosmology and provided support for the
+        Big Bang.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62560_r4_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>e) Why is the ‘Big Bang’ not an accurate description for the formation of the universe?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62560_r5_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>f) What happens to the temperature of matter as distance increases? Explain why.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62560_r6_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>g) According to the Big Bang Theory, what did protons and neutrons form from?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62560_r7_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>h) Why would protons and neutrons hold together in the first second following the Big Bang?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62560_r8_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>i) What was the first atom formed?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62560_r9_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>j) Describe how stars and galaxies formed. How long did this take?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62560_r10_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>k) Which of Einstein’s two theories are scientists working on to ‘unify’ and possibly explain the moment of
+        the Big Bang?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62560_r11_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>2. Using an example, explain the Doppler Effect.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t13984_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>3. Explain the Red Shift and how this evidence is used to support the Big Bang.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t36832_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>4. Since 1965, Cosmologists have studied <input class="inline-input" name="cell_blank12" type="text">; the
+        ‘afterglow' of the Big Bang.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t64096_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>5. Use the Large and Small Magellanic Cloud Galaxies to explain the Blue Shift. What force is moving these
+        galaxies, in fact, all galaxies in the Universe?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62688_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <p>6. Reflect on what you just learned and write:</p>
+    <table class="doc-table">
+      <tr>
+        <td>a) Why does this information matter?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62880_r0_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>b) Connections to other topics you’ve studied.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62880_r1_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>c) Write a quiz question to test your memory later.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62880_r2_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>d) Do you have any questions that came up for you while going through the content?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62880_r3_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <h2>4.3 Stars, Stars, Stars</h2>
+    <table class="doc-table">
+      <tr>
+        <td>1. Outline the life cycle of a star in order. Explain each stage.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62944_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>2. The brightness of a star is called its <input class="inline-input" name="cell_blank14" type="text">.
+        Stars can be classified by their <input class="inline-input" name="cell_blank15" type="text"> magnitude (how
+        bright they appear), or their <input class="inline-input" name="cell_blank16" type="text"> magnitude (how
+        bright they are)</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t63200_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>3. Everything about a star (size, colour, what happens to it over its life) is fixed by its <input class=
+        "inline-input" name="cell_blank20" type="text">.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t63648_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>4. The most massive stars are <input class="inline-input" name="cell_blank22" type="text">. They are 40
+        times more massive than the <input class="inline-input" name="cell_blank23" type="text">.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t64928_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>5. Stars of lower mass are <input class="inline-input" name="cell_blank26" type="text"> and <input class=
+        "inline-input" name="cell_blank27" type="text">, and their surface temp is <input class="inline-input" name=
+        "cell_blank28" type="text">.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t65184_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>6. An orange star, a blue star, a yellow star - put these in order from coolest to hottest. <input class=
+        "inline-input" name="cell_blank32" type="text">, <input class="inline-input" name="cell_blank33" type="text">,
+        <input class="inline-input" name="cell_blank34" type="text"></td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t61984_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <p>7. Reflect on what you just learned and write:</p>
+    <table class="doc-table">
+      <tr>
+        <td>a) Why does this information matter?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t65120_r0_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>b) Connections to other topics you’ve studied.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t65120_r1_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>c) Write a quiz question to test your memory later.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t65120_r2_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>d) Do you have any questions that came up for you while going through the content?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t65120_r3_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <h2>4.4 Formation of the Solar System</h2>
+    <table class="doc-table">
+      <tr>
+        <td>1. Describe the formation of the solar system according to the Nebular Theory.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t65312_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <p>2. Reflect on what you just learned and write:</p>
+    <table class="doc-table">
+      <tr>
+        <td>a) Why does this information matter?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62112_r0_c2" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>b) Connections to other topics you’ve studied.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62112_r1_c2" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>c) Write a quiz question to test your memory later.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62112_r2_c2" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>d) Do you have any questions that came up for you while going through the content?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t62112_r3_c2" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <h2>4.5 The Sun’s Energy</h2>
+    <table class="doc-table">
+      <tr>
+        <td>1. Create a diagram of the sun. On your diagram, you must label and explain each of the following: Core,
+        Chromosphere, Corona, Photosphere, Solar Prominences, and Solar Flares.</td>
+      </tr>
+      <tr>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t65248_r1_c0" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <p>2. Reflect on what you just learned and write:</p>
+    <table class="doc-table">
+      <tr>
+        <td>a) Why does this information matter?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t224_r0_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>b) Connections to other topics you’ve studied.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t224_r1_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>c) Write a quiz question to test your memory later.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t224_r2_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>d) Do you have any questions that came up for you while going through the content?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t224_r3_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <h2>4.6 – Astronomical Data & Collection Methods</h2>
+    <table class="doc-table">
+      <tr>
+        <td>1. Our understanding of the universe is based on studying the <input class="inline-input" name=
+        "cell_blank38" type="text"> of objects in space and their <input class="inline-input" name="cell_blank39" type=
+        "text"> from each other.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t96_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>2. Describe how an ‘optical telescope’ works.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t160_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>3. Why is the ‘Hubble Space Telescope’ considered the most significant advancement in Astronomy since
+        Galileo’s first optical telescope?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t544_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>4. Make a Venn Diagram to compare space satellites and space probes</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t352_r0_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t352_r1_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>5. Describe the features of a ‘spaceplane’ and why they are such an important technological tool for the
+        study of Space.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t416_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>6. How many years and how many kilometres did the ‘Cassini Spacecraft’ travel to reach Saturn following its
+        launch in 1997?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t864_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>7. What has NASA planned for Cassini’s ‘Grand Finale’?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t288_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>8. How many months and how many kilometres did the ‘Curiosity Rover’ travel to reach Mars?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t64736_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>9. List the three goals of the Curiosity Rover mission to Mars.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t1120_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>10. List three ways the ‘Parker Solar Probe’ mission is considered extreme?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t1184_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>11. Name the five countries involved in the International Space Station.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t800_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <p>12. Reflect on what you just learned and write:</p>
+    <table class="doc-table">
+      <tr>
+        <td>a) Why does this information matter?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t1376_r0_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>b) Connections to other topics you’ve studied.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t1376_r1_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>c) Write a quiz question to test your memory later.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t1376_r2_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>d) Do you have any questions that came up for you while going through the content?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t1376_r3_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <h2>4.7 – Other Ways of Knowing about the Universe</h2>
+    <table class="doc-table">
+      <tr>
+        <td>1. Why is the science of astronomy considered one of the oldest sciences?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t64864_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>2. How did Aboriginal people use astronomy to benefit their communities?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t672_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>3. How did ancient Egyptians benefit from their study of astronomy?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t1696_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <table class="doc-table">
+      <tr>
+        <td>4. Define creationism in your own words.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t65440_r0_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <p>5. Reflect on what you just learned and write:</p>
+    <table class="doc-table">
+      <tr>
+        <td>a) Why does this information matter?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t56800_r0_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>b) Connections to other topics you’ve studied.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t56800_r1_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>c) Write a quiz question to test your memory later.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t56800_r2_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>d) Do you have any questions that came up for you while going through the content?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t56800_r3_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <h2>4.8 – Space Exploration & Travel</h2>
+    <p>1. The issues surrounding space exploration and travel fall into 3 categories: Ethical, Political and
+    Environmental. Indicate where you stand on space exploration and travel by answering the following questions:</p>
+    <table class="doc-table">
+      <tr>
+        <td>a) Do humans have the right to alter and colonize unique environments on another planet? Explain your
+        answer.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t57056_r0_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>b) Do humans have the right to remove resources from other planets? Explain your answer.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t57056_r1_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>c) Should money be used for space travel when there are so many serious problems on Earth to be addressed?
+        Explain your answer.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t57056_r2_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>d) Who should be responsible for assessing and regulating the environmental impact of space exploration and
+        travel on Earth’s natural systems and the environment of other planets? Why?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t57056_r3_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>e) Who should have ownership over space resources? Explain your answer.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t57056_r4_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>f) Who should be responsible for deciding how space resources should be used? Explain your answer.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t57056_r5_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>g) Should space technology and resources be shared amongst countries? Explain your answer.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t57056_r6_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <p>2. Reflect on what you just learned and write:</p>
+    <table class="doc-table">
+      <tr>
+        <td>a) Why does this information matter?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t23392_r0_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>b) Connections to other topics you’ve studied.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t23392_r1_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>c) Write a quiz question to test your memory later.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t23392_r2_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>d) Do you have any questions that came up for you while going through the content?</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t23392_r3_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <p>Finally, answer yes or no to the following.</p>
+    <table class="doc-table">
+      <tr>
+        <td>1. I added my name to the top of each page.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t23840_r0_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>2. I hand-wrote my answers or used a stylus on a tablet.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t23840_r1_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>3. My work is neat and tidy, and I showed all my work.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t23840_r2_c1" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td>4. I personalize my answers with diagrams, stars or arrows for key points, and I added little side
+        notes.</td>
+        <td class="answer-cell">
+        <textarea class="cell-textarea" name="es_t23840_r3_c1" rows="3"></textarea></td>
+      </tr>
+    </table>
+    <p>This concludes the Learning Guide.</p>
+  </div>
+  <script>
+  (function () {
+  const LANG_STORAGE_KEY = "sc10LgLang";
+  const langButtons = Array.from(document.querySelectorAll('.lang-btn[data-lang]'));
+
+  const setLanguage = (lang) => {
+    const isBilingual = lang === "bi";
+    document.body.classList.toggle("lang-bi", isBilingual);
+
+    for (const btn of langButtons) {
+      const active = btn.dataset.lang === lang;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    }
+
+    try {
+      localStorage.setItem(LANG_STORAGE_KEY, lang);
+    } catch {}
+  };
+
+  try {
+    const saved = localStorage.getItem(LANG_STORAGE_KEY);
+    setLanguage(saved === "bi" ? "bi" : "en");
+  } catch {
+    setLanguage("en");
+  }
+
+  for (const btn of langButtons) {
+    btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
+  }
+  })();
+
+  function normalizeTextForLookup(str) {
+  return String(str || "").replace(/\s+/g, " ").trim();
+  }
+
+  const CN_TRANSLATIONS = {};
+
+  function getEnglishOnlyText(el) {
+  if (!el) return "";
+  const clone = el.cloneNode(true);
+  clone.querySelectorAll('.zh-inline, .zh-block, [lang^="zh"]').forEach(n => n.remove());
+  return normalizeTextForLookup(clone.textContent || "");
+  }
+
+  function isBefore(a, b) {
+  if (!a || !b || !a.compareDocumentPosition) return false;
+  return !!(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+  }
+
+  function findNearestSectionTitle(fromEl) {
+  const anchor = fromEl || document.body;
+  const candidates = Array.from(document.querySelectorAll('h2, p'));
+  const isSectionHeader = (txt) => {
+    if (!txt) return false;
+    if (/^\d+\.\d+\s*-\s+/.test(txt)) return true;
+    if (txt === 'INSTRUCTIONS') return true;
+    if (/^Finally,\s*answer\s+yes\s+or\s+no\s+to\s+the\s+following\.?$/i.test(txt)) return true;
+    return false;
+  };
+
+  for (let i = candidates.length - 1; i >= 0; i--) {
+    const el = candidates[i];
+    if (!isBefore(el, anchor)) continue;
+    if (el.closest && el.closest('.ai-tools')) continue;
+    const t = getEnglishOnlyText(el);
+    if (isSectionHeader(t)) return t;
+  }
+  return '';
+  }
+
+  function extractSectionId(sectionTitle) {
+  const m = /^\s*(\d+\.\d+)\b/.exec(String(sectionTitle || ""));
+  return m ? m[1] : "";
+  }
+
+  function getRowPromptText(tr) {
+  if (!tr) return '';
+  const tds = Array.from(tr.querySelectorAll('td')).filter(td => !td.classList.contains('answer-cell'));
+  const parts = tds.map(td => getEnglishOnlyText(td)).filter(Boolean);
+  return parts.join("\n");
+  }
+
+  function findNearestNumberedParagraph(fromEl) {
+  const anchor = fromEl || document.body;
+  const paras = Array.from(document.querySelectorAll('p'));
+  for (let i = paras.length - 1; i >= 0; i--) {
+    const p = paras[i];
+    if (!isBefore(p, anchor)) continue;
+    if (p.closest && p.closest('.ai-tools')) continue;
+    const t = getEnglishOnlyText(p);
+    // Match "1." / "2." / "10." but NOT section titles like "1.3 - ..."
+    if (/^\d+\.(?!\d)/.test(t)) return t;
+  }
+  return '';
+  }
+
+  function findNearestNumberedScopeRow(answerEl) {
+  const tr = answerEl ? answerEl.closest('tr') : null;
+  if (!tr) return '';
+  const parent = tr.parentElement;
+  if (!parent) return '';
+
+  let cur = tr.previousElementSibling;
+  while (cur) {
+    const t = getRowPromptText(cur);
+    if (/^\d+\.(?!\d)/.test(t)) return t;
+    cur = cur.previousElementSibling;
+  }
+  return '';
+  }
+
+  function uniqNonEmptyLines(lines) {
+  const out = [];
+  const seen = new Set();
+  for (const raw of lines) {
+    const t = normalizeTextForLookup(raw);
+    if (!t) continue;
+    if (seen.has(t)) continue;
+    seen.add(t);
+    out.push(t);
+  }
+  return out;
+  }
+
+  function appendTranslationSpan(el, cn, mode) {
+  if (!el || !cn) return;
+  const span = document.createElement("span");
+  span.lang = "zh-Hans";
+  span.textContent = cn;
+  span.className = mode === "block" ? "zh-block" : "zh-inline";
+  el.appendChild(span);
+  }
+
+  function initBilingualTranslations() {
+  // Block-level translations (most of the document)
+  const elems = document.querySelectorAll('h2, p, td');
+  elems.forEach(el => {
+    if (!el) return;
+    if (el.closest('.ai-tools, .ai-check-wrap')) return;
+    if (el.classList && el.classList.contains('answer-cell')) return;
+    if (el.dataset && el.dataset.cnDone === "1") return;
+    if (el.querySelector && el.querySelector('input, textarea')) return; // handled by inline walk
+    const key = getEnglishOnlyText(el);
+    const cn = CN_TRANSLATIONS[key];
+    if (!cn) return;
+    if (el.querySelector && el.querySelector('.zh-inline, .zh-block')) return;
+    const tag = (el.tagName || "").toLowerCase();
+    const mode = (tag === "h1" || tag === "h2" || tag === "h3") ? "inline" : "block";
+    appendTranslationSpan(el, (mode === "inline" ? "\u00a0" : "") + cn, mode);
+    el.dataset.cnDone = "1";
+  });
+
+  // Inline translations (fragments around fill-in-the-blank inputs)
+  const root = document.querySelector('.page');
+  if (!root) return;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      if (!node || !node.nodeValue) return NodeFilter.FILTER_REJECT;
+      const parent = node.parentElement;
+      if (!parent) return NodeFilter.FILTER_REJECT;
+      if (parent.closest('script, style, .ai-tools, .ai-check-wrap, .zh-inline, .zh-block')) return NodeFilter.FILTER_REJECT;
+      if (parent.closest('[data-cn-done="1"]')) return NodeFilter.FILTER_REJECT;
+      const key = normalizeTextForLookup(node.nodeValue);
+      if (!key) return NodeFilter.FILTER_REJECT;
+      if (!CN_TRANSLATIONS[key]) return NodeFilter.FILTER_REJECT;
+      // Skip pure punctuation / trivial markers
+      if (key === "." || key === "," || key === ":" || key === ";") return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(node => {
+    const key = normalizeTextForLookup(node.nodeValue);
+    const cn = CN_TRANSLATIONS[key];
+    if (!cn) return;
+    const parent = node.parentNode;
+    if (!parent) return;
+    const frag = document.createDocumentFragment();
+    frag.appendChild(document.createTextNode(node.nodeValue));
+    const span = document.createElement('span');
+    span.className = 'zh-inline';
+    span.lang = 'zh-Hans';
+    span.textContent = '\u00a0\uff08' + cn + '\uff09';
+    frag.appendChild(span);
+    parent.replaceChild(frag, node);
+  });
+  }
+
+  // Save/restore inputs so you don't lose progress on refresh
+  const KEY = "sc10_lg1_answers_v3";
+
+  // AI grading (optional)
+  const DEFAULT_GRADE_API_URL = "https://lakesideart.gochatus.org/grade-service/grade";
+  const gradeApiUrlEl = document.getElementById("grade-api-url");
+  const btnTestApi = document.getElementById("btn-test-api");
+  const apiStatusEl = document.getElementById("api-status");
+
+  function setApiStatus(text, kind) {
+    if (!apiStatusEl) return;
+    apiStatusEl.textContent = text || "";
+    apiStatusEl.className = "ai-status" + (kind ? " " + kind : "");
+  }
+
+  function getGradeApiUrl() {
+    if (!gradeApiUrlEl) return DEFAULT_GRADE_API_URL;
+    const url = (gradeApiUrlEl.value || "").trim();
+    return url || DEFAULT_GRADE_API_URL;
+  }
+
+  function saveGradeApiUrl() {
+    if (!gradeApiUrlEl) return;
+    const url = (gradeApiUrlEl.value || "").trim();
+    try {
+      localStorage.setItem("gradeApiUrl", url);
+    } catch {
+      // ignore
+    }
+  }
+
+  async function fetchJsonWithTimeout(url, options, timeoutMs) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const resp = await fetch(url, { ...options, signal: controller.signal });
+      const text = await resp.text().catch(() => "");
+      let data = null;
+      try { data = text ? JSON.parse(text) : null; } catch { data = null; }
+      return { ok: resp.ok, status: resp.status, data, text };
+    } catch (err) {
+      if (err && err.name === "AbortError") return { ok: false, status: 0, data: null, text: "", aborted: true };
+      throw err;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  function extractFirstGradeResult(data) {
+    if (!data) return null;
+    if (Array.isArray(data.results) && data.results[0]) return data.results[0];
+    if (data.result && Array.isArray(data.result.results) && data.result.results[0]) return data.result.results[0];
+    if (data.model_result && Array.isArray(data.model_result.results) && data.model_result.results[0]) return data.model_result.results[0];
+    return null;
+  }
+
+  function deriveHealthUrl(gradeUrl) {
+    try {
+      const u = new URL(gradeUrl);
+      u.search = "";
+      u.hash = "";
+      if (u.pathname.endsWith("/grade")) {
+        u.pathname = u.pathname.replace(/\/grade$/, "/health");
+      } else {
+        u.pathname = u.pathname.replace(/\/+$/, "") + "/health";
+      }
+      return u.toString();
+    } catch {
+      return null;
+    }
+  }
+
+  function deriveQaUrl(gradeUrl) {
+    try {
+      const u = new URL(gradeUrl);
+      u.search = "";
+      u.hash = "";
+      // Common pattern: /grade -> /qa
+      u.pathname = u.pathname.replace(/\/grade$/, "/qa");
+      if (!u.pathname.endsWith("/qa")) {
+        u.pathname = u.pathname.replace(/\/+$/, "") + "/qa";
+      }
+      return u.toString();
+    } catch {
+      return null;
+    }
+  }
+
+  function extractQaPairs(data) {
+    if (!data) return null;
+    if (Array.isArray(data.pairs)) return data.pairs;
+    if (Array.isArray(data.results)) return data.results;
+    if (Array.isArray(data.items)) return data.items;
+    if (Array.isArray(data)) return data;
+    return null;
+  }
+
+  function normalizeQaPair(p) {
+    if (!p || typeof p !== "object") return null;
+    const question = String(p.question ?? p.q ?? "").trim();
+    const answer = String(p.answer ?? p.a ?? "").trim();
+    if (!question && !answer) return null;
+    return { question, answer };
+  }
+
+  async function requestQaAnswer(questionText) {
+    const gradeUrl = getGradeApiUrl();
+    const qaUrl = deriveQaUrl(gradeUrl);
+    if (!qaUrl) throw new Error("no_qa_url");
+
+    const q = String(questionText || "").trim();
+    if (!q) throw new Error("empty_question");
+
+    const payload = { questions: [q] };
+    const aiTimeoutMs = 60000;
+
+    const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+      qaUrl,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      },
+      aiTimeoutMs
+    );
+
+    if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+
+    const pairs = extractQaPairs(data);
+    const firstRaw = Array.isArray(pairs) && pairs.length ? pairs[0] : null;
+    const first = normalizeQaPair(firstRaw);
+    if (!ok || !first || !first.answer) {
+      const reason = (data && data.error) ? data.error : `bad_response_${status}`;
+      const detail = text ? ` (${text.slice(0, 160)})` : "";
+      throw new Error(reason + detail);
+    }
+
+    return first.answer;
+  }
+
+  async function testApi() {
+    const gradeUrl = getGradeApiUrl();
+    setApiStatus("Testing...");
+    try {
+      const healthUrl = deriveHealthUrl(gradeUrl);
+      if (!healthUrl) {
+        setApiStatus("Invalid URL.", "bad");
+        return;
+      }
+      const { ok, status, data, aborted } = await fetchJsonWithTimeout(healthUrl, { method: "GET" }, 4000);
+      if (aborted) {
+        setApiStatus("Health check timed out.", "bad");
+        return;
+      }
+      if (!ok) {
+        setApiStatus(`Health check failed (${status}).`, "bad");
+        return;
+      }
+      const looksHealthy = !!(data && (data.status === "ok" || data.ok === true));
+      setApiStatus(looksHealthy ? "OK" : "OK (nonstandard response)", looksHealthy ? "ok" : "");
+    } catch {
+      setApiStatus("Health check failed.", "bad");
+    }
+  }
+
+  function initAiUi() {
+    if (!gradeApiUrlEl) return;
+    let saved = null;
+    try { saved = localStorage.getItem("gradeApiUrl"); } catch { saved = null; }
+    gradeApiUrlEl.value = saved === null ? DEFAULT_GRADE_API_URL : (saved || "");
+    gradeApiUrlEl.addEventListener("change", () => {
+      saveGradeApiUrl();
+      setApiStatus("", "");
+    });
+    if (btnTestApi) btnTestApi.addEventListener("click", testApi);
+  }
+
+  function setInlineFeedback(el, text, kind) {
+    if (!el) return;
+
+    const body = el.querySelector ? el.querySelector('.ai-tip-body') : null;
+    if (!body) return;
+
+    if (el._hideTimer) {
+      clearTimeout(el._hideTimer);
+      el._hideTimer = null;
+    }
+
+    body.textContent = text || "";
+    el.className = "ai-tip" + (kind ? " " + kind : "");
+
+    const hasText = !!(text && String(text).trim());
+    el.classList.toggle("is-visible", hasText);
+  }
+
+  function getQuestionTextForAnswer(answerEl) {
+    const tr = answerEl ? answerEl.closest("tr") : null;
+    const table = answerEl ? answerEl.closest("table") : null;
+
+    const sectionTitle = findNearestSectionTitle(table || tr || answerEl);
+    const sectionId = extractSectionId(sectionTitle);
+    const outerScope = findNearestNumberedParagraph(table || tr || answerEl);
+    const innerScope = findNearestNumberedScopeRow(answerEl);
+
+    const rowText = tr ? getRowPromptText(tr) : "";
+    const base = rowText || (table ? getEnglishOnlyText(table.querySelector("tr td:not(.answer-cell)")) : "") || "";
+
+    const lines = uniqNonEmptyLines([
+      sectionId ? ("Section: " + sectionId) : "",
+      sectionTitle,
+      outerScope,
+      innerScope,
+      base
+    ]);
+
+    return lines.join("\n");
+  }
+
+  async function gradeOne({ questionText, userText }) {
+    const gradeUrl = getGradeApiUrl();
+    const aiTimeoutMs = 60000;
+    const payload = { pairs: [{ question: questionText || "", answer: userText || "" }] };
+
+    const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+      gradeUrl,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      },
+      aiTimeoutMs
+    );
+
+    if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+    const first = extractFirstGradeResult(data);
+    if (!ok || !first) {
+      const reason = data && data.error ? data.error : `bad_response_${status}`;
+      const detail = text ? ` (${text.slice(0, 160)})` : "";
+      throw new Error(reason + detail);
+    }
+
+    return {
+      verdict: (first.verdict || "").trim(),
+      explanation: (first.explanation || "").trim()
+    };
+  }
+
+  // Hand-authored model answers for pedigree questions (image-based)
+  const PEDIGREE_MODEL_BY_INPUT_NAME = {
+    // 9a
+    "t18_r1_c3": "Leopold.",
+    // 9b
+    "t18_r2_c3": (
+      "Total = 3 grandchildren with hemophilia.\n\n" +
+      "Count the black squares (affected males) in the grandchildren generation:\n" +
+      "- From Alice: 1 affected son\n" +
+      "- From Beatrice: 2 affected sons\n" +
+      "- From Leopold: child shown is a carrier daughter (not affected)"
+    ),
+    // 9c
+    "t18_r3_c3": "No. The pedigree shows female carriers (half-shaded circles) but no affected females.",
+    // 9d
+    "t18_r4_c3": (
+      "Punnett square: Victoria (X XH) x Albert (X Y)\n\n" +
+      "Victoria gametes: X, XH\n" +
+      "Albert gametes: X, Y\n\n" +
+      "XX = normal daughter\n" +
+      "XHX = carrier daughter\n" +
+      "XY = normal son\n" +
+      "XHY = son with hemophilia\n\n" +
+      "So:\n" +
+      "- Daughters: 50% normal, 50% carriers\n" +
+      "- Sons: 50% normal, 50% affected"
+    ),
+    // 9e
+    "t18_r5_c3": (
+      "Each daughter has a 50% chance to be a carrier.\n" +
+      "4 daughters shown -> predicted carriers = 50% of 4 = 2."
+    ),
+    // 9f
+    "t18_r6_c3": (
+      "Gen I: Father XHY (hemophilia) x Mother XX (unaffected, not a carrier)\n\n" +
+      "Outcome:\n" +
+      "- All daughters: XHX (carriers)\n" +
+      "- All sons: XY (unaffected)\n\n" +
+      "Gen II: 2 carrier daughters and 2 normal sons\n" +
+      "Gen III: The first carrier daughter (XHX) has a son with hemophilia (XHY)."
+    )
+  };
+
+  // Central model-answer registry (extend as needed)
+  const MODEL_ANSWER_BY_INPUT_NAME = {
+    ...PEDIGREE_MODEL_BY_INPUT_NAME,
+
+    // 1.2 - The Nucleus and DNA (Reflect)
+    "t6_r0_c3": "This information matters because cells are the basic unit of life. Understanding cell structures and their functions helps explain how living things grow, repair damage, and stay healthy. It also helps us understand diseases and how cells divide and specialize.",
+    "t6_r1_c3": "This topic connects to Science 8 cell biology, including plant and animal cells. It also connects to topics such as mitosis, the cell cycle, DNA, genetics, and body systems. For example, learning about the nucleus helps explain how DNA controls cell activities and inheritance.",
+    "t6_r2_c3": "1. What is the function of the nucleus?\n2. What is chromatin and where is it found?\n3. What is the role of the nucleolus?\n4. What does the nuclear envelope do?\n5. Why are nuclear pores important?",
+    "t6_r3_c3": "How does DNA change from chromatin into chromosomes? Why do some cells not have a nucleus? How does the nucleus communicate with other parts of the cell?"
+  };
+
+  // Fallback model-answer lookup by section + prompt text (handles cases where input names change)
+  const MODEL_ANSWER_BY_SECTION_PROMPT = {
+    // 1.2 - The Nucleus and DNA (Reflect)
+    "1.2|why does this information matter": MODEL_ANSWER_BY_INPUT_NAME["t6_r0_c3"],
+    "1.2|connections to other topics you’ve studied": MODEL_ANSWER_BY_INPUT_NAME["t6_r1_c3"],
+    "1.2|connections to other topics you've studied": MODEL_ANSWER_BY_INPUT_NAME["t6_r1_c3"],
+    "1.2|write quiz questions to test your memory later": MODEL_ANSWER_BY_INPUT_NAME["t6_r2_c3"],
+    "1.2|do you have any questions that arose while reviewing the content": MODEL_ANSWER_BY_INPUT_NAME["t6_r3_c3"]
+  };
+
+  function normalizePromptKey(s) {
+    return normalizeTextForLookup(String(s || ""))
+      .toLowerCase()
+      .replace(/[\?\.]$/, "")
+      .trim();
+  }
+  const MODEL_ANSWER_BY_INLINE_GROUP = {
+    // Unit 4, 4.1 fill-in-the-blanks
+    "u4_4_1_q1": "The Universe is made up of matter, energy, and a whole lot of empty space.",
+    "u4_4_1_q2": "A galaxy contains stars, gas, and dust all held together by gravity.",
+    "u4_4_1_q3": "Galaxies can be classified, or sorted, by their shape."
+  };
+
+  function getModelAnswerForAnswerEl(answerEl) {
+    const name = answerEl && answerEl.name ? String(answerEl.name) : "";
+    const direct = MODEL_ANSWER_BY_INPUT_NAME[name] || "";
+    if (direct) return direct;
+
+    // Fallback: section + prompt text
+    const tr = answerEl ? answerEl.closest('tr') : null;
+    const prompt = tr ? getRowPromptText(tr) : "";
+    const sectionTitle = findNearestSectionTitle(answerEl);
+    const sectionId = extractSectionId(sectionTitle);
+    if (!sectionId || !prompt) return "";
+    const key = sectionId + "|" + normalizePromptKey(prompt);
+    return MODEL_ANSWER_BY_SECTION_PROMPT[key] || "";
+  }
+
+  function getModelAnswerForInlineGroup(groupEl) {
+    const key = groupEl && groupEl.getAttribute ? String(groupEl.getAttribute('data-ai-inline-group') || "") : "";
+    return MODEL_ANSWER_BY_INLINE_GROUP[key] || "";
+  }
+
+  function formatVerdictExplanation(verdict, explanation) {
+    const v = String(verdict || "").trim();
+    const e = String(explanation || "").trim();
+    if (v && e) return v + ": " + e;
+    if (v) return v;
+    return e;
+  }
+
+  async function gradeAgainstModelAnswer({ questionText, userText, modelAnswer }) {
+    const gradeUrl = getGradeApiUrl();
+    const aiTimeoutMs = 60000;
+
+    const prompt = [
+      String(questionText || "").trim(),
+      "Reference/model answer (for the teacher):\n" + String(modelAnswer || "").trim(),
+      "Judge whether the student's answer is correct compared to the reference. Return verdict Correct/Wrong and a short explanation."
+    ].filter(Boolean).join("\n\n");
+
+    const payload = { pairs: [{ question: prompt, answer: String(userText || "") }] };
+    const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+      gradeUrl,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      },
+      aiTimeoutMs
+    );
+
+    if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+    const first = extractFirstGradeResult(data);
+    if (!ok || !first) {
+      const reason = data && data.error ? data.error : `bad_response_${status}`;
+      const detail = text ? ` (${text.slice(0, 160)})` : "";
+      throw new Error(reason + detail);
+    }
+
+    return {
+      verdict: (first.verdict || "").trim(),
+      explanation: (first.explanation || "").trim()
+    };
+  }
+
+  async function requestOneCorrectAnswer(questionText) {
+    const gradeUrl = getGradeApiUrl();
+    const aiTimeoutMs = 60000;
+    const prompt = String(questionText || "").trim();
+    if (!prompt) throw new Error('missing_question');
+
+    const q = prompt + "\n\nProvide ONE correct answer as a model answer. Keep it concise. Do NOT mention that the student did not answer.";
+    // Some grader backends respond with "The student provided no answer" when answer is empty.
+    // Use a neutral placeholder to force generation of a real model answer.
+    const payload = { pairs: [{ question: q, answer: "N/A" }] };
+
+    const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+      gradeUrl,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      },
+      aiTimeoutMs
+    );
+
+    if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+    const first = extractFirstGradeResult(data);
+    if (!ok || !first) {
+      const reason = data && data.error ? data.error : `bad_response_${status}`;
+      const detail = text ? ` (${text.slice(0, 160)})` : "";
+      throw new Error(reason + detail);
+    }
+
+    let raw = (first.model_answer || first.suggested_answer || first.answer || first.explanation || "").trim();
+    if (!raw) throw new Error('empty_model_answer');
+
+    // Filter out unhelpful meta-responses.
+    if (/\bprovided\s+no\s+answer\b/i.test(raw) || /\bstudent\s+provided\s+no\s+answer\b/i.test(raw)) {
+      throw new Error('unhelpful_model_answer');
+    }
+
+    // Strip common leading labels.
+    raw = raw.replace(/^\s*(?:example\s+answer|model\s+answer|answer)\s*:\s*/i, "").trim();
+    return raw;
+  }
+
+  async function checkCellAnswer(answerEl, feedbackEl, btn) {
+    const userText = (answerEl && answerEl.value ? answerEl.value : "").trim();
+    const questionText = getQuestionTextForAnswer(answerEl);
+    const modelAnswer = getModelAnswerForAnswerEl(answerEl);
+
+    // Empty answer: show model answer if present; otherwise generate one possible answer.
+    if (!userText) {
+      if (btn) btn.disabled = true;
+      setInlineFeedback(feedbackEl, "", "");
+      try {
+        if (modelAnswer) {
+          setInlineFeedback(feedbackEl, modelAnswer, "");
+        } else {
+          // Prefer /qa for generating a correct answer.
+          let generated = "";
+          try {
+            generated = await requestQaAnswer(questionText);
+          } catch {
+            generated = await requestOneCorrectAnswer(questionText);
+          }
+          setInlineFeedback(feedbackEl, generated, "");
+        }
+      } catch (err) {
+        console.warn("Empty-answer handler failed:", err);
+        setInlineFeedback(feedbackEl, "AI grading unavailable (check URL in AI answer check settings).", "bad");
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+      return;
+    }
+
+    // Non-empty answer: show the model answer if present; otherwise generate an AI answer.
+    if (btn) btn.disabled = true;
+    setInlineFeedback(feedbackEl, "Generating answer...", "");
+    try {
+      if (modelAnswer) {
+        setInlineFeedback(feedbackEl, modelAnswer, "");
+      } else {
+        // Use /qa to answer the question.
+        let generated = "";
+        try {
+          generated = await requestQaAnswer(questionText);
+        } catch {
+          generated = await requestOneCorrectAnswer(questionText);
+        }
+        setInlineFeedback(feedbackEl, generated, "");
+      }
+    } catch (err) {
+      console.warn("Answer generation failed:", err);
+      setInlineFeedback(feedbackEl, "AI grading unavailable (check URL in AI answer check settings).", "bad");
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  function collectEnglishTextWithInputs(rootEl, useInputValues) {
+    const parts = [];
+    const walk = (node) => {
+      if (!node) return;
+      if (node.nodeType === Node.TEXT_NODE) {
+        parts.push(node.nodeValue || "");
+        return;
+      }
+      if (node.nodeType !== Node.ELEMENT_NODE) return;
+
+      const el = node;
+      if (el.classList && (el.classList.contains('zh-inline') || el.classList.contains('zh-block'))) return;
+      if (el.classList && el.classList.contains('ai-check-wrap')) return;
+      if ((el.getAttribute && (el.getAttribute('lang') || '')).toLowerCase().startsWith('zh')) return;
+
+      if (el.tagName === 'INPUT') {
+        const v = (el.value || "").trim();
+        parts.push(useInputValues ? (v || "____") : "____");
+        return;
+      }
+
+      for (const child of Array.from(el.childNodes || [])) walk(child);
+    };
+
+    walk(rootEl);
+    return normalizeTextForLookup(parts.join(''));
+  }
+
+  async function checkInlineGroupAnswer(groupEl, tipEl, btn) {
+    if (!groupEl) return;
+    const inputs = Array.from(groupEl.querySelectorAll('input.inline-input'));
+    const hasAny = inputs.some(i => (i.value || '').trim());
+    const modelAnswer = getModelAnswerForInlineGroup(groupEl);
+
+    const sectionTitle = findNearestSectionTitle(groupEl);
+    const sectionId = extractSectionId(sectionTitle);
+    const baseQuestion = collectEnglishTextWithInputs(groupEl, false);
+    const questionText = uniqNonEmptyLines([
+      sectionId ? ("Section: " + sectionId) : "",
+      sectionTitle,
+      baseQuestion
+    ]).join("\n");
+
+    if (!hasAny) {
+      if (btn) btn.disabled = true;
+      setInlineFeedback(tipEl, "", "");
+      try {
+        // Empty answer: show model answer if present; otherwise generate one possible answer.
+        if (modelAnswer) {
+          setInlineFeedback(tipEl, modelAnswer, "");
+        } else {
+          // Prefer /qa for generating a correct answer.
+          let generated = "";
+          try {
+            generated = await requestQaAnswer(questionText);
+          } catch {
+            generated = await requestOneCorrectAnswer(questionText);
+          }
+          setInlineFeedback(tipEl, generated, "");
+        }
+      } catch (err) {
+        console.warn("Empty-answer handler failed:", err);
+        setInlineFeedback(tipEl, "AI grading unavailable (check URL in AI answer check settings).", "bad");
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+      return;
+    }
+
+    const userText = collectEnglishTextWithInputs(groupEl, true);
+
+    // Non-empty answer: show the model answer if present; otherwise generate an AI answer.
+    if (btn) btn.disabled = true;
+    setInlineFeedback(tipEl, "Generating answer...", "");
+    try {
+      if (modelAnswer) {
+        setInlineFeedback(tipEl, modelAnswer, "");
+      } else {
+        // Use /qa to answer the question.
+        let generated = "";
+        try {
+          generated = await requestQaAnswer(questionText);
+        } catch {
+          generated = await requestOneCorrectAnswer(questionText);
+        }
+        setInlineFeedback(tipEl, generated, "");
+      }
+    } catch (err) {
+      console.warn("Answer generation failed:", err);
+      setInlineFeedback(tipEl, "AI grading unavailable (check URL in AI answer check settings).", "bad");
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  // Some imported docs combine multiple numbered fill-in items into one <p>.
+  // Split them into separate inline groups so each gets its own Check button.
+  function splitU4_4_1FillInIntoInlineGroups() {
+    const h2s = Array.from(document.querySelectorAll('h2'));
+    const targetH2 = h2s.find(h => getEnglishOnlyText(h) === "4.1 – Dissecting the Universe");
+    if (!targetH2) return;
+
+    const p = targetH2.nextElementSibling;
+    if (!p || p.tagName !== "P") return;
+    if (p.matches && p.matches('p[data-ai-inline-group]')) return;
+
+    const hasExpectedInputs =
+      p.querySelector && (
+        p.querySelector('input.inline-input[name="lg_blank1"]') &&
+        p.querySelector('input.inline-input[name="lg_blank4"]') &&
+        p.querySelector('input.inline-input[name="lg_blank7"]')
+      );
+    if (!hasExpectedInputs) return;
+
+    const html = String(p.innerHTML || "");
+    const m2 = html.match(/\n\s*\n2\./);
+    const m3 = html.match(/\n\s*\n3\./);
+    if (!m2 || !m3 || m2.index == null || m3.index == null) return;
+
+    const i2 = m2.index;
+    const i3 = m3.index;
+    if (!(i2 > 0 && i3 > i2)) return;
+
+    const q1 = html.slice(0, i2).trim();
+    const q2 = html.slice(i2, i3).trim();
+    const q3 = html.slice(i3).trim();
+    if (!q1 || !q2 || !q3) return;
+
+    const p1 = document.createElement("p");
+    p1.setAttribute("data-ai-inline-group", "u4_4_1_q1");
+    p1.innerHTML = q1;
+
+    const p2 = document.createElement("p");
+    p2.setAttribute("data-ai-inline-group", "u4_4_1_q2");
+    p2.innerHTML = q2;
+
+    const p3 = document.createElement("p");
+    p3.setAttribute("data-ai-inline-group", "u4_4_1_q3");
+    p3.innerHTML = q3;
+
+    p.insertAdjacentElement("beforebegin", p1);
+    p.insertAdjacentElement("beforebegin", p2);
+    p.insertAdjacentElement("beforebegin", p3);
+    p.remove();
+  }
+
+  function initAiInlineGroups() {
+    const groups = document.querySelectorAll('p[data-ai-inline-group]');
+    let idx = 0;
+    groups.forEach(groupEl => {
+      if (!groupEl || groupEl.dataset.aiGroupAttached === "1") return;
+      const inputs = groupEl.querySelectorAll('input.inline-input');
+      if (!inputs || inputs.length === 0) return;
+
+      groupEl.dataset.aiGroupAttached = "1";
+      idx++;
+
+      // Ensure inputs are saved by our localStorage mechanism
+      inputs.forEach((inp, i) => {
+        if (!inp.getAttribute('name')) {
+          inp.setAttribute('name', (groupEl.getAttribute('data-ai-inline-group') || 'inline_group') + '_blank' + (i + 1));
+        }
+      });
+
+      const wrap = document.createElement('div');
+      wrap.className = 'ai-check-wrap';
+
+      const row = document.createElement('div');
+      row.className = 'ai-check-row';
+
+      const btnReset = document.createElement('button');
+      btnReset.type = 'button';
+      btnReset.className = 'ai-reset-btn';
+      btnReset.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 16h10l1-16"/><path d="M10 11v7"/><path d="M14 11v7"/></svg>';
+      btnReset.title = 'Reset (\u6e05\u7a7a)';
+      btnReset.setAttribute('aria-label', 'Reset (\u6e05\u7a7a)');
+
+      const btnCheck = document.createElement('button');
+      btnCheck.type = 'button';
+      btnCheck.className = 'ai-check-btn';
+      btnCheck.textContent = 'Check';
+      btnCheck.title = 'Send your answer to the AI grader';
+
+      const tip = document.createElement('div');
+      tip.className = 'ai-tip';
+      tip.setAttribute('role', 'status');
+      tip.setAttribute('aria-live', 'polite');
+      tip.id = 'ai-tip-inline-' + idx;
+
+      const tipClose = document.createElement('button');
+      tipClose.type = 'button';
+      tipClose.className = 'ai-tip-close';
+      tipClose.textContent = '\u00d7';
+      tipClose.title = 'Close';
+      tipClose.setAttribute('aria-label', 'Close');
+
+      const tipBody = document.createElement('div');
+      tipBody.className = 'ai-tip-body';
+
+      tipClose.addEventListener('click', () => setInlineFeedback(tip, '', ''));
+      tip.appendChild(tipClose);
+      tip.appendChild(tipBody);
+
+      btnReset.addEventListener('click', () => {
+        inputs.forEach(inp => { inp.value = ''; });
+        setInlineFeedback(tip, '', '');
+        try {
+          inputs.forEach(inp => inp.dispatchEvent(new Event('input', { bubbles: true })));
+        } catch {}
+        const first = inputs[0];
+        if (first) first.focus();
+      });
+
+      btnCheck.addEventListener('click', () => checkInlineGroupAnswer(groupEl, tip, btnCheck));
+
+      row.appendChild(btnReset);
+      row.appendChild(btnCheck);
+      wrap.appendChild(row);
+      wrap.appendChild(tip);
+      groupEl.appendChild(wrap);
+    });
+  }
+
+  function initAiChecks() {
+    const targets = document.querySelectorAll('.answer-cell input[name], .answer-cell textarea[name]');
+    let idx = 0;
+    targets.forEach(answerEl => {
+      if (!answerEl || answerEl.dataset.aiCheckAttached === "1") return;
+      answerEl.dataset.aiCheckAttached = "1";
+      idx++;
+
+      const wrap = document.createElement("div");
+      wrap.className = "ai-check-wrap";
+
+      const row = document.createElement("div");
+      row.className = "ai-check-row";
+
+      const btnReset = document.createElement("button");
+      btnReset.type = "button";
+      btnReset.className = "ai-reset-btn";
+      btnReset.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 16h10l1-16"/><path d="M10 11v7"/><path d="M14 11v7"/></svg>';
+      btnReset.title = "Reset (\u6e05\u7a7a)";
+      btnReset.setAttribute("aria-label", "Reset (\u6e05\u7a7a)");
+
+      const btnCheck = document.createElement("button");
+      btnCheck.type = "button";
+      btnCheck.className = "ai-check-btn";
+      btnCheck.textContent = "Check";
+      btnCheck.title = "Send your answer to the AI grader";
+
+      const tip = document.createElement("div");
+      tip.className = "ai-tip";
+      tip.setAttribute("role", "status");
+      tip.setAttribute("aria-live", "polite");
+      tip.id = "ai-tip-" + idx;
+
+      const tipClose = document.createElement("button");
+      tipClose.type = "button";
+      tipClose.className = "ai-tip-close";
+      tipClose.textContent = "\u00d7";
+      tipClose.title = "Close";
+      tipClose.setAttribute("aria-label", "Close");
+
+      const tipBody = document.createElement("div");
+      tipBody.className = "ai-tip-body";
+
+      tipClose.addEventListener("click", () => {
+        setInlineFeedback(tip, "", "");
+      });
+
+      tip.appendChild(tipClose);
+      tip.appendChild(tipBody);
+
+      btnReset.addEventListener("click", () => {
+        answerEl.value = "";
+        setInlineFeedback(tip, "", "");
+        try { answerEl.dispatchEvent(new Event('input', { bubbles: true })); } catch {}
+        answerEl.focus();
+      });
+
+      btnCheck.addEventListener("click", () => checkCellAnswer(answerEl, tip, btnCheck));
+
+      row.appendChild(btnReset);
+      row.appendChild(btnCheck);
+      wrap.appendChild(row);
+      wrap.appendChild(tip);
+      answerEl.insertAdjacentElement("afterend", wrap);
+    });
+  }
+
+  function embedImages() {
+    const cellTargets = [
+      {
+        match: "Describe the structure of DNA, including its components.",
+        src: "sc10_lg1_assets_v3/img_2.png",
+        alt: "DNA structure diagram",
+      },
+      {
+        match: "Watch the video that reviews cell structures and functions that you learned in Science 8",
+        src: "sc10_lg1_assets_v3/img_1.png",
+        alt: "Cell structures review image",
+      },
+      {
+        match: "Use a Punnett Square to show the probability of 1 heterozygous Black Bear and one homozygous Black Bear producing a Kermode Bear.",
+        src: "sc10_lg1_assets_v3/img_4.png",
+        alt: "Punnett square reference image",
+      },
+      {
+        match: "Complete the Punnett Square practice questions. A key is provided for you to check your work and understanding of Mendelian Genetics.",
+        src: "sc10_lg1_assets_v3/img_5.png",
+        alt: "Punnett square practice key",
+      },
+      {
+        match: "Answer the following questions using the ‘Pedigree of the Royal Family’ and the inheritance",
+        src: "sc10_lg1_assets_v3/img_6.png",
+        alt: "Royal family pedigree (hemophilia)",
+      },
+    ];
+
+    const afterTargets = [
+      {
+        match: "Mendelian Genetics and Inherited Traits",
+        src: "sc10_lg1_assets_v3/img_3.png",
+        alt: "Mendelian genetics overview",
+      },
+    ];
+
+    document.querySelectorAll('td').forEach(td => {
+      const raw = (td.textContent || "").trim();
+      for (const t of cellTargets) {
+        let already = false;
+        for (const img of td.querySelectorAll('img[data-embed-for]')) {
+          if (img.getAttribute('data-embed-for') === t.match) {
+            already = true;
+            break;
+          }
+        }
+
+        if (raw.includes(t.match) && !already) {
+          const img = document.createElement('img');
+          img.className = 'doc-image';
+          img.src = t.src;
+          img.alt = t.alt;
+          img.setAttribute('data-embed-for', t.match);
+          td.appendChild(img);
+        }
+      }
+    });
+
+    document.querySelectorAll('h1, h2, h3').forEach(h => {
+      const raw = (h.textContent || "").trim();
+      for (const t of afterTargets) {
+        if (!raw.includes(t.match)) continue;
+
+        let already = false;
+        const next = h.nextElementSibling;
+        if (next) {
+          if (next.matches && next.matches('img[data-embed-after]') && next.getAttribute('data-embed-after') === t.match) {
+            already = true;
+          } else if (next.querySelector) {
+            const img = next.querySelector('img[data-embed-after]');
+            if (img && img.getAttribute('data-embed-after') === t.match) already = true;
+          }
+        }
+        if (already) continue;
+
+        const p = document.createElement('p');
+        const img = document.createElement('img');
+        img.className = 'doc-image';
+        img.src = t.src;
+        img.alt = t.alt;
+        img.setAttribute('data-embed-after', t.match);
+        p.appendChild(img);
+        h.insertAdjacentElement('afterend', p);
+      }
+    });
+  }
+
+  function save() {
+    const data = {};
+    document.querySelectorAll('input[name], textarea[name]').forEach(el => {
+      data[el.name] = el.value;
+    });
+    localStorage.setItem(KEY, JSON.stringify(data));
+  }
+  function load() {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    Object.entries(data).forEach(([k,v]) => {
+      const el = document.querySelector(`[name="${CSS.escape(k)}"]`);
+      if (el) el.value = v;
+    });
+  }
+  document.addEventListener('input', (e) => {
+    if (e.target.matches('input[name], textarea[name]')) save();
+  });
+
+  document.addEventListener('click', (e) => {
+    const cell = e.target && e.target.closest ? e.target.closest('td.answer-cell') : null;
+    if (!cell) return;
+    if (e.target.closest && e.target.closest('.ai-check-wrap')) return;
+    if (e.target.matches && e.target.matches('input, textarea')) return;
+    const field = cell.querySelector('input, textarea');
+    if (!field) return;
+    field.focus();
+  });
+  window.addEventListener('load', () => {
+    load();
+    embedImages();
+    initBilingualTranslations();
+    initAiUi();
+    initAiChecks();
+    splitU4_4_1FillInIntoInlineGroups();
+    initAiInlineGroups();
+  });
+  </script>
+</body>
+</html>
