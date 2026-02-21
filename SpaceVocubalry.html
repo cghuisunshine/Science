@@ -335,41 +335,149 @@
   </div>
 
   <script>
+    const UI = {
+      en: {
+        docTitle: "Space Vocabulary - Matching Practice",
+        mainTitle: "Matching Practice: Space Vocabulary",
+        subTitle: "Click a left-hand box, then click its right-hand match.",
+        colWords: "Words",
+        colDefs: "Definitions",
+        wordsAria: "Words list",
+        defsAria: "Definitions list",
+        btnLang: "EN+中文",
+        btnShuffle: "Shuffle",
+        btnReset: "Reset",
+        btnShow: "Show Answers",
+        btnHide: "Hide Answers",
+        status: (m, total) => `Matches: ${m} / ${total}`,
+        labelExplanation: "Explanation",
+        labelExample: "Example",
+        hint_default: "Tip: You can change your pick anytime—just click a different card.",
+        hint_all_done: "All matched! Press Shuffle to practice again, or Reset to start over.",
+        hint_correct: "Correct! Keep going.",
+        hint_wrong: "Not a match—try again.",
+        hint_shuffled: "Shuffled! Continue matching.",
+        hint_reset: "Reset complete. Start matching!",
+        hint_show_answers: "Answers connected. Detailed explanations and examples are shown on the left.",
+        hint_hide_answers: "Answers hidden. Keep practicing!"
+      },
+      zh: {
+        docTitle: "太空词汇 - 连线配对练习",
+        mainTitle: "配对练习：太空词汇",
+        subTitle: "先点击左侧词汇，再点击右侧对应解释。",
+        colWords: "词汇",
+        colDefs: "定义",
+        wordsAria: "词汇列表",
+        defsAria: "定义列表",
+        btnLang: "EN+中文",
+        btnShuffle: "打乱",
+        btnReset: "重置",
+        btnShow: "显示答案",
+        btnHide: "隐藏答案",
+        status: (m, total) => `已配对：${m} / ${total}`,
+        labelExplanation: "解释",
+        labelExample: "例子",
+        hint_default: "提示：你可以随时重新选择，直接点击另一张卡片即可。",
+        hint_all_done: "全部配对完成！可点击“打乱”继续练习，或点击“重置”重新开始。",
+        hint_correct: "配对正确，继续加油。",
+        hint_wrong: "配对错误，请再试一次。",
+        hint_shuffled: "已打乱，继续配对吧。",
+        hint_reset: "已重置，请开始新的配对练习。",
+        hint_show_answers: "已显示答案连线，左侧同时展示详细解释与例子。",
+        hint_hide_answers: "已隐藏答案，继续练习。"
+      },
+      both: {
+        docTitle: "Space Vocabulary - Matching Practice / 太空词汇 - 连线配对练习",
+        mainTitle: "Matching Practice: Space Vocabulary / 配对练习：太空词汇",
+        subTitle: "Click a left-hand box, then click its right-hand match. / 先点击左侧词汇，再点击右侧对应解释。",
+        colWords: "Words / 词汇",
+        colDefs: "Definitions / 定义",
+        wordsAria: "Words list / 词汇列表",
+        defsAria: "Definitions list / 定义列表",
+        btnLang: "English",
+        btnShuffle: "Shuffle / 打乱",
+        btnReset: "Reset / 重置",
+        btnShow: "Show Answers / 显示答案",
+        btnHide: "Hide Answers / 隐藏答案",
+        status: (m, total) => `Matches: ${m} / ${total} | 已配对：${m} / ${total}`,
+        labelExplanation: "Explanation / 解释",
+        labelExample: "Example / 例子",
+        hint_default: "Tip: You can change your pick anytime. / 提示：你可以随时重新选择。",
+        hint_all_done: "All matched! Shuffle or reset. / 全部配对完成！可打乱或重置。",
+        hint_correct: "Correct! Keep going. / 配对正确，继续加油。",
+        hint_wrong: "Not a match—try again. / 配对错误，请再试一次。",
+        hint_shuffled: "Shuffled! Continue matching. / 已打乱，继续配对吧。",
+        hint_reset: "Reset complete. Start matching! / 已重置，请开始新的配对练习。",
+        hint_show_answers: "Answers connected with details shown. / 已显示答案连线与详细解释。",
+        hint_hide_answers: "Answers hidden. Keep practicing! / 已隐藏答案，继续练习。"
+      }
+    };
+
     const PAIRS = [
       {
         id: "nebula",
-        term: "nebula",
-        def: "massive clouds of dust, hydrogen and helium gas",
-        explanation: "A nebula is an interstellar cloud where new stars can be born, or where dead stars leave gas and dust behind.",
-        example: "The Orion Nebula is a stellar nursery where astronomers observe young stars forming."
+        term: { en: "nebula", zh: "星云" },
+        def: { en: "massive clouds of dust, hydrogen and helium gas", zh: "由大量尘埃、氢气和氦气组成的巨大云团" },
+        explanation: {
+          en: "A nebula is an interstellar cloud where new stars can be born, or where dead stars leave gas and dust behind.",
+          zh: "星云是星际空间中的云状物质区，既可能孕育新恒星，也可能是恒星死亡后留下的气体和尘埃。"
+        },
+        example: {
+          en: "The Orion Nebula is a stellar nursery where astronomers observe young stars forming.",
+          zh: "猎户座大星云就是典型的“恒星摇篮”，天文学家可以在那里观测年轻恒星的形成过程。"
+        }
       },
       {
         id: "universe",
-        term: "universe",
-        def: "made up of all matter and space",
-        explanation: "The universe includes all galaxies, stars, planets, light, matter, energy, and even the space-time they exist in.",
-        example: "When we observe distant galaxies with telescopes, we are studying a tiny part of the whole universe."
+        term: { en: "universe", zh: "宇宙" },
+        def: { en: "made up of all matter and space", zh: "由所有物质与空间组成的整体" },
+        explanation: {
+          en: "The universe includes all galaxies, stars, planets, light, matter, energy, and even the space-time they exist in.",
+          zh: "宇宙包含所有星系、恒星、行星、光、物质、能量，以及它们存在其中的时空。"
+        },
+        example: {
+          en: "When we observe distant galaxies with telescopes, we are studying a tiny part of the whole universe.",
+          zh: "当我们用望远镜观测遥远星系时，其实只是在研究整个宇宙中的很小一部分。"
+        }
       },
       {
         id: "star",
-        term: "star",
-        def: "a huge ball of gas held by gravity",
-        explanation: "A star is a massive sphere of hot gas where nuclear fusion in its core releases heat and light.",
-        example: "Our Sun is a star that provides Earth with light and energy."
+        term: { en: "star", zh: "恒星" },
+        def: { en: "a huge ball of gas held by gravity", zh: "由引力维持的巨大气体球" },
+        explanation: {
+          en: "A star is a massive sphere of hot gas where nuclear fusion in its core releases heat and light.",
+          zh: "恒星是巨大的炽热气体球体，其核心通过核聚变持续释放光和热。"
+        },
+        example: {
+          en: "Our Sun is a star that provides Earth with light and energy.",
+          zh: "太阳就是一颗恒星，它为地球提供光和能量。"
+        }
       },
       {
         id: "constellation",
-        term: "constellation",
-        def: "group of stars that form a pattern",
-        explanation: "A constellation is a pattern of stars seen from Earth; many constellations are named after mythological figures or objects.",
-        example: "Orion and Ursa Major are well-known constellations visible in the night sky."
+        term: { en: "constellation", zh: "星座" },
+        def: { en: "group of stars that form a pattern", zh: "在天空中形成特定图案的一组恒星" },
+        explanation: {
+          en: "A constellation is a pattern of stars seen from Earth; many constellations are named after mythological figures or objects.",
+          zh: "星座是从地球视角看到的恒星图案，很多星座以神话人物或事物命名。"
+        },
+        example: {
+          en: "Orion and Ursa Major are well-known constellations visible in the night sky.",
+          zh: "猎户座和大熊座是夜空中常见且知名的星座。"
+        }
       },
       {
         id: "galaxy",
-        term: "galaxy",
-        def: "contains stars, gas and dust held by gravity",
-        explanation: "A galaxy is a huge system containing billions of stars, gas, dust, and dark matter bound together by gravity.",
-        example: "The Milky Way is the galaxy that contains our Solar System."
+        term: { en: "galaxy", zh: "星系" },
+        def: { en: "contains stars, gas and dust held by gravity", zh: "由引力束缚的恒星、气体和尘埃系统" },
+        explanation: {
+          en: "A galaxy is a huge system containing billions of stars, gas, dust, and dark matter bound together by gravity.",
+          zh: "星系是由数十亿颗恒星、气体、尘埃和暗物质组成的巨大系统，它们通过引力结合在一起。"
+        },
+        example: {
+          en: "The Milky Way is the galaxy that contains our Solar System.",
+          zh: "银河系就是包含我们太阳系的星系。"
+        }
       }
     ];
 
@@ -395,7 +503,23 @@
         .replaceAll("'", "&#039;");
     }
 
+    function uiText(key){
+      return UI[currentLang][key];
+    }
+
+    function i18nValue(valueByLang){
+      if(currentLang === "both"){
+        const en = valueByLang?.en ?? "";
+        const zh = valueByLang?.zh ?? "";
+        if(en && zh) return `${en} / ${zh}`;
+        return en || zh;
+      }
+      return valueByLang?.[currentLang] ?? valueByLang?.en ?? valueByLang?.zh ?? "";
+    }
+
     // State
+    const LANG_ORDER = ["en", "both"];
+    let currentLang = "en";
     let selectedLeft = null;   // { id, el }
     let selectedRight = null;  // { id, el }
     let matched = new Set();   // ids
@@ -627,19 +751,32 @@
 
     // UI helpers
     function updateStatus(){
-      $("#status").textContent = `Matches: ${matched.size} / ${PAIRS.length}`;
+      $("#status").textContent = uiText("status")(matched.size, PAIRS.length);
     }
 
-    function updateHint(msg){
+    function updateHint(key){
       const hint = $("#hint");
-      if(msg){ hint.textContent = msg; return; }
-      hint.textContent = matched.size === PAIRS.length
-        ? "All matched! Press Shuffle to practice again, or Reset to start over."
-        : "Tip: You can change your pick anytime—just click a different card.";
+      if(key){ hint.textContent = uiText(key); return; }
+      hint.textContent = matched.size === PAIRS.length ? uiText("hint_all_done") : uiText("hint_default");
     }
 
     function clearWrongMarks(){
       document.querySelectorAll(".card.wrong").forEach(el => el.classList.remove("wrong"));
+    }
+
+    function syncStaticUi(){
+      document.documentElement.lang = currentLang === "zh" ? "zh" : "en";
+      document.title = uiText("docTitle");
+      $("#mainTitle").textContent = uiText("mainTitle");
+      $("#subTitle").textContent = uiText("subTitle");
+      $("#leftColTitle").textContent = uiText("colWords");
+      $("#rightColTitle").textContent = uiText("colDefs");
+      $("#leftList").setAttribute("aria-label", uiText("wordsAria"));
+      $("#rightList").setAttribute("aria-label", uiText("defsAria"));
+      $("#langBtn").textContent = uiText("btnLang");
+      $("#shuffleBtn").textContent = uiText("btnShuffle");
+      $("#resetBtn").textContent = uiText("btnReset");
+      $("#showBtn").textContent = showAnswers ? uiText("btnHide") : uiText("btnShow");
     }
 
     function applyCardState(card){
@@ -656,6 +793,7 @@
     function render({ reshuffle = true } = {}){
       const leftList = $("#leftList");
       const rightList = $("#rightList");
+      syncStaticUi();
       leftList.innerHTML = "";
       rightList.innerHTML = "";
 
@@ -675,8 +813,8 @@
         card.dataset.side = "left";
         card.dataset.id = item.id;
         card.innerHTML = `
-          <span class="wordLabel">${escapeHtml(item.term)}</span>
-          ${showAnswers ? `<small class="answerDetail"><b>Explanation:</b> ${escapeHtml(item.explanation)}<br><b>Example:</b> ${escapeHtml(item.example)}</small>` : ""}
+          <span class="wordLabel">${escapeHtml(i18nValue(item.term))}</span>
+          ${showAnswers ? `<small class="answerDetail"><b>${escapeHtml(uiText("labelExplanation"))}:</b> ${escapeHtml(i18nValue(item.explanation))}<br><b>${escapeHtml(uiText("labelExample"))}:</b> ${escapeHtml(i18nValue(item.example))}</small>` : ""}
         `;
 
         applyCardState(card);
@@ -696,7 +834,7 @@
         card.setAttribute("tabindex","0");
         card.dataset.side = "right";
         card.dataset.id = item.id;
-        card.textContent = item.def;
+        card.textContent = i18nValue(item.def);
 
         applyCardState(card);
 
@@ -758,12 +896,12 @@
           redrawAllMatched();
 
           updateStatus();
-          updateHint(matched.size === PAIRS.length ? null : "Correct! Keep going.");
+          updateHint(matched.size === PAIRS.length ? null : "hint_correct");
         } else {
           selectedLeft.el.classList.add("wrong");
           selectedRight.el.classList.add("wrong");
           setAttemptWrong(true);
-          updateHint("Not a match—try again.");
+          updateHint("hint_wrong");
 
           setTimeout(() => {
             selectedLeft?.el?.classList.remove("selected");
@@ -782,26 +920,27 @@
     // Buttons
     $("#shuffleBtn").addEventListener("click", () => {
       render();
-      updateHint("Shuffled! Continue matching.");
+      updateHint("hint_shuffled");
     });
 
     $("#resetBtn").addEventListener("click", () => {
       matched = new Set();
       showAnswers = false;
       clearAllCurves();
-      $("#showBtn").textContent = "Show Answers";
       render();
-      updateHint("Reset complete. Start matching!");
+      updateHint("hint_reset");
     });
 
     $("#showBtn").addEventListener("click", () => {
       showAnswers = !showAnswers;
-      $("#showBtn").textContent = showAnswers ? "Hide Answers" : "Show Answers";
       render({ reshuffle: false });
-      updateHint(showAnswers
-        ? "Answers connected. Detailed explanations and examples are shown on the left."
-        : "Answers hidden. Keep practicing!"
-      );
+      updateHint(showAnswers ? "hint_show_answers" : "hint_hide_answers");
+    });
+
+    $("#langBtn").addEventListener("click", () => {
+      const modeIndex = LANG_ORDER.indexOf(currentLang);
+      currentLang = LANG_ORDER[(modeIndex + 1) % LANG_ORDER.length];
+      render({ reshuffle: false });
     });
 
     // Keep curves aligned
