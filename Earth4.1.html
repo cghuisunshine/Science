@@ -307,6 +307,34 @@
       font-weight:700;
     }
     a.link:hover{text-decoration:underline}
+    .i18n-zh{
+      display:none;
+      margin-top:6px;
+      color:var(--muted);
+      font-size:.95em;
+      line-height:1.5;
+    }
+    body.lang-bilingual .i18n-zh{display:block}
+    .brand .i18n-zh{
+      margin-top:2px;
+      font-size:12px;
+      line-height:1.35;
+      color:var(--faint);
+      font-weight:600;
+    }
+    .toc .i18n-zh{
+      margin-top:4px;
+      font-size:12px;
+      color:var(--faint);
+      font-weight:600;
+    }
+    .practice-head .i18n-zh{
+      margin-top:2px;
+      font-size:12px;
+      color:var(--faint);
+      font-weight:600;
+    }
+    .callout .i18n-zh{color:#1e3a8a}
 
     /* Print */
     @media print{
@@ -330,6 +358,7 @@
       </div>
       <div class="actions">
         <button class="btn primary" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑ Top</button>
+        <button class="btn" id="langToggle" type="button" aria-pressed="false">Language: EN</button>
         <button class="btn" onclick="document.body.classList.toggle('printHints')">Layout</button>
         <button class="btn" onclick="window.print()">Print</button>
       </div>
@@ -707,8 +736,174 @@
   </main>
 
   <script>
-    // Optional: highlight the current section in the TOC as you scroll
     (function(){
+      const addZh = (el, zh, opts = {}) => {
+        if (!el || !zh) return;
+        const node = document.createElement(opts.tag || 'div');
+        node.className = `i18n-zh ${opts.className || ''}`.trim();
+        node.innerHTML = zh;
+        if (opts.append) el.appendChild(node);
+        else el.insertAdjacentElement('afterend', node);
+      };
+
+      const addZhAll = (selector, zhList, opts = {}) => {
+        const nodes = Array.from(document.querySelectorAll(selector));
+        zhList.forEach((zh, i) => addZh(nodes[i], zh, opts));
+      };
+
+      addZh(document.querySelector('.brand h1'), '地球与空间科学 • 拆解宇宙', { append: true });
+      addZh(document.querySelector('.hero h1'), '4.1 拆解宇宙');
+      addZh(
+        document.querySelector('.hero p'),
+        '宇宙是一个非常大的地方！它由物质、能量以及大量空旷空间组成。本页将介绍宇宙及其中的主要组成：星系、恒星、行星、卫星、彗星和小行星，以及我们如何测量宇宙中的距离。'
+      );
+
+      addZh(document.querySelector('.sticky h2'), '本页内容');
+      addZh(document.querySelector('.sticky .subtle'), '跳转到各个主题部分。');
+
+      const tocZh = [
+        '宇宙与太阳系 · 导入',
+        '组织宇宙 · 宏观图景',
+        '星系 · 形状',
+        '银河系 · 尺度',
+        '恒星 · 光与引力',
+        '太阳系 · 行星等天体',
+        '测量宇宙 · 距离',
+        '光年 · 基准尺度',
+        '天体距离 · 行星际/恒星际/星系际',
+        '标注活动 · 练习'
+      ];
+      addZhAll('.toc a', tocZh, { append: true });
+
+      addZhAll('.section .kicker', [
+        '导入',
+        '宏观图景',
+        '结构',
+        '我们的家园星系',
+        '恒星',
+        '太阳系',
+        '测量',
+        '关键单位',
+        '距离类型',
+        '练习'
+      ]);
+
+      addZhAll('.section h3', [
+        '宇宙与太阳系',
+        '组织宇宙',
+        '星系',
+        '银河系',
+        '恒星',
+        '太阳系',
+        '测量宇宙',
+        '光年——恒星尺度单位',
+        '天体距离',
+        '标注活动'
+      ]);
+
+      addZhAll('.section > p', [
+        '宇宙是一个非常大的地方！它由物质、能量以及大量空旷空间组成。本节将讨论关于宇宙与太阳系起源的科学理论，并认识我们已知的宇宙组成：星系、恒星、行星、卫星、彗星和小行星。',
+        '我们已经了解了许多太空知识，但未知仍然更多。把科学知识看作一个持续增长、不断更新的信息体系会很有帮助。回顾历史观点（过去的理论与动机）能帮助我们理解知识从何而来，也能思考未来会走向哪里。',
+        '“宇宙”由所有的物质与空间组成。所有恒星、行星、气体、尘埃，甚至各种能量都属于宇宙。宇宙之大常常超出我们的直觉。',
+        '在宇宙中，存在包含数十亿颗恒星的星系。有些恒星周围还会有行星、小行星和彗星。',
+        '星系由恒星、气体和尘埃组成，并由引力维系在一起。即使最小的星系也有数十万颗恒星。我们所在的银河系包含超过 1000 亿颗恒星。',
+        '你看到的其实只是银河系旋臂中的一小部分。',
+        '如果每个星系约有 1000 亿颗恒星，而宇宙约有 1000 亿个星系，那么宇宙中的恒星总数约为一百亿万亿颗：',
+        '这能帮助我们感受宇宙的尺度。请记住，恒星之间存在巨大的空旷空间。事实上，宇宙中大部分都是空旷空间。换个角度看：宇宙中的恒星数量比地球所有海滩上的沙粒还多！',
+        '你在夜空中看到的恒星，是由引力维系的巨大气体球。恒星会以光的形式释放能量，因此会发光。恒星的大小、颜色和温度各不相同。太阳位于太阳系中心，是一颗中等大小的黄色恒星。',
+        '“星团”是同一时期、同一地点形成的一组恒星，并在引力作用下长期保持聚集。恒星形成的图案叫“星座”，古代观测者发现并命名了这些图案。',
+        '我们的太阳系包含太阳和绕太阳运行的八大行星。此外还有 60 多颗卫星、数百万颗小行星和数十亿颗彗星。',
+        '目前对“行星”的定义是：',
+        '按距离太阳由近到远，行星依次为：水星、金星、地球、火星、木星、土星、天王星、海王星。',
+        '“卫星”绕行星运行；“小行星”是绕太阳运行的小型岩石天体（有时称次行星/类行星）；“彗星”是绕太阳运行的冰岩天体，接近太阳时会形成明亮尾巴。',
+        '现在我们对宇宙组成已有概念，接下来看看宇宙到底有多大。你可能已经感受到太空的浩瀚，那么我们该用什么单位来测量太空距离呢？',
+        '在太空中，“光年”常作为主要距离单位。光年不是时间单位，而是光在一年中传播的距离。',
+        '一个光年已经很大，但在宇宙尺度下仍可能显得很小。例如，银河系直径约为 10 万光年（零非常多）。',
+        '由于太空中的距离极其巨大，天文学家使用三类术语来描述不同类型的距离：',
+        '你可以直接在下方练习。每个活动都已嵌入本页，无需离开页面即可完成。'
+      ]);
+
+      addZhAll('.media .caption', [
+        '视频：宇宙与太阳系（YouTube）',
+        '哈勃深空照片。经 NASA 与太空望远镜科学研究所许可转载。',
+        '视频：什么是宇宙？（YouTube）',
+        '视频：星系（YouTube）',
+        '你是否曾在夜空中看到过银河？',
+        '视频：银河系（YouTube）',
+        '视频：恒星（YouTube）',
+        '视频：太阳系（YouTube）',
+        '视频：测量宇宙（YouTube）',
+        '视频：光年（YouTube）',
+        '视频：太空中的距离类型（YouTube）'
+      ]);
+
+      addZh(document.querySelector('#galaxies .callout > strong'), '星系形状：');
+      addZhAll('#galaxies .callout li', [
+        '椭圆星系（Elliptical）整体呈圆形或椭圆形。',
+        '螺旋星系（Spiral）像风车，带有从中心伸出的弯曲旋臂。',
+        '不规则星系（Irregular）不属于前两类。'
+      ], { append: true });
+
+      addZhAll('#solar-system > ul li', [
+        '围绕太阳运行；',
+        '具有足够质量以维持“近似球形”；',
+        '在其轨道邻域中具有主导地位。'
+      ], { append: true });
+      addZh(
+        document.querySelector('#solar-system .callout'),
+        '冥王星说明（2006）：在 2006 年之前，冥王星被视为第九大行星。2006 年，天文学家将其重新归类为“矮行星”。对此决定至今仍有争议。',
+        { append: true }
+      );
+
+      addZh(document.querySelector('#lightyear .callout > strong'), '需要记住的数据：');
+      addZhAll('#lightyear .callout li', [
+        '光速约为 300,000 km/s',
+        '光在一年中传播距离约为 9.46 万亿千米',
+        '天文学家常用“1 光年”代替写出 9 460 800 000 000 km'
+      ], { append: true });
+
+      addZhAll('#stellar-distances > ul li', [
+        '行星际距离（Interplanetary）：行星与行星之间的距离。常用千米（km）或天文单位（AU）表示。1 AU = 地日平均距离 ≈ 150,000,000 km。',
+        '恒星际距离（Interstellar）：同一星系内恒星之间的距离，常用光年表示。',
+        '星系际距离（Intergalactic）：星系与星系之间的距离，也常用光年表示。'
+      ], { append: true });
+
+      addZhAll('#labeling .practice-head > span', [
+        '标注宇宙',
+        '标注太阳系'
+      ]);
+      addZhAll('#labeling .practice-head a', [
+        '在新标签页中打开',
+        '在新标签页中打开'
+      ], { append: true });
+
+      addZh(
+        document.querySelector('#labeling .callout'),
+        '<strong>提示：</strong>完成每个标注活动后，尝试用自己的话解释答案（它是什么、在哪里、为什么重要）。这是最快巩固概念的方法。',
+        { append: true }
+      );
+
+      addZh(
+        document.querySelector('footer > div'),
+        '本页面为单文件 HTML • 响应式 + 适合打印 • 可直接放入你的 GitHub Pages 仓库。'
+      );
+
+      const langToggle = document.getElementById('langToggle');
+      const setLangMode = (mode) => {
+        const bilingual = mode === 'enzh';
+        document.body.classList.toggle('lang-bilingual', bilingual);
+        langToggle.textContent = bilingual ? 'Language: EN+ZH' : 'Language: EN';
+        langToggle.setAttribute('aria-pressed', bilingual ? 'true' : 'false');
+        localStorage.setItem('earth41LangMode', mode);
+      };
+
+      langToggle.addEventListener('click', () => {
+        const bilingual = document.body.classList.contains('lang-bilingual');
+        setLangMode(bilingual ? 'en' : 'enzh');
+      });
+      setLangMode(localStorage.getItem('earth41LangMode') === 'enzh' ? 'enzh' : 'en');
+
+      // Optional: highlight the current section in the TOC as you scroll
       const links = Array.from(document.querySelectorAll('.toc a'));
       const sections = links
         .map(a => document.querySelector(a.getAttribute('href')))
