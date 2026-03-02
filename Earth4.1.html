@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>4.1 Dissecting the Universe</title>
+  <meta name="description" content="An interactive lesson page: Dissecting the Universe (galaxies, stars, solar system, measuring distances)." />
+
+  <style>
+    :root{
+      --bg:#f7f8fb;
+      --panel:#ffffff;
+      --text:#111827;
+      --muted:#4b5563;
+      --faint:#6b7280;
+      --border:rgba(17,24,39,.10);
+      --shadow: 0 10px 30px rgba(17,24,39,.08);
+      --accent:#2563eb;
+      --accent2:#16a34a;
+      --radius:18px;
+      --maxw: 1120px;
+      --codebg:#0b1220;
+      --codefg:#e5e7eb;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, rgba(37,99,235,.10), transparent 60%),
+        radial-gradient(900px 500px at 90% 0%, rgba(22,163,74,.10), transparent 55%),
+        var(--bg);
+      line-height:1.6;
+    }
+
+    /* Top bar */
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter:saturate(160%) blur(10px);
+      background:rgba(247,248,251,.78);
+      border-bottom:1px solid var(--border);
+    }
+    .topbar .inner{
+      max-width:var(--maxw);
+      margin:0 auto;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      min-width:0;
+    }
+    .badge{
+      width:40px; height:40px; border-radius:14px;
+      background:linear-gradient(135deg, rgba(37,99,235,.95), rgba(22,163,74,.75));
+      box-shadow:var(--shadow);
+      display:grid; place-items:center;
+      color:white; font-weight:800;
+      letter-spacing:.2px;
+      flex:0 0 auto;
+    }
+    .brand h1{
+      font-size:14px;
+      margin:0;
+      color:var(--muted);
+      font-weight:600;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .actions{
+      display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .btn{
+      appearance:none; border:1px solid var(--border);
+      background:rgba(255,255,255,.75);
+      color:var(--text);
+      padding:9px 12px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:600;
+      cursor:pointer;
+      transition:transform .06s ease, background .2s ease, border-color .2s ease;
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .btn:hover{background:rgba(255,255,255,.95); border-color:rgba(17,24,39,.18)}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      background:rgba(37,99,235,.10);
+      border-color:rgba(37,99,235,.25);
+      color:rgba(37,99,235,1);
+    }
+    .btn.primary:hover{
+      background:rgba(37,99,235,.14);
+      border-color:rgba(37,99,235,.35);
+    }
+
+    /* Layout */
+    .wrap{
+      max-width:var(--maxw);
+      margin:0 auto;
+      padding:22px 18px 52px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap:18px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+    }
+
+    /* Cards */
+    .card{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card .pad{padding:18px}
+    .card h2{
+      margin:0 0 8px;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+    .subtle{color:var(--muted); font-size:14px}
+
+    /* Hero */
+    .hero{
+      padding:22px 18px;
+      background:
+        radial-gradient(900px 380px at 10% 0%, rgba(37,99,235,.16), transparent 55%),
+        radial-gradient(700px 380px at 90% 0%, rgba(22,163,74,.14), transparent 55%);
+      border-bottom:1px solid var(--border);
+    }
+    .hero h1{
+      margin:0 0 8px;
+      font-size:22px;
+      line-height:1.2;
+      letter-spacing:-.2px;
+    }
+    .hero p{margin:0; color:var(--muted); max-width:70ch}
+
+    /* TOC */
+    .toc a{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 12px;
+      border-radius:12px;
+      text-decoration:none;
+      color:var(--text);
+      border:1px solid transparent;
+      transition:background .2s ease, border-color .2s ease;
+      font-weight:600;
+      font-size:14px;
+    }
+    .toc a:hover{
+      background:rgba(17,24,39,.03);
+      border-color:rgba(17,24,39,.08);
+    }
+    .toc small{color:var(--faint); font-weight:600}
+    .sticky{
+      position:sticky; top:76px;
+    }
+    @media (max-width: 980px){
+      .sticky{position:static}
+    }
+
+    /* Content */
+    .section{
+      scroll-margin-top:92px;
+      padding:18px;
+      border-bottom:1px solid var(--border);
+    }
+    .section:last-child{border-bottom:none}
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(17,24,39,.02);
+      color:var(--muted);
+      font-weight:700;
+      font-size:12px;
+      letter-spacing:.3px;
+      text-transform:uppercase;
+    }
+    .section h3{
+      margin:10px 0 8px;
+      font-size:18px;
+      letter-spacing:-.2px;
+    }
+    .section p{margin:0 0 10px}
+    .section ul{margin:10px 0 0; padding-left:18px}
+    .section li{margin:6px 0; color:var(--text)}
+    .callout{
+      border:1px solid rgba(37,99,235,.25);
+      background:rgba(37,99,235,.06);
+      border-radius:16px;
+      padding:14px;
+      margin:12px 0 2px;
+      color:var(--text);
+    }
+    .callout strong{color:rgba(37,99,235,1)}
+    .math{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background:rgba(17,24,39,.04);
+      border:1px solid rgba(17,24,39,.08);
+      padding:10px 12px;
+      border-radius:14px;
+      overflow:auto;
+    }
+
+    /* Media */
+    .media{
+      margin-top:12px;
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      background:rgba(17,24,39,.02);
+    }
+    .media .caption{
+      padding:10px 12px;
+      font-size:12.5px;
+      color:var(--muted);
+      border-top:1px solid var(--border);
+    }
+    .video{
+      aspect-ratio: 16 / 9;
+      width:100%;
+      display:block;
+      border:0;
+    }
+    .imgph{
+      display:grid;
+      place-items:center;
+      height:260px;
+      background:
+        radial-gradient(500px 220px at 20% 20%, rgba(37,99,235,.18), transparent 60%),
+        radial-gradient(420px 220px at 80% 30%, rgba(22,163,74,.16), transparent 60%),
+        linear-gradient(135deg, rgba(17,24,39,.05), rgba(17,24,39,.02));
+      color:var(--muted);
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+
+    /* Footer */
+    footer{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:13px;
+      text-align:center;
+    }
+    a.link{
+      color:var(--accent);
+      text-decoration:none;
+      font-weight:700;
+    }
+    a.link:hover{text-decoration:underline}
+
+    /* Print */
+    @media print{
+      .topbar, .actions, .sticky {display:none !important}
+      body{background:white}
+      .card{box-shadow:none}
+      .grid{grid-template-columns:1fr}
+      .section{break-inside:avoid}
+      a{color:inherit; text-decoration:none}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="inner">
+      <div class="brand">
+        <div class="badge">4.1</div>
+        <h1>Earth &amp; Space Science • Dissecting the Universe</h1>
+      </div>
+      <div class="actions">
+        <button class="btn primary" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑ Top</button>
+        <button class="btn" onclick="document.body.classList.toggle('printHints')">Layout</button>
+        <button class="btn" onclick="window.print()">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <div class="card">
+      <div class="hero">
+        <h1>4.1 Dissecting the Universe</h1>
+        <p>
+          The universe is a very big place! It’s made up of matter, energy, and a whole lot of empty space.
+          This page introduces the universe and everything in it—galaxies, stars, planets, moons, comets, and asteroids—
+          and how we measure distances across space.
+        </p>
+      </div>
+    </div>
+
+    <div style="height:16px"></div>
+
+    <div class="grid">
+      <!-- TOC -->
+      <aside class="card sticky">
+        <div class="pad">
+          <h2>On this page</h2>
+          <p class="subtle" style="margin:0 0 10px">Jump to a topic section.</p>
+          <nav class="toc" aria-label="Table of contents">
+            <a href="#universe-solar"><span>The Universe &amp; the Solar System</span><small>Intro</small></a>
+            <a href="#organizing"><span>Organizing the Universe</span><small>Big picture</small></a>
+            <a href="#galaxies"><span>Galaxies</span><small>Shapes</small></a>
+            <a href="#milky-way"><span>The Milky Way</span><small>Scale</small></a>
+            <a href="#stars"><span>Stars</span><small>Light &amp; gravity</small></a>
+            <a href="#solar-system"><span>Solar System</span><small>Planets &amp; more</small></a>
+            <a href="#measuring"><span>Measuring the Universe</span><small>Distances</small></a>
+            <a href="#lightyear"><span>A Light-Year</span><small>Yardstick</small></a>
+            <a href="#stellar-distances"><span>Stellar Distances</span><small>Inter-*</small></a>
+            <a href="#labeling"><span>Labelling Activities</span><small>Practice</small></a>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- Content -->
+      <section class="card" aria-label="Lesson content">
+        <!-- 1 -->
+        <article id="universe-solar" class="section">
+          <span class="kicker">Introduction</span>
+          <h3>The Universe and the Solar System</h3>
+          <p>
+            The universe is a very big place! It's made up of matter, energy, and a whole lot of empty space.
+            In this section we look at scientific theories about how the universe and our solar system came to be.
+            We will examine the parts of the universe that we know about: galaxies, stars, planets, moons, comets, and asteroids.
+          </p>
+          <p>
+            We know quite a bit about space, but there’s even more that we don’t know.
+            It helps to think of scientific knowledge as a growing, changing body of information.
+            Looking at the history of ideas (past theories and motivations) helps us see where our knowledge came from—and where it might go next.
+          </p>
+
+          <div class="media" role="group" aria-label="Video: Introduction to the Universe">
+            <iframe class="video"
+              src="https://www.youtube.com/embed/2FwCMnyWZDg"
+              title="YouTube video"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+            <div class="caption">Video: The Universe and the Solar System (YouTube)</div>
+          </div>
+        </article>
+
+        <!-- 2 -->
+        <article id="organizing" class="section">
+          <span class="kicker">Big picture</span>
+          <h3>Organizing the Universe</h3>
+
+          <div class="media" role="group" aria-label="Image placeholder: Hubble Deep Field">
+            <div class="imgph">Image Placeholder (Add Hubble Deep Field photo here)</div>
+            <div class="caption">
+              Hubble deep field photos. Reproduced with permission of NASA and Space Telescope Science Institute.
+            </div>
+          </div>
+
+          <p style="margin-top:12px">
+            The <strong>universe</strong> is made up of all <strong>matter</strong> and <strong>space</strong>.
+            All of the stars, planets, gases, dust, and even all energy fit within the term “universe.”
+            It can be hard to imagine the universe and how big it is.
+          </p>
+
+          <div class="media" role="group" aria-label="Video: What is the Universe">
+            <iframe class="video"
+              src="https://www.youtube.com/embed/nrTsvn9usVQ"
+              title="YouTube video"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+            <div class="caption">Video: What is the Universe? (YouTube)</div>
+          </div>
+        </article>
+
+        <!-- 3 -->
+        <article id="galaxies" class="section">
+          <span class="kicker">Structure</span>
+          <h3>Galaxies</h3>
+          <p>
+            Within the universe, there are galaxies that contain billions of stars. Around some stars, there are planets,
+            asteroids and comets.
+          </p>
+          <p>
+            A <strong>galaxy</strong> contains stars, gas, and dust, all held together by gravity.
+            Even the smallest galaxies contain hundreds of thousands of stars.
+            The Milky Way galaxy (where we live) contains more than <strong>100 billion</strong> stars.
+          </p>
+
+          <div class="callout">
+            <strong>Galaxy shapes:</strong>
+            <ul>
+              <li><strong>Elliptical</strong> galaxies are round or oval-shaped.</li>
+              <li><strong>Spiral</strong> galaxies look like pinwheels with curved arms reaching from the centre.</li>
+              <li><strong>Irregular</strong> galaxies don’t fit the first two groups.</li>
+            </ul>
+          </div>
+
+          <div class="media" role="group" aria-label="Video: Galaxies">
+            <iframe class="video"
+              src="https://www.youtube.com/embed/EuJNVgcYEWU"
+              title="YouTube video"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+            <div class="caption">Video: Galaxies (YouTube)</div>
+          </div>
+        </article>
+
+        <!-- 4 -->
+        <article id="milky-way" class="section">
+          <span class="kicker">Our home galaxy</span>
+          <h3>The Milky Way</h3>
+
+          <div class="media" role="group" aria-label="Image placeholder: Milky Way">
+            <div class="imgph">Image Placeholder (Add a Milky Way photo here)</div>
+            <div class="caption">Have you ever looked up in the night sky and seen the Milky Way?</div>
+          </div>
+
+          <p style="margin-top:12px">
+            What you are seeing is actually just one of the spirals of our galaxy, the Milky Way.
+          </p>
+          <p>
+            If each galaxy contains about <strong>100 billion</strong> stars, and the universe contains about <strong>100 billion</strong> galaxies,
+            then the universe contains about <strong>ten billion trillion</strong> stars:
+          </p>
+          <div class="math">10 000 000 000 000 000 000 000 stars</div>
+          <p style="margin-top:10px">
+            This starts to give us an idea of how big the universe is. Remember that between all of those stars is a huge amount of empty space.
+            In fact, most of the universe consists of empty space.
+            Another way to think about it: there are more stars in the universe than there are grains of sand on all the beaches on Earth!
+          </p>
+
+          <div class="media" role="group" aria-label="Video: The Milky Way">
+            <iframe class="video"
+              src="https://www.youtube.com/embed/0La58bUNNzQ"
+              title="YouTube video"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+            <div class="caption">Video: The Milky Way (YouTube)</div>
+          </div>
+        </article>
+
+        <!-- 5 -->
+        <article id="stars" class="section">
+          <span class="kicker">Stars</span>
+          <h3>Stars</h3>
+          <p>
+            The <strong>stars</strong> you see in the night sky are huge balls of gas, held together by gravity.
+            Stars generate energy in the form of light, which is why they glow.
+            Stars can be many different sizes, colours, and temperatures.
+            At the centre of our solar system, our <strong>Sun</strong> is an average-sized yellow star.
+          </p>
+          <p>
+            <strong>Star clusters</strong> are groups of stars formed at the same time and place, and they stay together for a long time due to gravity.
+            Patterns of stars are called <strong>constellations</strong>—ancient observers noticed these patterns and named them.
+          </p>
+
+          <div class="media" role="group" aria-label="Video: Stars">
+            <iframe class="video"
+              src="https://www.youtube.com/embed/b22HKFMIfWo"
+              title="YouTube video"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+            <div class="caption">Video: Stars (YouTube)</div>
+          </div>
+        </article>
+
+        <!-- 6 -->
+        <article id="solar-system" class="section">
+          <span class="kicker">Solar system</span>
+          <h3>Solar System</h3>
+          <p>
+            Our <strong>solar system</strong> contains the Sun and the eight planets that orbit the Sun.
+            Also in our solar system are more than 60 moons, millions of asteroids, and billions of comets.
+          </p>
+          <p>
+            A <strong>planet</strong> is currently defined as a body that:
+          </p>
+          <ul>
+            <li>orbits the Sun,</li>
+            <li>has enough mass to retain a “round” shape, and</li>
+            <li>dominates its neighbourhood.</li>
+          </ul>
+          <p style="margin-top:10px">
+            The planets in order from the Sun:
+            <strong>Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune</strong>.
+          </p>
+
+          <div class="callout">
+            <strong>Pluto note (2006):</strong>
+            Until 2006, Pluto was the ninth planet. In 2006, astronomers reclassified Pluto as a <strong>dwarf planet</strong>.
+            The debate continues, as some astronomers don’t agree with that decision.
+          </div>
+
+          <p>
+            A <strong>moon</strong> orbits a planet.
+            <strong>Asteroids</strong> are small rocky bodies revolving around the Sun (sometimes called minor planets/planetoids).
+            A <strong>comet</strong> is a ball of rock and ice that orbits the Sun; comets can develop a glowing tail when heated by the Sun.
+          </p>
+
+          <div class="media" role="group" aria-label="Video: Solar System">
+            <iframe class="video"
+              src="https://www.youtube.com/embed/libKVRa01L8"
+              title="YouTube video"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+            <div class="caption">Video: Solar System (YouTube)</div>
+          </div>
+        </article>
+
+        <!-- 7 -->
+        <article id="measuring" class="section">
+          <span class="kicker">Measurement</span>
+          <h3>Measuring the Universe</h3>
+          <p>
+            Now that we have a sense of what the universe is made up of, we can look at how big it is.
+            You probably have an idea of the vastness of space—so what can we use to measure distances in space?
+          </p>
+
+          <div class="media" role="group" aria-label="Video: Measuring the Universe">
+            <iframe class="video"
+              src="https://www.youtube.com/embed/CiDkNvaOtB4"
+              title="YouTube video"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+            <div class="caption">Video: Measuring the Universe (YouTube)</div>
+          </div>
+        </article>
+
+        <!-- 8 -->
+        <article id="lightyear" class="section">
+          <span class="kicker">Key unit</span>
+          <h3>A Light-Year — The Stellar Yardstick</h3>
+          <p>
+            In space, <strong>light-years</strong> are often used as a main unit of measurement.
+            A light-year is <strong>not</strong> a measurement of time; it’s the distance that a beam of light travels in one year.
+          </p>
+
+          <div class="callout">
+            <strong>Numbers to remember:</strong>
+            <ul>
+              <li>Speed of light ≈ <strong>300 000 km/s</strong></li>
+              <li>Distance light travels in one year ≈ <strong>9.46 trillion km</strong></li>
+              <li>Astronomers say <strong>1 light-year</strong> instead of writing <strong>9 460 800 000 000 km</strong></li>
+            </ul>
+          </div>
+
+          <p>
+            One light-year is huge—but in the scope of the universe it can be small. For example, the Milky Way has a diameter of about
+            <strong>100 000 light-years</strong> (that’s a lot of zeroes!).
+          </p>
+
+          <div class="media" role="group" aria-label="Video: Light-year">
+            <iframe class="video"
+              src="https://www.youtube.com/embed/j2uWp8WpGwY"
+              title="YouTube video"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+            <div class="caption">Video: Light-Year (YouTube)</div>
+          </div>
+        </article>
+
+        <!-- 9 -->
+        <article id="stellar-distances" class="section">
+          <span class="kicker">Distance types</span>
+          <h3>Stellar Distances</h3>
+          <p>
+            Because some distances in space are so huge, astronomers use three terms to describe what kinds of distances they mean:
+          </p>
+          <ul>
+            <li>
+              <strong>Interplanetary distances</strong> are distances between planets.
+              These are measured in kilometres (km) or in <strong>Astronomical Units (AU)</strong>.
+              <br /><span class="subtle">1 AU = distance between Earth and Sun ≈ 150 000 000 km</span>
+            </li>
+            <li>
+              <strong>Interstellar distances</strong> are distances between stars in a galaxy.
+              <br /><span class="subtle">Measured in light-years</span>
+            </li>
+            <li>
+              <strong>Intergalactic distances</strong> are distances between galaxies.
+              <br /><span class="subtle">Also measured in light-years</span>
+            </li>
+          </ul>
+
+          <div class="media" role="group" aria-label="Video: Stellar distances">
+            <iframe class="video"
+              src="https://www.youtube.com/embed/uvuAVk0W0DM"
+              title="YouTube video"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+            <div class="caption">Video: Distance types in space (YouTube)</div>
+          </div>
+        </article>
+
+        <!-- 10 -->
+        <article id="labeling" class="section">
+          <span class="kicker">Practice</span>
+          <h3>Labelling Activities</h3>
+          <p>
+            Use these interactive activities to practice identifying major parts of the universe and solar system:
+          </p>
+          <ul>
+            <li>
+              <a class="link" href="https://cghuisunshine.github.io/Science/LabellingUniverse.html" target="_blank" rel="noopener">
+                Labelling the Universe
+              </a>
+            </li>
+            <li>
+              <a class="link" href="https://cghuisunshine.github.io/Science/LabellingSolar.html" target="_blank" rel="noopener">
+                Labelling the Solar System
+              </a>
+            </li>
+          </ul>
+
+          <div class="callout" style="margin-top:12px">
+            <strong>Tip:</strong> After you finish each labelling activity, try explaining your answers in your own words
+            (what it is, where it is, and why it matters). That’s the fastest way to lock in the concepts.
+          </div>
+        </article>
+      </section>
+    </div>
+
+    <footer>
+      <div style="margin-top:18px">
+        Built as a single self-contained HTML page • Responsive + print-friendly • You can paste this into your GitHub Pages repo.
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // Optional: highlight the current section in the TOC as you scroll
+    (function(){
+      const links = Array.from(document.querySelectorAll('.toc a'));
+      const sections = links
+        .map(a => document.querySelector(a.getAttribute('href')))
+        .filter(Boolean);
+
+      const setActive = (id) => {
+        links.forEach(a => {
+          const on = a.getAttribute('href') === '#' + id;
+          a.style.background = on ? 'rgba(37,99,235,.08)' : '';
+          a.style.borderColor = on ? 'rgba(37,99,235,.25)' : '';
+        });
+      };
+
+      const obs = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter(e => e.isIntersecting)
+          .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if(visible) setActive(visible.target.id);
+      }, { rootMargin: '-20% 0px -70% 0px', threshold: [0.05, 0.1, 0.2, 0.35] });
+
+      sections.forEach(s => obs.observe(s));
+      if(sections[0]) setActive(sections[0].id);
+    })();
+  </script>
+</body>
+</html>
