@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <title>Solar System Vocabulary – Matching Practice (Curved Lines)</title>
+
+  <style>
+    :root{
+      --bg1:#0b3a6b;
+      --bg2:#0a6aa5;
+      --card:#ffffff;
+      --ink:#111;
+      --muted:#4b5563;
+      --good:#16a34a;
+      --bad:#dc2626;
+      --accent:#0ea5e9;
+      --shadow: 0 10px 25px rgba(0,0,0,.22);
+      --radius: 18px;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:#fff;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.12), transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(255,255,255,.10), transparent 45%),
+        linear-gradient(135deg, var(--bg2), var(--bg1));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+    }
+
+    .app{ width:min(1120px, 100%); }
+
+    .header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+      flex-wrap:wrap;
+    }
+
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+
+    .title h1{
+      font-size: clamp(20px, 3vw, 28px);
+      margin:0;
+      letter-spacing:.2px;
+    }
+
+    .title p{
+      margin:0;
+      opacity:.9;
+      color:#e6f6ff;
+      font-size:14px;
+    }
+
+    .controls{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    button{
+      border:0;
+      border-radius:999px;
+      padding:10px 14px;
+      font-weight:700;
+      cursor:pointer;
+      background: rgba(255,255,255,.92);
+      color:#0b2540;
+      box-shadow: 0 6px 16px rgba(0,0,0,.18);
+      transition: transform .08s ease, filter .15s ease;
+      user-select:none;
+    }
+    button:hover{ filter: brightness(0.98); }
+    button:active{ transform: translateY(1px) scale(0.99); }
+
+    .panel{
+      position:relative;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: var(--radius);
+      padding:14px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .gridWrap{ position:relative; }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: clamp(56px, 9vw, 130px);
+      row-gap:14px;
+      position:relative;
+    }
+
+    .colTitle{
+      font-weight:800;
+      margin:0 0 10px 0;
+      color:#e6f6ff;
+      letter-spacing:.2px;
+    }
+
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      min-height:320px;
+      position:relative;
+      z-index:2; /* above svg */
+    }
+
+    .card{
+      background: var(--card);
+      color: var(--ink);
+      border-radius:14px;
+      padding:18px 16px;
+      box-shadow: 0 10px 22px rgba(0,0,0,.18);
+      border:3px solid transparent;
+      cursor:pointer;
+      user-select:none;
+      position:relative;
+      transition: transform .08s ease, border-color .15s ease, filter .15s ease;
+    }
+    .card:hover{ filter: brightness(0.99); }
+    .card:active{ transform: translateY(1px); }
+
+    .left .card{ text-align:left; }
+
+    .left .card .wordLabel{
+      display:block;
+      font-size: clamp(22px, 2.7vw, 34px);
+      font-weight:900;
+      text-transform: lowercase;
+      letter-spacing:.6px;
+      text-align:center;
+    }
+
+    .left .card .answerDetail{
+      display:block;
+      margin-top:10px;
+      padding-top:10px;
+      border-top:1px solid rgba(11,37,64,.16);
+      font-size:14px;
+      line-height:1.35;
+      font-weight:600;
+      text-transform:none;
+      letter-spacing:0;
+      color:#1f2937;
+      text-align:left;
+    }
+
+    .left .card .answerDetail b{
+      color:#0f172a;
+      font-weight:800;
+    }
+
+    .right .card{
+      font-size:18px;
+      font-weight:700;
+      line-height:1.15;
+    }
+
+    .card small{
+      display:block;
+      margin-top:8px;
+      font-weight:600;
+      color: var(--muted);
+    }
+
+    .selected{
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(14,165,233,.25), 0 10px 22px rgba(0,0,0,.18);
+    }
+
+    .matched{
+      border-color: rgba(22,163,74,.9);
+      box-shadow: 0 0 0 4px rgba(22,163,74,.20), 0 10px 22px rgba(0,0,0,.18);
+      cursor:default;
+      opacity:.95;
+    }
+
+    .wrong{
+      border-color: rgba(220,38,38,.95);
+      box-shadow: 0 0 0 4px rgba(220,38,38,.20), 0 10px 22px rgba(0,0,0,.18);
+      animation: shake .22s ease-in-out 0s 2;
+    }
+
+    @keyframes shake{
+      0%{ transform: translateX(0); }
+      25%{ transform: translateX(-4px); }
+      50%{ transform: translateX(4px); }
+      75%{ transform: translateX(-3px); }
+      100%{ transform: translateX(0); }
+    }
+
+    .footer{
+      margin-top:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      color:#e6f6ff;
+      opacity:.95;
+    }
+
+    .status{
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+
+    .hint{
+      font-size:14px;
+      opacity:.92;
+    }
+
+    /* SVG overlay */
+    svg.lines{
+      position:absolute;
+      inset:0;
+      z-index:1;
+      pointer-events:none;
+      overflow:visible;
+    }
+
+    /* curved paths */
+    svg.lines path{
+      fill: none;
+      stroke: rgba(22,163,74,.95);
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,.25));
+    }
+
+    svg.lines path.preview{
+      stroke: rgba(14,165,233,.95);
+      stroke-dasharray: 7 6;
+    }
+
+    svg.lines path.attempt{
+      stroke: rgba(14,165,233,.95);
+    }
+    svg.lines path.attempt.wrong{
+      stroke: rgba(220,38,38,.95);
+      stroke-dasharray: 8 6;
+    }
+    svg.lines path.answer{
+      stroke: rgba(245,158,11,.95);
+      stroke-width: 3.5;
+      stroke-dasharray: 7 5;
+    }
+
+    /* optional: little end dots */
+    svg.lines circle{
+      fill: rgba(22,163,74,.95);
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,.25));
+    }
+    svg.lines circle.previewDot{
+      fill: rgba(14,165,233,.95);
+    }
+    svg.lines circle.attemptDot{
+      fill: rgba(14,165,233,.95);
+    }
+    svg.lines circle.attemptDot.wrong{
+      fill: rgba(220,38,38,.95);
+    }
+    svg.lines circle.answerDot{
+      fill: rgba(245,158,11,.95);
+    }
+
+    @media (max-width: 720px){
+      .grid{ grid-template-columns: 1fr; }
+      .list{ min-height: unset; }
+      svg.lines{ display:none; } /* hide on 1-col layout */
+      .left .card .wordLabel{ font-size: 26px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="title">
+        <h1 id="mainTitle">Matching Practice: Space Vocabulary</h1>
+        <p id="subTitle">Click a left-hand box, then click its right-hand match.</p>
+      </div>
+      <div class="controls">
+        <button id="langBtn" type="button">中文</button>
+        <button id="shuffleBtn" type="button">Shuffle</button>
+        <button id="resetBtn" type="button">Reset</button>
+        <button id="showBtn" type="button">Show Answers</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="gridWrap" id="gridWrap">
+        <svg class="lines" id="linesSvg" aria-hidden="true"></svg>
+
+        <div class="grid" id="grid">
+          <div class="left">
+            <div class="colTitle" id="leftColTitle">Terms</div>
+            <div class="list" id="leftList" aria-label="Terms list"></div>
+          </div>
+
+          <div class="right">
+            <div class="colTitle" id="rightColTitle">Definitions</div>
+            <div class="list" id="rightList" aria-label="Definitions list"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="status" id="status">Matches: 0 / 5</div>
+        <div class="hint" id="hint">Tip: You can change your pick anytime—just click a different card.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const UI = {
+      en: {
+        docTitle: "Space Vocabulary - Matching Practice",
+        mainTitle: "Matching Practice: Space Vocabulary",
+        subTitle: "Click a left-hand box, then click its right-hand match.",
+        colWords: "Terms",
+        colDefs: "Definitions",
+        wordsAria: "Terms list",
+        defsAria: "Definitions list",
+        btnLang: "EN+中文",
+        btnShuffle: "Shuffle",
+        btnReset: "Reset",
+        btnShow: "Show Answers",
+        btnHide: "Hide Answers",
+        status: (m, total) => `Matches: ${m} / ${total}`,
+        labelExplanation: "Explanation",
+        labelExample: "Example",
+        hint_default: "Tip: You can change your pick anytime—just click a different card.",
+        hint_all_done: "All matched! Press Shuffle to practice again, or Reset to start over.",
+        hint_correct: "Correct! Keep going.",
+        hint_wrong: "Not a match—try again.",
+        hint_shuffled: "Shuffled! Continue matching.",
+        hint_reset: "Reset complete. Start matching!",
+        hint_show_answers: "Answers connected. Detailed explanations and examples are shown on the left.",
+        hint_hide_answers: "Answers hidden. Keep practicing!"
+      },
+      zh: {
+        docTitle: "太空词汇 - 连线配对练习",
+        mainTitle: "配对练习：太空词汇",
+        subTitle: "先点击左侧词汇，再点击右侧对应解释。",
+        colWords: "词汇",
+        colDefs: "定义",
+        wordsAria: "词汇列表",
+        defsAria: "定义列表",
+        btnLang: "EN+中文",
+        btnShuffle: "打乱",
+        btnReset: "重置",
+        btnShow: "显示答案",
+        btnHide: "隐藏答案",
+        status: (m, total) => `已配对：${m} / ${total}`,
+        labelExplanation: "解释",
+        labelExample: "例子",
+        hint_default: "提示：你可以随时重新选择，直接点击另一张卡片即可。",
+        hint_all_done: "全部配对完成！可点击“打乱”继续练习，或点击“重置”重新开始。",
+        hint_correct: "配对正确，继续加油。",
+        hint_wrong: "配对错误，请再试一次。",
+        hint_shuffled: "已打乱，继续配对吧。",
+        hint_reset: "已重置，请开始新的配对练习。",
+        hint_show_answers: "已显示答案连线，左侧同时展示详细解释与例子。",
+        hint_hide_answers: "已隐藏答案，继续练习。"
+      },
+      both: {
+        docTitle: "Space Vocabulary - Matching Practice / 太空词汇 - 连线配对练习",
+        mainTitle: "Matching Practice: Space Vocabulary / 配对练习：太空词汇",
+        subTitle: "Click a left-hand box, then click its right-hand match. / 先点击左侧词汇，再点击右侧对应解释。",
+        colWords: "Terms / 词汇",
+        colDefs: "Definitions / 定义",
+        wordsAria: "Terms list / 词汇列表",
+        defsAria: "Definitions list / 定义列表",
+        btnLang: "English",
+        btnShuffle: "Shuffle / 打乱",
+        btnReset: "Reset / 重置",
+        btnShow: "Show Answers / 显示答案",
+        btnHide: "Hide Answers / 隐藏答案",
+        status: (m, total) => `Matches: ${m} / ${total} | 已配对：${m} / ${total}`,
+        labelExplanation: "Explanation / 解释",
+        labelExample: "Example / 例子",
+        hint_default: "Tip: You can change your pick anytime. / 提示：你可以随时重新选择。",
+        hint_all_done: "All matched! Shuffle or reset. / 全部配对完成！可打乱或重置。",
+        hint_correct: "Correct! Keep going. / 配对正确，继续加油。",
+        hint_wrong: "Not a match—try again. / 配对错误，请再试一次。",
+        hint_shuffled: "Shuffled! Continue matching. / 已打乱，继续配对吧。",
+        hint_reset: "Reset complete. Start matching! / 已重置，请开始新的配对练习。",
+        hint_show_answers: "Answers connected with details shown. / 已显示答案连线与详细解释。",
+        hint_hide_answers: "Answers hidden. Keep practicing! / 已隐藏答案，继续练习。"
+      }
+    };
+
+    const PAIRS = [
+      {
+        id: "solar-system",
+        term: { en: "solar system" },
+        def: { en: "contains sun, planets, moons, asteroids, comets" },
+        explanation: { en: "contains sun, planets, moons, asteroids, comets" },
+        example: { en: "Our solar system includes the Sun, eight planets, many moons, asteroids, and comets." }
+      },
+      {
+        id: "asteroid",
+        term: { en: "asteroid" },
+        def: { en: "a small rocky body that revolves around the sun" },
+        explanation: { en: "a small rocky body that revolves around the sun" },
+        example: { en: "Many asteroids are found in the asteroid belt between Mars and Jupiter." }
+      },
+      {
+        id: "comet",
+        term: { en: "comet" },
+        def: { en: "a ball of rock and ice that orbits the sun" },
+        explanation: { en: "a ball of rock and ice that orbits the sun" },
+        example: { en: "A comet can form a bright tail when it gets close to the Sun." }
+      },
+      {
+        id: "planet",
+        term: { en: "planet" },
+        def: { en: "orbits the sun, large body, round shape" },
+        explanation: { en: "orbits the sun, large body, round shape" },
+        example: { en: "Earth is a planet that orbits the Sun and has a nearly round shape." }
+      },
+      {
+        id: "moon",
+        term: { en: "moon" },
+        def: { en: "a large body that orbits a planet" },
+        explanation: { en: "a large body that orbits a planet" },
+        example: { en: "Earth's Moon is a natural satellite that orbits our planet." }
+      }
+    ];
+
+    const PAIR_BY_ID = Object.fromEntries(PAIRS.map((pair) => [pair.id, pair]));
+
+    const $ = (sel) => document.querySelector(sel);
+
+    function shuffle(arr){
+      const a = [...arr];
+      for(let i=a.length-1;i>0;i--){
+        const j = Math.floor(Math.random() * (i+1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function uiText(key){
+      return UI[currentLang][key];
+    }
+
+    function i18nValue(valueByLang){
+      if(currentLang === "both"){
+        const en = valueByLang?.en ?? "";
+        const zh = valueByLang?.zh ?? "";
+        if(en && zh) return `${en} / ${zh}`;
+        return en || zh;
+      }
+      return valueByLang?.[currentLang] ?? valueByLang?.en ?? valueByLang?.zh ?? "";
+    }
+
+    // State
+    const LANG_ORDER = ["en", "both"];
+    let currentLang = "en";
+    let selectedLeft = null;   // { id, el }
+    let selectedRight = null;  // { id, el }
+    let matched = new Set();   // ids
+    let showAnswers = false;
+    let leftOrder = [];
+    let rightOrder = [];
+
+    // SVG state
+    const curvesById = new Map(); // id -> { path, c1, c2 }
+    const answerCurvesById = new Map(); // id -> { path, c1, c2 }
+    let preview = null;           // { path, c1, c2 }
+    let attempt = null;           // { path, c1, c2 }
+
+    const gridWrap = $("#gridWrap");
+    const linesSvg = $("#linesSvg");
+
+    function svgNS(tag){ return document.createElementNS("http://www.w3.org/2000/svg", tag); }
+
+    function sizeSvgToWrap(){
+      const r = gridWrap.getBoundingClientRect();
+      const w = Math.max(1, Math.round(r.width));
+      const h = Math.max(1, Math.round(r.height));
+      linesSvg.setAttribute("width", w);
+      linesSvg.setAttribute("height", h);
+      linesSvg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+    }
+
+    function anchors(leftEl, rightEl){
+      const wrap = gridWrap.getBoundingClientRect();
+      const a = leftEl.getBoundingClientRect();
+      const b = rightEl.getBoundingClientRect();
+
+      const x1 = a.right - wrap.left;
+      const y1 = (a.top + a.height/2) - wrap.top;
+
+      const x2 = b.left - wrap.left;
+      const y2 = (b.top + b.height/2) - wrap.top;
+
+      return { x1, y1, x2, y2 };
+    }
+
+    // Create a nice cubic Bezier curve between points
+    function bezierPath(x1, y1, x2, y2){
+      const dx = Math.max(60, (x2 - x1) * 0.55); // curvature strength
+      const c1x = x1 + dx;
+      const c1y = y1;
+      const c2x = x2 - dx;
+      const c2y = y2;
+      const d = `M ${x1} ${y1} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${x2} ${y2}`;
+      return { d, c1x, c1y, c2x, c2y };
+    }
+
+    function makeCurveElements(className=""){
+      const path = svgNS("path");
+      if(className) path.setAttribute("class", className);
+
+      const c1 = svgNS("circle");
+      const c2 = svgNS("circle");
+      c1.setAttribute("r", "4");
+      c2.setAttribute("r", "4");
+      if(className === "preview"){
+        c1.setAttribute("class", "previewDot");
+        c2.setAttribute("class", "previewDot");
+      }
+      if(className === "answer"){
+        c1.setAttribute("class", "answerDot");
+        c2.setAttribute("class", "answerDot");
+      }
+
+      linesSvg.appendChild(path);
+      linesSvg.appendChild(c1);
+      linesSvg.appendChild(c2);
+
+      return { path, c1, c2 };
+    }
+
+    function setCurve(curveEls, x1, y1, x2, y2){
+      const { d } = bezierPath(x1,y1,x2,y2);
+      curveEls.path.setAttribute("d", d);
+
+      curveEls.c1.setAttribute("cx", x1);
+      curveEls.c1.setAttribute("cy", y1);
+      curveEls.c2.setAttribute("cx", x2);
+      curveEls.c2.setAttribute("cy", y2);
+    }
+
+    function upsertMatchedCurve(id){
+      const leftEl = document.querySelector(`.card.matched[data-side="left"][data-id="${id}"]`);
+      const rightEl = document.querySelector(`.card.matched[data-side="right"][data-id="${id}"]`);
+      if(!leftEl || !rightEl) return;
+
+      const {x1,y1,x2,y2} = anchors(leftEl, rightEl);
+
+      let curve = curvesById.get(id);
+      if(!curve){
+        curve = makeCurveElements("");
+        curvesById.set(id, curve);
+      }
+      setCurve(curve, x1,y1,x2,y2);
+    }
+
+    function upsertAnswerCurve(id){
+      const leftEl = document.querySelector(`.card[data-side="left"][data-id="${id}"]`);
+      const rightEl = document.querySelector(`.card[data-side="right"][data-id="${id}"]`);
+      if(!leftEl || !rightEl) return;
+
+      const {x1,y1,x2,y2} = anchors(leftEl, rightEl);
+
+      let curve = answerCurvesById.get(id);
+      if(!curve){
+        curve = makeCurveElements("answer");
+        answerCurvesById.set(id, curve);
+      }
+      setCurve(curve, x1,y1,x2,y2);
+    }
+
+    function ensurePreview(){
+      if(preview) return preview;
+      preview = makeCurveElements("preview");
+      return preview;
+    }
+
+    function removePreview(){
+      if(!preview) return;
+      preview.path.remove();
+      preview.c1.remove();
+      preview.c2.remove();
+      preview = null;
+    }
+
+    function ensureAttempt(){
+      if(attempt) return attempt;
+      attempt = makeCurveElements("attempt");
+      attempt.c1.setAttribute("class", "attemptDot");
+      attempt.c2.setAttribute("class", "attemptDot");
+      return attempt;
+    }
+
+    function removeAttempt(){
+      if(!attempt) return;
+      attempt.path.remove();
+      attempt.c1.remove();
+      attempt.c2.remove();
+      attempt = null;
+    }
+
+    function setAttemptWrong(isWrong){
+      if(!attempt) return;
+      attempt.path.classList.toggle("wrong", isWrong);
+      attempt.c1.classList.toggle("wrong", isWrong);
+      attempt.c2.classList.toggle("wrong", isWrong);
+    }
+
+    function updatePreview(){
+      const left = selectedLeft?.el || null;
+      const right = selectedRight?.el || null;
+
+      if(left && right){
+        removePreview();
+        return;
+      }
+
+      if(left && !right){
+        const wrap = gridWrap.getBoundingClientRect();
+        const a = left.getBoundingClientRect();
+        const x1 = a.right - wrap.left;
+        const y1 = (a.top + a.height/2) - wrap.top;
+        const x2 = wrap.width * 0.72;
+        const y2 = y1;
+
+        const p = ensurePreview();
+        setCurve(p, x1,y1,x2,y2);
+        return;
+      }
+
+      if(!left && right){
+        const wrap = gridWrap.getBoundingClientRect();
+        const b = right.getBoundingClientRect();
+        const x1 = wrap.width * 0.28;
+        const y1 = (b.top + b.height/2) - wrap.top;
+        const x2 = b.left - wrap.left;
+        const y2 = y1;
+
+        const p = ensurePreview();
+        setCurve(p, x1,y1,x2,y2);
+        return;
+      }
+
+      removePreview();
+    }
+
+    function updateAttempt(){
+      const left = selectedLeft?.el || null;
+      const right = selectedRight?.el || null;
+
+      if(left && right){
+        const {x1,y1,x2,y2} = anchors(left, right);
+        const a = ensureAttempt();
+        setAttemptWrong(false);
+        setCurve(a, x1,y1,x2,y2);
+        return;
+      }
+
+      removeAttempt();
+    }
+
+    function clearAllCurves(){
+      linesSvg.innerHTML = "";
+      curvesById.clear();
+      answerCurvesById.clear();
+      preview = null;
+      attempt = null;
+    }
+
+    function redrawAllMatched(){
+      clearAllCurves();
+
+      for(const id of matched){
+        upsertMatchedCurve(id);
+      }
+      if(showAnswers){
+        for(const pair of PAIRS){
+          if(!matched.has(pair.id)) upsertAnswerCurve(pair.id);
+        }
+      }
+      updatePreview();
+      updateAttempt();
+    }
+
+    // UI helpers
+    function updateStatus(){
+      $("#status").textContent = uiText("status")(matched.size, PAIRS.length);
+    }
+
+    function updateHint(key){
+      const hint = $("#hint");
+      if(key){ hint.textContent = uiText(key); return; }
+      hint.textContent = matched.size === PAIRS.length ? uiText("hint_all_done") : uiText("hint_default");
+    }
+
+    function clearWrongMarks(){
+      document.querySelectorAll(".card.wrong").forEach(el => el.classList.remove("wrong"));
+    }
+
+    function syncStaticUi(){
+      document.documentElement.lang = currentLang === "zh" ? "zh" : "en";
+      document.title = uiText("docTitle");
+      $("#mainTitle").textContent = uiText("mainTitle");
+      $("#subTitle").textContent = uiText("subTitle");
+      $("#leftColTitle").textContent = uiText("colWords");
+      $("#rightColTitle").textContent = uiText("colDefs");
+      $("#leftList").setAttribute("aria-label", uiText("wordsAria"));
+      $("#rightList").setAttribute("aria-label", uiText("defsAria"));
+      $("#langBtn").textContent = uiText("btnLang");
+      $("#shuffleBtn").textContent = uiText("btnShuffle");
+      $("#resetBtn").textContent = uiText("btnReset");
+      $("#showBtn").textContent = showAnswers ? uiText("btnHide") : uiText("btnShow");
+    }
+
+    function applyCardState(card){
+      const id = card.dataset.id;
+      if(matched.has(id)){
+        card.classList.add("matched");
+        card.setAttribute("aria-disabled","true");
+      } else {
+        card.classList.remove("matched");
+        card.setAttribute("aria-disabled","false");
+      }
+    }
+
+    function render({ reshuffle = true } = {}){
+      const leftList = $("#leftList");
+      const rightList = $("#rightList");
+      syncStaticUi();
+      leftList.innerHTML = "";
+      rightList.innerHTML = "";
+
+      if(reshuffle || leftOrder.length !== PAIRS.length || rightOrder.length !== PAIRS.length){
+        leftOrder = shuffle(PAIRS.map((pair) => pair.id));
+        rightOrder = shuffle(PAIRS.map((pair) => pair.id));
+      }
+
+      const leftItems = leftOrder.map((id) => PAIR_BY_ID[id]);
+      const rightItems = rightOrder.map((id) => PAIR_BY_ID[id]);
+
+      for(const item of leftItems){
+        const card = document.createElement("div");
+        card.className = "card";
+        card.setAttribute("role","button");
+        card.setAttribute("tabindex","0");
+        card.dataset.side = "left";
+        card.dataset.id = item.id;
+        card.innerHTML = `
+          <span class="wordLabel">${escapeHtml(i18nValue(item.term))}</span>
+          ${showAnswers ? `<small class="answerDetail"><b>${escapeHtml(uiText("labelExplanation"))}:</b> ${escapeHtml(i18nValue(item.explanation))}<br><b>${escapeHtml(uiText("labelExample"))}:</b> ${escapeHtml(i18nValue(item.example))}</small>` : ""}
+        `;
+
+        applyCardState(card);
+
+        card.addEventListener("click", () => onPick(card));
+        card.addEventListener("keydown", (e) => {
+          if(e.key === "Enter" || e.key === " "){ e.preventDefault(); onPick(card); }
+        });
+
+        leftList.appendChild(card);
+      }
+
+      for(const item of rightItems){
+        const card = document.createElement("div");
+        card.className = "card";
+        card.setAttribute("role","button");
+        card.setAttribute("tabindex","0");
+        card.dataset.side = "right";
+        card.dataset.id = item.id;
+        card.textContent = i18nValue(item.def);
+
+        applyCardState(card);
+
+        card.addEventListener("click", () => onPick(card));
+        card.addEventListener("keydown", (e) => {
+          if(e.key === "Enter" || e.key === " "){ e.preventDefault(); onPick(card); }
+        });
+
+        rightList.appendChild(card);
+      }
+
+      selectedLeft = null;
+      selectedRight = null;
+
+      updateStatus();
+      updateHint();
+
+      requestAnimationFrame(() => {
+        sizeSvgToWrap();
+        redrawAllMatched();
+      });
+    }
+
+    function onPick(card){
+      clearWrongMarks();
+      const id = card.dataset.id;
+      const side = card.dataset.side;
+      if(matched.has(id)) return;
+
+      if(side === "left"){
+        document.querySelectorAll('.card.selected[data-side="left"]').forEach(el => el.classList.remove("selected"));
+        card.classList.add("selected");
+        selectedLeft = { id, el: card };
+      } else {
+        document.querySelectorAll('.card.selected[data-side="right"]').forEach(el => el.classList.remove("selected"));
+        card.classList.add("selected");
+        selectedRight = { id, el: card };
+      }
+
+      sizeSvgToWrap();
+      updatePreview();
+      updateAttempt();
+
+      if(selectedLeft && selectedRight){
+        if(selectedLeft.id === selectedRight.id){
+          matched.add(selectedLeft.id);
+
+          selectedLeft.el.classList.remove("selected");
+          selectedRight.el.classList.remove("selected");
+          selectedLeft.el.classList.add("matched");
+          selectedRight.el.classList.add("matched");
+
+          selectedLeft.el.setAttribute("aria-disabled","true");
+          selectedRight.el.setAttribute("aria-disabled","true");
+
+          selectedLeft = null;
+          selectedRight = null;
+          sizeSvgToWrap();
+          redrawAllMatched();
+
+          updateStatus();
+          updateHint(matched.size === PAIRS.length ? null : "hint_correct");
+        } else {
+          selectedLeft.el.classList.add("wrong");
+          selectedRight.el.classList.add("wrong");
+          setAttemptWrong(true);
+          updateHint("hint_wrong");
+
+          setTimeout(() => {
+            selectedLeft?.el?.classList.remove("selected");
+            selectedRight?.el?.classList.remove("selected");
+            selectedLeft = null;
+            selectedRight = null;
+            clearWrongMarks();
+            sizeSvgToWrap();
+            updatePreview();
+            updateAttempt();
+          }, 450);
+        }
+      }
+    }
+
+    // Buttons
+    $("#shuffleBtn").addEventListener("click", () => {
+      render();
+      updateHint("hint_shuffled");
+    });
+
+    $("#resetBtn").addEventListener("click", () => {
+      matched = new Set();
+      showAnswers = false;
+      clearAllCurves();
+      render();
+      updateHint("hint_reset");
+    });
+
+    $("#showBtn").addEventListener("click", () => {
+      showAnswers = !showAnswers;
+      render({ reshuffle: false });
+      updateHint(showAnswers ? "hint_show_answers" : "hint_hide_answers");
+    });
+
+    $("#langBtn").addEventListener("click", () => {
+      const modeIndex = LANG_ORDER.indexOf(currentLang);
+      currentLang = LANG_ORDER[(modeIndex + 1) % LANG_ORDER.length];
+      render({ reshuffle: false });
+    });
+
+    // Keep curves aligned
+    window.addEventListener("resize", () => {
+      sizeSvgToWrap();
+      redrawAllMatched();
+    });
+
+    const ro = new ResizeObserver(() => {
+      sizeSvgToWrap();
+      redrawAllMatched();
+    });
+    ro.observe(gridWrap);
+
+    // Init
+    render();
+  </script>
+</body>
+</html>
