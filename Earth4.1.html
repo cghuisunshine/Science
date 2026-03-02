@@ -258,6 +258,41 @@
       font-weight:700;
       letter-spacing:.2px;
     }
+    .practice-embeds{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+      margin-top:10px;
+      align-items:start;
+    }
+    .practice-card{
+      border:1px solid var(--border);
+      border-radius:16px;
+      overflow:hidden;
+      background:rgba(17,24,39,.02);
+    }
+    .practice-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border-bottom:1px solid var(--border);
+      background:rgba(255,255,255,.9);
+      font-size:14px;
+      font-weight:700;
+    }
+    .practice-frame{
+      width:100%;
+      height:860px;
+      border:0;
+      display:block;
+      background:#0b3a6b;
+    }
+    @media (max-width: 980px){
+      .practice-frame{height:700px}
+      .practice-head{flex-direction:column; align-items:flex-start}
+    }
 
     /* Footer */
     footer{
@@ -280,6 +315,7 @@
       .card{box-shadow:none}
       .grid{grid-template-columns:1fr}
       .section{break-inside:avoid}
+      .practice-frame{display:none}
       a{color:inherit; text-decoration:none}
     }
   </style>
@@ -624,20 +660,36 @@
           <span class="kicker">Practice</span>
           <h3>Labelling Activities</h3>
           <p>
-            Use these interactive activities to practice identifying major parts of the universe and solar system:
+            Practice directly below. Each activity is embedded so you can complete it without leaving this page.
           </p>
-          <ul>
-            <li>
-              <a class="link" href="https://cghuisunshine.github.io/Science/LabellingUniverse.html" target="_blank" rel="noopener">
-                Labelling the Universe
-              </a>
-            </li>
-            <li>
-              <a class="link" href="https://cghuisunshine.github.io/Science/LabellingSolar.html" target="_blank" rel="noopener">
-                Labelling the Solar System
-              </a>
-            </li>
-          </ul>
+
+          <div class="practice-embeds" aria-label="Embedded labelling activities">
+            <div class="practice-card">
+              <div class="practice-head">
+                <span>Labelling the Universe</span>
+                <a class="link" href="LabellingUniverse.html?v=2" target="_blank" rel="noopener">Open in new tab</a>
+              </div>
+              <iframe
+                class="practice-frame"
+                src="LabellingUniverse.html?v=2"
+                title="Embedded activity: Labelling the Universe"
+                loading="lazy"
+                allowfullscreen></iframe>
+            </div>
+
+            <div class="practice-card">
+              <div class="practice-head">
+                <span>Labelling the Solar System</span>
+                <a class="link" href="LabellingSolar.html?v=2" target="_blank" rel="noopener">Open in new tab</a>
+              </div>
+              <iframe
+                class="practice-frame"
+                src="LabellingSolar.html?v=2"
+                title="Embedded activity: Labelling the Solar System"
+                loading="lazy"
+                allowfullscreen></iframe>
+            </div>
+          </div>
 
           <div class="callout" style="margin-top:12px">
             <strong>Tip:</strong> After you finish each labelling activity, try explaining your answers in your own words
