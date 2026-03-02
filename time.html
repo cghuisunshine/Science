@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Beijing ↔ Vancouver Time Mapping</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 20px; line-height: 1.4; }
+    .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: end; }
+    label { display: grid; gap: 6px; font-size: 14px; }
+    input, button, select { font: inherit; padding: 8px 10px; }
+    button { cursor: pointer; }
+    .card { border: 1px solid #ddd; border-radius: 10px; padding: 14px; }
+    .grid { display: grid; gap: 14px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #e5e5e5; padding: 8px 10px; text-align: left; font-variant-numeric: tabular-nums; }
+    th { background: #fafafa; position: sticky; top: 0; }
+    .muted { color: #666; font-size: 13px; }
+    .two { display: grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 980px) { .two { grid-template-columns: 1fr 1fr; } }
+    .pill { display: inline-block; padding: 2px 8px; border: 1px solid #ddd; border-radius: 999px; font-size: 12px; color: #333; background: #fff; }
+    .out { font-weight: 650; }
+  </style>
+</head>
+<body>
+  <h1>Beijing ↔ Vancouver Time Mapping</h1>
+  <p class="muted">
+    Uses IANA time zones: <span class="pill">Asia/Shanghai</span> (Beijing Time) and
+    <span class="pill">America/Vancouver</span> (Vancouver). DST is handled based on the selected date.
+  </p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="row">
+        <label>
+          Date (used for mapping + DST)
+          <input id="date" type="date" />
+        </label>
+
+        <label>
+          Build mapping for
+          <select id="which">
+            <option value="beijing">Beijing day (00:00 → 23:00)</option>
+            <option value="vancouver">Vancouver day (00:00 → 23:00)</option>
+          </select>
+        </label>
+
+        <button id="build">Build 24-hour mapping table</button>
+      </div>
+      <div id="offsetInfo" class="muted" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="two">
+      <div class="card">
+        <h2 style="margin-top:0;">Convert Beijing → Vancouver</h2>
+        <div class="row">
+          <label>
+            Beijing date
+            <input id="bjDate" type="date" />
+          </label>
+          <label>
+            Beijing time (start)
+            <input id="bjTimeStart" type="time" step="60" value="09:00" />
+          </label>
+          <label>
+            Beijing time (end, optional)
+            <input id="bjTimeEnd" type="time" step="60" />
+          </label>
+          <button id="bjToVan">Convert</button>
+        </div>
+        <p class="out" id="bjToVanOut" style="margin-bottom:0;"></p>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-top:0;">Convert Vancouver → Beijing</h2>
+        <div class="row">
+          <label>
+            Vancouver date
+            <input id="vanDate" type="date" />
+          </label>
+          <label>
+            Vancouver time (start)
+            <input id="vanTimeStart" type="time" step="60" value="09:00" />
+          </label>
+          <label>
+            Vancouver time (end, optional)
+            <input id="vanTimeEnd" type="time" step="60" />
+          </label>
+          <button id="vanToBj">Convert</button>
+        </div>
+        <p class="out" id="vanToBjOut" style="margin-bottom:0;"></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0;">24-hour mapping table</h2>
+      <div class="muted" id="tableCaption" style="margin-bottom:10px;"></div>
+      <div style="max-height: 520px; overflow: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Beijing Time</th>
+              <th>Vancouver Time</th>
+              <th>UTC</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const TZ_BJ  = "Asia/Shanghai";
+  const TZ_VAN = "America/Vancouver";
+
+  // Format helpers
+  const fmt = (tz, date) => new Intl.DateTimeFormat(undefined, {
+    timeZone: tz,
+    year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit",
+    hour12: false
+  }).format(date);
+
+  const fmtHM = (tz, date) => new Intl.DateTimeFormat(undefined, {
+    timeZone: tz,
+    hour: "2-digit", minute: "2-digit",
+    hour12: false
+  }).format(date);
+
+  const fmtYMD = (tz, date) => new Intl.DateTimeFormat(undefined, {
+    timeZone: tz,
+    year: "numeric", month: "2-digit", day: "2-digit"
+  }).format(date);
+
+  const fmtUTC = (date) => new Intl.DateTimeFormat(undefined, {
+    timeZone: "UTC",
+    year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit",
+    hour12: false
+  }).format(date);
+
+  // Compute timezone offset (minutes) for a given UTC Date and IANA timezone.
+  // Returns: minutes to add to UTC to get local time in tz (e.g. +480 for Beijing, -480/-420 for Vancouver).
+  function getOffsetMinutes(utcDate, tz) {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: tz,
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+      hour12: false
+    }).formatToParts(utcDate);
+
+    const map = Object.fromEntries(parts.filter(p => p.type !== "literal").map(p => [p.type, p.value]));
+    const asIfUTC = Date.UTC(
+      Number(map.year),
+      Number(map.month) - 1,
+      Number(map.day),
+      Number(map.hour),
+      Number(map.minute),
+      Number(map.second)
+    );
+
+    return (asIfUTC - utcDate.getTime()) / 60000;
+  }
+
+  // Convert a wall-clock time in a given tz into a UTC Date.
+  // Standard two-pass approach to handle DST transitions.
+  function zonedTimeToUtc(y, m, d, hh, mm, tz) {
+    const guess = new Date(Date.UTC(y, m - 1, d, hh, mm, 0));
+    const off1 = getOffsetMinutes(guess, tz);
+    const utc1 = new Date(guess.getTime() - off1 * 60000);
+    const off2 = getOffsetMinutes(utc1, tz);
+    return new Date(guess.getTime() - off2 * 60000);
+  }
+
+  function parseDateInput(value) {
+    // value: "YYYY-MM-DD"
+    const [y, m, d] = value.split("-").map(Number);
+    return { y, m, d };
+  }
+
+  function parseTimeInput(value) {
+    // value: "HH:MM"
+    const [hh, mm] = value.split(":").map(Number);
+    return { hh, mm };
+  }
+
+  function setTodayDefaults() {
+    const now = new Date();
+    const todayLocal = new Intl.DateTimeFormat("en-CA", { year:"numeric", month:"2-digit", day:"2-digit" }).format(now).replaceAll("/", "-");
+    // en-CA often yields YYYY-MM-DD; if not, normalize fallback
+    const iso = (todayLocal.length === 10 && todayLocal[4] === "-") ? todayLocal : new Date().toISOString().slice(0,10);
+
+    document.getElementById("date").value = iso;
+    document.getElementById("bjDate").value = iso;
+    document.getElementById("vanDate").value = iso;
+  }
+
+  function updateOffsetInfo(selectedDateISO) {
+    const { y, m, d } = parseDateInput(selectedDateISO);
+    // pick noon UTC to avoid edge cases
+    const noonUTC = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+    const bjOff  = getOffsetMinutes(noonUTC, TZ_BJ);
+    const vanOff = getOffsetMinutes(noonUTC, TZ_VAN);
+    const diffHours = (bjOff - vanOff) / 60;
+
+    const sign = (n) => (n >= 0 ? "+" : "−");
+    const abs  = (n) => Math.abs(n);
+
+    document.getElementById("offsetInfo").textContent =
+      `On ${selectedDateISO}, offsets are: Beijing UTC${sign(bjOff/60)}${abs(bjOff/60)}; ` +
+      `Vancouver UTC${sign(vanOff/60)}${abs(vanOff/60)}. ` +
+      `Beijing is ${diffHours} hours ahead of Vancouver on this date.`;
+  }
+
+  function buildTable() {
+    const iso = document.getElementById("date").value;
+    const which = document.getElementById("which").value;
+    if (!iso) return;
+
+    updateOffsetInfo(iso);
+
+    const { y, m, d } = parseDateInput(iso);
+    const tbody = document.getElementById("tbody");
+    tbody.innerHTML = "";
+
+    // Build 24 rows based on the selected "day" in that timezone.
+    // For each hour in that local day, convert that local wall time -> UTC -> format in both zones.
+    const baseTZ = (which === "beijing") ? TZ_BJ : TZ_VAN;
+    const caption = (which === "beijing")
+      ? `Mapping each hour of the Beijing day on ${iso} to Vancouver time.`
+      : `Mapping each hour of the Vancouver day on ${iso} to Beijing time.`;
+    document.getElementById("tableCaption").textContent = caption;
+
+    for (let hour = 0; hour < 24; hour++) {
+      const utc = zonedTimeToUtc(y, m, d, hour, 0, baseTZ);
+
+      const bjStr  = fmt(TZ_BJ, utc);
+      const vanStr = fmt(TZ_VAN, utc);
+      const utcStr = fmtUTC(utc);
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${bjStr}</td>
+        <td>${vanStr}</td>
+        <td>${utcStr}</td>
+      `;
+      tbody.appendChild(tr);
+    }
+  }
+
+  function convertBJtoVAN() {
+    const dISO = document.getElementById("bjDate").value;
+    const tStart = document.getElementById("bjTimeStart").value;
+    const tEnd = document.getElementById("bjTimeEnd").value;
+    if (!dISO || !tStart) return;
+
+    const { y, m, d } = parseDateInput(dISO);
+    const { hh: startH, mm: startM } = parseTimeInput(tStart);
+    const startUtc = zonedTimeToUtc(y, m, d, startH, startM, TZ_BJ);
+
+    let out = `Vancouver: ${fmt(TZ_VAN, startUtc)} (from Beijing ${dISO} ${tStart})`;
+    if (tEnd) {
+      const { hh: endH, mm: endM } = parseTimeInput(tEnd);
+      let endUtc = zonedTimeToUtc(y, m, d, endH, endM, TZ_BJ);
+      let wrap = "";
+      if (endUtc.getTime() < startUtc.getTime()) {
+        endUtc = zonedTimeToUtc(y, m, d + 1, endH, endM, TZ_BJ);
+        wrap = " (+1 day)";
+      }
+      out = `Vancouver range: ${fmt(TZ_VAN, startUtc)} → ${fmt(TZ_VAN, endUtc)} (from Beijing ${dISO} ${tStart} → ${tEnd}${wrap})`;
+    }
+    document.getElementById("bjToVanOut").textContent = out;
+  }
+
+  function convertVANtoBJ() {
+    const dISO = document.getElementById("vanDate").value;
+    const tStart = document.getElementById("vanTimeStart").value;
+    const tEnd = document.getElementById("vanTimeEnd").value;
+    if (!dISO || !tStart) return;
+
+    const { y, m, d } = parseDateInput(dISO);
+    const { hh: startH, mm: startM } = parseTimeInput(tStart);
+    const startUtc = zonedTimeToUtc(y, m, d, startH, startM, TZ_VAN);
+
+    let out = `Beijing: ${fmt(TZ_BJ, startUtc)} (from Vancouver ${dISO} ${tStart})`;
+    if (tEnd) {
+      const { hh: endH, mm: endM } = parseTimeInput(tEnd);
+      let endUtc = zonedTimeToUtc(y, m, d, endH, endM, TZ_VAN);
+      let wrap = "";
+      if (endUtc.getTime() < startUtc.getTime()) {
+        endUtc = zonedTimeToUtc(y, m, d + 1, endH, endM, TZ_VAN);
+        wrap = " (+1 day)";
+      }
+      out = `Beijing range: ${fmt(TZ_BJ, startUtc)} → ${fmt(TZ_BJ, endUtc)} (from Vancouver ${dISO} ${tStart} → ${tEnd}${wrap})`;
+    }
+    document.getElementById("vanToBjOut").textContent = out;
+  }
+
+  // Wire up
+  setTodayDefaults();
+  buildTable();
+
+  document.getElementById("build").addEventListener("click", buildTable);
+  document.getElementById("date").addEventListener("change", buildTable);
+  document.getElementById("which").addEventListener("change", buildTable);
+
+  document.getElementById("bjToVan").addEventListener("click", convertBJtoVAN);
+  document.getElementById("vanToBj").addEventListener("click", convertVANtoBJ);
+</script>
+</body>
+</html>
