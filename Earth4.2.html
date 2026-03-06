@@ -74,8 +74,20 @@
     .btn.primary:hover{background:rgba(37,99,235,.14); border-color:rgba(37,99,235,.35)}
 
     .wrap{max-width:var(--maxw); margin:0 auto; padding:22px 18px 52px;}
-    .grid{display:grid; grid-template-columns:320px 1fr; gap:18px; align-items:start;}
+    .grid{display:grid; grid-template-columns:320px minmax(0, 1fr); gap:18px; align-items:start; transition:grid-template-columns .20s ease, gap .20s ease;}
     @media (max-width: 980px){.grid{grid-template-columns:1fr}}
+
+    /* Foldable left navigation */
+    .sidebar{will-change:opacity, transform}
+    body.nav-collapsed .grid{grid-template-columns:0px minmax(0, 1fr); gap:0}
+    body.nav-collapsed .sidebar{
+      opacity:0; transform:translateX(-8px); pointer-events:none;
+      border:0; box-shadow:none;
+    }
+    @media (max-width: 980px){
+      body.nav-collapsed .grid{grid-template-columns:1fr; gap:18px}
+      body.nav-collapsed .sidebar{display:none}
+    }
 
     .card{background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
     .card .pad{padding:18px}
@@ -159,6 +171,7 @@
       </div>
       <div class="actions">
         <button class="btn primary" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑ Top</button>
+        <button class="btn" id="navToggle" type="button" aria-controls="pageNav" aria-expanded="true">☰ Outline: Hide</button>
         <button class="btn" id="langToggle" type="button" aria-pressed="false">Language: EN</button>
         <button class="btn" onclick="window.print()">Print</button>
       </div>
@@ -179,7 +192,7 @@
     <div style="height:16px"></div>
 
     <div class="grid">
-      <aside class="card sticky">
+      <aside class="card sticky sidebar" id="pageNav">
         <div class="pad">
           <h2>On this page</h2>
           <p class="subtle" style="margin:0 0 10px">Jump to a topic section.</p>
@@ -425,6 +438,27 @@
         setLangMode(bilingual ? 'en' : 'enzh');
       });
       setLangMode(localStorage.getItem('earth42LangMode') === 'enzh' ? 'enzh' : 'en');
+
+      const navToggle = document.getElementById('navToggle');
+      const pageNav = document.getElementById('pageNav');
+      const setNavCollapsed = (collapsed) => {
+        document.body.classList.toggle('nav-collapsed', collapsed);
+        if (navToggle){
+          navToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+          navToggle.textContent = collapsed ? '☰ Outline: Show' : '☰ Outline: Hide';
+        }
+        if (pageNav){
+          pageNav.setAttribute('aria-hidden', collapsed ? 'true' : 'false');
+          if ('inert' in pageNav) pageNav.inert = collapsed;
+        }
+        try{ localStorage.setItem('earth42NavCollapsed', collapsed ? '1' : '0'); }catch(_){}
+      };
+      if (navToggle){
+        navToggle.addEventListener('click', () => {
+          setNavCollapsed(!document.body.classList.contains('nav-collapsed'));
+        });
+        setNavCollapsed(localStorage.getItem('earth42NavCollapsed') === '1');
+      }
 
       const links = Array.from(document.querySelectorAll('.toc a'));
       const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
