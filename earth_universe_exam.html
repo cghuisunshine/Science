@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Earth & Space Science Exam Prep — 4.1 & 4.2</title>
+  <style>
+    :root {
+      --bg: #f6f8fc;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --accent: #1d4ed8;
+      --accent-2: #0f766e;
+      --good: #166534;
+      --good-bg: #dcfce7;
+      --bad: #991b1b;
+      --bad-bg: #fee2e2;
+      --warn: #92400e;
+      --warn-bg: #fef3c7;
+      --border: #dbe3ef;
+      --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 100%);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #1d4ed8, #0f766e);
+      color: white;
+      padding: 28px;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.8rem, 3.8vw, 3rem);
+      line-height: 1.15;
+    }
+
+    .hero p { margin: 8px 0; }
+    .hero .i18n-zh {
+      color: rgba(255, 255, 255, 0.94);
+    }
+    .hero .i18n-zh.inline {
+      color: rgba(255, 255, 255, 0.96);
+    }
+    .hero .pill .i18n-zh {
+      color: #153e91;
+      font-size: 0.9em;
+      margin-top: 4px;
+    }
+    .i18n-zh {
+      display: none;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.95em;
+      line-height: 1.5;
+    }
+    body.lang-bilingual .i18n-zh { display: block; }
+    .i18n-zh.inline {
+      display: none;
+      margin-top: 0;
+      margin-left: 0.45em;
+      font-size: inherit;
+      line-height: inherit;
+      color: var(--muted);
+    }
+    body.lang-bilingual .i18n-zh.inline { display: inline; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    h2, h3 {
+      margin-top: 0;
+      line-height: 1.25;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .pill {
+      background: #e8f0ff;
+      color: #153e91;
+      border: 1px solid #c8dafd;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    label.inline {
+      display: inline-block;
+      margin-right: 12px;
+      font-weight: 700;
+    }
+
+    input[type="text"],
+    input[type="url"] {
+      width: min(360px, 100%);
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 1rem;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0 8px;
+    }
+
+    .lang-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 14px 0 6px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #f8fbff;
+    }
+
+    .lang-bar strong {
+      color: var(--accent);
+      font-size: 0.98rem;
+    }
+
+    .lang-toggle-btn {
+      background: linear-gradient(135deg, #1d4ed8, #0f766e);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(29, 78, 216, 0.18);
+    }
+
+    button {
+      appearance: none;
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+    button:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    .primary { background: var(--accent); color: #fff; }
+    .secondary { background: #e5eefc; color: #163b8c; }
+    .success { background: var(--accent-2); color: #fff; }
+    .ghost { background: #eef2f7; color: #374151; }
+
+    .scoreboard {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .scorebox {
+      background: #f8fbff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .scorebox strong {
+      display: block;
+      font-size: 1.45rem;
+      margin-bottom: 4px;
+    }
+
+    .inline-status {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .inline-status.ok { color: var(--good); }
+    .inline-status.bad { color: var(--bad); }
+
+    .question {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 16px;
+      background: #fcfdff;
+    }
+
+    .question.correct {
+      border-color: #86efac;
+      background: #f0fdf4;
+    }
+
+    .question.incorrect {
+      border-color: #fca5a5;
+      background: #fff7f7;
+    }
+
+    .qhead {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .qnum {
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .tag {
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--muted);
+      background: #eef2ff;
+      padding: 5px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .tag .i18n-zh.inline {
+      color: var(--muted);
+      font-size: inherit;
+    }
+
+    .option {
+      display: block;
+      margin: 10px 0;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: white;
+      cursor: pointer;
+    }
+
+    .option:hover {
+      background: #f8fbff;
+    }
+
+    .option input {
+      margin-right: 10px;
+      transform: scale(1.15);
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 12px;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 0.97rem;
+    }
+
+    .feedback.show { display: block; }
+    .feedback.correct { background: var(--good-bg); color: var(--good); }
+    .feedback.incorrect { background: var(--bad-bg); color: var(--bad); }
+    .feedback.unanswered { background: var(--warn-bg); color: var(--warn); }
+
+    .mcq-btn-row {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .mcq-check-btn {
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 0.9rem;
+    }
+
+    details {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 14px;
+      background: #fff;
+      margin-bottom: 12px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .answer-box {
+      margin-top: 10px;
+      background: #f8fbff;
+      border-left: 4px solid var(--accent);
+      padding: 12px;
+      border-radius: 10px;
+    }
+    .answer-box.hidden { display: none; }
+
+    .ai-settings {
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: #f9fbff;
+    }
+
+    .ai-settings summary {
+      font-weight: 800;
+    }
+
+    .settings-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .settings-row label {
+      min-width: 120px;
+      font-weight: 700;
+    }
+
+    .settings-row input {
+      flex: 1 1 340px;
+      min-width: 220px;
+    }
+
+    .qa-toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .qa-input {
+      width: 100%;
+      margin-top: 10px;
+      min-height: 90px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font: inherit;
+      resize: vertical;
+    }
+
+    .qa-btn-row {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .qa-btn {
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 0.9rem;
+    }
+
+    .qa-feedback {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .qa-feedback.ok { color: var(--good); }
+    .qa-feedback.bad { color: var(--bad); }
+
+    .sticky-nav {
+      position: sticky;
+      top: 10px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 24px 0 8px;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .scoreboard {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .lang-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .sticky-nav {
+        position: static;
+      }
+    }
+
+    @media print {
+      body { background: white; }
+      .hero { background: #1d4ed8 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .toolbar button, .qa-btn-row button, .qa-input, .ai-settings, .mcq-btn-row button { display: none; }
+      .card, .question, details { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Earth & Space Science Exam Prep</h1>
+      <p><strong>Units:</strong> 4.1 Dissecting the Universe + 4.2 Formation of the Universe</p>
+      <p>This interactive page helps students review key ideas about the universe, galaxies, stars, the solar system, the Big Bang, Doppler effect, red-shift, blue-shift, and CMBR.</p>
+      <div class="pill-row">
+        <span class="pill">20 Auto-Graded MCQs</span>
+        <span class="pill">Short Answer Review</span>
+        <span class="pill">Reveal Answers</span>
+        <span class="pill">Print-Friendly</span>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Student Info</h2>
+        <p><label class="inline" for="studentName">Name:</label><input id="studentName" type="text" placeholder="Enter student name" /></p>
+        <p class="small">Tip: Try the multiple-choice section first without revealing the answers. Then use the short-answer section to practise explaining ideas in full sentences.</p>
+
+        <div class="lang-bar">
+          <strong id="langBarLabel">Language / 语言</strong>
+          <button class="lang-toggle-btn" id="langToggle" type="button" aria-pressed="false">English + 中文: OFF</button>
+        </div>
+
+        <div class="toolbar">
+          <button class="primary" id="btnGradeMcq" onclick="gradeQuiz()">Submit & Grade MCQ</button>
+          <button class="secondary" id="btnCheckMcqAi" onclick="checkMcqWithAi(this)" type="button">Check MCQ with AI</button>
+          <button class="success" id="btnRevealAll" onclick="revealAnswers()">Reveal All Answers</button>
+          <button class="secondary" id="btnHideAnswers" onclick="hideAnswers()">Hide Revealed Answers</button>
+          <button class="ghost" id="btnResetQuiz" onclick="resetQuiz()">Reset Quiz</button>
+          <button class="ghost" id="btnPrintPage" onclick="window.print()">Print Page</button>
+        </div>
+        <span class="inline-status" id="mcqAiStatus"></span>
+
+        <div class="scoreboard">
+          <div class="scorebox"><strong id="scoreRaw">0/20</strong><span>Raw Score</span></div>
+          <div class="scorebox"><strong id="scorePct">0%</strong><span>Percent</span></div>
+          <div class="scorebox"><strong id="scoreCorrect">0</strong><span>Correct</span></div>
+          <div class="scorebox"><strong id="scoreLevel">—</strong><span>Level</span></div>
+        </div>
+
+        <details class="ai-settings">
+          <summary>AI grading (optional)</summary>
+          <div class="settings-row">
+            <label for="grade-api-url">Grade API URL</label>
+            <input id="grade-api-url" type="url" placeholder="https://example.com/grade" />
+            <button type="button" class="qa-btn ghost" id="btn-test-api">Test</button>
+          </div>
+          <span class="inline-status" id="api-status"></span>
+          <p class="small">If AI grading fails, checks fall back to local overlap comparison.</p>
+        </details>
+      </section>
+
+      <aside class="card sticky-nav">
+        <h2>What to Review</h2>
+        <ul>
+          <li>What the universe contains</li>
+          <li>Galaxy, star, planet, moon, asteroid, comet</li>
+          <li>Milky Way and solar system</li>
+          <li>Light-year, AU, and distance types</li>
+          <li>Big Bang theory</li>
+          <li>Doppler effect</li>
+          <li>Red-shift and blue-shift</li>
+          <li>Cosmic Microwave Background Radiation (CMBR)</li>
+        </ul>
+        <p class="small">Passing strategy: memorize the key definitions, then practise explaining why red-shift and CMBR support the Big Bang theory.</p>
+      </aside>
+    </div>
+
+    <section class="card" id="mcq-section">
+      <h2>Part A — Multiple Choice (Auto-Graded + AI Check)</h2>
+      <div id="quiz"></div>
+    </section>
+
+    <section class="card" id="qa-section" data-qa-block="1">
+      <h2>Part B — Short Answer Practice</h2>
+      <p>Write your answer first. Then open the model answer to check your understanding.</p>
+      <div class="qa-toolbar">
+        <button type="button" class="secondary qa-btn" id="btnCheckQaAll">Check All QA with AI</button>
+        <span class="inline-status" id="qaStatus"></span>
+      </div>
+
+      <details>
+        <summary>1. What is the universe?</summary>
+        <div class="answer-box">The universe includes all matter, energy, and space. It contains galaxies, stars, planets, moons, gas, dust, asteroids, comets, and a huge amount of empty space.</div>
+      </details>
+
+      <details>
+        <summary>2. What is the difference between a galaxy and a solar system?</summary>
+        <div class="answer-box">A galaxy is a huge collection of stars, gas, and dust held together by gravity. A solar system is a star and the objects that orbit it, such as planets, moons, asteroids, and comets.</div>
+      </details>
+
+      <details>
+        <summary>3. Why is the Milky Way important to us?</summary>
+        <div class="answer-box">The Milky Way is important because it is our home galaxy. Our solar system is located inside the Milky Way.</div>
+      </details>
+
+      <details>
+        <summary>4. What is a light-year?</summary>
+        <div class="answer-box">A light-year is a distance, not a time. It is the distance light travels in one year, about 9.46 trillion kilometres.</div>
+      </details>
+
+      <details>
+        <summary>5. What does the Big Bang theory say?</summary>
+        <div class="answer-box">The Big Bang theory says that the universe began from a very hot, dense state and then expanded. Over time, matter formed particles, then atoms, stars, and galaxies.</div>
+      </details>
+
+      <details>
+        <summary>6. Explain the Doppler effect using a siren example.</summary>
+        <div class="answer-box">When an ambulance moves toward you, the sound waves are squeezed together, so the pitch sounds higher. When it moves away, the waves stretch out, so the pitch sounds lower. This is the Doppler effect.</div>
+      </details>
+
+      <details>
+        <summary>7. What is red-shift, and what does it tell scientists?</summary>
+        <div class="answer-box">Red-shift happens when light waves are stretched toward the red end of the spectrum. It tells scientists that an object, such as a distant galaxy, is moving away from us.</div>
+      </details>
+
+      <details>
+        <summary>8. What is blue-shift?</summary>
+        <div class="answer-box">Blue-shift happens when light waves are squeezed toward the blue end of the spectrum. It shows that an object is moving toward us.</div>
+      </details>
+
+      <details>
+        <summary>9. What is CMBR?</summary>
+        <div class="answer-box">CMBR stands for Cosmic Microwave Background Radiation. It is faint microwave radiation found throughout the universe and is considered leftover energy, or the afterglow, from the Big Bang.</div>
+      </details>
+
+      <details>
+        <summary>10. Give two main pieces of evidence for the Big Bang theory.</summary>
+        <div class="answer-box">Two main pieces of evidence are: (1) the red-shift of distant galaxies, showing the universe is expanding, and (2) the detection of Cosmic Microwave Background Radiation, which is leftover energy from the early universe.</div>
+      </details>
+    </section>
+
+    <section class="card" id="challenge-section" data-qa-block="1">
+      <h2>Part C — Challenge Review</h2>
+      <details>
+        <summary>Why does red-shift support the idea of an expanding universe?</summary>
+        <div class="answer-box">If light from most distant galaxies is red-shifted, it means those galaxies are moving away from us. This suggests that space is expanding and carrying galaxies farther apart.</div>
+      </details>
+      <details>
+        <summary>Why is the phrase “Big Bang” a little misleading?</summary>
+        <div class="answer-box">It can sound like an explosion in empty space, but the theory describes the expansion of space itself. Space, time, matter, and energy all began changing from an early hot, dense state.</div>
+      </details>
+      <details>
+        <summary>Compare interplanetary, interstellar, and intergalactic distances.</summary>
+        <div class="answer-box">Interplanetary distances are between planets and are often measured in kilometres or AU. Interstellar distances are between stars in a galaxy and are often measured in light-years. Intergalactic distances are between galaxies and are also measured in light-years.</div>
+      </details>
+    </section>
+
+    <div class="footer">Built as a single self-contained HTML study page for exam preparation.</div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        section: '4.1',
+        q: 'What is the universe?',
+        options: [
+          'Only the Solar System',
+          'Everything that exists, including matter, energy, and space',
+          'Only stars and planets',
+          'Only galaxies'
+        ],
+        answer: 1,
+        explain: 'The universe includes all matter, all energy, and all space.'
+      },
+      {
+        section: '4.1',
+        q: 'Which object is at the centre of our solar system?',
+        options: ['Earth', 'The Moon', 'The Sun', 'Jupiter'],
+        answer: 2,
+        explain: 'The eight planets orbit the Sun.'
+      },
+      {
+        section: '4.1',
+        q: 'A galaxy is best described as:',
+        options: [
+          'A group of planets orbiting one moon',
+          'A huge collection of stars, gas, and dust held together by gravity',
+          'A single bright star',
+          'A type of comet'
+        ],
+        answer: 1,
+        explain: 'Galaxies contain many stars and other material held together by gravity.'
+      },
+      {
+        section: '4.1',
+        q: 'The Milky Way is:',
+        options: ['A galaxy', 'A planet', 'A star cluster only', 'A comet belt'],
+        answer: 0,
+        explain: 'The Milky Way is our home galaxy.'
+      },
+      {
+        section: '4.1',
+        q: 'Which galaxy shape looks like a pinwheel with curved arms?',
+        options: ['Elliptical', 'Spiral', 'Irregular', 'Rectangular'],
+        answer: 1,
+        explain: 'Spiral galaxies have curved arms reaching outward from the centre.'
+      },
+      {
+        section: '4.1',
+        q: 'A star is best described as:',
+        options: [
+          'A cold rocky object',
+          'A huge ball of gas held together by gravity',
+          'A chunk of ice orbiting the Sun',
+          'A small moon'
+        ],
+        answer: 1,
+        explain: 'Stars are huge balls of gas that produce light energy.'
+      },
+      {
+        section: '4.1',
+        q: 'Which list shows the first four planets in order from the Sun?',
+        options: [
+          'Earth, Mars, Venus, Mercury',
+          'Mercury, Venus, Earth, Mars',
+          'Mars, Earth, Venus, Mercury',
+          'Mercury, Earth, Venus, Mars'
+        ],
+        answer: 1,
+        explain: 'The planets begin with Mercury, Venus, Earth, and Mars.'
+      },
+      {
+        section: '4.1',
+        q: 'What is a light-year?',
+        options: [
+          'The time it takes Earth to orbit the Sun',
+          'A kind of telescope',
+          'The distance light travels in one year',
+          'The brightness of a star'
+        ],
+        answer: 2,
+        explain: 'A light-year measures distance, not time.'
+      },
+      {
+        section: '4.1',
+        q: 'Which unit is commonly used for interplanetary distances?',
+        options: ['Degrees Celsius', 'AU', 'Watts', 'Litres'],
+        answer: 1,
+        explain: 'Distances between planets are often measured in kilometres or Astronomical Units (AU).'
+      },
+      {
+        section: '4.1',
+        q: 'Interstellar distances are distances between:',
+        options: ['Planets', 'Galaxies', 'Stars in a galaxy', 'Moons'],
+        answer: 2,
+        explain: 'Interstellar means between stars.'
+      },
+      {
+        section: '4.2',
+        q: 'The Big Bang theory says the universe began from:',
+        options: [
+          'A frozen cloud inside the Milky Way',
+          'A hot, dense beginning followed by expansion',
+          'A collision between Earth and the Sun',
+          'A giant black hole swallowing matter'
+        ],
+        answer: 1,
+        explain: 'The theory describes the universe beginning in a very hot, dense state and then expanding.'
+      },
+      {
+        section: '4.2',
+        q: 'The Doppler effect is the change in:',
+        options: [
+          'Mass and gravity',
+          'Colour and shape only',
+          'Frequency and wavelength when a source moves relative to an observer',
+          'Temperature and pressure only'
+        ],
+        answer: 2,
+        explain: 'Motion changes the observed wavelength and frequency of waves.'
+      },
+      {
+        section: '4.2',
+        q: 'When a sound source moves toward you, the sound usually seems:',
+        options: ['Lower in pitch', 'Higher in pitch', 'Invisible', 'Silent'],
+        answer: 1,
+        explain: 'Approaching waves are compressed, so the pitch sounds higher.'
+      },
+      {
+        section: '4.2',
+        q: 'Red-shift means light is shifted toward the:',
+        options: ['Blue end of the spectrum', 'Red end of the spectrum', 'Middle only', 'Ultraviolet only'],
+        answer: 1,
+        explain: 'Red-shift means wavelengths are stretched longer.'
+      },
+      {
+        section: '4.2',
+        q: 'If a galaxy is red-shifted, it is generally moving:',
+        options: ['Toward us', 'Away from us', 'In a circle only', 'Nowhere'],
+        answer: 1,
+        explain: 'Red-shift is evidence that the object is moving away.'
+      },
+      {
+        section: '4.2',
+        q: 'Edwin Hubble used red-shift observations to conclude that:',
+        options: [
+          'The Earth is at the centre of everything',
+          'The universe is shrinking',
+          'The universe is expanding',
+          'The Sun is moving away from Earth'
+        ],
+        answer: 2,
+        explain: 'Hubble found that distant galaxies are generally moving away, showing expansion.'
+      },
+      {
+        section: '4.2',
+        q: 'CMBR stands for:',
+        options: [
+          'Cosmic Microwave Background Radiation',
+          'Central Matter Balance Reaction',
+          'Cosmic Motion Beam Reflection',
+          'Current Magnetic Band Radiation'
+        ],
+        answer: 0,
+        explain: 'CMBR is the leftover microwave radiation detected throughout the universe.'
+      },
+      {
+        section: '4.2',
+        q: 'Why is CMBR important?',
+        options: [
+          'It proves the Moon is made of rock',
+          'It is evidence of leftover energy from the early universe',
+          'It causes day and night',
+          'It is the same as sunlight'
+        ],
+        answer: 1,
+        explain: 'CMBR is often called the afterglow of the Big Bang.'
+      },
+      {
+        section: '4.2',
+        q: 'Blue-shift shows that an object is moving:',
+        options: ['Toward us', 'Away from us', 'At the speed of light only', 'Nowhere'],
+        answer: 0,
+        explain: 'Blue-shift means wavelengths are compressed, showing motion toward us.'
+      },
+      {
+        section: '4.2',
+        q: 'Which choice gives two major observations supporting the Big Bang theory?',
+        options: [
+          'Ocean tides and moon phases',
+          'Red-shift of galaxies and CMBR',
+          'Seasons and eclipses',
+          'Wind patterns and clouds'
+        ],
+        answer: 1,
+        explain: 'The expansion of the universe and the detection of CMBR are key evidence.'
+      }
+    ];
+
+    const questionTranslations = [
+      { q: '什么是宇宙？', options: ['只有太阳系', '一切存在的事物，包括物质、能量和空间', '只有恒星和行星', '只有星系'], explain: '宇宙包括全部物质、全部能量和全部空间。' },
+      { q: '我们的太阳系中心是什么天体？', options: ['地球', '月球', '太阳', '木星'], explain: '八大行星都围绕太阳运行。' },
+      { q: '星系最恰当的描述是：', options: ['一群围绕某个月球运行的行星', '由引力聚集在一起的大量恒星、气体和尘埃', '一颗明亮的恒星', '一种彗星'], explain: '星系包含许多恒星以及其他由引力维系的物质。' },
+      { q: '银河系是：', options: ['一个星系', '一颗行星', '只是一个星团', '一条彗星带'], explain: '银河系是我们的家园星系。' },
+      { q: '哪种星系形状看起来像带有弯曲旋臂的风车？', options: ['椭圆星系', '旋涡星系', '不规则星系', '矩形星系'], explain: '旋涡星系具有从中心向外延伸的弯曲旋臂。' },
+      { q: '恒星最恰当的描述是：', options: ['寒冷的岩石天体', '由引力聚集而成的巨大气体球', '围绕太阳运行的冰块', '一颗小卫星'], explain: '恒星是能够发光的巨大气体球。' },
+      { q: '下列哪一组按距离太阳由近到远列出前四颗行星？', options: ['地球、火星、金星、水星', '水星、金星、地球、火星', '火星、地球、金星、水星', '水星、地球、金星、火星'], explain: '前四颗行星依次是水星、金星、地球和火星。' },
+      { q: '什么是光年？', options: ['地球绕太阳运行一周所需时间', '一种望远镜', '光在一年中传播的距离', '恒星的亮度'], explain: '光年是距离单位，不是时间单位。' },
+      { q: '行星之间的距离常用哪个单位表示？', options: ['摄氏度', '天文单位 AU', '瓦特', '升'], explain: '行星之间的距离通常用千米或天文单位（AU）表示。' },
+      { q: '星际距离是指以下哪种距离？', options: ['行星之间', '星系之间', '同一星系中恒星之间', '卫星之间'], explain: '“星际”是指恒星与恒星之间。' },
+      { q: '大爆炸理论认为宇宙起源于：', options: ['银河系内部的一团冻结云', '一个炽热而高密度的起点，随后开始膨胀', '地球与太阳的碰撞', '一个吞噬物质的巨大黑洞'], explain: '该理论认为宇宙起初处于极热、极致密状态，随后开始膨胀。' },
+      { q: '多普勒效应是以下哪一项的变化？', options: ['质量和引力', '只有颜色和形状', '当波源相对观察者运动时，频率和波长发生变化', '只有温度和压强'], explain: '运动会改变观察到的波长和频率。' },
+      { q: '当一个声源向你靠近时，声音通常听起来会：', options: ['音调更低', '音调更高', '看不见', '没有声音'], explain: '靠近时波被压缩，因此音调更高。' },
+      { q: '红移意味着光向光谱的哪一端偏移？', options: ['蓝端', '红端', '仅中间部分', '仅紫外部分'], explain: '红移意味着波长被拉长。' },
+      { q: '如果一个星系出现红移，它通常是在：', options: ['朝向我们运动', '远离我们运动', '只做圆周运动', '没有运动'], explain: '红移是该天体正在远离我们的证据。' },
+      { q: '埃德温·哈勃根据红移观测得出什么结论？', options: ['地球位于一切中心', '宇宙正在收缩', '宇宙正在膨胀', '太阳正在远离地球'], explain: '哈勃发现远方星系普遍在远离，因此说明宇宙在膨胀。' },
+      { q: 'CMBR 代表什么？', options: ['宇宙微波背景辐射', '中心物质平衡反应', '宇宙运动束反射', '当前磁带辐射'], explain: 'CMBR 是在整个宇宙中探测到的残余微波辐射。' },
+      { q: '为什么 CMBR 很重要？', options: ['它证明月球由岩石构成', '它是早期宇宙残余能量的证据', '它导致昼夜变化', '它与阳光相同'], explain: 'CMBR 常被称为大爆炸的“余辉”。' },
+      { q: '蓝移表明一个天体正在：', options: ['朝向我们运动', '远离我们运动', '只以光速运动', '没有运动'], explain: '蓝移意味着波长被压缩，表明天体正朝我们靠近。' },
+      { q: '哪一项给出了支持大爆炸理论的两项主要观测证据？', options: ['海洋潮汐和月相', '星系红移和 CMBR', '季节和日食月食', '风型和云层'], explain: '宇宙膨胀以及探测到 CMBR 是关键证据。' }
+    ];
+
+    const shortAnswerTranslations = [
+      {
+        q: '1. 什么是宇宙？',
+        a: '宇宙包括所有物质、能量和空间。它包含星系、恒星、行星、卫星、气体、尘埃、小行星、彗星以及大量的空旷空间。'
+      },
+      {
+        q: '2. 星系和太阳系有什么区别？',
+        a: '星系是由引力维系在一起的大量恒星、气体和尘埃组成的巨大集合。太阳系则是一颗恒星及所有围绕它运行的天体，例如行星、卫星、小行星和彗星。'
+      },
+      {
+        q: '3. 为什么银河系对我们很重要？',
+        a: '银河系很重要，因为它是我们的家园星系。我们的太阳系就位于银河系之中。'
+      },
+      {
+        q: '4. 什么是光年？',
+        a: '光年是距离单位，不是时间单位。它表示光在一年中传播的距离，约为 9.46 万亿千米。'
+      },
+      {
+        q: '5. 大爆炸理论是怎么说的？',
+        a: '大爆炸理论认为宇宙起源于一个非常炽热、非常致密的状态，随后开始膨胀。随着时间推移，物质形成粒子、原子，接着形成恒星和星系。'
+      },
+      {
+        q: '6. 用警笛举例解释多普勒效应。',
+        a: '当救护车朝你驶来时，声波被压缩，所以音调听起来更高；当它远离时，声波被拉长，所以音调听起来更低。这就是多普勒效应。'
+      },
+      {
+        q: '7. 什么是红移？它告诉科学家什么？',
+        a: '红移发生在光波被拉伸到光谱红端时。它告诉科学家，一个天体，例如远方星系，正在远离我们。'
+      },
+      {
+        q: '8. 什么是蓝移？',
+        a: '蓝移发生在光波被压缩到光谱蓝端时。它表明一个天体正在朝我们运动。'
+      },
+      {
+        q: '9. 什么是 CMBR？',
+        a: 'CMBR 指宇宙微波背景辐射。它是在整个宇宙中都能探测到的微弱微波辐射，被认为是来自大爆炸的残余能量，也就是“余辉”。'
+      },
+      {
+        q: '10. 举出支持大爆炸理论的两项主要证据。',
+        a: '两项主要证据是：（1）远方星系的红移，说明宇宙正在膨胀；（2）探测到宇宙微波背景辐射，它是早期宇宙留下的残余能量。'
+      },
+      {
+        q: '为什么红移支持宇宙正在膨胀这一观点？',
+        a: '如果大多数远方星系发出的光都出现红移，就表示这些星系正在远离我们。这说明空间本身在膨胀，并把各个星系带得越来越远。'
+      },
+      {
+        q: '为什么说“Big Bang（大爆炸）”这个说法有点误导？',
+        a: '这个名字听起来像是在空旷空间里发生了一次爆炸，但该理论描述的是空间本身的膨胀。空间、时间、物质和能量都是从早期炽热而致密的状态中开始演化的。'
+      },
+      {
+        q: '比较行星际、恒星际和星系际距离。',
+        a: '行星际距离是行星之间的距离，通常用千米或 AU 表示。恒星际距离是同一星系中恒星之间的距离，通常用光年表示。星系际距离是星系与星系之间的距离，也常用光年表示。'
+      }
+    ];
+
+    const DEFAULT_GRADE_API_URL = 'https://lakesideart.gochatus.org/grade-service/grade';
+
+    const quizEl = document.getElementById('quiz');
+    const gradeApiUrlEl = document.getElementById('grade-api-url');
+    const btnTestApi = document.getElementById('btn-test-api');
+    const apiStatusEl = document.getElementById('api-status');
+    const mcqAiStatusEl = document.getElementById('mcqAiStatus');
+    const qaStatusEl = document.getElementById('qaStatus');
+    const btnCheckQaAll = document.getElementById('btnCheckQaAll');
+    const langToggle = document.getElementById('langToggle');
+    const qaItems = [];
+
+    function isBilingual() {
+      return document.body.classList.contains('lang-bilingual');
+    }
+
+    function uiText(en, zh) {
+      return isBilingual() ? `${en} / ${zh}` : en;
+    }
+
+    function addZh(el, zh, opts = {}) {
+      if (!el || !zh) return;
+      const node = document.createElement(opts.tag || 'div');
+      node.className = `i18n-zh ${opts.className || ''}`.trim();
+      node.innerHTML = zh;
+      if (opts.append) el.appendChild(node);
+      else el.insertAdjacentElement('afterend', node);
+    }
+
+    function addZhInline(el, zh, opts = {}) {
+      addZh(el, zh, { ...opts, append: true, tag: 'span', className: `inline ${opts.className || ''}`.trim() });
+    }
+
+    function setInlineStatus(el, text, kind) {
+      if (!el) return;
+      el.textContent = text || '';
+      const baseClass = el.classList.contains('qa-feedback') ? 'qa-feedback' : 'inline-status';
+      const className = kind === 'ok' ? `${baseClass} ok`
+        : kind === 'bad' ? `${baseClass} bad`
+        : baseClass;
+      el.className = className;
+    }
+
+    function setApiStatus(text, kind) {
+      if (!apiStatusEl) return;
+      apiStatusEl.textContent = text || '';
+      apiStatusEl.className = kind === 'ok' ? 'qa-feedback ok'
+        : kind === 'bad' ? 'qa-feedback bad'
+        : 'inline-status';
+    }
+
+    function getGradeApiUrl() {
+      if (!gradeApiUrlEl) return null;
+      const url = (gradeApiUrlEl.value || '').trim();
+      return url || null;
+    }
+
+    function saveGradeApiUrl() {
+      if (!gradeApiUrlEl) return;
+      try {
+        localStorage.setItem('gradeApiUrl', (gradeApiUrlEl.value || '').trim());
+      } catch {}
+    }
+
+    function initApiSettings() {
+      if (!gradeApiUrlEl) return;
+      let saved = null;
+      try { saved = localStorage.getItem('gradeApiUrl'); } catch {}
+      gradeApiUrlEl.value = saved === null ? DEFAULT_GRADE_API_URL : saved;
+      gradeApiUrlEl.addEventListener('change', () => {
+        saveGradeApiUrl();
+        setApiStatus('', '');
+      });
+      if (btnTestApi) btnTestApi.addEventListener('click', testApi);
+    }
+
+    function normalizeText(str) {
+      return String(str || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .split(/\s+/)
+        .filter(Boolean);
+    }
+
+    function similarityScore(userText, targetText) {
+      const uWords = normalizeText(userText);
+      const tWords = normalizeText(targetText);
+      if (uWords.length === 0 || tWords.length === 0) return 0;
+      const uSet = new Set(uWords);
+      const tSet = new Set(tWords);
+      let intersection = 0;
+      tSet.forEach(word => { if (uSet.has(word)) intersection++; });
+      const union = uSet.size + tSet.size - intersection;
+      return union === 0 ? 0 : intersection / union;
+    }
+
+    function localOverlapCheck(userText, correctText) {
+      if (!correctText) {
+        return { verdict: 'unknown', explanation: 'No model answer provided; enable AI grading to validate.' };
+      }
+      const score = similarityScore(userText, correctText);
+      const percent = Math.round(score * 100);
+      if (percent >= 70) return { verdict: 'correct', explanation: `Overlap about ${percent}% with the model answer.` };
+      if (percent >= 40) return { verdict: 'wrong', explanation: `Partial overlap (${percent}%). Compare with the model answer and refine.` };
+      return { verdict: 'wrong', explanation: `Low overlap (~${percent}%). Compare with the model answer and try again.` };
+    }
+
+    async function fetchJsonWithTimeout(url, options, timeoutMs) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const resp = await fetch(url, { ...options, signal: controller.signal });
+        const text = await resp.text().catch(() => '');
+        let data = null;
+        try { data = text ? JSON.parse(text) : null; } catch { data = null; }
+        return { ok: resp.ok, status: resp.status, data, text };
+      } catch (err) {
+        if (err && err.name === 'AbortError') {
+          return { ok: false, status: 0, data: null, text: '', aborted: true };
+        }
+        throw err;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function extractFirstGradeResult(data) {
+      if (!data) return null;
+      if (Array.isArray(data.results) && data.results[0]) return data.results[0];
+      if (data.result && Array.isArray(data.result.results) && data.result.results[0]) return data.result.results[0];
+      if (data.model_result && Array.isArray(data.model_result.results) && data.model_result.results[0]) return data.model_result.results[0];
+      return null;
+    }
+
+    function deriveHealthUrl(gradeUrl) {
+      try {
+        const u = new URL(gradeUrl);
+        u.search = '';
+        u.hash = '';
+        if (u.pathname.endsWith('/grade')) {
+          u.pathname = u.pathname.replace(/\/grade$/, '/health');
+        } else {
+          u.pathname = u.pathname.replace(/\/+$/, '') + '/health';
+        }
+        return u.toString();
+      } catch {
+        return null;
+      }
+    }
+
+    async function testApi() {
+      const gradeUrl = getGradeApiUrl();
+      if (!gradeUrl) {
+        setApiStatus(uiText('Set a URL first.', '请先设置地址。'), 'bad');
+        return;
+      }
+      setApiStatus(uiText('Testing...', '正在测试……'), '');
+      try {
+        const healthUrl = deriveHealthUrl(gradeUrl);
+        if (!healthUrl) {
+          setApiStatus(uiText('Invalid URL.', '地址无效。'), 'bad');
+          return;
+        }
+        const { ok, status, data, aborted } = await fetchJsonWithTimeout(healthUrl, { method: 'GET' }, 4000);
+        if (aborted) {
+          setApiStatus(uiText('Health check timed out.', '健康检查超时。'), 'bad');
+          return;
+        }
+        if (!ok) {
+          setApiStatus(uiText(`Health check failed (${status}).`, `健康检查失败（${status}）。`), 'bad');
+          return;
+        }
+        const healthy = !!(data && (data.status === 'ok' || data.ok === true));
+        setApiStatus(healthy ? uiText('OK', '正常') : uiText('OK (nonstandard response)', '正常（响应格式非标准）'), healthy ? 'ok' : '');
+      } catch {
+        setApiStatus(uiText('Health check failed.', '健康检查失败。'), 'bad');
+      }
+    }
+
+    async function gradeOne({ questionText, userText, correctText }) {
+      const gradeUrl = getGradeApiUrl();
+      const timeoutMs = 60000;
+      if (gradeUrl) {
+        const pair = { question: questionText, answer: userText };
+        if (correctText) pair.reference_answer = correctText;
+        const payload = { pairs: [pair] };
+        const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+          gradeUrl,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          },
+          timeoutMs
+        );
+        if (aborted) throw new Error(`timeout_after_${Math.round(timeoutMs / 1000)}s`);
+        const first = extractFirstGradeResult(data);
+        if (!ok || !first) {
+          const reason = data && data.error ? data.error : `bad_response_${status}`;
+          const detail = text ? ` (${text.slice(0, 160)})` : '';
+          throw new Error(reason + detail);
+        }
+        return {
+          verdict: first.verdict === 'correct' ? 'correct' : 'wrong',
+          explanation: (first.explanation || '').trim(),
+          mode: 'ai'
+        };
+      }
+      const local = localOverlapCheck(userText, correctText);
+      return { verdict: local.verdict, explanation: local.explanation, mode: 'local' };
+    }
+
+    function renderQuiz() {
+      quizEl.innerHTML = questions.map((item, index) => `
+        <div class="question" id="q${index}">
+          <div class="qhead">
+            <div>
+              <div class="qnum">Question ${index + 1}</div>
+              <div><strong>${item.q}</strong><div class="i18n-zh">${questionTranslations[index].q}</div></div>
+            </div>
+            <span class="tag">Section ${item.section}<span class="i18n-zh inline">第 ${item.section} 节</span></span>
+          </div>
+          <div>
+            ${item.options.map((opt, optIndex) => `
+              <label class="option">
+                <input type="radio" name="q${index}" value="${optIndex}" />
+                ${String.fromCharCode(65 + optIndex)}. ${opt}
+                <div class="i18n-zh">${questionTranslations[index].options[optIndex]}</div>
+              </label>
+            `).join('')}
+          </div>
+          <div class="mcq-btn-row">
+            <button type="button" class="secondary mcq-check-btn" onclick="checkSingleMcq(${index})">${uiText('Check this question', '检查本题')}</button>
+          </div>
+          <div class="feedback" id="fb${index}"></div>
+        </div>
+      `).join('');
+    }
+
+    function gradeSingleMcq(index) {
+      const item = questions[index];
+      const qEl = document.getElementById(`q${index}`);
+      const fbEl = document.getElementById(`fb${index}`);
+      const selected = document.querySelector(`input[name="q${index}"]:checked`);
+
+      qEl.classList.remove('correct', 'incorrect');
+      fbEl.className = 'feedback show';
+
+      if (!selected) {
+        fbEl.classList.add('unanswered');
+        fbEl.innerHTML = `<strong>${uiText('Not answered.', '未作答。')}</strong> ${uiText('Correct answer:', '正确答案：')} ${letter(item.answer)}. ${item.options[item.answer]}${isBilingual() ? `<div class="i18n-zh">${questionTranslations[index].options[item.answer]}</div>` : ''}<br>${item.explain}${isBilingual() ? `<div class="i18n-zh">${questionTranslations[index].explain}</div>` : ''}`;
+        return false;
+      }
+
+      const chosen = Number(selected.value);
+      if (chosen === item.answer) {
+        qEl.classList.add('correct');
+        fbEl.classList.add('correct');
+        fbEl.innerHTML = `<strong>${uiText('Correct.', '正确。')}</strong> ${item.explain}${isBilingual() ? `<div class="i18n-zh">${questionTranslations[index].explain}</div>` : ''}`;
+        return true;
+      }
+
+      qEl.classList.add('incorrect');
+      fbEl.classList.add('incorrect');
+      fbEl.innerHTML = `<strong>${uiText('Incorrect.', '不正确。')}</strong> ${uiText('Correct answer:', '正确答案：')} ${letter(item.answer)}. ${item.options[item.answer]}${isBilingual() ? `<div class="i18n-zh">${questionTranslations[index].options[item.answer]}</div>` : ''}<br>${item.explain}${isBilingual() ? `<div class="i18n-zh">${questionTranslations[index].explain}</div>` : ''}`;
+      return false;
+    }
+
+    function checkSingleMcq(index) {
+      gradeSingleMcq(index);
+    }
+
+    function gradeQuiz() {
+      let correct = 0;
+      questions.forEach((item, index) => {
+        if (gradeSingleMcq(index)) correct++;
+      });
+      updateScore(correct);
+      setInlineStatus(mcqAiStatusEl, uiText('Local MCQ grading completed.', '本地选择题评分完成。'), '');
+    }
+
+    async function checkMcqWithAi(btn) {
+      if (btn) btn.disabled = true;
+      setInlineStatus(mcqAiStatusEl, uiText('Checking MCQ answers...', '正在检查选择题答案……'), '');
+      let answered = 0;
+      let correct = 0;
+      try {
+        for (let index = 0; index < questions.length; index++) {
+          const item = questions[index];
+          const qEl = document.getElementById(`q${index}`);
+          const fbEl = document.getElementById(`fb${index}`);
+          const selected = document.querySelector(`input[name="q${index}"]:checked`);
+
+          qEl.classList.remove('correct', 'incorrect');
+          fbEl.className = 'feedback show';
+
+          if (!selected) {
+            fbEl.classList.add('unanswered');
+            fbEl.innerHTML = `<strong>${uiText('Not answered.', '未作答。')}</strong> ${uiText('Correct answer:', '正确答案：')} ${letter(item.answer)}. ${item.options[item.answer]}${isBilingual() ? `<div class="i18n-zh">${questionTranslations[index].options[item.answer]}</div>` : ''}`;
+            continue;
+          }
+
+          answered++;
+          const chosen = Number(selected.value);
+          const questionText = `${item.q}\nChoices: ${item.options.map((opt, i) => `${letter(i)}. ${opt}`).join(' | ')}`;
+          const userText = `${letter(chosen)}. ${item.options[chosen]}`;
+          const correctText = `${letter(item.answer)}. ${item.options[item.answer]}. ${item.explain}`;
+
+          let result;
+          try {
+            result = await gradeOne({ questionText, userText, correctText });
+          } catch (err) {
+            const local = localOverlapCheck(userText, correctText);
+            result = { verdict: local.verdict, explanation: `AI unavailable; ${local.explanation}`, mode: 'local' };
+          }
+
+          const isCorrect = result.verdict === 'correct';
+          if (isCorrect) correct++;
+          qEl.classList.add(isCorrect ? 'correct' : 'incorrect');
+          fbEl.classList.add(isCorrect ? 'correct' : 'incorrect');
+          const prefix = isCorrect ? 'Correct.' : 'Wrong.';
+          fbEl.innerHTML = `<strong>${isCorrect ? uiText('Correct.', '正确。') : uiText('Wrong.', '错误。')}</strong> ${result.explanation || ''}<br>${uiText('Correct answer:', '正确答案：')} ${letter(item.answer)}. ${item.options[item.answer]}${isBilingual() ? `<div class="i18n-zh">${questionTranslations[index].options[item.answer]}</div>` : ''}`;
+        }
+
+        updateScore(correct);
+        if (!answered) {
+          setInlineStatus(mcqAiStatusEl, uiText('No MCQ answers selected yet.', '还没有选择任何选择题答案。'), 'bad');
+        } else {
+          const pct = Math.round((correct / answered) * 100);
+          setInlineStatus(mcqAiStatusEl, uiText(`MCQ AI check done: ${correct}/${answered} (${pct}% of answered questions).`, `选择题 AI 检查完成：${correct}/${answered}（已作答题目中 ${pct}% 正确）。`), '');
+        }
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    function setAnswerVisible(item, visible) {
+      if (!item || !item.answerEl) return;
+      item.answerEl.classList.toggle('hidden', !visible);
+      if (item.toggleBtn) item.toggleBtn.textContent = visible ? uiText('Hide model answer', '隐藏参考答案') : uiText('Show model answer', '显示参考答案');
+    }
+
+    async function checkQaItem(item, btn) {
+      const userText = (item.inputEl.value || '').trim();
+      const questionText = (item.summaryEl.textContent || '').trim();
+      const correctText = (item.answerEl.textContent || '').trim();
+
+      if (!userText) {
+        setAnswerVisible(item, true);
+        setInlineStatus(item.feedbackEl, uiText('No answer entered. Showing model answer.', '未输入答案。已显示参考答案。'), 'bad');
+        return 'wrong';
+      }
+
+      if (btn) btn.disabled = true;
+      setInlineStatus(item.feedbackEl, getGradeApiUrl() ? uiText('Checking with AI grader...', '正在使用 AI 评分器检查……') : uiText('Checking...', '正在检查……'), '');
+      try {
+        let result;
+        try {
+          result = await gradeOne({ questionText, userText, correctText });
+        } catch {
+          const local = localOverlapCheck(userText, correctText);
+          result = { verdict: local.verdict, explanation: `AI unavailable; ${local.explanation}`, mode: 'local' };
+        }
+        const isCorrect = result.verdict === 'correct';
+        setInlineStatus(item.feedbackEl, `${isCorrect ? uiText('Correct.', '正确。') : uiText('Wrong.', '错误。')} ${result.explanation || ''}`, isCorrect ? 'ok' : 'bad');
+        setAnswerVisible(item, true);
+        return result.verdict;
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    async function checkAllQa(btn) {
+      if (btn) btn.disabled = true;
+      setInlineStatus(qaStatusEl, uiText('Checking all QA...', '正在检查全部简答……'), '');
+      let correct = 0;
+      try {
+        for (let i = 0; i < qaItems.length; i++) {
+          setInlineStatus(qaStatusEl, uiText(`Checking ${i + 1}/${qaItems.length}...`, `正在检查 ${i + 1}/${qaItems.length}……`), '');
+          const verdict = await checkQaItem(qaItems[i], qaItems[i].checkBtn);
+          if (verdict === 'correct') correct++;
+        }
+        const pct = qaItems.length ? Math.round((correct / qaItems.length) * 100) : 0;
+        setInlineStatus(qaStatusEl, uiText(`QA check done: ${correct}/${qaItems.length} (${pct}%).`, `简答检查完成：${correct}/${qaItems.length}（${pct}%）。`), '');
+      } catch {
+        setInlineStatus(qaStatusEl, uiText('QA check failed.', '简答检查失败。'), 'bad');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    function initQaTools() {
+      const detailsList = Array.from(document.querySelectorAll('[data-qa-block] details'));
+      detailsList.forEach((details, index) => {
+        const summaryEl = details.querySelector('summary');
+        const answerEl = details.querySelector('.answer-box');
+        if (!summaryEl || !answerEl) return;
+
+        addZh(summaryEl, shortAnswerTranslations[index].q);
+        addZh(answerEl, shortAnswerTranslations[index].a);
+
+        answerEl.classList.add('hidden');
+        const inputEl = document.createElement('textarea');
+        inputEl.className = 'qa-input';
+        inputEl.placeholder = uiText('Type your answer here...', '在这里输入你的答案……');
+
+        const rowEl = document.createElement('div');
+        rowEl.className = 'qa-btn-row';
+
+        const checkBtn = document.createElement('button');
+        checkBtn.type = 'button';
+        checkBtn.className = 'secondary qa-btn';
+        checkBtn.textContent = uiText('Check my answer', '检查答案');
+
+        const toggleBtn = document.createElement('button');
+        toggleBtn.type = 'button';
+        toggleBtn.className = 'ghost qa-btn';
+        toggleBtn.textContent = uiText('Show model answer', '显示参考答案');
+
+        const feedbackEl = document.createElement('span');
+        feedbackEl.className = 'qa-feedback';
+
+        rowEl.appendChild(checkBtn);
+        rowEl.appendChild(toggleBtn);
+        rowEl.appendChild(feedbackEl);
+
+        details.insertBefore(inputEl, answerEl);
+        details.insertBefore(rowEl, answerEl);
+
+        const item = {
+          id: `qa${index + 1}`,
+          summaryEl,
+          answerEl,
+          inputEl,
+          feedbackEl,
+          checkBtn,
+          toggleBtn,
+          zh: shortAnswerTranslations[index]
+        };
+
+        checkBtn.addEventListener('click', () => checkQaItem(item, checkBtn));
+        toggleBtn.addEventListener('click', () => setAnswerVisible(item, answerEl.classList.contains('hidden')));
+        qaItems.push(item);
+      });
+
+      if (btnCheckQaAll) {
+        btnCheckQaAll.addEventListener('click', () => checkAllQa(btnCheckQaAll));
+      }
+    }
+
+    function initStaticTranslations() {
+      addZh(document.querySelector('.hero h1'), '地球与空间科学考试复习');
+      addZhInline(document.querySelector('.hero p strong'), '单元：');
+      addZh(document.querySelectorAll('.hero p')[0], '4.1 解析宇宙 + 4.2 宇宙的形成');
+      addZh(document.querySelectorAll('.hero p')[1], '本互动页面帮助学生复习宇宙、星系、恒星、太阳系、大爆炸、多普勒效应、红移、蓝移以及宇宙微波背景辐射等核心概念。');
+      ['20 道自动评分选择题', '简答复习', '显示答案', '适合打印'].forEach((zh, i) => addZh(document.querySelectorAll('.pill')[i], zh));
+
+      addZh(document.querySelector('.card h2'), '学生信息');
+      addZhInline(document.querySelector('label.inline'), '姓名：');
+      addZh(document.querySelectorAll('.small')[0], '提示：先不要看答案完成选择题，再用简答部分练习用完整句子解释概念。');
+      addZh(document.querySelector('.sticky-nav h2'), '复习要点');
+      [
+        '宇宙包含什么',
+        '星系、恒星、行星、卫星、小行星、彗星',
+        '银河系和太阳系',
+        '光年、天文单位以及不同距离类型',
+        '大爆炸理论',
+        '多普勒效应',
+        '红移和蓝移',
+        '宇宙微波背景辐射（CMBR）'
+      ].forEach((zh, i) => addZh(document.querySelectorAll('.sticky-nav li')[i], zh));
+      addZh(document.querySelector('.sticky-nav .small'), '通过策略：记住关键定义，然后练习解释为什么红移和 CMBR 支持大爆炸理论。');
+
+      addZh(document.querySelector('#mcq-section h2'), 'A 部分：选择题（自动评分 + AI 检查）');
+      addZh(document.querySelector('#qa-section h2'), 'B 部分：简答练习');
+      addZh(document.querySelectorAll('#qa-section p')[0], '先写出你的答案，再打开参考答案检查理解。');
+      addZh(document.querySelector('#challenge-section h2'), 'C 部分：挑战复习');
+      addZh(document.querySelector('.footer'), '这是一个用于考试复习的单文件 HTML 学习页。');
+
+      addZh(document.querySelector('.ai-settings summary'), 'AI 评分（可选）');
+      addZh(document.querySelector('label[for="grade-api-url"]'), '评分 API 地址');
+      addZh(document.querySelector('.ai-settings .small'), '如果 AI 评分失败，系统会回退到本地重叠度比较。');
+
+      const scoreLabels = ['原始得分', '百分比', '答对数', '等级'];
+      document.querySelectorAll('.scorebox span').forEach((el, i) => addZh(el, scoreLabels[i]));
+    }
+
+    function applyLanguageMode(mode) {
+      const bilingual = mode === 'enzh';
+      document.body.classList.toggle('lang-bilingual', bilingual);
+      if (langToggle) {
+        langToggle.textContent = bilingual ? 'English + 中文: ON' : 'English + 中文: OFF';
+        langToggle.setAttribute('aria-pressed', bilingual ? 'true' : 'false');
+      }
+
+      const btnGradeMcq = document.getElementById('btnGradeMcq');
+      const btnCheckMcqAi = document.getElementById('btnCheckMcqAi');
+      const btnRevealAll = document.getElementById('btnRevealAll');
+      const btnHideAnswers = document.getElementById('btnHideAnswers');
+      const btnResetQuiz = document.getElementById('btnResetQuiz');
+      const btnPrintPage = document.getElementById('btnPrintPage');
+      const langBarLabel = document.getElementById('langBarLabel');
+      if (btnGradeMcq) btnGradeMcq.textContent = uiText('Submit & Grade MCQ', '提交并评分选择题');
+      if (btnCheckMcqAi) btnCheckMcqAi.textContent = uiText('Check MCQ with AI', '用 AI 检查选择题');
+      if (btnRevealAll) btnRevealAll.textContent = uiText('Reveal All Answers', '显示全部答案');
+      if (btnHideAnswers) btnHideAnswers.textContent = uiText('Hide Revealed Answers', '隐藏已显示答案');
+      if (btnResetQuiz) btnResetQuiz.textContent = uiText('Reset Quiz', '重置测验');
+      if (btnPrintPage) btnPrintPage.textContent = uiText('Print Page', '打印页面');
+      if (langBarLabel) langBarLabel.textContent = uiText('Language / 语言', 'Language / 语言');
+      if (btnTestApi) btnTestApi.textContent = uiText('Test', '测试');
+      if (btnCheckQaAll) btnCheckQaAll.textContent = uiText('Check All QA with AI', '用 AI 检查全部简答');
+      const studentName = document.getElementById('studentName');
+      if (studentName) studentName.placeholder = uiText('Enter student name', '输入学生姓名');
+      if (gradeApiUrlEl) gradeApiUrlEl.placeholder = uiText('https://example.com/grade', 'https://example.com/grade');
+
+      qaItems.forEach(item => {
+        item.inputEl.placeholder = uiText('Type your answer here...', '在这里输入你的答案……');
+        item.checkBtn.textContent = uiText('Check my answer', '检查答案');
+        item.toggleBtn.textContent = item.answerEl.classList.contains('hidden')
+          ? uiText('Show model answer', '显示参考答案')
+          : uiText('Hide model answer', '隐藏参考答案');
+      });
+
+      renderQuiz();
+    }
+
+    function initLanguageToggle() {
+      const key = 'earthUniverseExamLang';
+      const saved = (() => {
+        try { return localStorage.getItem(key); } catch { return null; }
+      })();
+      applyLanguageMode(saved === 'enzh' ? 'enzh' : 'en');
+      if (langToggle) {
+        langToggle.addEventListener('click', () => {
+          const next = isBilingual() ? 'en' : 'enzh';
+          applyLanguageMode(next);
+          try { localStorage.setItem(key, next); } catch {}
+        });
+      }
+    }
+
+    function revealAnswers() {
+      questions.forEach((item, index) => {
+        const fbEl = document.getElementById(`fb${index}`);
+        fbEl.className = 'feedback show correct';
+        fbEl.innerHTML = `<strong>Answer:</strong> ${letter(item.answer)}. ${item.options[item.answer]}<br>${item.explain}`;
+      });
+      qaItems.forEach(item => setAnswerVisible(item, true));
+    }
+
+    function hideAnswers() {
+      questions.forEach((_, index) => {
+        const qEl = document.getElementById(`q${index}`);
+        const fbEl = document.getElementById(`fb${index}`);
+        qEl.classList.remove('correct', 'incorrect');
+        fbEl.className = 'feedback';
+        fbEl.innerHTML = '';
+      });
+      qaItems.forEach(item => setAnswerVisible(item, false));
+    }
+
+    function resetQuiz() {
+      document.querySelectorAll('input[type="radio"]').forEach(input => { input.checked = false; });
+      qaItems.forEach(item => {
+        item.inputEl.value = '';
+        setInlineStatus(item.feedbackEl, '', '');
+      });
+      hideAnswers();
+      setInlineStatus(mcqAiStatusEl, '', '');
+      setInlineStatus(qaStatusEl, '', '');
+      setApiStatus('', '');
+      document.getElementById('scoreRaw').textContent = '0/20';
+      document.getElementById('scorePct').textContent = '0%';
+      document.getElementById('scoreCorrect').textContent = '0';
+      document.getElementById('scoreLevel').textContent = '—';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateScore(correct) {
+      const total = questions.length;
+      const pct = Math.round((correct / total) * 100);
+      let level = 'Needs Review';
+      if (pct >= 85) level = 'Excellent';
+      else if (pct >= 70) level = 'Good';
+      else if (pct >= 50) level = 'Developing';
+
+      document.getElementById('scoreRaw').textContent = `${correct}/${total}`;
+      document.getElementById('scorePct').textContent = `${pct}%`;
+      document.getElementById('scoreCorrect').textContent = `${correct}`;
+      document.getElementById('scoreLevel').textContent = level;
+    }
+
+    function letter(i) {
+      return String.fromCharCode(65 + i);
+    }
+
+    initStaticTranslations();
+    initApiSettings();
+    initQaTools();
+    initLanguageToggle();
+  </script>
+</body>
+</html>
