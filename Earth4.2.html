@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>4.2 Formation of the Universe</title>
+  <meta name="description" content="An interactive lesson page: Formation of the Universe." />
+
+  <style>
+    :root{
+      --bg:#f7f8fb;
+      --panel:#ffffff;
+      --text:#111827;
+      --muted:#4b5563;
+      --faint:#6b7280;
+      --border:rgba(17,24,39,.10);
+      --shadow: 0 10px 30px rgba(17,24,39,.08);
+      --accent:#2563eb;
+      --accent2:#16a34a;
+      --radius:18px;
+      --maxw: 1120px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, rgba(37,99,235,.10), transparent 60%),
+        radial-gradient(900px 500px at 90% 0%, rgba(22,163,74,.10), transparent 55%),
+        var(--bg);
+      line-height:1.6;
+    }
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter:saturate(160%) blur(10px);
+      background:rgba(247,248,251,.78);
+      border-bottom:1px solid var(--border);
+    }
+    .topbar .inner{
+      max-width:var(--maxw);
+      margin:0 auto;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{display:flex; align-items:center; gap:12px; min-width:0;}
+    .badge{
+      width:40px; height:40px; border-radius:14px;
+      background:linear-gradient(135deg, rgba(37,99,235,.95), rgba(22,163,74,.75));
+      box-shadow:var(--shadow);
+      display:grid; place-items:center;
+      color:white; font-weight:800;
+      letter-spacing:.2px;
+      flex:0 0 auto;
+    }
+    .brand h1{
+      font-size:14px; margin:0; color:var(--muted); font-weight:600;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .actions{display:flex; gap:10px; flex-wrap:wrap;}
+    .btn{
+      appearance:none; border:1px solid var(--border); background:rgba(255,255,255,.75);
+      color:var(--text); padding:9px 12px; border-radius:999px; font-size:13px;
+      font-weight:600; cursor:pointer; transition:transform .06s ease, background .2s ease, border-color .2s ease;
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .btn:hover{background:rgba(255,255,255,.95); border-color:rgba(17,24,39,.18)}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:rgba(37,99,235,.10); border-color:rgba(37,99,235,.25); color:rgba(37,99,235,1)}
+    .btn.primary:hover{background:rgba(37,99,235,.14); border-color:rgba(37,99,235,.35)}
+
+    .wrap{max-width:var(--maxw); margin:0 auto; padding:22px 18px 52px;}
+    .grid{display:grid; grid-template-columns:320px 1fr; gap:18px; align-items:start;}
+    @media (max-width: 980px){.grid{grid-template-columns:1fr}}
+
+    .card{background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
+    .card .pad{padding:18px}
+    .card h2{margin:0 0 8px; font-size:16px; letter-spacing:.2px}
+    .subtle{color:var(--muted); font-size:14px}
+
+    .hero{
+      padding:22px 18px;
+      background:
+        radial-gradient(900px 380px at 10% 0%, rgba(37,99,235,.16), transparent 55%),
+        radial-gradient(700px 380px at 90% 0%, rgba(22,163,74,.14), transparent 55%);
+      border-bottom:1px solid var(--border);
+    }
+    .hero h1{margin:0 0 8px; font-size:22px; line-height:1.2; letter-spacing:-.2px}
+    .hero p{margin:0; color:var(--muted); max-width:70ch}
+
+    .toc a{
+      display:flex; justify-content:space-between; gap:12px; padding:10px 12px; border-radius:12px;
+      text-decoration:none; color:var(--text); border:1px solid transparent;
+      transition:background .2s ease, border-color .2s ease; font-weight:600; font-size:14px;
+    }
+    .toc a:hover{background:rgba(17,24,39,.03); border-color:rgba(17,24,39,.08)}
+    .toc small{color:var(--faint); font-weight:600}
+    .sticky{position:sticky; top:76px}
+    @media (max-width: 980px){.sticky{position:static}}
+
+    .section{scroll-margin-top:92px; padding:18px; border-bottom:1px solid var(--border)}
+    .section:last-child{border-bottom:none}
+    .kicker{
+      display:inline-flex; align-items:center; gap:10px; padding:6px 10px; border-radius:999px;
+      border:1px solid var(--border); background:rgba(17,24,39,.02); color:var(--muted);
+      font-weight:700; font-size:12px; letter-spacing:.3px; text-transform:uppercase;
+    }
+    .section h3{margin:10px 0 8px; font-size:18px; letter-spacing:-.2px}
+    .section p{margin:0 0 10px}
+    .callout{
+      border:1px solid rgba(37,99,235,.25); background:rgba(37,99,235,.06); border-radius:16px;
+      padding:14px; margin:12px 0 2px; color:var(--text);
+    }
+    .callout strong{color:rgba(37,99,235,1)}
+
+    .media{margin-top:12px; border-radius:16px; overflow:hidden; border:1px solid var(--border); background:rgba(17,24,39,.02)}
+    .media .caption{padding:10px 12px; font-size:12.5px; color:var(--muted); border-top:1px solid var(--border)}
+    .video{aspect-ratio:16 / 9; width:100%; display:block; border:0}
+    .lesson-image{width:100%; height:auto; display:block}
+    .lesson-image.narrow{max-width:360px; margin:0 auto}
+    .imgph{
+      display:grid; place-items:center; min-height:240px; padding:24px; text-align:center;
+      background: radial-gradient(500px 220px at 20% 20%, rgba(37,99,235,.18), transparent 60%),
+                  radial-gradient(420px 220px at 80% 30%, rgba(22,163,74,.16), transparent 60%),
+                  linear-gradient(135deg, rgba(17,24,39,.05), rgba(17,24,39,.02));
+      color:var(--muted); font-weight:700; letter-spacing:.2px;
+    }
+    .diagram-mini{font-size:14px; line-height:1.7; color:#1f2937}
+
+    footer{margin-top:18px; color:var(--muted); font-size:13px; text-align:center}
+    .i18n-zh{display:none; margin-top:6px; color:var(--muted); font-size:.95em; line-height:1.5}
+    body.lang-bilingual .i18n-zh{display:block}
+    .brand .i18n-zh,.toc .i18n-zh{font-size:12px; color:var(--faint); font-weight:600}
+    .callout .i18n-zh{color:#1e3a8a}
+
+    @media print{
+      .topbar, .actions, .sticky {display:none !important}
+      body{background:white}
+      .card{box-shadow:none}
+      .grid{grid-template-columns:1fr}
+      .section{break-inside:avoid}
+      a{color:inherit; text-decoration:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="inner">
+      <div class="brand">
+        <div class="badge">4.2</div>
+        <h1>Earth &amp; Space Science • Formation of the Universe</h1>
+      </div>
+      <div class="actions">
+        <button class="btn primary" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑ Top</button>
+        <button class="btn" id="langToggle" type="button" aria-pressed="false">Language: EN</button>
+        <button class="btn" onclick="window.print()">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <div class="card">
+      <div class="hero">
+        <h1>4.2 Formation of the Universe</h1>
+        <p>
+          How did Earth come to revolve around the Sun? How did the Milky Way form? Where did the universe come from?
+          This lesson introduces the main scientific ideas that explain how the universe began and why astronomers think it is still expanding today.
+        </p>
+      </div>
+    </div>
+
+    <div style="height:16px"></div>
+
+    <div class="grid">
+      <aside class="card sticky">
+        <div class="pad">
+          <h2>On this page</h2>
+          <p class="subtle" style="margin:0 0 10px">Jump to a topic section.</p>
+          <nav class="toc" aria-label="Table of contents">
+            <a href="#intro"><span>Introduction</span><small>Overview</small></a>
+            <a href="#big-bang"><span>The Big Bang Theory</span><small>Main idea</small></a>
+            <a href="#doppler"><span>The Doppler Effect</span><small>Waves</small></a>
+            <a href="#redshift"><span>Expanding Universe &amp; Red Shift</span><small>Evidence</small></a>
+            <a href="#cmbr"><span>Cosmic Microwave Background Radiation</span><small>Afterglow</small></a>
+            <a href="#blueshift"><span>The Blue Shift</span><small>Smaller scale</small></a>
+            <a href="#summary"><span>Support for Big Bang Theory</span><small>Summary</small></a>
+          </nav>
+        </div>
+      </aside>
+
+      <section class="card" aria-label="Lesson content">
+        <article id="intro" class="section">
+          <span class="kicker">Introduction</span>
+          <h3>Introduction</h3>
+          <p>
+            How did the Earth come to be revolving around the Sun? How did the Milky Way Galaxy form? And while we're at it, where did the universe come from, and how long has it been around?
+            You are not the only one asking these questions. People have been coming up with theories to answer these questions for many years.
+            In this lesson, you will examine the current scientific theories that explain the formation of the universe.
+          </p>
+          <div class="media" role="group" aria-label="Thinking illustration for introduction">
+            <img class="lesson-image narrow" src="assets/thinking_guy.gif" alt="Thinking person illustration" loading="lazy" />
+            <div class="caption">Thinking about questions on the origin of the universe.</div>
+          </div>
+        </article>
+
+        <article id="big-bang" class="section">
+          <span class="kicker">Main theory</span>
+          <h3>The Big Bang Theory</h3>
+          <div class="media" role="group" aria-label="Deep space image for the Big Bang Theory">
+            <img class="lesson-image" src="assets/deepspace.jpg" alt="Deep space with stars and galaxies" loading="lazy" />
+            <div class="caption">Deep space image for the Big Bang Theory section.</div>
+          </div>
+          <p>
+            The Big Bang theory was developed in the early 1900s. It states that about 15 billion years ago an explosion caused the expansion of matter and radiation into space.
+            The explosion was the beginning of space and time as we know it. Seconds after the explosion, energy was converted into particles and anti-particles (for example, electrons and positrons).
+            Within minutes, traces of hydrogen and helium nuclei were created. Millions of years later, stars and galaxies began to form.
+            The chemical reactions in stars created all the other elements found in the Universe today.
+          </p>
+          <p>Watch the video below to learn more about the Big Bang Theory and the formation of the Universe.</p>
+          <div class="media" role="group" aria-label="Video: Big Bang Theory">
+            <iframe class="video" src="https://www.youtube.com/embed/wNDGgL73ihY" title="The Big Bang Theory" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: The Big Bang Theory (YouTube)</div>
+          </div>
+        </article>
+
+        <article id="doppler" class="section">
+          <span class="kicker">Wave behaviour</span>
+          <h3>The Doppler Effect</h3>
+          <p>
+            The Big Bang Theory suggests that the universe is continually expanding. Measurements of the Doppler Effect support this theory.
+            The Doppler Effect is the change in frequency and wavelength of a source when it is moving relative to an observer.
+            If the source is moving towards an observer, the wavelength squashes up and the frequency increases.
+            When the object is moving away from the observer, the wavelength spreads out and the frequency decreases.
+          </p>
+          <p>
+            This can be witnessed in everyday life when you hear the siren of an ambulance or police car moving towards you and then away from you.
+            The siren sounds higher in pitch when the vehicle comes towards you and lower in pitch when it moves away.
+          </p>
+          <div class="media" role="group" aria-label="Doppler effect diagram">
+            <img class="lesson-image" src="assets/Doppler_Effect.png" alt="Diagram showing Doppler effect with compressed and stretched waves" loading="lazy" />
+            <div class="caption">Diagram of the Doppler Effect.</div>
+          </div>
+        </article>
+
+        <article id="redshift" class="section">
+          <span class="kicker">Evidence</span>
+          <h3>The Expanding Universe and the Red Shift</h3>
+          <p>
+            In the 1920s, astronomer Edwin Hubble used the Doppler Effect to determine that the Universe is expanding.
+            Hubble found that the light from distant galaxies was shifted towards lower frequencies or the red end of the spectrum.
+            This is known as a <strong>Red Doppler Shift</strong>, or a <strong>red-shift</strong>.
+            If the galaxies were moving towards Hubble, the light would have been blue-shifted.
+          </p>
+          <p>
+            By analyzing the spectra of distant galaxies, it has been discovered that, on average, galaxies are rushing away from our Milky Way Galaxy at thousands of kilometres per second.
+            We know this because the spectra of these galaxies are red-shifted and the further out they are, the faster they are found to be moving.
+          </p>
+          <p>
+            This at first seems to indicate that we may be at the centre of the Universe. However, it is thought that no matter where you are in the Universe, galaxies race away from you.
+            Galaxies are not moving through space; instead, space itself is thought to be expanding between all points in the Universe.
+          </p>
+          <div class="media" role="group" aria-label="Video: red shift and expanding universe">
+            <iframe class="video" src="https://www.youtube.com/embed/y5tKC3nEx2I" title="The Expanding Universe and the Red Shift" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: The Expanding Universe and the Red Shift (YouTube)</div>
+          </div>
+        </article>
+
+        <article id="cmbr" class="section">
+          <span class="kicker">Afterglow</span>
+          <h3>Cosmic Microwave Background Radiation</h3>
+          <p>
+            Technology now exists to look at the sky by focusing on forms of radiation other than visible light.
+            As a result, we have gained a different perspective and increased our knowledge of the Universe.
+            Since the sky was first viewed using microwaves in 1965, scientists have found that the Universe is filled with microwave radiation.
+          </p>
+          <p>
+            This is now understood to be traces of radiation coming from the remnants of the Big Bang.
+            The energy of the Big Bang has been red-shifted into microwaves because the Universe is expanding.
+            This light is seen today as the <strong>Cosmic Microwave Background Radiation (CMBR)</strong> — the “afterglow” of the Big Bang.
+          </p>
+          <div class="callout">
+            <strong>Key idea:</strong> CMBR is important evidence because it suggests the whole universe still contains leftover energy from its early beginning.
+          </div>
+          <div class="media" role="group" aria-label="CMBR sky map image">
+            <img class="lesson-image" src="assets/CMBR.jpg" alt="Cosmic Microwave Background Radiation map" loading="lazy" />
+            <div class="caption">Cosmic Microwave Background Radiation (CMBR) map.</div>
+          </div>
+        </article>
+
+        <article id="blueshift" class="section">
+          <span class="kicker">Smaller scale motion</span>
+          <h3>The Blue Shift</h3>
+          <p>
+            On a smaller scale, some galaxies are colliding with others because of the large force of gravity between them.
+            The Large and Small Magellanic Clouds are two dwarf galaxies gravitationally attracted to our own Milky Way Galaxy.
+            The spectra of these two galaxies are blue-shifted.
+          </p>
+          <p>
+            It is hypothesized that they will eventually collide with our galaxy, although this is billions of years away.
+            Spectral lines that are red-shifted show an object moving away from us, while spectral lines that are blue-shifted show an object moving towards us.
+          </p>
+          <div class="media" role="group" aria-label="Red-shift and blue-shift diagram">
+            <img class="lesson-image" src="assets/Redshift_blueshift.png" alt="Red-shift and blue-shift spectral shift diagram" loading="lazy" />
+            <div class="caption">Diagram for red-shift and blue-shift.</div>
+          </div>
+        </article>
+
+        <article id="summary" class="section">
+          <span class="kicker">Summary</span>
+          <h3>Support for the Big Bang Theory Summarized</h3>
+          <p>
+            The Big Bang theory is based on the General Theory of Relativity, the theory developed in the 1900s by Albert Einstein.
+            The major observations that support the Big Bang theory are the expansion of the Universe, the abundance of the different chemical elements seen in the Universe, and the detection of the CMBR.
+          </p>
+          <div class="callout">
+            <strong>Main evidence summary:</strong>
+            <div>1. The universe is expanding (first observed by Edwin Hubble in the 1920s).</div>
+            <div>2. The chemical elements in the universe match what the theory predicts.</div>
+            <div>3. Cosmic Microwave Background Radiation was detected as leftover energy from the early universe.</div>
+          </div>
+          <p>
+            The name “Big Bang” can be misleading because it sounds like a huge explosion in empty space.
+            It is better to think of it as an expansion of space itself.
+            The term “Big Bang” was invented by astronomer Fred Hoyle, who was trying to ridicule the theory, but the name was so memorable that it stayed.
+          </p>
+          <div class="media" role="group" aria-label="Albert Einstein portrait">
+            <img class="lesson-image" src="assets/einstein.jpg" alt="Albert Einstein portrait" loading="lazy" />
+            <div class="caption">Albert Einstein and the General Theory of Relativity.</div>
+          </div>
+        </article>
+      </section>
+    </div>
+
+    <footer>
+      <div style="margin-top:18px">Built as a single self-contained HTML page • Responsive + print-friendly • Based on the layout style of Earth4.1.html.</div>
+    </footer>
+  </main>
+
+  <script>
+    (function(){
+      const addZh = (el, zh, opts = {}) => {
+        if (!el || !zh) return;
+        const node = document.createElement(opts.tag || 'div');
+        node.className = `i18n-zh ${opts.className || ''}`.trim();
+        node.innerHTML = zh;
+        if (opts.append) el.appendChild(node);
+        else el.insertAdjacentElement('afterend', node);
+      };
+      const addZhAll = (selector, zhList, opts = {}) => {
+        const nodes = Array.from(document.querySelectorAll(selector));
+        zhList.forEach((zh, i) => addZh(nodes[i], zh, opts));
+      };
+
+      addZh(document.querySelector('.brand h1'), '地球与空间科学 • 宇宙的形成', { append: true });
+      addZh(document.querySelector('.hero h1'), '4.2 宇宙的形成');
+      addZh(document.querySelector('.hero p'), '地球为什么会绕太阳运行？银河系是怎样形成的？宇宙从哪里来？本课将介绍解释宇宙起源以及宇宙为何至今仍在膨胀的主要科学理论。');
+      addZh(document.querySelector('.sticky h2'), '本页内容');
+      addZh(document.querySelector('.sticky .subtle'), '跳转到各个主题部分。');
+      addZhAll('.toc a', [
+        '导入 · 概览','大爆炸理论 · 核心观点','多普勒效应 · 波动','膨胀宇宙与红移 · 证据','宇宙微波背景辐射 · 余辉','蓝移 · 小尺度现象','大爆炸理论支持证据 · 总结'
+      ], { append: true });
+      addZhAll('.section .kicker', ['导入','主要理论','波动现象','证据','余辉','小尺度运动','总结']);
+      addZhAll('.section h3', ['导言','大爆炸理论','多普勒效应','膨胀的宇宙与红移','宇宙微波背景辐射','蓝移','支持大爆炸理论的证据总结']);
+      addZh(document.querySelector('footer > div'), '本页面为单文件 HTML • 响应式 + 适合打印 • 版式参考 Earth4.1.html。');
+
+      const langToggle = document.getElementById('langToggle');
+      const setLangMode = (mode) => {
+        const bilingual = mode === 'enzh';
+        document.body.classList.toggle('lang-bilingual', bilingual);
+        langToggle.textContent = bilingual ? 'Language: EN+ZH' : 'Language: EN';
+        langToggle.setAttribute('aria-pressed', bilingual ? 'true' : 'false');
+        localStorage.setItem('earth42LangMode', mode);
+      };
+      langToggle.addEventListener('click', () => {
+        const bilingual = document.body.classList.contains('lang-bilingual');
+        setLangMode(bilingual ? 'en' : 'enzh');
+      });
+      setLangMode(localStorage.getItem('earth42LangMode') === 'enzh' ? 'enzh' : 'en');
+
+      const links = Array.from(document.querySelectorAll('.toc a'));
+      const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+      const setActive = (id) => {
+        links.forEach(a => {
+          const on = a.getAttribute('href') === '#' + id;
+          a.style.background = on ? 'rgba(37,99,235,.08)' : '';
+          a.style.borderColor = on ? 'rgba(37,99,235,.25)' : '';
+        });
+      };
+      const obs = new IntersectionObserver((entries) => {
+        const visible = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActive(visible.target.id);
+      }, { rootMargin: '-20% 0px -70% 0px', threshold: [0.05, 0.1, 0.2, 0.35] });
+      sections.forEach(s => obs.observe(s));
+      if (sections[0]) setActive(sections[0].id);
+    })();
+  </script>
+</body>
+</html>
