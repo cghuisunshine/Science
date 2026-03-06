@@ -134,8 +134,11 @@
     footer{margin-top:18px; color:var(--muted); font-size:13px; text-align:center}
     .i18n-zh{display:none; margin-top:6px; color:var(--muted); font-size:.95em; line-height:1.5}
     body.lang-bilingual .i18n-zh{display:block}
+    .i18n-zh.inline{display:none; margin-top:0; margin-left:.45em; font-size:inherit; line-height:inherit; color:var(--faint)}
+    body.lang-bilingual .i18n-zh.inline{display:inline}
     .brand .i18n-zh,.toc .i18n-zh{font-size:12px; color:var(--faint); font-weight:600}
     .callout .i18n-zh{color:#1e3a8a}
+    .callout .i18n-zh.inline{color:#1e3a8a}
 
     @media print{
       .topbar, .actions, .sticky {display:none !important}
@@ -350,14 +353,22 @@
         if (opts.append) el.appendChild(node);
         else el.insertAdjacentElement('afterend', node);
       };
+      const addZhInline = (el, zh, opts = {}) => {
+        const className = ['inline', opts.className || ''].join(' ').trim();
+        addZh(el, zh, { ...opts, append: true, tag: 'span', className });
+      };
       const addZhAll = (selector, zhList, opts = {}) => {
         const nodes = Array.from(document.querySelectorAll(selector));
         zhList.forEach((zh, i) => addZh(nodes[i], zh, opts));
       };
+      const addZhAllInline = (selector, zhList, opts = {}) => {
+        const nodes = Array.from(document.querySelectorAll(selector));
+        zhList.forEach((zh, i) => addZhInline(nodes[i], zh, opts));
+      };
 
       addZh(document.querySelector('.brand h1'), '地球与空间科学 • 宇宙的形成', { append: true });
       addZh(document.querySelector('.hero h1'), '4.2 宇宙的形成');
-      addZh(document.querySelector('.hero p'), '地球为什么会绕太阳运行？银河系是怎样形成的？宇宙从哪里来？本课将介绍解释宇宙起源以及宇宙为何至今仍在膨胀的主要科学理论。');
+      addZhInline(document.querySelector('.hero p'), '地球为什么会绕太阳运行？银河系是怎样形成的？宇宙从哪里来？本课将介绍解释宇宙起源以及宇宙为何至今仍在膨胀的主要科学理论。');
       addZh(document.querySelector('.sticky h2'), '本页内容');
       addZh(document.querySelector('.sticky .subtle'), '跳转到各个主题部分。');
       addZhAll('.toc a', [
@@ -365,6 +376,40 @@
       ], { append: true });
       addZhAll('.section .kicker', ['导入','主要理论','波动现象','证据','余辉','小尺度运动','总结']);
       addZhAll('.section h3', ['导言','大爆炸理论','多普勒效应','膨胀的宇宙与红移','宇宙微波背景辐射','蓝移','支持大爆炸理论的证据总结']);
+      addZhAllInline('.section > p', [
+        '地球为什么会围绕太阳运行？银河系如何形成？再进一步，宇宙从何而来，又存在了多久？提出这些问题的不只有你。多年来，人们一直在提出各种理论来解释这些问题。本课中，你将学习当前用于解释宇宙形成的科学理论。',
+        '大爆炸理论形成于20世纪早期。它认为大约150亿年前，一次爆炸使物质与辐射向太空扩张。这次爆炸标志着我们所知的时空开端。爆炸后数秒内，能量转化为粒子与反粒子（如电子与正电子）。几分钟后，出现了氢和氦原子的核。数百万年后，恒星与星系开始形成。恒星中的化学反应产生了今天宇宙中的其他元素。',
+        '观看下方视频，进一步了解大爆炸理论与宇宙形成。',
+        '大爆炸理论提出宇宙在持续膨胀。多普勒效应的测量结果支持这一理论。多普勒效应是当波源相对于观察者运动时，频率与波长发生变化的现象。若波源向观察者移动，波长被压缩、频率升高；若波源远离观察者，波长拉长、频率降低。',
+        '在日常生活中可以观察到这种现象：当救护车或警车靠近再远离你时，警笛音调会先变高后变低。',
+        '20世纪20年代，天文学家埃德温·哈勃利用多普勒效应判断宇宙正在膨胀。哈勃发现远处星系发出的光向更低频率、也就是光谱红端偏移。这被称为红色多普勒位移，或红移。若这些星系朝哈勃移动，光谱应表现为蓝移。',
+        '通过分析远方星系的光谱，人们发现平均而言，这些星系正以每秒数千公里的速度远离我们的银河系。我们之所以知道这一点，是因为这些星系光谱出现红移，而且距离越远，观测到的后退速度通常越快。',
+        '这起初看起来像是我们位于宇宙中心。然而科学家认为，无论你在宇宙中的哪里，都会看到其他星系远离你。并不是星系在穿过空间运动，而是空间本身在宇宙各点之间膨胀。',
+        '如今的技术可以通过可见光以外的辐射来观测天空。因此我们获得了不同视角，并增加了对宇宙的认识。自1965年首次用微波观测天空以来，科学家发现宇宙中充满了微波辐射。',
+        '现在人们认为，这些辐射是来自大爆炸残余的痕迹。由于宇宙在膨胀，大爆炸的能量发生红移并落入微波波段。今天看到的这种辐射称为宇宙微波背景辐射（CMBR），即大爆炸的“余辉”。',
+        '在较小尺度上，一些星系会因彼此间强大的引力而发生碰撞。大麦哲伦星云和小麦哲伦星云是两个受引力吸引、正在靠近银河系的矮星系。这两个星系的光谱呈现蓝移。',
+        '推测它们最终会与银河系相撞，不过这将发生在数十亿年之后。光谱线红移表示天体远离我们，而光谱线蓝移表示天体朝我们靠近。',
+        '大爆炸理论建立在广义相对论基础上，而广义相对论是阿尔伯特·爱因斯坦在20世纪提出的。支持大爆炸理论的主要观测包括：宇宙膨胀、宇宙中不同化学元素丰度与理论预测一致，以及探测到宇宙微波背景辐射。',
+        '“Big Bang（大爆炸）”这个名称可能会让人误解，好像是在空旷空间里发生了一次巨大爆炸。更准确的理解是空间本身在膨胀。该术语由天文学家弗雷德·霍伊尔提出，他原本想借此嘲讽该理论，但这个名字太容易记住，最终保留了下来。'
+      ]);
+      addZhAllInline('.media .caption', [
+        '思考宇宙起源相关问题。',
+        '用于大爆炸理论部分的深空图像。',
+        '视频：大爆炸理论（YouTube）',
+        '多普勒效应示意图。',
+        '视频：膨胀的宇宙与红移（YouTube）',
+        '宇宙微波背景辐射（CMBR）图。',
+        '红移与蓝移示意图。',
+        '阿尔伯特·爱因斯坦与广义相对论。'
+      ]);
+      addZhInline(document.querySelector('#cmbr .callout > strong'), '关键观点：');
+      addZhInline(document.querySelector('#cmbr .callout'), 'CMBR 是关键证据，因为它表明整个宇宙仍保留着早期起源留下的能量。');
+      addZhInline(document.querySelector('#summary .callout > strong'), '主要证据总结：');
+      addZhAllInline('#summary .callout > div', [
+        '1. 宇宙在膨胀（1920年代由埃德温·哈勃首先观测到）。',
+        '2. 宇宙中的化学元素组成与理论预测一致。',
+        '3. 探测到宇宙微波背景辐射，说明早期宇宙留下了残余能量。'
+      ]);
       addZh(document.querySelector('footer > div'), '本页面为单文件 HTML • 响应式 + 适合打印 • 版式参考 Earth4.1.html。');
 
       const langToggle = document.getElementById('langToggle');
