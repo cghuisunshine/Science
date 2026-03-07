@@ -902,6 +902,13 @@
       addZh(el, zh, { ...opts, append: true, tag: 'span', className: `inline ${opts.className || ''}`.trim() });
     }
 
+    function getEnglishOnlyText(el) {
+      if (!el) return '';
+      const clone = el.cloneNode(true);
+      clone.querySelectorAll('.i18n-zh').forEach(node => node.remove());
+      return (clone.textContent || '').trim();
+    }
+
     function setInlineStatus(el, text, kind) {
       if (!el) return;
       el.textContent = text || '';
@@ -1214,7 +1221,7 @@
     async function checkQaItem(item, btn) {
       const userText = (item.inputEl.value || '').trim();
       const questionText = (item.summaryEl.textContent || '').trim();
-      const correctText = (item.answerEl.textContent || '').trim();
+      const correctText = getEnglishOnlyText(item.answerEl);
 
       if (!userText) {
         setAnswerVisible(item, true);
@@ -1268,7 +1275,7 @@
         if (!summaryEl || !answerEl) return;
 
         addZh(summaryEl, shortAnswerTranslations[index].q);
-        addZh(answerEl, shortAnswerTranslations[index].a);
+        addZh(answerEl, shortAnswerTranslations[index].a, { append: true });
 
         answerEl.classList.add('hidden');
         const inputEl = document.createElement('textarea');

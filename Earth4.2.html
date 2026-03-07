@@ -144,10 +144,14 @@
     .diagram-mini{font-size:14px; line-height:1.7; color:#1f2937}
 
     footer{margin-top:18px; color:var(--muted); font-size:13px; text-align:center}
+    .i18n-en.block{display:block}
     .i18n-zh{display:none; margin-top:6px; color:var(--muted); font-size:.95em; line-height:1.5}
     body.lang-bilingual .i18n-zh{display:block}
     .i18n-zh.inline{display:none; margin-top:0; margin-left:.45em; font-size:inherit; line-height:inherit; color:var(--faint)}
     body.lang-bilingual .i18n-zh.inline{display:inline}
+    body.lang-zh .i18n-en{display:none !important}
+    body.lang-zh .i18n-zh{display:block}
+    body.lang-zh .i18n-zh.inline{display:inline}
     .brand .i18n-zh,.toc .i18n-zh{font-size:12px; color:var(--faint); font-weight:600}
     .callout .i18n-zh{color:#1e3a8a}
     .callout .i18n-zh.inline{color:#1e3a8a}
@@ -358,8 +362,21 @@
 
   <script>
     (function(){
+      const wrapEnglishContent = (el) => {
+        if (!el || el.querySelector(':scope > .i18n-en')) return;
+        const childNodes = Array.from(el.childNodes);
+        if (!childNodes.length) return;
+        const hasBlockChild = childNodes.some((node) => node.nodeType === Node.ELEMENT_NODE && /^(DIV|P|UL|OL|TABLE|SECTION|ARTICLE|FIGURE|BLOCKQUOTE)$/i.test(node.tagName));
+        const wrapper = document.createElement(hasBlockChild ? 'div' : 'span');
+        wrapper.className = `i18n-en${hasBlockChild ? ' block' : ''}`;
+        childNodes.forEach((node) => wrapper.appendChild(node));
+        el.appendChild(wrapper);
+      };
+
       const addZh = (el, zh, opts = {}) => {
         if (!el || !zh) return;
+        if (opts.append) wrapEnglishContent(el);
+        else el.classList.add('i18n-en');
         const node = document.createElement(opts.tag || 'div');
         node.className = `i18n-zh ${opts.className || ''}`.trim();
         node.innerHTML = zh;
@@ -427,17 +444,19 @@
 
       const langToggle = document.getElementById('langToggle');
       const setLangMode = (mode) => {
-        const bilingual = mode === 'enzh';
-        document.body.classList.toggle('lang-bilingual', bilingual);
-        langToggle.textContent = bilingual ? 'Language: EN+ZH' : 'Language: EN';
-        langToggle.setAttribute('aria-pressed', bilingual ? 'true' : 'false');
-        localStorage.setItem('earth42LangMode', mode);
+        const currentMode = ['en', 'enzh', 'zh'].includes(mode) ? mode : 'en';
+        document.body.classList.toggle('lang-bilingual', currentMode === 'enzh');
+        document.body.classList.toggle('lang-zh', currentMode === 'zh');
+        langToggle.textContent = currentMode === 'enzh' ? 'Language: EN+ZH' : currentMode === 'zh' ? 'Language: ZH' : 'Language: EN';
+        langToggle.setAttribute('aria-pressed', currentMode === 'en' ? 'false' : 'true');
+        langToggle.setAttribute('aria-label', currentMode === 'enzh' ? 'Language mode: English and Chinese' : currentMode === 'zh' ? 'Language mode: Chinese only' : 'Language mode: English only');
+        localStorage.setItem('earth42LangMode', currentMode);
       };
       langToggle.addEventListener('click', () => {
-        const bilingual = document.body.classList.contains('lang-bilingual');
-        setLangMode(bilingual ? 'en' : 'enzh');
+        const currentMode = document.body.classList.contains('lang-zh') ? 'zh' : document.body.classList.contains('lang-bilingual') ? 'enzh' : 'en';
+        setLangMode(currentMode === 'en' ? 'enzh' : currentMode === 'enzh' ? 'zh' : 'en');
       });
-      setLangMode(localStorage.getItem('earth42LangMode') === 'enzh' ? 'enzh' : 'en');
+      setLangMode(localStorage.getItem('earth42LangMode'));
 
       const navToggle = document.getElementById('navToggle');
       const pageNav = document.getElementById('pageNav');
