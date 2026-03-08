@@ -102,6 +102,15 @@
       display:grid;
       gap:12px;
     }
+    .empty{
+      background:rgba(255,255,255,.78);
+      border:2px dashed #b8ae7c;
+      border-radius:16px;
+      padding:18px;
+      color:#5a5a5a;
+      font-size:16px;
+      text-align:center;
+    }
     .event{
       background:var(--card);
       border:2px solid #222;
@@ -214,7 +223,7 @@
   <div class="wrap">
     <div class="hero">
       <h1>课程安排</h1>
-      <p class="sub">根据你提供的 2026 年 3 月到 6 月课程表整理，只保留“”相关课程，并自动高亮“下一节课”。</p>
+      <p class="sub">上方只显示从当前时间起到未来 7 天内的课程，其余课程放到下方日历视图中。</p>
       <div class="hero-grid">
         <div class="next-box">
           <div class="next-label">下一节课程</div>
@@ -225,6 +234,8 @@
         </div>
         <div class="stats">
           <div class="pill">总课程数：<span id="totalCount"></span></div>
+          <div class="pill">未来 7 天：<span id="weekCount"></span></div>
+          <div class="pill">日历其余课程：<span id="calendarCount"></span></div>
           <div class="pill">时间：晚上 6:30–8:30</div>
           <div class="pill">月份：2026/03–2026/06</div>
           <div class="pill">课程类型：补习 / 数理化计算机</div>
@@ -232,10 +243,10 @@
       </div>
     </div>
 
-    <h2 class="section-title">时间线</h2>
+    <h2 class="section-title">未来 7 天课程</h2>
     <div id="timeline" class="timeline"></div>
 
-    <h2 class="section-title">按月份查看</h2>
+    <h2 class="section-title">其余课程日历</h2>
     <div id="months"></div>
 
     <div class="footer">注：页面使用浏览器本地时间判断“下一节课”。若你在不同时区打开，日期时间显示会按本地设备时间解释。</div>
@@ -300,8 +311,6 @@
       { title:"Bruce 数理化计算机", start:"2026-06-23T18:30:00", end:"2026-06-23T20:30:00" },
       { title:"Bruce 数理化计算机", start:"2026-06-25T18:30:00", end:"2026-06-25T20:30:00" }
     ];
-    events.sort((a,b)=> new Date(a.start) - new Date(b.start));
-
     const timeline = document.getElementById("timeline");
     const monthsWrap = document.getElementById("months");
     document.getElementById("totalCount").textContent = events.length;
@@ -331,7 +340,6 @@
       const hours = Math.floor((totalMin % (60*24)) / 60);
       const mins = totalMin % 60;
       let parts = [];
-    events.sort((a,b)=> new Date(a.start) - new Date(b.start));
       if(days) parts.push(`${days}天`);
       if(hours) parts.push(`${hours}小时`);
       parts.push(`${mins}分钟`);
@@ -340,10 +348,26 @@
 
     function render(){
       const now = new Date();
+      const weekAhead = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
       let nextIndex = events.findIndex(ev => new Date(ev.start) >= now);
       if(nextIndex === -1) nextIndex = null;
 
       const nextEv = nextIndex !== null ? events[nextIndex] : null;
+      const weekEvents = events
+        .map((ev, idx) => ({ ev, idx }))
+        .filter(({ ev }) => {
+          const s = new Date(ev.start);
+          return s >= now && s <= weekAhead;
+        });
+      const calendarEvents = events
+        .map((ev, idx) => ({ ev, idx }))
+        .filter(({ ev }) => {
+          const s = new Date(ev.start);
+          return s < now || s > weekAhead;
+        });
+
+      document.getElementById("weekCount").textContent = weekEvents.length;
+      document.getElementById("calendarCount").textContent = calendarEvents.length;
 
       if(nextEv){
         const s = new Date(nextEv.start), e = new Date(nextEv.end);
@@ -357,7 +381,11 @@
       }
 
       timeline.innerHTML = "";
-      events.forEach((ev, idx) => {
+      if(weekEvents.length === 0){
+        timeline.innerHTML = `<div class="empty">未来 7 天内没有课程，其他课程已放到下方日历。</div>`;
+      }
+
+      weekEvents.forEach(({ ev, idx }) => {
         const s = new Date(ev.start), e = new Date(ev.end);
         const card = document.createElement("div");
         card.className = "event";
@@ -381,15 +409,19 @@
       });
 
       const grouped = {};
-      events.forEach((ev, idx) => {
+      calendarEvents.forEach(({ ev, idx }) => {
         const s = new Date(ev.start);
         const key = `${s.getFullYear()}-${String(s.getMonth()+1).padStart(2,'0')}`;
         if(!grouped[key]) grouped[key] = [];
-    events.sort((a,b)=> new Date(a.start) - new Date(b.start));
         grouped[key].push({ev, idx});
       });
 
       monthsWrap.innerHTML = "";
+      if(calendarEvents.length === 0){
+        monthsWrap.innerHTML = `<div class="empty">其余课程为空。</div>`;
+        return;
+      }
+
       Object.keys(grouped).forEach(key => {
         const monthBox = document.createElement("section");
         monthBox.className = "month";
