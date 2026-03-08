@@ -790,6 +790,9 @@
         <div class="match-grid">
           <div>${itemsHtml}</div>
           <div>
+            <div class="check-row">
+              <button type="button" class="secondary check-btn" onclick="checkMatchingQuestion()">${getLocalizedHTML(uiText.checkThisQuestion, false)}</button>
+            </div>
             <div id="matchingFeedback" class="feedback"></div>
           </div>
         </div>
@@ -862,6 +865,10 @@
       matchingFeedback.className = matchingCorrect === matchingItems.length ? 'feedback correct' : 'feedback wrong';
       matchingFeedback.innerHTML = `<strong>${getLocalizedHTML(uiText.matchingScore, false)}: ${matchingCorrect}/${matchingItems.length}</strong><div class="explanation">${matchingLines.join('<br>')}</div>`;
       return matchingCorrect;
+    }
+
+    function checkMatchingQuestion() {
+      gradeMatching();
     }
 
     function gradeQuiz(shouldScroll = true) {
