@@ -60,6 +60,12 @@
       border-radius:16px;
       padding:16px;
     }
+    .stats{
+      display:flex;
+      flex-wrap:wrap;
+      align-content:flex-start;
+      gap:8px;
+    }
     .next-label{
       display:inline-block;
       background:#1f1f1f;
@@ -85,14 +91,16 @@
       margin-top:6px;
     }
     .pill{
-      display:inline-block;
+      display:inline-flex;
+      width:fit-content;
+      max-width:100%;
       padding:6px 10px;
       border-radius:999px;
       border:1px solid #333;
       background:#fff;
-      margin:4px 6px 0 0;
       font-size:13px;
       font-weight:600;
+      white-space:nowrap;
     }
     .section-title{
       margin:28px 0 12px;
@@ -232,14 +240,6 @@
           <div id="countdown" class="hint"></div>
           <div class="hint">会根据你设备当前时间自动更新。</div>
         </div>
-        <div class="stats">
-          <div class="pill">总课程数：<span id="totalCount"></span></div>
-          <div class="pill">未来 7 天：<span id="weekCount"></span></div>
-          <div class="pill">日历其余课程：<span id="calendarCount"></span></div>
-          <div class="pill">时间：晚上 6:30–8:30</div>
-          <div class="pill">月份：2026/03–2026/06</div>
-          <div class="pill">课程类型：补习 / 数理化计算机</div>
-        </div>
       </div>
     </div>
 
@@ -315,7 +315,6 @@
 
     const timeline = document.getElementById("timeline");
     const monthsWrap = document.getElementById("months");
-    document.getElementById("totalCount").textContent = events.length;
 
     const weekdayFmt = new Intl.DateTimeFormat("zh-CN", { weekday:"short" });
     const fullFmt = new Intl.DateTimeFormat("zh-CN", {
@@ -368,9 +367,6 @@
           const s = new Date(ev.start);
           return s < now || s > weekAhead;
         });
-
-      document.getElementById("weekCount").textContent = weekEvents.length;
-      document.getElementById("calendarCount").textContent = calendarEvents.length;
 
       if(nextEv){
         const s = new Date(nextEv.start), e = new Date(nextEv.end);
