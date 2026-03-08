@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Universe Quiz</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --correct: #166534;
+      --correct-bg: #dcfce7;
+      --wrong: #991b1b;
+      --wrong-bg: #fee2e2;
+      --warn: #92400e;
+      --warn-bg: #fef3c7;
+      --border: #d1d5db;
+      --shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 16px 60px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+      color: white;
+      border-radius: 24px;
+      padding: 28px 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+    }
+
+    .hero p {
+      margin: 0;
+      opacity: 0.95;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 18px 0 24px;
+      align-items: center;
+    }
+
+    .mode-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .mode-control label {
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease, background 0.2s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .secondary {
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .score-box {
+      margin-left: auto;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 14px;
+      min-width: 180px;
+      text-align: center;
+      font-weight: bold;
+      box-shadow: var(--shadow);
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 22px 20px;
+      margin-bottom: 18px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .card.question.correct {
+      border-color: #86efac;
+      background: #f0fdf4;
+    }
+
+    .card.question.incorrect {
+      border-color: #fca5a5;
+      background: #fff7f7;
+    }
+
+    .question-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 0 0 14px;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: #fafafa;
+      cursor: pointer;
+    }
+
+    .option:hover {
+      background: #f3f4f6;
+    }
+
+    .option input {
+      margin-top: 3px;
+      transform: scale(1.15);
+    }
+
+    .feedback {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      display: none;
+      font-weight: 600;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback.correct {
+      display: block;
+      background: var(--correct-bg);
+      color: var(--correct);
+      border: 1px solid #86efac;
+    }
+
+    .feedback.wrong {
+      display: block;
+      background: var(--wrong-bg);
+      color: var(--wrong);
+      border: 1px solid #fca5a5;
+    }
+
+    .feedback.unanswered {
+      display: block;
+      background: var(--warn-bg);
+      color: var(--warn);
+      border: 1px solid #fcd34d;
+    }
+
+    .explanation {
+      margin-top: 8px;
+      font-weight: normal;
+    }
+
+    .check-row {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .check-btn {
+      padding: 9px 12px;
+      font-size: 0.92rem;
+    }
+
+    .match-grid {
+      display: grid;
+      grid-template-columns: 1.7fr 1fr;
+      gap: 16px;
+    }
+
+    .match-item {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      background: #fafafa;
+      margin-bottom: 12px;
+    }
+
+    .match-item label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      background: white;
+    }
+
+    .summary {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 18px;
+      padding: 18px;
+      margin-top: 24px;
+      display: none;
+    }
+
+    .summary h2 {
+      margin-top: 0;
+    }
+
+    .answer-key {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #bfdbfe;
+    }
+
+    .pill {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: #1e40af;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 12px;
+    }
+
+    .localized-text {
+      display: inline;
+    }
+
+    .localized-stacked {
+      display: inline-block;
+    }
+
+    .localized-stacked .lang-en,
+    .localized-stacked .lang-zh {
+      display: block;
+    }
+
+    .localized-stacked .lang-zh {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.96em;
+    }
+
+    .localized-inline .lang-zh {
+      color: var(--muted);
+    }
+
+    .hero .localized-stacked .lang-zh,
+    .hero .localized-inline .lang-zh,
+    .primary .localized-stacked .lang-zh,
+    .primary .localized-inline .lang-zh {
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    @media (max-width: 740px) {
+      .match-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .score-box {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .mode-control {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <h1 id="heroTitle"></h1>
+      <p id="heroDescription"></p>
+    </section>
+
+    <div class="toolbar">
+      <button id="gradeQuizBtn" class="primary" onclick="gradeQuiz()"></button>
+      <button id="resetBtn" class="secondary" onclick="resetQuiz()"></button>
+      <button id="showAnswersBtn" class="secondary" onclick="showAnswers()"></button>
+      <div class="mode-control">
+        <label id="languageModeLabel" for="languageMode"></label>
+        <select id="languageMode" onchange="setLanguageMode(this.value)"></select>
+      </div>
+      <div class="score-box" id="scoreBox"></div>
+    </div>
+
+    <div id="quiz"></div>
+
+    <section id="matchingSection" class="card"></section>
+
+    <section id="summary" class="summary">
+      <h2 id="summaryTitle"></h2>
+      <p id="summaryText"></p>
+      <div class="answer-key">
+        <h3 id="answerKeyTitle"></h3>
+        <ol id="answerKeyList"></ol>
+        <p id="footerNote" class="footer-note"></p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const uiText = {
+      title: { en: 'Universe Quiz', zh: '宇宙测验' },
+      instructions: {
+        en: 'Use Check This Question for instant feedback, or click Grade Quiz to check the full quiz and see your score.',
+        zh: '点击“检查本题”可立即获得反馈，或点击“批改测验”一次检查整份测验并查看你的分数。'
+      },
+      gradeQuiz: { en: 'Grade Quiz', zh: '批改测验' },
+      reset: { en: 'Reset', zh: '重置' },
+      showAnswers: { en: 'Show Answers', zh: '显示答案' },
+      displayMode: { en: 'Display Mode', zh: '显示模式' },
+      scoreLabel: { en: 'Score', zh: '分数' },
+      scoreNotGraded: { en: 'Score: Not graded yet', zh: '分数：尚未批改' },
+      scoreAnswersDisplayed: { en: 'Score: Answers displayed', zh: '分数：已显示答案' },
+      matchingSection: { en: 'Matching Section', zh: '配对部分' },
+      matchingTitle: {
+        en: '8. Match each definition with the correct astronomy term.',
+        zh: '8. 将每个定义与正确的天文学术语配对。'
+      },
+      selectAnswer: { en: 'Select an answer', zh: '选择答案' },
+      quizSummary: { en: 'Quiz Summary', zh: '测验总结' },
+      answerKey: { en: 'Answer Key', zh: '答案' },
+      checkThisQuestion: { en: 'Check This Question', zh: '检查本题' },
+      notAnswered: { en: 'Not answered.', zh: '未作答。' },
+      correct: { en: 'Correct.', zh: '正确。' },
+      incorrect: { en: 'Incorrect.', zh: '不正确。' },
+      correctAnswer: { en: 'Correct answer:', zh: '正确答案：' },
+      matchingScore: { en: 'Matching score', zh: '配对得分' },
+      answerShown: { en: 'Answer shown.', zh: '已显示答案。' },
+      answersShown: { en: 'Answers shown.', zh: '已显示答案。' },
+      summaryReview: {
+        en: 'The correct answers are now displayed for review.',
+        zh: '正确答案现已显示，供你复习。'
+      },
+      summaryExcellent: {
+        en: 'Excellent work! You have a very strong understanding of this universe unit.',
+        zh: '非常棒！你对这个宇宙单元内容掌握得很扎实。'
+      },
+      summaryGood: {
+        en: 'Good job! You understand most of the main ideas, with just a few points to review.',
+        zh: '做得很好！你已经理解了大部分重点，只需要再复习少数内容。'
+      },
+      summaryOkay: {
+        en: 'Nice effort. Review redshift/blueshift, light-years, and basic astronomy terms.',
+        zh: '继续加油。请复习红移/蓝移、光年和基础天文学术语。'
+      },
+      summaryRetry: {
+        en: 'Keep practicing. Re-read the lesson and try the quiz again after reviewing the answer key.',
+        zh: '继续练习。重新阅读课程内容，并在查看答案后再试一次。'
+      },
+      footerTip: {
+        en: 'Tip: One light-year is the distance light travels in one year, so 1.5 million light-years means the light takes 1.5 million years to reach us.',
+        zh: '提示：一光年是光在一年内传播的距离，因此 150 万光年表示光需要 150 万年才能到达我们这里。'
+      }
+    };
+
+    const languageOptions = [
+      { value: 'en', label: { en: 'English', zh: '英文' } },
+      { value: 'zh', label: { en: 'Chinese', zh: '中文' } },
+      { value: 'bilingual', label: { en: 'English + Chinese', zh: '英文 + 中文' } }
+    ];
+
+    const matchingChoices = [
+      { key: 'constellation', text: { en: 'Constellation', zh: '星座' } },
+      { key: 'universe', text: { en: 'Universe', zh: '宇宙' } },
+      { key: 'star', text: { en: 'Star', zh: '恒星' } },
+      { key: 'galaxy', text: { en: 'Galaxy', zh: '星系' } }
+    ];
+
+    const matchingItems = [
+      {
+        id: 'match1',
+        answerKey: 'galaxy',
+        text: {
+          en: 'contains stars, gas, and dust all held together by gravity',
+          zh: '包含恒星、气体和尘埃，并都由引力聚集在一起'
+        }
+      },
+      {
+        id: 'match2',
+        answerKey: 'constellation',
+        text: {
+          en: 'groups of stars that form a pattern',
+          zh: '形成特定图案的一组恒星'
+        }
+      },
+      {
+        id: 'match3',
+        answerKey: 'star',
+        text: {
+          en: 'a huge ball of gas, held together by gravity',
+          zh: '由引力聚集在一起的巨大气体球'
+        }
+      },
+      {
+        id: 'match4',
+        answerKey: 'universe',
+        text: {
+          en: 'made up of all matter and space',
+          zh: '由所有物质和空间组成'
+        }
+      }
+    ];
+
+    const questions = [
+      {
+        id: 1,
+        question: {
+          en: 'Let us say a star just exploded into a supernova 9 million km away. How long will it take its radiation to reach our solar system?',
+          zh: '假设一颗恒星在距离 900 万千米处刚刚爆炸成超新星，它释放的辐射要多久才能到达我们的太阳系？'
+        },
+        options: [
+          { key: '30-years', text: { en: '30 years', zh: '30 年' } },
+          { key: '30-hours', text: { en: '30 hours', zh: '30 小时' } },
+          { key: '30-seconds', text: { en: '30 seconds', zh: '30 秒' } },
+          { key: '750-hours', text: { en: '750 hours', zh: '750 小时' } }
+        ],
+        answerKey: '30-seconds',
+        explanation: {
+          en: 'Radiation travels at the speed of light, which is about 300,000 km per second. 9,000,000 divided by 300,000 is about 30 seconds.',
+          zh: '辐射以光速传播，约为每秒 300,000 千米。9,000,000 除以 300,000，大约等于 30 秒。'
+        }
+      },
+      {
+        id: 2,
+        question: {
+          en: 'Astronomers estimate that the whole universe contains at least how many galaxies?',
+          zh: '天文学家估计，整个宇宙至少包含多少个星系？'
+        },
+        options: [
+          { key: '800-billion', text: { en: '800 billion', zh: '8000 亿' } },
+          { key: '100-quadrillion', text: { en: '100 quadrillion', zh: '100 千万亿' } },
+          { key: '100-billion', text: { en: '100 billion', zh: '1000 亿' } },
+          { key: '100-trillion', text: { en: '100 trillion', zh: '100 万亿' } }
+        ],
+        answerKey: '100-billion',
+        explanation: {
+          en: 'A common school-level estimate is that the universe contains at least 100 billion galaxies.',
+          zh: '在学校课程中，常见的估计是宇宙至少包含 1000 亿个星系。'
+        }
+      },
+      {
+        id: 3,
+        question: {
+          en: 'If a galaxy is 1.5 million light-years away, how long does it take the light to travel from the galaxy to Earth?',
+          zh: '如果一个星系距离我们 150 万光年，那么它发出的光到达地球需要多长时间？'
+        },
+        options: [
+          { key: '1.5-billion-years', text: { en: '1.5 billion years', zh: '15 亿年' } },
+          { key: '1.5-million-years', text: { en: '1.5 million years', zh: '150 万年' } },
+          { key: '1.5-years', text: { en: '1.5 years', zh: '1.5 年' } },
+          { key: '1.5-thousand-years', text: { en: '1.5 thousand years', zh: '1500 年' } }
+        ],
+        answerKey: '1.5-million-years',
+        explanation: {
+          en: 'A light-year is the distance light travels in one year, so light from 1.5 million light-years away takes 1.5 million years.',
+          zh: '一光年是光在一年内传播的距离，所以距离 150 万光年的光到达我们这里需要 150 万年。'
+        }
+      },
+      {
+        id: 4,
+        question: {
+          en: 'What sort of waves exhibit the Doppler effect?',
+          zh: '哪一类波会表现出多普勒效应？'
+        },
+        options: [
+          { key: 'light-waves', text: { en: 'light waves', zh: '光波' } },
+          { key: 'sound-waves', text: { en: 'sound waves', zh: '声波' } },
+          { key: 'both', text: { en: 'both of these', zh: '以上两者都有' } },
+          { key: 'none', text: { en: 'None of these', zh: '以上都不是' } }
+        ],
+        answerKey: 'both',
+        explanation: {
+          en: 'The Doppler effect happens with both sound waves and light waves.',
+          zh: '多普勒效应既会发生在声波中，也会发生在光波中。'
+        }
+      },
+      {
+        id: 5,
+        question: {
+          en: 'Which discovery(ies) came from our understanding redshift/blueshift?',
+          zh: '哪些发现来自我们对红移/蓝移的理解？'
+        },
+        options: [
+          { key: 'expanding-universe', text: { en: 'The universe is expanding.', zh: '宇宙正在膨胀。' } },
+          { key: 'galaxies-moving-away', text: { en: 'Most galaxies are moving away from us.', zh: '大多数星系正在远离我们。' } },
+          { key: 'andromeda-collision', text: { en: 'Andromeda galaxy will collide with the Milky Way in 3.75 billion years.', zh: '仙女座星系将在 37.5 亿年后与银河系相撞。' } },
+          { key: 'all', text: { en: 'All of these.', zh: '以上都是。' } }
+        ],
+        answerKey: 'all',
+        explanation: {
+          en: 'Redshift and blueshift help astronomers understand motion in space, including expansion of the universe, galaxy movement, and Andromeda approaching us.',
+          zh: '红移和蓝移帮助天文学家理解天体在空间中的运动，包括宇宙膨胀、星系运动，以及仙女座正在向我们靠近。'
+        }
+      },
+      {
+        id: 6,
+        question: {
+          en: 'The Big Bang theory was developed in the early 1800s.',
+          zh: '大爆炸理论形成于 19 世纪初。'
+        },
+        options: [
+          { key: 'true', text: { en: 'true', zh: '正确' } },
+          { key: 'false', text: { en: 'false', zh: '错误' } }
+        ],
+        answerKey: 'false',
+        explanation: {
+          en: 'The Big Bang theory was developed in the early 1900s, not the 1800s.',
+          zh: '大爆炸理论形成于 20 世纪初，而不是 19 世纪。'
+        }
+      },
+      {
+        id: 7,
+        question: {
+          en: 'Why is the Big Bang theory widely accepted in the scientific community? Choose the best answer.',
+          zh: '为什么大爆炸理论在科学界被广泛接受？请选择最佳答案。'
+        },
+        options: [
+          { key: 'expansion', text: { en: 'The universe is expanding.', zh: '宇宙正在膨胀。' } },
+          { key: 'light-elements', text: { en: 'It explains how elements such as helium and hydrogen formed.', zh: '它解释了氦和氢等元素是如何形成的。' } },
+          { key: 'background-radiation', text: { en: 'It predicts the cosmic background radiation that exists in the universe.', zh: '它预测了宇宙中存在的宇宙背景辐射。' } },
+          { key: 'all', text: { en: 'All of these', zh: '以上都是' } }
+        ],
+        answerKey: 'all',
+        explanation: {
+          en: 'The Big Bang theory is supported by several lines of evidence: expansion of the universe, formation of light elements, and cosmic background radiation.',
+          zh: '大爆炸理论得到多方面证据支持，包括宇宙膨胀、轻元素形成以及宇宙背景辐射。'
+        }
+      }
+    ];
+
+    const appState = {
+      currentLanguageMode: 'bilingual',
+      lastAction: 'initial',
+      score: 0,
+      total: questions.length + matchingItems.length,
+      percent: 0
+    };
+
+    const quizDiv = document.getElementById('quiz');
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function getLocalizedHTML(text, stacked = true) {
+      if (typeof text === 'string') {
+        return escapeHtml(text);
+      }
+
+      if (appState.currentLanguageMode === 'en') {
+        return escapeHtml(text.en);
+      }
+
+      if (appState.currentLanguageMode === 'zh') {
+        return escapeHtml(text.zh);
+      }
+
+      const wrapperClass = stacked ? 'localized-text localized-stacked' : 'localized-text localized-inline';
+      return `<span class="${wrapperClass}"><span class="lang-en">${escapeHtml(text.en)}</span><span class="lang-zh">${escapeHtml(text.zh)}</span></span>`;
+    }
+
+    function getLocalizedPlain(text) {
+      if (typeof text === 'string') {
+        return text;
+      }
+
+      if (appState.currentLanguageMode === 'en') {
+        return text.en;
+      }
+
+      if (appState.currentLanguageMode === 'zh') {
+        return text.zh;
+      }
+
+      return `${text.en} / ${text.zh}`;
+    }
+
+    function getOptionByKey(question, optionKey) {
+      return question.options.find(option => option.key === optionKey);
+    }
+
+    function getMatchingChoiceByKey(choiceKey) {
+      return matchingChoices.find(choice => choice.key === choiceKey);
+    }
+
+    function getSelections() {
+      return {
+        answers: questions.map(question => {
+          const selected = document.querySelector(`input[name="q${question.id}"]:checked`);
+          return selected ? selected.value : '';
+        }),
+        matching: matchingItems.reduce((acc, item) => {
+          const select = document.getElementById(item.id);
+          acc[item.id] = select ? select.value : '';
+          return acc;
+        }, {})
+      };
+    }
+
+    function renderLanguageOptions() {
+      const languageMode = document.getElementById('languageMode');
+      languageMode.innerHTML = languageOptions
+        .map(option => `<option value="${option.value}">${escapeHtml(getLocalizedPlain(option.label))}</option>`)
+        .join('');
+      languageMode.value = appState.currentLanguageMode;
+    }
+
+    function updateScoreBox() {
+      const scoreBox = document.getElementById('scoreBox');
+
+      if (appState.lastAction === 'graded') {
+        scoreBox.textContent = `${getLocalizedPlain(uiText.scoreLabel)}: ${appState.score}/${appState.total} (${appState.percent}%)`;
+        return;
+      }
+
+      if (appState.lastAction === 'answers') {
+        scoreBox.textContent = getLocalizedPlain(uiText.scoreAnswersDisplayed);
+        return;
+      }
+
+      scoreBox.textContent = getLocalizedPlain(uiText.scoreNotGraded);
+    }
+
+    function renderStaticContent() {
+      document.documentElement.lang = appState.currentLanguageMode === 'zh' ? 'zh' : 'en';
+      document.title = getLocalizedPlain(uiText.title);
+      document.getElementById('heroTitle').innerHTML = getLocalizedHTML(uiText.title);
+      document.getElementById('heroDescription').innerHTML = getLocalizedHTML(uiText.instructions);
+      document.getElementById('gradeQuizBtn').innerHTML = getLocalizedHTML(uiText.gradeQuiz, false);
+      document.getElementById('resetBtn').innerHTML = getLocalizedHTML(uiText.reset, false);
+      document.getElementById('showAnswersBtn').innerHTML = getLocalizedHTML(uiText.showAnswers, false);
+      document.getElementById('languageModeLabel').innerHTML = getLocalizedHTML(uiText.displayMode, false);
+      document.getElementById('summaryTitle').innerHTML = getLocalizedHTML(uiText.quizSummary, false);
+      document.getElementById('answerKeyTitle').innerHTML = getLocalizedHTML(uiText.answerKey, false);
+      document.getElementById('footerNote').innerHTML = getLocalizedHTML(uiText.footerTip);
+      renderLanguageOptions();
+      updateScoreBox();
+      renderAnswerKey();
+    }
+
+    function renderQuiz(snapshot = { answers: [] }) {
+      quizDiv.innerHTML = '';
+
+      questions.forEach((question, index) => {
+        const card = document.createElement('section');
+        card.className = 'card question';
+        card.id = `question${index}`;
+
+        const title = document.createElement('h2');
+        title.className = 'question-title';
+        title.innerHTML = `${index + 1}. ${getLocalizedHTML(question.question)}`;
+        card.appendChild(title);
+
+        const optionsWrap = document.createElement('div');
+        optionsWrap.className = 'options';
+
+        question.options.forEach((option, optionIndex) => {
+          const optionId = `q${question.id}_opt${optionIndex}`;
+          const label = document.createElement('label');
+          label.className = 'option';
+          label.setAttribute('for', optionId);
+
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.name = `q${question.id}`;
+          input.id = optionId;
+          input.value = option.key;
+          input.checked = snapshot.answers[index] === option.key;
+
+          const span = document.createElement('span');
+          span.innerHTML = getLocalizedHTML(option.text);
+
+          label.appendChild(input);
+          label.appendChild(span);
+          optionsWrap.appendChild(label);
+        });
+
+        const feedback = document.createElement('div');
+        feedback.id = `feedback${index}`;
+        feedback.className = 'feedback';
+
+        const checkRow = document.createElement('div');
+        checkRow.className = 'check-row';
+
+        const checkBtn = document.createElement('button');
+        checkBtn.type = 'button';
+        checkBtn.className = 'secondary check-btn';
+        checkBtn.innerHTML = getLocalizedHTML(uiText.checkThisQuestion, false);
+        checkBtn.addEventListener('click', () => checkSingleQuestion(index));
+
+        checkRow.appendChild(checkBtn);
+        card.appendChild(optionsWrap);
+        card.appendChild(checkRow);
+        card.appendChild(feedback);
+        quizDiv.appendChild(card);
+      });
+    }
+
+    function renderMatchingSection(snapshot = { matching: {} }) {
+      const matchingSection = document.getElementById('matchingSection');
+      const itemsHtml = matchingItems.map(item => {
+        const optionsHtml = [
+          `<option value="">${escapeHtml(getLocalizedPlain(uiText.selectAnswer))}</option>`,
+          ...matchingChoices.map(choice => {
+            const isSelected = snapshot.matching[item.id] === choice.key ? ' selected' : '';
+            return `<option value="${choice.key}"${isSelected}>${escapeHtml(getLocalizedPlain(choice.text))}</option>`;
+          })
+        ].join('');
+
+        return `
+          <div class="match-item">
+            <label for="${item.id}">${getLocalizedHTML(item.text)}</label>
+            <select id="${item.id}">
+              ${optionsHtml}
+            </select>
+          </div>
+        `;
+      }).join('');
+
+      matchingSection.innerHTML = `
+        <div class="pill">${getLocalizedHTML(uiText.matchingSection, false)}</div>
+        <h2 class="question-title">${getLocalizedHTML(uiText.matchingTitle)}</h2>
+        <div class="match-grid">
+          <div>${itemsHtml}</div>
+          <div>
+            <div id="matchingFeedback" class="feedback"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAnswerKey() {
+      const answerKeyList = document.getElementById('answerKeyList');
+      const questionItems = questions.map(question => {
+        const answerOption = getOptionByKey(question, question.answerKey);
+        return `<li>${getLocalizedHTML(answerOption.text, false)}</li>`;
+      });
+      const matchingAnswers = matchingItems
+        .map(item => getLocalizedHTML(getMatchingChoiceByKey(item.answerKey).text, false))
+        .join('; ');
+
+      answerKeyList.innerHTML = [...questionItems, `<li>${matchingAnswers}</li>`].join('');
+    }
+
+    function gradeSingleQuestion(index) {
+      const question = questions[index];
+      const card = document.getElementById(`question${index}`);
+      const feedback = document.getElementById(`feedback${index}`);
+      const selected = document.querySelector(`input[name="q${question.id}"]:checked`);
+      const answerOption = getOptionByKey(question, question.answerKey);
+
+      card.classList.remove('correct', 'incorrect');
+      feedback.className = 'feedback show';
+
+      if (!selected) {
+        feedback.classList.add('unanswered');
+        feedback.innerHTML = `${getLocalizedHTML(uiText.notAnswered, false)}<div class="explanation">${getLocalizedHTML(uiText.correctAnswer, false)} <strong>${getLocalizedHTML(answerOption.text, false)}</strong><br>${getLocalizedHTML(question.explanation)}</div>`;
+        return false;
+      }
+
+      if (selected.value === question.answerKey) {
+        card.classList.add('correct');
+        feedback.classList.add('correct');
+        feedback.innerHTML = `${getLocalizedHTML(uiText.correct, false)}<div class="explanation">${getLocalizedHTML(question.explanation)}</div>`;
+        return true;
+      }
+
+      card.classList.add('incorrect');
+      feedback.classList.add('wrong');
+      feedback.innerHTML = `${getLocalizedHTML(uiText.incorrect, false)}<div class="explanation">${getLocalizedHTML(uiText.correctAnswer, false)} <strong>${getLocalizedHTML(answerOption.text, false)}</strong><br>${getLocalizedHTML(question.explanation)}</div>`;
+      return false;
+    }
+
+    function checkSingleQuestion(index) {
+      gradeSingleQuestion(index);
+    }
+
+    function gradeMatching() {
+      let matchingCorrect = 0;
+      const matchingLines = [];
+
+      matchingItems.forEach(item => {
+        const selectedValue = document.getElementById(item.id).value;
+        const answerChoice = getMatchingChoiceByKey(item.answerKey);
+
+        if (selectedValue === item.answerKey) {
+          matchingCorrect++;
+          matchingLines.push(`&#9989; ${getLocalizedHTML(item.text, false)} &rarr; ${getLocalizedHTML(answerChoice.text, false)}`);
+        } else {
+          matchingLines.push(`&#10060; ${getLocalizedHTML(item.text, false)} &rarr; ${getLocalizedHTML(uiText.correctAnswer, false)} ${getLocalizedHTML(answerChoice.text, false)}`);
+        }
+      });
+
+      const matchingFeedback = document.getElementById('matchingFeedback');
+      matchingFeedback.className = matchingCorrect === matchingItems.length ? 'feedback correct' : 'feedback wrong';
+      matchingFeedback.innerHTML = `<strong>${getLocalizedHTML(uiText.matchingScore, false)}: ${matchingCorrect}/${matchingItems.length}</strong><div class="explanation">${matchingLines.join('<br>')}</div>`;
+      return matchingCorrect;
+    }
+
+    function gradeQuiz(shouldScroll = true) {
+      let score = 0;
+
+      questions.forEach((_, index) => {
+        if (gradeSingleQuestion(index)) score++;
+      });
+
+      score += gradeMatching();
+
+      appState.score = score;
+      appState.percent = Math.round((score / appState.total) * 100);
+      appState.lastAction = 'graded';
+      updateScoreBox();
+
+      const summary = document.getElementById('summary');
+      const summaryText = document.getElementById('summaryText');
+      let message = uiText.summaryRetry;
+
+      if (appState.percent >= 90) {
+        message = uiText.summaryExcellent;
+      } else if (appState.percent >= 75) {
+        message = uiText.summaryGood;
+      } else if (appState.percent >= 60) {
+        message = uiText.summaryOkay;
+      }
+
+      summaryText.innerHTML = getLocalizedHTML(message);
+      summary.style.display = 'block';
+
+      if (shouldScroll) {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      }
+    }
+
+    function resetQuiz() {
+      appState.lastAction = 'initial';
+      appState.score = 0;
+      appState.percent = 0;
+      renderStaticContent();
+      renderQuiz({ answers: [] });
+      renderMatchingSection({ matching: {} });
+      document.getElementById('summary').style.display = 'none';
+      document.getElementById('summaryText').textContent = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showAnswers(shouldScroll = true) {
+      questions.forEach((question, index) => {
+        const radios = document.querySelectorAll(`input[name="q${question.id}"]`);
+        radios.forEach(radio => {
+          radio.checked = radio.value === question.answerKey;
+        });
+
+        const card = document.getElementById(`question${index}`);
+        const feedback = document.getElementById(`feedback${index}`);
+        const answerOption = getOptionByKey(question, question.answerKey);
+
+        card.classList.remove('incorrect');
+        card.classList.add('correct');
+        feedback.className = 'feedback correct';
+        feedback.innerHTML = `${getLocalizedHTML(uiText.answerShown, false)}<div class="explanation"><strong>${getLocalizedHTML(answerOption.text, false)}</strong><br>${getLocalizedHTML(question.explanation)}</div>`;
+      });
+
+      matchingItems.forEach(item => {
+        document.getElementById(item.id).value = item.answerKey;
+      });
+
+      const matchingFeedback = document.getElementById('matchingFeedback');
+      matchingFeedback.className = 'feedback correct';
+      matchingFeedback.innerHTML = `${getLocalizedHTML(uiText.answersShown, false)}<div class="explanation">${matchingItems
+        .map(item => getLocalizedHTML(getMatchingChoiceByKey(item.answerKey).text, false))
+        .join(', ')}</div>`;
+
+      appState.lastAction = 'answers';
+      updateScoreBox();
+      document.getElementById('summary').style.display = 'block';
+      document.getElementById('summaryText').innerHTML = getLocalizedHTML(uiText.summaryReview);
+
+      if (shouldScroll) {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      }
+    }
+
+    function setLanguageMode(mode) {
+      const snapshot = getSelections();
+      appState.currentLanguageMode = mode;
+      renderStaticContent();
+      renderQuiz(snapshot);
+      renderMatchingSection(snapshot);
+
+      if (appState.lastAction === 'graded') {
+        gradeQuiz(false);
+      } else if (appState.lastAction === 'answers') {
+        showAnswers(false);
+      } else {
+        document.getElementById('summary').style.display = 'none';
+        document.getElementById('summaryText').textContent = '';
+      }
+    }
+
+    renderStaticContent();
+    renderQuiz({ answers: [] });
+    renderMatchingSection({ matching: {} });
+  </script>
+</body>
+</html>
