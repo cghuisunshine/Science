@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Solar System Crossword</title>
+<style>
+  :root {
+    --bg: #111;
+    --cell: #ececec;
+    --line: #1f1f1f;
+    --text: #111;
+    --accent: #2563eb;
+    --ok: #15803d;
+    --bad: #b91c1c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f3f4f6;
+    color: #111827;
+  }
+  .page {
+    max-width: 1420px;
+    margin: 0 auto;
+    padding: 18px;
+  }
+  h1 {
+    margin: 0 0 8px;
+    font-size: 32px;
+  }
+  .sub {
+    margin: 0 0 16px;
+    font-size: 18px;
+    color: #374151;
+  }
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    align-items: center;
+  }
+  button {
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 15px;
+    cursor: pointer;
+    background: #111827;
+    color: white;
+  }
+  button.secondary { background: #374151; }
+  button.light { background: white; color: #111827; border: 1px solid #d1d5db; }
+  #status {
+    font-weight: 700;
+    min-height: 24px;
+  }
+  .board-shell {
+    background: #d9d9d9;
+    padding: 8px;
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  }
+  .board {
+    position: relative;
+    width: 1372px;
+    height: 1028px;
+    background: #000;
+    border: 1px solid #555;
+    margin: 0 auto;
+  }
+  .cell {
+    position: absolute;
+    background: var(--cell);
+    border: 1px solid var(--line);
+    overflow: hidden;
+    transition: background .15s ease, box-shadow .15s ease;
+  }
+  .cell input {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    outline: none;
+    background: transparent;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text);
+    padding-top: 8px;
+  }
+  .cell.correct { background: #dcfce7; }
+  .cell.wrong { background: #fee2e2; }
+  .cell.active-word { background: #dbeafe; }
+  .cell.active-focus {
+    box-shadow: inset 0 0 0 3px var(--accent);
+    z-index: 3;
+  }
+  .num-btn {
+    position: absolute;
+    left: 2px;
+    top: 1px;
+    min-width: 22px;
+    height: 22px;
+    border: 0;
+    border-radius: 4px;
+    padding: 0 3px;
+    margin: 0;
+    background: transparent;
+    color: #111;
+    font-size: 18px;
+    line-height: 1;
+    text-align: left;
+    z-index: 4;
+    cursor: pointer;
+  }
+  .num-btn:hover, .num-btn.active {
+    background: rgba(37, 99, 235, .14);
+  }
+  .single-clue {
+    margin-top: 16px;
+    background: #e5e5e5;
+    border: 1px solid #8a8a8a;
+    padding: 10px 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  #selectedClueText {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.2;
+    white-space: nowrap;
+    flex: 1 1 auto;
+  }
+  #clueAnswerInput {
+    width: 210px;
+    min-width: 160px;
+    font-size: 22px;
+    padding: 8px 10px;
+    border: 2px solid #8a8a8a;
+    border-radius: 4px;
+    background: #f2f2f2;
+    text-transform: uppercase;
+  }
+  #fillBtn {
+    border-radius: 0;
+    background: #d9d9d9;
+    color: #111;
+    padding: 8px 12px;
+    border-bottom: 3px solid #666;
+    box-shadow: none;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-top: 18px;
+  }
+  .panel {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  }
+  .panel h2 {
+    margin: 0 0 10px;
+    font-size: 24px;
+  }
+  .clues {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .clues h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+  }
+  .clues ol {
+    margin: 0;
+    padding-left: 24px;
+  }
+  .clues li {
+    margin-bottom: 8px;
+    line-height: 1.35;
+  }
+  .clue-btn {
+    border: 0;
+    background: transparent;
+    color: #111827;
+    padding: 0;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  .clue-btn:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .clue-btn.active {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .muted { color: #6b7280; }
+  @media (max-width: 980px) {
+    .clues { grid-template-columns: 1fr; }
+    #selectedClueText { white-space: normal; }
+    .single-clue { flex-wrap: wrap; }
+  }
+</style>
+
+</head>
+<body>
+  <div class="page">
+    <h1>Practice with Terms for the Solar System</h1>
+    <p class="sub">Click a number in the grid or a clue below. The hint appears, and typing the whole answer will automatically fill the crossword.</p>
+
+    <div class="toolbar">
+      <button id="checkBtn">Check answers</button>
+      <button id="revealBtn" class="secondary">Reveal answers</button>
+      <button id="clearBtn" class="light">Clear all</button>
+      <button id="toggleBtn" class="light">Toggle pencil mode</button>
+      <span id="status" class="muted">Choose a clue, then type the full answer in the clue box or type letter-by-letter in the grid.</span>
+    </div>
+
+    <div class="single-clue">
+      <p id="selectedClueText">Across 4: all the gases which surround a star or a planet.</p>
+      <input id="clueAnswerInput" type="text" autocomplete="off" spellcheck="false" aria-label="Type the full answer here" />
+      <button id="fillBtn">Enter</button>
+    </div>
+
+    <div class="board-shell">
+      <div id="board" class="board" aria-label="Solar System crossword"></div>
+    </div>
+
+        
+
+    <div class="layout">
+      <div class="panel">
+        <h2>Clues</h2>
+        <div class="clues">
+          <div>
+            <h3>Across</h3>
+            <ol id="acrossList"></ol>
+          </div>
+          <div>
+            <h3>Down</h3>
+            <ol id="downList"></ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const cells = [
+  {x:437,y:21,w:93,h:59,n:1},
+  {x:231,y:82,w:93,h:59,n:2},
+  {x:437,y:82,w:93,h:59},
+  {x:592,y:82,w:109,h:59,n:3},
+  {x:733,y:82,w:109,h:59,n:4},
+  {x:844,y:82,w:109,h:59},
+  {x:955,y:82,w:28,h:59},
+  {x:985,y:82,w:29,h:59},
+  {x:1016,y:82,w:108,h:59},
+  {x:1126,y:82,w:93,h:59,n:5},
+  {x:1221,y:82,w:28,h:59},
+  {x:1251,y:82,w:29,h:59},
+  {x:1282,y:82,w:28,h:59},
+  {x:1312,y:82,w:28,h:59},
+  {x:10,y:143,w:108,h:58,n:6},
+  {x:231,y:143,w:93,h:58,n:7},
+  {x:326,y:143,w:109,h:58},
+  {x:437,y:143,w:93,h:58},
+  {x:532,y:143,w:28,h:58},
+  {x:562,y:143,w:28,h:58},
+  {x:592,y:143,w:109,h:58},
+  {x:1126,y:143,w:93,h:58},
+  {x:10,y:203,w:108,h:59},
+  {x:231,y:203,w:93,h:59},
+  {x:437,y:203,w:93,h:59},
+  {x:592,y:203,w:109,h:59},
+  {x:844,y:203,w:109,h:59,n:8},
+  {x:955,y:203,w:28,h:59},
+  {x:985,y:203,w:29,h:59},
+  {x:1016,y:203,w:108,h:59},
+  {x:1126,y:203,w:93,h:59},
+  {x:1221,y:203,w:28,h:59},
+  {x:1251,y:203,w:29,h:59},
+  {x:10,y:264,w:108,h:58},
+  {x:231,y:264,w:93,h:58},
+  {x:437,y:264,w:93,h:58},
+  {x:592,y:264,w:109,h:58},
+  {x:1126,y:264,w:93,h:58},
+  {x:10,y:324,w:108,h:59,n:9},
+  {x:120,y:324,w:109,h:59},
+  {x:231,y:324,w:93,h:59},
+  {x:326,y:324,w:109,h:59},
+  {x:437,y:324,w:93,h:59},
+  {x:532,y:324,w:28,h:59},
+  {x:592,y:324,w:109,h:59},
+  {x:733,y:324,w:109,h:59,n:10},
+  {x:844,y:324,w:109,h:59,n:11},
+  {x:955,y:324,w:28,h:59},
+  {x:985,y:324,w:29,h:59},
+  {x:1016,y:324,w:108,h:59},
+  {x:1126,y:324,w:93,h:59},
+  {x:1221,y:324,w:28,h:59},
+  {x:1251,y:324,w:29,h:59},
+  {x:437,y:385,w:93,h:59},
+  {x:592,y:385,w:109,h:59},
+  {x:844,y:385,w:109,h:59},
+  {x:10,y:446,w:108,h:58,n:12},
+  {x:120,y:446,w:109,h:58},
+  {x:231,y:446,w:93,h:58},
+  {x:326,y:446,w:109,h:58},
+  {x:437,y:446,w:93,h:58},
+  {x:592,y:446,w:109,h:58,n:13},
+  {x:703,y:446,w:28,h:58},
+  {x:733,y:446,w:109,h:58},
+  {x:844,y:446,w:109,h:58},
+  {x:955,y:446,w:28,h:58},
+  {x:1016,y:446,w:108,h:58,n:14},
+  {x:437,y:506,w:93,h:59},
+  {x:844,y:506,w:109,h:59},
+  {x:1016,y:506,w:108,h:59},
+  {x:592,y:567,w:109,h:58,n:15},
+  {x:844,y:567,w:109,h:58},
+  {x:1016,y:567,w:108,h:58},
+  {x:326,y:627,w:109,h:59,n:16},
+  {x:437,y:627,w:93,h:59},
+  {x:532,y:627,w:28,h:59},
+  {x:562,y:627,w:28,h:59},
+  {x:592,y:627,w:109,h:59},
+  {x:844,y:627,w:109,h:59},
+  {x:1016,y:627,w:108,h:59},
+  {x:120,y:688,w:109,h:59,n:17},
+  {x:592,y:688,w:109,h:59},
+  {x:844,y:688,w:109,h:59},
+  {x:1016,y:688,w:108,h:59},
+  {x:120,y:749,w:109,h:58},
+  {x:592,y:749,w:109,h:58,n:18},
+  {x:703,y:749,w:28,h:58},
+  {x:733,y:749,w:109,h:58},
+  {x:844,y:749,w:109,h:58},
+  {x:955,y:749,w:28,h:58},
+  {x:985,y:749,w:29,h:58},
+  {x:1016,y:749,w:108,h:58},
+  {x:120,y:809,w:109,h:59},
+  {x:592,y:809,w:109,h:59},
+  {x:844,y:809,w:109,h:59},
+  {x:1016,y:809,w:108,h:59},
+  {x:120,y:870,w:109,h:58,n:19},
+  {x:231,y:870,w:93,h:58},
+  {x:326,y:870,w:109,h:58},
+  {x:437,y:870,w:93,h:58},
+  {x:532,y:870,w:28,h:58},
+  {x:562,y:870,w:28,h:58},
+  {x:592,y:870,w:109,h:58},
+  {x:703,y:870,w:28,h:58},
+  {x:120,y:930,w:109,h:59}
+];
+
+const clues = [
+  {number:1, direction:'Down', answer:'METEORITE', clue:"a piece of stone or metal from space that falls to Earth's surface.", cells:[[437,21],[437,82],[437,143],[437,203],[437,264],[437,324],[437,385],[437,446],[437,506]]},
+  {number:2, direction:'Down', answer:'ORBIT', clue:'the path followed by an object in space as it goes around another object.', cells:[[231,82],[231,143],[231,203],[231,264],[231,324]]},
+  {number:3, direction:'Down', answer:'REVOLVE', clue:'to move in an orbit or circle around something.', cells:[[592,82],[592,143],[592,203],[592,264],[592,324],[592,385],[592,446],[592,506]]},
+  {number:4, direction:'Across', answer:'ATMOSPHERE', clue:'all the gases which surround a star or a planet.', cells:[[733,82],[844,82],[955,82],[985,82],[1016,82],[1126,82],[1221,82],[1251,82],[1282,82],[1312,82]]},
+  {number:5, direction:'Down', answer:'PLUTO', clue:'no longer considered a planet.', cells:[[1126,82],[1126,143],[1126,203],[1126,264],[1126,324]]},
+  {number:6, direction:'Down', answer:'MARS', clue:'iron in the soil gives this planet its red color.', cells:[[10,143],[10,203],[10,264],[10,324]]},
+  {number:7, direction:'Across', answer:'ROTATE', clue:'to turn around a center point.', cells:[[231,143],[326,143],[437,143],[532,143],[562,143],[592,143]]},
+  {number:8, direction:'Across', answer:'MERCURY', clue:'the smallest planet in our solar system.', cells:[[844,203],[955,203],[985,203],[1016,203],[1126,203],[1221,203],[1251,203]]},
+  {number:9, direction:'Across', answer:'SATURN', clue:'this planet is surrounded by over 1000 rings made of ice and dust.', cells:[[10,324],[120,324],[231,324],[326,324],[437,324],[532,324]]},
+  {number:10, direction:'Across', answer:'ASTEROID', clue:'a rocky space object of varying size.', cells:[[733,324],[844,324],[955,324],[985,324],[1016,324],[1126,324],[1221,324],[1251,324]]},
+  {number:11, direction:'Down', answer:'SATELLITE', clue:'an object that moves around a larger object.', cells:[[844,324],[844,385],[844,446],[844,506],[844,567],[844,627],[844,688],[844,749],[844,809]]},
+  {number:12, direction:'Across', answer:'COMET', clue:'a big ball of dirty ice and snow in outer space.', cells:[[10,446],[120,446],[231,446],[326,446],[437,446]]},
+  {number:13, direction:'Across', answer:'EARTH', clue:'the third closest planet to the Sun.', cells:[[592,446],[703,446],[733,446],[844,446],[955,446]]},
+  {number:14, direction:'Down', answer:'JUPITER', clue:'this planet is so large that all of the other planets could fit inside it.', cells:[[1016,446],[1016,506],[1016,567],[1016,627],[1016,688],[1016,749],[1016,809]]},
+  {number:15, direction:'Down', answer:'URANUS', clue:'this planet tilts over so far on its axis that it rotates on its side.', cells:[[592,567],[592,627],[592,688],[592,749],[592,809],[592,870]]},
+  {number:16, direction:'Across', answer:'SOLAR', clue:'having to do with the Sun.', cells:[[326,627],[437,627],[532,627],[562,627],[592,627]]},
+  {number:17, direction:'Down', answer:'VENUS', clue:'this planet is sometimes called the evening star and is the closest planet to Earth.', cells:[[120,688],[120,749],[120,809],[120,870],[120,930]]},
+  {number:18, direction:'Across', answer:'NEPTUNE', clue:'this planet has a moon called Triton.', cells:[[592,749],[703,749],[733,749],[844,749],[955,749],[985,749],[1016,749]]},
+  {number:19, direction:'Across', answer:'UNIVERSE', clue:'the huge space which contains all of the matter and energy in existence.', cells:[[120,870],[231,870],[326,870],[437,870],[532,870],[562,870],[592,870],[703,870]]}
+];
+
+const board = document.getElementById('board');
+const statusEl = document.getElementById('status');
+const clueInput = document.getElementById('clueAnswerInput');
+const selectedClueText = document.getElementById('selectedClueText');
+const acrossList = document.getElementById('acrossList');
+const downList = document.getElementById('downList');
+
+const map = new Map();
+const solution = new Map();
+const keyToClues = new Map();
+let pencilMode = false;
+let selectedClue = null;
+
+cells.forEach((c) => {
+  const key = `${c.x},${c.y}`;
+  const div = document.createElement('div');
+  div.className = 'cell';
+  div.style.left = c.x + 'px';
+  div.style.top = c.y + 'px';
+  div.style.width = c.w + 'px';
+  div.style.height = c.h + 'px';
+  div.dataset.key = key;
+
+  if (c.n) {
+    const num = document.createElement('button');
+    num.type = 'button';
+    num.className = 'num-btn';
+    num.textContent = c.n;
+    num.dataset.number = c.n;
+    div.appendChild(num);
+  }
+
+  const input = document.createElement('input');
+  input.maxLength = 1;
+  input.autocomplete = 'off';
+  input.spellcheck = false;
+  input.setAttribute('aria-label', `Cell ${key}`);
+  div.appendChild(input);
+  board.appendChild(div);
+  map.set(key, {div, input});
+});
+
+clues.forEach(entry => {
+  entry.id = `${entry.direction}-${entry.number}`;
+  entry.cells.forEach((pos, i) => {
+    const key = `${pos[0]},${pos[1]}`;
+    solution.set(key, entry.answer[i]);
+    const arr = keyToClues.get(key) || [];
+    arr.push(entry.id);
+    keyToClues.set(key, arr);
+  });
+});
+
+function renderClues() {
+  const byDirection = {
+    Across: clues.filter(c => c.direction === 'Across'),
+    Down: clues.filter(c => c.direction === 'Down')
+  };
+  for (const clue of byDirection.Across) {
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'clue-btn';
+    btn.dataset.clueId = clue.id;
+    btn.innerHTML = `<strong>${clue.number}</strong> — ${clue.clue}`;
+    btn.addEventListener('click', () => selectClue(clue.id, true));
+    li.appendChild(btn);
+    acrossList.appendChild(li);
+  }
+  for (const clue of byDirection.Down) {
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'clue-btn';
+    btn.dataset.clueId = clue.id;
+    btn.innerHTML = `<strong>${clue.number}</strong> — ${clue.clue}`;
+    btn.addEventListener('click', () => selectClue(clue.id, true));
+    li.appendChild(btn);
+    downList.appendChild(li);
+  }
+}
+renderClues();
+
+function normalizeAnswer(str) {
+  return (str || '').toUpperCase().replace(/[^A-Z]/g, '');
+}
+
+function clearHighlights() {
+  map.forEach(({div}) => div.classList.remove('active-word', 'active-focus'));
+  document.querySelectorAll('.clue-btn').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.num-btn').forEach(el => el.classList.remove('active'));
+}
+
+function selectClue(clueId, focusInput = false) {
+  const clue = clues.find(c => c.id === clueId);
+  if (!clue) return;
+  selectedClue = clue;
+  clearHighlights();
+
+  selectedClueText.textContent = `${clue.direction} ${clue.number}: ${clue.clue}`;
+  clueInput.value = clue.cells.map(pos => map.get(`${pos[0]},${pos[1]}`).input.value || '').join('');
+  clue.cells.forEach((pos, idx) => {
+    const key = `${pos[0]},${pos[1]}`;
+    const {div} = map.get(key);
+    div.classList.add('active-word');
+    if (idx === 0) div.classList.add('active-focus');
+  });
+
+  document.querySelectorAll(`.clue-btn[data-clue-id="${clue.id}"]`).forEach(el => el.classList.add('active'));
+  document.querySelectorAll(`.num-btn[data-number="${clue.number}"]`).forEach(el => el.classList.add('active'));
+
+  if (focusInput) clueInput.focus();
+}
+
+function fillSelectedAnswer() {
+  if (!selectedClue) return;
+  const normalized = normalizeAnswer(clueInput.value);
+  selectedClue.cells.forEach((pos, i) => {
+    const key = `${pos[0]},${pos[1]}`;
+    const {input, div} = map.get(key);
+    input.value = normalized[i] || '';
+    if (!pencilMode) div.classList.remove('wrong', 'correct');
+  });
+  statusEl.textContent = `${selectedClue.direction} ${selectedClue.number} filled.`;
+  statusEl.style.color = '#111827';
+  if (selectedClue.cells.length) {
+    const last = selectedClue.cells[Math.min(normalized.length, selectedClue.cells.length) - 1] || selectedClue.cells[0];
+    map.get(`${last[0]},${last[1]}`).input.focus();
+  }
+}
+
+function syncSelectedClueInputFromGrid() {
+  if (!selectedClue) return;
+  clueInput.value = selectedClue.cells.map(pos => map.get(`${pos[0]},${pos[1]}`).input.value || '').join('');
+}
+
+function updateSingleCellClasses(key) {
+  const {div, input} = map.get(key);
+  if (!pencilMode) div.classList.remove('wrong', 'correct');
+  if (!input.value) return;
+  if (input.value.toUpperCase() === solution.get(key)) {
+    div.classList.add('correct');
+  } else {
+    div.classList.add('wrong');
+  }
+}
+
+const orderedKeys = cells.map(c => `${c.x},${c.y}`);
+
+orderedKeys.forEach((key, index) => {
+  const {div, input} = map.get(key);
+  input.addEventListener('focus', () => {
+    const candidates = keyToClues.get(key) || [];
+    if (!candidates.length) return;
+    if (!selectedClue || !candidates.includes(selectedClue.id)) {
+      selectClue(candidates[0], false);
+    } else {
+      clearHighlights();
+      selectedClue.cells.forEach(pos => map.get(`${pos[0]},${pos[1]}`).div.classList.add('active-word'));
+      div.classList.add('active-focus');
+      document.querySelectorAll(`.clue-btn[data-clue-id="${selectedClue.id}"]`).forEach(el => el.classList.add('active'));
+      document.querySelectorAll(`.num-btn[data-number="${selectedClue.number}"]`).forEach(el => el.classList.add('active'));
+    }
+  });
+
+  input.addEventListener('input', (e) => {
+    let v = normalizeAnswer(e.target.value);
+    e.target.value = v.slice(0, 1);
+    if (!pencilMode) div.classList.remove('wrong', 'correct');
+    syncSelectedClueInputFromGrid();
+    if (e.target.value && selectedClue) {
+      const idx = selectedClue.cells.findIndex(pos => `${pos[0]},${pos[1]}` === key);
+      if (idx > -1 && idx < selectedClue.cells.length - 1) {
+        const next = selectedClue.cells[idx + 1];
+        map.get(`${next[0]},${next[1]}`).input.focus();
+      } else if (index < orderedKeys.length - 1) {
+        map.get(orderedKeys[index + 1]).input.focus();
+      }
+    }
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      checkAnswers();
+      return;
+    }
+    if (e.key === 'Backspace' && !input.value) {
+      if (selectedClue) {
+        const idx = selectedClue.cells.findIndex(pos => `${pos[0]},${pos[1]}` === key);
+        if (idx > 0) {
+          e.preventDefault();
+          const prev = selectedClue.cells[idx - 1];
+          map.get(`${prev[0]},${prev[1]}`).input.focus();
+          return;
+        }
+      }
+      if (index > 0) {
+        e.preventDefault();
+        map.get(orderedKeys[index - 1]).input.focus();
+      }
+      return;
+    }
+    if (e.key === 'ArrowRight' && index < orderedKeys.length - 1) {
+      e.preventDefault();
+      map.get(orderedKeys[index + 1]).input.focus();
+    }
+    if (e.key === 'ArrowLeft' && index > 0) {
+      e.preventDefault();
+      map.get(orderedKeys[index - 1]).input.focus();
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const current = cells[index];
+      const target = cells.find(c => c.x === current.x && c.y > current.y && Math.abs(c.y - current.y) < 90);
+      if (target) map.get(`${target.x},${target.y}`).input.focus();
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const current = cells[index];
+      const prev = [...cells].reverse().find(c => c.x === current.x && c.y < current.y && Math.abs(c.y - current.y) < 90);
+      if (prev) map.get(`${prev.x},${prev.y}`).input.focus();
+    }
+  });
+});
+
+document.querySelectorAll('.num-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const n = Number(btn.dataset.number);
+    const first = clues.find(c => c.number === n);
+    if (first) selectClue(first.id, true);
+  });
+});
+
+clueInput.addEventListener('input', () => {
+  clueInput.value = normalizeAnswer(clueInput.value).slice(0, selectedClue ? selectedClue.answer.length : 999);
+});
+
+clueInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    fillSelectedAnswer();
+  }
+});
+
+document.getElementById('fillBtn').addEventListener('click', fillSelectedAnswer);
+
+function clearMarks() {
+  map.forEach(({div}) => div.classList.remove('wrong', 'correct'));
+}
+
+function checkAnswers() {
+  let correct = 0;
+  clearMarks();
+  map.forEach(({div, input}, key) => {
+    const expected = solution.get(key);
+    const actual = normalizeAnswer(input.value);
+    input.value = actual.slice(0, 1);
+    if (!actual) return;
+    if (actual === expected) {
+      div.classList.add('correct');
+      correct++;
+    } else {
+      div.classList.add('wrong');
+    }
+  });
+  if (correct === solution.size) {
+    statusEl.textContent = 'Perfect! You completed the whole crossword.';
+    statusEl.style.color = 'var(--ok)';
+  } else {
+    statusEl.textContent = `${correct} of ${solution.size} letters are correct.`;
+    statusEl.style.color = '#111827';
+  }
+}
+
+function revealAnswers() {
+  map.forEach(({input, div}, key) => {
+    input.value = solution.get(key) || '';
+    div.classList.remove('wrong');
+    div.classList.add('correct');
+  });
+  syncSelectedClueInputFromGrid();
+  statusEl.textContent = 'All answers revealed.';
+  statusEl.style.color = 'var(--ok)';
+}
+
+function clearAll() {
+  map.forEach(({input, div}) => {
+    input.value = '';
+    div.classList.remove('wrong', 'correct');
+  });
+  syncSelectedClueInputFromGrid();
+  statusEl.textContent = 'Puzzle cleared.';
+  statusEl.style.color = '#6b7280';
+  if (selectedClue) selectClue(selectedClue.id, false);
+  else selectClue('Across-4', false);
+}
+
+document.getElementById('checkBtn').addEventListener('click', checkAnswers);
+document.getElementById('revealBtn').addEventListener('click', revealAnswers);
+document.getElementById('clearBtn').addEventListener('click', clearAll);
+document.getElementById('toggleBtn').addEventListener('click', () => {
+  pencilMode = !pencilMode;
+  statusEl.textContent = pencilMode ? 'Pencil mode on. No red or green marking while typing.' : 'Pencil mode off.';
+  statusEl.style.color = pencilMode ? '#2563eb' : '#6b7280';
+});
+
+selectClue('Across-4', false);
+</script>
+</body>
+</html>
