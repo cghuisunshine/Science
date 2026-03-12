@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>4.3 Stars, Stars, Stars</title>
+  <meta name="description" content="An interactive lesson page: Stars, Stars, Stars." />
+
+  <style>
+    :root{
+      --bg:#f7f8fb;
+      --panel:#ffffff;
+      --text:#111827;
+      --muted:#4b5563;
+      --faint:#6b7280;
+      --border:rgba(17,24,39,.10);
+      --shadow: 0 10px 30px rgba(17,24,39,.08);
+      --accent:#2563eb;
+      --accent2:#16a34a;
+      --radius:18px;
+      --maxw: 1120px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, rgba(37,99,235,.10), transparent 60%),
+        radial-gradient(900px 500px at 90% 0%, rgba(22,163,74,.10), transparent 55%),
+        var(--bg);
+      line-height:1.6;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter:saturate(160%) blur(10px);
+      background:rgba(247,248,251,.78);
+      border-bottom:1px solid var(--border);
+    }
+
+    .topbar .inner{
+      max-width:var(--maxw);
+      margin:0 auto;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .badge{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      background:linear-gradient(135deg, rgba(37,99,235,.95), rgba(22,163,74,.75));
+      box-shadow:var(--shadow);
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight:800;
+      letter-spacing:.2px;
+      flex:0 0 auto;
+    }
+
+    .brand h1{
+      font-size:14px;
+      margin:0;
+      color:var(--muted);
+      font-weight:600;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      appearance:none;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.75);
+      color:var(--text);
+      padding:9px 12px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:600;
+      cursor:pointer;
+      transition:transform .06s ease, background .2s ease, border-color .2s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .btn:hover{background:rgba(255,255,255,.95); border-color:rgba(17,24,39,.18)}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:rgba(37,99,235,.10); border-color:rgba(37,99,235,.25); color:rgba(37,99,235,1)}
+    .btn.primary:hover{background:rgba(37,99,235,.14); border-color:rgba(37,99,235,.35)}
+
+    .wrap{max-width:var(--maxw); margin:0 auto; padding:22px 18px 52px;}
+    .grid{display:grid; grid-template-columns:320px minmax(0, 1fr); gap:18px; align-items:start; transition:grid-template-columns .20s ease, gap .20s ease;}
+    @media (max-width: 980px){.grid{grid-template-columns:1fr}}
+
+    .sidebar{will-change:opacity, transform}
+    body.nav-collapsed .grid{grid-template-columns:0px minmax(0, 1fr); gap:0}
+    body.nav-collapsed .sidebar{
+      opacity:0;
+      transform:translateX(-8px);
+      pointer-events:none;
+      border:0;
+      box-shadow:none;
+    }
+    @media (max-width: 980px){
+      body.nav-collapsed .grid{grid-template-columns:1fr; gap:18px}
+      body.nav-collapsed .sidebar{display:none}
+    }
+
+    .card{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .card .pad{padding:18px}
+    .card h2{margin:0 0 8px; font-size:16px; letter-spacing:.2px}
+    .subtle{color:var(--muted); font-size:14px}
+
+    .hero{
+      padding:22px 18px;
+      background:
+        radial-gradient(900px 380px at 10% 0%, rgba(37,99,235,.16), transparent 55%),
+        radial-gradient(700px 380px at 90% 0%, rgba(22,163,74,.14), transparent 55%);
+      border-bottom:1px solid var(--border);
+    }
+
+    .hero h1{margin:0 0 8px; font-size:22px; line-height:1.2; letter-spacing:-.2px}
+    .hero p{margin:0; color:var(--muted); max-width:72ch}
+
+    .toc a{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 12px;
+      border-radius:12px;
+      text-decoration:none;
+      color:var(--text);
+      border:1px solid transparent;
+      transition:background .2s ease, border-color .2s ease;
+      font-weight:600;
+      font-size:14px;
+    }
+
+    .toc a:hover{background:rgba(17,24,39,.03); border-color:rgba(17,24,39,.08)}
+    .toc small{color:var(--faint); font-weight:600}
+    .sticky{position:sticky; top:76px}
+    @media (max-width: 980px){.sticky{position:static}}
+
+    .section{
+      scroll-margin-top:92px;
+      padding:18px;
+      border-bottom:1px solid var(--border);
+    }
+
+    .section:last-child{border-bottom:none}
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(17,24,39,.02);
+      color:var(--muted);
+      font-weight:700;
+      font-size:12px;
+      letter-spacing:.3px;
+      text-transform:uppercase;
+    }
+
+    .section h3{margin:10px 0 8px; font-size:18px; letter-spacing:-.2px}
+    .section p{margin:0 0 10px}
+
+    .callout{
+      border:1px solid rgba(37,99,235,.25);
+      background:rgba(37,99,235,.06);
+      border-radius:16px;
+      padding:14px;
+      margin:12px 0 2px;
+      color:var(--text);
+    }
+
+    .callout strong{color:rgba(37,99,235,1)}
+
+    .media{
+      margin-top:12px;
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      background:rgba(17,24,39,.02);
+    }
+
+    .media .caption{
+      padding:10px 12px;
+      font-size:12.5px;
+      color:var(--muted);
+      border-top:1px solid var(--border);
+    }
+
+    .media-right{
+      max-width:280px;
+      margin-left:auto;
+    }
+
+    .media-center{
+      max-width:460px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    .video{
+      aspect-ratio:16 / 9;
+      width:100%;
+      display:block;
+      border:0;
+    }
+
+    .lesson-image{width:100%; height:auto; display:block}
+
+    footer{margin-top:18px; color:var(--muted); font-size:13px; text-align:center}
+    .i18n-en.block{display:block}
+    .i18n-zh{display:none; margin-top:6px; color:var(--muted); font-size:.95em; line-height:1.5}
+    body.lang-bilingual .i18n-zh{display:block}
+    .i18n-zh.inline{display:none; margin-top:0; margin-left:.45em; font-size:inherit; line-height:inherit; color:var(--faint)}
+    body.lang-bilingual .i18n-zh.inline{display:inline}
+    body.lang-zh .i18n-en{display:none !important}
+    body.lang-zh .i18n-zh{display:block}
+    body.lang-zh .i18n-zh.inline{display:inline}
+    .brand .i18n-zh,.toc .i18n-zh{font-size:12px; color:var(--faint); font-weight:600}
+    .callout .i18n-zh{color:#1e3a8a}
+    .callout .i18n-zh.inline{color:#1e3a8a}
+
+    @media print{
+      .topbar, .actions, .sticky {display:none !important}
+      body{background:#fff}
+      .card{box-shadow:none}
+      .grid{grid-template-columns:1fr}
+      .section{break-inside:avoid}
+      a{color:inherit; text-decoration:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="inner">
+      <div class="brand">
+        <div class="badge">4.3</div>
+        <h1>Earth &amp; Space Science • Stars, Stars, Stars</h1>
+      </div>
+      <div class="actions">
+        <button class="btn primary" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑ Top</button>
+        <button class="btn" id="navToggle" type="button" aria-controls="pageNav" aria-expanded="true">☰ Outline: Hide</button>
+        <button class="btn" id="langToggle" type="button" aria-pressed="false">Language: EN</button>
+        <button class="btn" onclick="window.print()">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <div class="card">
+      <div class="hero">
+        <h1>4.3 Stars, Stars, Stars</h1>
+        <p>
+          The light given off by stars reveals their colour, temperature, composition, and life stage.
+          In this lesson, you will explore how astronomers use light and spectra to study stars and how stars change over billions of years.
+        </p>
+      </div>
+    </div>
+
+    <div style="height:16px"></div>
+
+    <div class="grid">
+      <aside class="card sticky sidebar" id="pageNav">
+        <div class="pad">
+          <h2>On this page</h2>
+          <p class="subtle" style="margin:0 0 10px">Jump to a topic section.</p>
+          <nav class="toc" aria-label="Table of contents">
+            <a href="#intro"><span>Introduction</span><small>Overview</small></a>
+            <a href="#characteristics"><span>Characteristics of Stars</span><small>Spectrum</small></a>
+            <a href="#fingerprints"><span>Fingerprints of the Elements</span><small>Evidence</small></a>
+            <a href="#colours"><span>Hot and Cold Colours</span><small>Temperature</small></a>
+            <a href="#lives"><span>The Lives of Stars</span><small>Life cycle</small></a>
+            <a href="#birth"><span>Birth of a Star</span><small>Fusion</small></a>
+          </nav>
+        </div>
+      </aside>
+
+      <section class="card" aria-label="Lesson content">
+        <article id="intro" class="section">
+          <span class="kicker">Introduction</span>
+          <h3>Introduction</h3>
+          <p>
+            When you look at a star, what do you see? The light given off by a star can provide information about its characteristics.
+            Stars can be classified based on their colour, temperature, and absolute magnitude.
+          </p>
+          <p>
+            Stars seem to remain constant in the night sky, but this is only because their life cycles are so long.
+            By looking at many different stars, astronomers begin to understand the various stages in the life of a star.
+          </p>
+          <div class="media media-right" role="group" aria-label="Telescope image for observing stars">
+            <a href="assets/telescope.jpg" target="_blank" rel="noopener noreferrer">
+              <img class="lesson-image" src="assets/telescope.jpg" alt="Telescope used to observe stars" loading="lazy" />
+            </a>
+            <div class="caption">Telescope image for observing stars.</div>
+          </div>
+        </article>
+
+        <article id="characteristics" class="section">
+          <span class="kicker">Light and colour</span>
+          <h3>Characteristics of Stars</h3>
+          <p>
+            Ordinary light is made up of the seven colours of the rainbow: red, orange, yellow, green, blue, indigo and violet.
+            Prisms can bend rays of light. When rays of light are bent, the light splits into its individual colours.
+          </p>
+          <p>
+            Scientists can examine light using an instrument called a spectroscope.
+            A <strong>spectroscope</strong> splits the light that passes through it and displays a series of colours.
+            The series of colours that is produced is called a spectrum.
+          </p>
+          <p>
+            Stars give off light during part of their life cycle. The colour of a star can reveal a lot about its characteristics.
+          </p>
+          <div class="media media-center" role="group" aria-label="Spectroscope image">
+            <a href="assets/Spectroscope.jpg" target="_blank" rel="noopener noreferrer">
+              <img class="lesson-image" src="assets/Spectroscope.jpg" alt="Spectroscope showing light split into a spectrum" loading="lazy" />
+            </a>
+            <div class="caption">A spectroscope separates light into a spectrum.</div>
+          </div>
+        </article>
+
+        <article id="fingerprints" class="section">
+          <span class="kicker">Spectral evidence</span>
+          <h3>Fingerprints of the Elements</h3>
+          <p>
+            The sun gives off light because the elements in it are heated to very high temperatures.
+            Recall that an element is a substance that is made up of only one kind of atom.
+            Every element produces a distinct colour when it is heated.
+          </p>
+          <p>
+            For example, when hydrogen is heated, only a few thin bands of light are produced.
+            This same spectrum is produced whenever hydrogen is heated.
+            On the other hand, no other element produces the same spectrum.
+            You can think of an element's spectrum as its fingerprint.
+          </p>
+          <p>
+            No two people have the same fingerprint, and no two elements have the same spectrum.
+            This means we can identify an element by the spectrum it produces.
+            Astronomers use spectroscopes to analyze starlight and determine what elements make up a star.
+          </p>
+          <div class="callout">
+            <strong>Key idea:</strong> Each element produces a unique spectrum, so the light from a star reveals what the star is made of.
+          </div>
+          <div class="media" role="group" aria-label="Video about fingerprints of the elements">
+            <iframe class="video" src="https://www.youtube.com/embed/2ZlhRChr_Bw" title="Fingerprints of the Elements video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: Fingerprints of the Elements (YouTube)</div>
+          </div>
+        </article>
+
+        <article id="colours" class="section">
+          <span class="kicker">Temperature</span>
+          <h3>Hot and Cold Colours</h3>
+          <p>
+            Have you ever noticed that when you turn the stove on, the burner begins to glow bright red as it heats up?
+            If you turn the heat down, the colour changes to a dull, dark red as the burner cools.
+          </p>
+          <p>
+            This connection between colour and temperature applies to stars as well.
+            When you see stars in the sky, they appear whitish.
+            However, when you look through binoculars or a telescope, their colours actually vary.
+          </p>
+          <p>
+            Cooler stars give off reddish light, medium hot stars emit yellowish light, and very hot stars produce bluish-violet light.
+          </p>
+          <div class="media" role="group" aria-label="Video about star colours and temperature">
+            <iframe class="video" src="https://www.youtube.com/embed/LCZPZfc8nHE" title="Hot and Cold Colours video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: Hot and Cold Colours (YouTube)</div>
+          </div>
+        </article>
+
+        <article id="lives" class="section">
+          <span class="kicker">Life cycle</span>
+          <h3>The Lives of Stars</h3>
+          <p>
+            Although it may appear that the stars remain constant in the sky, they are actually going through a very long life cycle.
+            It takes billions of years for a star to go from birth to death.
+          </p>
+          <p>
+            By studying many stars at different stages in their life cycles, astronomers have been able to piece together the life of a star.
+            These stages include formation in a nebula, stable periods of fusion, and eventual death as objects such as white dwarfs.
+          </p>
+          <div class="media" role="group" aria-label="Video about the life cycle of stars">
+            <iframe class="video" src="https://www.youtube.com/embed/cRYu8pMg9zQ" title="The Lives of Stars video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: The Lives of Stars (YouTube)</div>
+          </div>
+        </article>
+
+        <article id="birth" class="section">
+          <span class="kicker">Star formation</span>
+          <h3>Birth of a Star</h3>
+          <p>
+            A star is born when atoms of light elements are squeezed under enough pressure for their nuclei to undergo fusion.
+          </p>
+          <p>
+            The <strong>force of gravity</strong> compresses atoms in interstellar gas until the <strong>fusion</strong> reactions begin.
+            Once fusion starts, enormous amounts of energy are released and the new star begins to shine.
+          </p>
+          <div class="callout">
+            <strong>Main process:</strong> Gravity pulls gas together, pressure rises, and fusion begins. That is how a star starts its life.
+          </div>
+          <div class="media" role="group" aria-label="Video about the birth of a star">
+            <iframe class="video" src="https://www.youtube.com/embed/9EnBBIx6XkM" title="Birth of a Star video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: Birth of a Star (YouTube)</div>
+          </div>
+        </article>
+      </section>
+    </div>
+
+    <footer>
+      <div style="margin-top:18px">Built as a single self-contained HTML page • Responsive + print-friendly • Styled to match the layout pattern used in Earth4.2.html.</div>
+    </footer>
+  </main>
+
+  <script>
+    (function(){
+      const wrapEnglishContent = (el) => {
+        if (!el || el.querySelector(':scope > .i18n-en')) return;
+        const childNodes = Array.from(el.childNodes);
+        if (!childNodes.length) return;
+        const hasBlockChild = childNodes.some((node) => node.nodeType === Node.ELEMENT_NODE && /^(DIV|P|UL|OL|TABLE|SECTION|ARTICLE|FIGURE|BLOCKQUOTE)$/i.test(node.tagName));
+        const wrapper = document.createElement(hasBlockChild ? 'div' : 'span');
+        wrapper.className = `i18n-en${hasBlockChild ? ' block' : ''}`;
+        childNodes.forEach((node) => wrapper.appendChild(node));
+        el.appendChild(wrapper);
+      };
+
+      const addZh = (el, zh, opts = {}) => {
+        if (!el || !zh) return;
+        if (opts.append) wrapEnglishContent(el);
+        else el.classList.add('i18n-en');
+        const node = document.createElement(opts.tag || 'div');
+        node.className = `i18n-zh ${opts.className || ''}`.trim();
+        node.innerHTML = zh;
+        if (opts.append) el.appendChild(node);
+        else el.insertAdjacentElement('afterend', node);
+      };
+
+      const addZhInline = (el, zh, opts = {}) => {
+        const className = ['inline', opts.className || ''].join(' ').trim();
+        addZh(el, zh, { ...opts, append: true, tag: 'span', className });
+      };
+
+      const addZhAll = (selector, zhList, opts = {}) => {
+        const nodes = Array.from(document.querySelectorAll(selector));
+        zhList.forEach((zh, i) => addZh(nodes[i], zh, opts));
+      };
+
+      const addZhAllInline = (selector, zhList, opts = {}) => {
+        const nodes = Array.from(document.querySelectorAll(selector));
+        zhList.forEach((zh, i) => addZhInline(nodes[i], zh, opts));
+      };
+
+      addZh(document.querySelector('.brand h1'), '地球与空间科学 • 星星，星星，星星', { append: true });
+      addZh(document.querySelector('.hero h1'), '4.3 星星，星星，星星');
+      addZhInline(document.querySelector('.hero p'), '恒星发出的光可以显示它们的颜色、温度、组成成分和所处的生命阶段。本课将学习天文学家如何利用光和光谱研究恒星，以及恒星如何在数十亿年中发生变化。');
+      addZh(document.querySelector('.sticky h2'), '本页内容');
+      addZh(document.querySelector('.sticky .subtle'), '跳转到各个主题部分。');
+      addZhAll('.toc a', [
+        '导入 · 概览',
+        '恒星的特征 · 光谱',
+        '元素的指纹 · 证据',
+        '冷色与暖色 · 温度',
+        '恒星的一生 · 生命周期',
+        '恒星的诞生 · 核聚变'
+      ], { append: true });
+      addZhAll('.section .kicker', [
+        '导入',
+        '光与颜色',
+        '光谱证据',
+        '温度',
+        '生命周期',
+        '恒星形成'
+      ]);
+      addZhAll('.section h3', [
+        '导言',
+        '恒星的特征',
+        '元素的指纹',
+        '冷色与暖色',
+        '恒星的一生',
+        '恒星的诞生'
+      ]);
+      addZhAllInline('.section > p', [
+        '当你看着一颗恒星时，你看到了什么？恒星发出的光可以提供关于它特征的信息。恒星可以根据颜色、温度和绝对星等进行分类。',
+        '恒星在夜空中似乎保持不变，但这只是因为它们的生命周期非常漫长。通过观察许多不同的恒星，天文学家开始了解恒星生命中的不同阶段。',
+        '普通白光由彩虹的七种颜色组成：红、橙、黄、绿、蓝、靛和紫。棱镜可以使光线发生弯折。当光线被弯折时，白光会分解成各自独立的颜色。',
+        '科学家可以使用一种叫做光谱仪的仪器来研究光。<strong>光谱仪</strong>会把通过它的光分开，并显示成一系列颜色。形成的这一系列颜色称为光谱。',
+        '恒星在其生命周期的某些阶段会发光。恒星的颜色能够揭示很多关于它特征的信息。',
+        '太阳会发光，是因为其中的元素被加热到非常高的温度。回想一下，元素是只由一种原子构成的物质。每种元素在受热时都会产生独特的颜色。',
+        '例如，当氢被加热时，只会产生几条很细的亮线。无论何时加热氢，都会产生相同的光谱。而其他任何元素都不会产生完全相同的光谱。你可以把元素的光谱看作它的指纹。',
+        '没有两个人拥有相同的指纹，也没有两种元素拥有相同的光谱。这意味着我们可以通过元素产生的光谱来识别它。天文学家利用光谱仪分析恒星发出的光，并判断恒星由哪些元素组成。',
+        '你是否注意过，当你打开炉子时，炉盘随着温度升高会开始发出明亮的红光？如果把火调小，颜色会随着炉盘冷却而变成暗红色。',
+        '这种颜色与温度之间的联系同样适用于恒星。当你在天空中看恒星时，它们看起来往往偏白。然而，当你通过双筒望远镜或天文望远镜观察时，它们的颜色实际上各不相同。',
+        '较冷的恒星会发出偏红的光，中等温度的恒星发出偏黄色的光，而非常热的恒星会发出蓝紫色的光。',
+        '虽然恒星在天空中看起来似乎保持不变，但它们实际上正在经历非常漫长的生命周期。一颗恒星从诞生到死亡往往需要数十亿年。',
+        '通过研究处于不同生命阶段的许多恒星，天文学家已经能够拼凑出恒星的一生。这些阶段包括在星云中形成、稳定进行核聚变，以及最终以白矮星等形式结束生命。',
+        '当轻元素的原子在足够大的压力下被压缩，使它们的原子核发生聚变时，一颗恒星便诞生了。',
+        '<strong>引力</strong>会把星际气体中的原子压缩在一起，直到<strong>核聚变</strong>反应开始。一旦聚变启动，就会释放出巨大的能量，新生恒星也开始发光。'
+      ]);
+      addZhAllInline('.media .caption', [
+        '用于观测恒星的天文望远镜图像。',
+        '光谱仪把光分解为光谱。',
+        '视频：元素的指纹（YouTube）',
+        '视频：冷色与暖色（YouTube）',
+        '视频：恒星的一生（YouTube）',
+        '视频：恒星的诞生（YouTube）'
+      ]);
+      addZhInline(document.querySelector('#fingerprints .callout > strong'), '关键观点：');
+      addZhInline(document.querySelector('#fingerprints .callout'), '每种元素都会产生独特的光谱，因此恒星发出的光可以揭示这颗恒星由什么组成。');
+      addZhInline(document.querySelector('#birth .callout > strong'), '主要过程：');
+      addZhInline(document.querySelector('#birth .callout'), '引力把气体拉拢到一起，压力不断升高，随后核聚变开始。这就是恒星生命的起点。');
+      addZh(document.querySelector('footer > div'), '本页面为单文件 HTML • 响应式 + 适合打印 • 版式与 Earth4.2.html 保持一致。');
+
+      const langToggle = document.getElementById('langToggle');
+      const setLangMode = (mode) => {
+        const currentMode = ['en', 'enzh', 'zh'].includes(mode) ? mode : 'en';
+        document.body.classList.toggle('lang-bilingual', currentMode === 'enzh');
+        document.body.classList.toggle('lang-zh', currentMode === 'zh');
+        langToggle.textContent = currentMode === 'enzh' ? 'Language: EN+ZH' : currentMode === 'zh' ? 'Language: ZH' : 'Language: EN';
+        langToggle.setAttribute('aria-pressed', currentMode === 'en' ? 'false' : 'true');
+        langToggle.setAttribute('aria-label', currentMode === 'enzh' ? 'Language mode: English and Chinese' : currentMode === 'zh' ? 'Language mode: Chinese only' : 'Language mode: English only');
+        localStorage.setItem('earth43LangMode', currentMode);
+      };
+
+      langToggle.addEventListener('click', () => {
+        const currentMode = document.body.classList.contains('lang-zh') ? 'zh' : document.body.classList.contains('lang-bilingual') ? 'enzh' : 'en';
+        setLangMode(currentMode === 'en' ? 'enzh' : currentMode === 'enzh' ? 'zh' : 'en');
+      });
+
+      setLangMode(localStorage.getItem('earth43LangMode'));
+
+      const body = document.body;
+      const navToggle = document.getElementById('navToggle');
+      const pageNav = document.getElementById('pageNav');
+
+      const setNavCollapsed = (collapsed) => {
+        body.classList.toggle('nav-collapsed', collapsed);
+        if (navToggle){
+          navToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+          navToggle.textContent = collapsed ? '☰ Outline: Show' : '☰ Outline: Hide';
+        }
+        if (pageNav){
+          pageNav.setAttribute('aria-hidden', collapsed ? 'true' : 'false');
+          if ('inert' in pageNav) pageNav.inert = collapsed;
+        }
+        try{ localStorage.setItem('earth43NavCollapsed', collapsed ? '1' : '0'); }catch(_){}
+      };
+
+      if (navToggle){
+        navToggle.addEventListener('click', () => {
+          setNavCollapsed(!body.classList.contains('nav-collapsed'));
+        });
+        setNavCollapsed(localStorage.getItem('earth43NavCollapsed') === '1');
+      }
+
+      const links = Array.from(document.querySelectorAll('.toc a'));
+      const sections = links.map((a) => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+      const setActive = (id) => {
+        links.forEach((a) => {
+          const on = a.getAttribute('href') === '#' + id;
+          a.style.background = on ? 'rgba(37,99,235,.08)' : '';
+          a.style.borderColor = on ? 'rgba(37,99,235,.25)' : '';
+        });
+      };
+      const obs = new IntersectionObserver((entries) => {
+        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActive(visible.target.id);
+      }, { rootMargin: '-20% 0px -70% 0px', threshold: [0.05, 0.1, 0.2, 0.35] });
+      sections.forEach((section) => obs.observe(section));
+      if (sections[0]) setActive(sections[0].id);
+    })();
+  </script>
+</body>
+</html>
