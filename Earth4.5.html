@@ -243,6 +243,32 @@
       font-size:1.1rem;
     }
 
+    .challenge-frame{
+      width:100%;
+      min-height:720px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      background:#fff;
+    }
+
+    .challenge-link{
+      margin-top:12px;
+      text-align:center;
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    .challenge-link a{
+      color:var(--accent);
+      font-weight:600;
+      text-decoration:none;
+    }
+
+    .challenge-link a:hover{
+      text-decoration:underline;
+    }
+
     footer{margin-top:18px; color:var(--muted); font-size:13px; text-align:center}
     .i18n-en.block{display:block}
     .i18n-zh{display:none; margin-top:6px; color:var(--muted); font-size:.95em; line-height:1.5}
@@ -497,7 +523,14 @@
         <article id="challenge" class="section">
           <span class="kicker">Review</span>
           <h3>Crossword Challenge</h3>
+          <p class="challenge-intro">
+            Complete the interactive crossword below to review the main ideas from this lesson.
+          </p>
           <div class="challenge-box">Crossword Challenge</div>
+          <iframe class="challenge-frame" src="solar_system_crossword.html" title="Solar system crossword challenge" loading="lazy"></iframe>
+          <div class="challenge-link">
+            <a href="solar_system_crossword.html" target="_blank" rel="noopener noreferrer">Open the crossword in a new tab</a>
+          </div>
         </article>
       </section>
     </div>
@@ -625,7 +658,9 @@
       ]);
       addZhInline(document.querySelector('#flares .callout > strong'), '示例：');
       addZhInline(document.querySelector('#flares .callout'), '1989 年，一次太阳耀斑曾导致魁北克大停电，居民断电超过九小时。');
+      addZhInline(document.querySelector('#challenge .challenge-intro'), '完成下面的互动纵横字谜，复习本课的主要概念。');
       addZh(document.querySelector('#challenge .challenge-box'), '纵横字谜挑战');
+      addZh(document.querySelector('#challenge .challenge-link'), '<a href="solar_system_crossword.html" target="_blank" rel="noopener noreferrer">在新标签页中打开纵横字谜</a>', { append: true });
       addZh(document.querySelector('footer > div'), '本页面为单文件 HTML • 响应式 + 适合打印 • 版式与 Earth4.2.html 保持一致。');
 
       const langToggle = document.getElementById('langToggle');
