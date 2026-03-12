@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>4.5 The Sun's Energy</title>
+  <meta name="description" content="An interactive lesson page: The Sun's Energy." />
+
+  <style>
+    :root{
+      --bg:#f7f8fb;
+      --panel:#ffffff;
+      --text:#111827;
+      --muted:#4b5563;
+      --faint:#6b7280;
+      --border:rgba(17,24,39,.10);
+      --shadow: 0 10px 30px rgba(17,24,39,.08);
+      --accent:#2563eb;
+      --accent2:#16a34a;
+      --radius:18px;
+      --maxw:1120px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, rgba(37,99,235,.10), transparent 60%),
+        radial-gradient(900px 500px at 90% 0%, rgba(22,163,74,.10), transparent 55%),
+        var(--bg);
+      line-height:1.6;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter:saturate(160%) blur(10px);
+      background:rgba(247,248,251,.78);
+      border-bottom:1px solid var(--border);
+    }
+
+    .topbar .inner{
+      max-width:var(--maxw);
+      margin:0 auto;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .brand{display:flex; align-items:center; gap:12px; min-width:0}
+    .badge{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      background:linear-gradient(135deg, rgba(37,99,235,.95), rgba(22,163,74,.75));
+      box-shadow:var(--shadow);
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight:800;
+      letter-spacing:.2px;
+      flex:0 0 auto;
+    }
+
+    .brand h1{
+      font-size:14px;
+      margin:0;
+      color:var(--muted);
+      font-weight:600;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .actions{display:flex; gap:10px; flex-wrap:wrap}
+    .btn{
+      appearance:none;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.75);
+      color:var(--text);
+      padding:9px 12px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:600;
+      cursor:pointer;
+      transition:transform .06s ease, background .2s ease, border-color .2s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .btn:hover{background:rgba(255,255,255,.95); border-color:rgba(17,24,39,.18)}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:rgba(37,99,235,.10); border-color:rgba(37,99,235,.25); color:rgba(37,99,235,1)}
+    .btn.primary:hover{background:rgba(37,99,235,.14); border-color:rgba(37,99,235,.35)}
+
+    .wrap{max-width:var(--maxw); margin:0 auto; padding:22px 18px 52px}
+    .grid{display:grid; grid-template-columns:320px minmax(0, 1fr); gap:18px; align-items:start; transition:grid-template-columns .20s ease, gap .20s ease}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+
+    .sidebar{will-change:opacity, transform}
+    body.nav-collapsed .grid{grid-template-columns:0px minmax(0, 1fr); gap:0}
+    body.nav-collapsed .sidebar{
+      opacity:0;
+      transform:translateX(-8px);
+      pointer-events:none;
+      border:0;
+      box-shadow:none;
+    }
+    @media (max-width:980px){
+      body.nav-collapsed .grid{grid-template-columns:1fr; gap:18px}
+      body.nav-collapsed .sidebar{display:none}
+    }
+
+    .card{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .card .pad{padding:18px}
+    .card h2{margin:0 0 8px; font-size:16px; letter-spacing:.2px}
+    .subtle{color:var(--muted); font-size:14px}
+
+    .hero{
+      padding:22px 18px;
+      background:
+        radial-gradient(900px 380px at 10% 0%, rgba(37,99,235,.16), transparent 55%),
+        radial-gradient(700px 380px at 90% 0%, rgba(22,163,74,.14), transparent 55%);
+      border-bottom:1px solid var(--border);
+    }
+
+    .hero h1{margin:0 0 8px; font-size:22px; line-height:1.2; letter-spacing:-.2px}
+    .hero p{margin:0; color:var(--muted); max-width:72ch}
+
+    .toc a{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 12px;
+      border-radius:12px;
+      text-decoration:none;
+      color:var(--text);
+      border:1px solid transparent;
+      transition:background .2s ease, border-color .2s ease;
+      font-weight:600;
+      font-size:14px;
+    }
+    .toc a:hover{background:rgba(17,24,39,.03); border-color:rgba(17,24,39,.08)}
+    .toc small{color:var(--faint); font-weight:600}
+    .sticky{position:sticky; top:76px}
+    @media (max-width:980px){.sticky{position:static}}
+
+    .section{
+      scroll-margin-top:92px;
+      padding:18px;
+      border-bottom:1px solid var(--border);
+    }
+    .section:last-child{border-bottom:none}
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(17,24,39,.02);
+      color:var(--muted);
+      font-weight:700;
+      font-size:12px;
+      letter-spacing:.3px;
+      text-transform:uppercase;
+    }
+
+    .section h3{margin:10px 0 8px; font-size:18px; letter-spacing:-.2px}
+    .section p{margin:0 0 10px}
+    .section ol{margin:0 0 12px 24px; padding:0}
+    .section li{margin-bottom:10px}
+
+    .callout{
+      border:1px solid rgba(37,99,235,.25);
+      background:rgba(37,99,235,.06);
+      border-radius:16px;
+      padding:14px;
+      margin:12px 0 2px;
+      color:var(--text);
+    }
+    .callout strong{color:rgba(37,99,235,1)}
+
+    .media{
+      margin-top:12px;
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      background:rgba(17,24,39,.02);
+    }
+    .media .caption{
+      padding:10px 12px;
+      font-size:12.5px;
+      color:var(--muted);
+      border-top:1px solid var(--border);
+    }
+    .media-center{
+      max-width:560px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .media-banner{
+      max-width:260px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .video{
+      aspect-ratio:16 / 9;
+      width:100%;
+      display:block;
+      border:0;
+    }
+    .lesson-image{width:100%; height:auto; display:block}
+    .lesson-image.banner{
+      width:auto;
+      max-width:208px;
+      margin:0 auto;
+    }
+
+    .challenge-box{
+      margin-top:8px;
+      padding:20px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background:linear-gradient(135deg, #f8fbff, #eef5ff);
+      font-weight:700;
+      color:var(--heading);
+      text-align:center;
+      font-size:1.1rem;
+    }
+
+    footer{margin-top:18px; color:var(--muted); font-size:13px; text-align:center}
+    .i18n-en.block{display:block}
+    .i18n-zh{display:none; margin-top:6px; color:var(--muted); font-size:.95em; line-height:1.5}
+    body.lang-bilingual .i18n-zh{display:block}
+    .i18n-zh.inline{display:none; margin-top:0; margin-left:.45em; font-size:inherit; line-height:inherit; color:var(--faint)}
+    body.lang-bilingual .i18n-zh.inline{display:inline}
+    body.lang-zh .i18n-en{display:none !important}
+    body.lang-zh .i18n-zh{display:block}
+    body.lang-zh .i18n-zh.inline{display:inline}
+    .brand .i18n-zh,.toc .i18n-zh{font-size:12px; color:var(--faint); font-weight:600}
+    .callout .i18n-zh{color:#1e3a8a}
+    .callout .i18n-zh.inline{color:#1e3a8a}
+
+    @media print{
+      .topbar, .actions, .sticky {display:none !important}
+      body{background:#fff}
+      .card{box-shadow:none}
+      .grid{grid-template-columns:1fr}
+      .section{break-inside:avoid}
+      a{color:inherit; text-decoration:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="inner">
+      <div class="brand">
+        <div class="badge">4.5</div>
+        <h1>Earth &amp; Space Science • The Sun's Energy</h1>
+      </div>
+      <div class="actions">
+        <button class="btn primary" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑ Top</button>
+        <button class="btn" id="navToggle" type="button" aria-controls="pageNav" aria-expanded="true">☰ Outline: Hide</button>
+        <button class="btn" id="langToggle" type="button" aria-pressed="false">Language: EN</button>
+        <button class="btn" onclick="window.print()">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <div class="card">
+      <div class="hero">
+        <h1>4.5 The Sun's Energy</h1>
+        <p>
+          The Sun is an ordinary yellow dwarf star, but it is essential to life on Earth.
+          This lesson explores the Sun's layers, how it produces energy, and solar activity such as sunspots, flares, prominences, and solar wind.
+        </p>
+      </div>
+    </div>
+
+    <div style="height:16px"></div>
+
+    <div class="grid">
+      <aside class="card sticky sidebar" id="pageNav">
+        <div class="pad">
+          <h2>On this page</h2>
+          <p class="subtle" style="margin:0 0 10px">Jump to a topic section.</p>
+          <nav class="toc" aria-label="Table of contents">
+            <a href="#intro"><span>Introduction</span><small>Overview</small></a>
+            <a href="#anatomy"><span>Anatomy of the Sun</span><small>Layers</small></a>
+            <a href="#energy"><span>The Sun's Energy Source</span><small>Fusion</small></a>
+            <a href="#sunspots"><span>Sunspots</span><small>Cycles</small></a>
+            <a href="#flares"><span>Solar Flares</span><small>Magnetism</small></a>
+            <a href="#prominences"><span>Solar Prominences</span><small>Gas loops</small></a>
+            <a href="#wind"><span>Solar Wind</span><small>Charged particles</small></a>
+            <a href="#challenge"><span>Crossword Challenge</span><small>Review</small></a>
+          </nav>
+        </div>
+      </aside>
+
+      <section class="card" aria-label="Lesson content">
+        <article id="intro" class="section">
+          <span class="kicker">Overview</span>
+          <h3>Introduction</h3>
+          <p>
+            Our Sun is a star. It is not a particularly large star, nor is it considered small.
+            In fact, it is rather ordinary as far as stars go. It is a yellow dwarf star, and it is the closest star to Earth.
+          </p>
+          <p>
+            While the Sun may not be extraordinary among stars, it is of great importance to us on Earth.
+            The Sun controls our climate and weather and sustains all life on Earth. Without it, we would not exist.
+          </p>
+          <p>
+            Scientists study the Sun carefully. From it, they have learned many things about stars in general, including their structures and the processes that drive them.
+          </p>
+          <div class="media" role="group" aria-label="Video introducing the Sun">
+            <iframe class="video" src="https://www.youtube.com/embed/DEoT_EH_Uss" title="Introduction to the Sun video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: Introduction to the Sun (YouTube)</div>
+          </div>
+        </article>
+
+        <article id="anatomy" class="section">
+          <span class="kicker">Layers</span>
+          <h3>Anatomy of the Sun</h3>
+          <p>
+            The vast majority of all matter in the solar system is contained in the Sun.
+            In fact, the Sun contains over 99.8% of the total mass of our solar system.
+          </p>
+          <div class="media" role="group" aria-label="Video about the anatomy of the Sun">
+            <iframe class="video" src="https://www.youtube.com/embed/KFxJ_8ob6BM" title="Anatomy of the Sun video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: Anatomy of the Sun (YouTube)</div>
+          </div>
+          <p>
+            We can only observe the outer layers of the Sun, known as the solar atmosphere.
+            The solar atmosphere is divided into three distinct layers: the photosphere, the chromosphere, and the corona.
+          </p>
+          <ol>
+            <li>
+              <strong>The photosphere.</strong>
+              <div class="media media-center" role="group" aria-label="Photosphere image">
+                <a href="assets/VSS00031.jpg" target="_blank" rel="noopener noreferrer">
+                  <img class="lesson-image" src="assets/VSS00031.jpg" alt="Image representing the visible photosphere of the Sun" loading="lazy" />
+                </a>
+                <div class="caption">Image representing the visible photosphere of the Sun.</div>
+              </div>
+              <p>
+                Though the Sun is made up largely of hydrogen and helium, it also contains many of the same elements found on Earth.
+                Because of the extremely high temperatures, these elements are in gaseous form.
+                The visible surface is the layer where we can no longer see through the gases.
+              </p>
+              <p>
+                There are two transparent layers outside the photosphere known as the <strong>chromosphere</strong> and the <strong>corona</strong>.
+              </p>
+            </li>
+            <li>
+              <strong>The chromosphere.</strong>
+              <p>
+                The chromosphere is made up of gases just outside the photosphere and is about 2 500 km thick.
+                As you move away from the photosphere, the density decreases, but the temperature increases.
+              </p>
+            </li>
+            <li>
+              <strong>The corona.</strong>
+              <div class="media media-center" role="group" aria-label="Corona image">
+                <a href="assets/Space_The_solar_corona.jpg" target="_blank" rel="noopener noreferrer">
+                  <img class="lesson-image" src="assets/Space_The_solar_corona.jpg" alt="The solar corona during an eclipse" loading="lazy" />
+                </a>
+                <div class="caption">The solar corona during an eclipse.</div>
+              </div>
+              <p>
+                The corona is the Sun's outermost layer. It extends millions of kilometres into space and is extremely hot.
+                Most of the radiation from this region is in the form of x-rays and ultraviolet rays.
+              </p>
+              <p>
+                The brightness of the photosphere usually blocks our view of the corona.
+                During a solar eclipse, the Moon blocks out the photosphere and allows us to see it.
+              </p>
+            </li>
+          </ol>
+        </article>
+
+        <article id="energy" class="section">
+          <span class="kicker">Fusion</span>
+          <h3>The Sun's Energy Source</h3>
+          <p>
+            The energy of the Sun comes from the <strong>solar core</strong>.
+            In this central region, <strong>nuclear fusion</strong> converts hydrogen to helium and generates extremely large amounts of energy.
+          </p>
+          <p>
+            Over millions of years, this energy is transferred from the solar core to the outer layers of the solar atmosphere.
+            Once it reaches the outer layers, it is radiated into space as heat, ultraviolet rays, and x-rays.
+          </p>
+          <div class="media" role="group" aria-label="Video about the Sun's energy source">
+            <iframe class="video" src="https://www.youtube.com/embed/Ux33-5k8cjg" title="The Sun's Energy Source video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: The Sun's Energy Source (YouTube)</div>
+          </div>
+        </article>
+
+        <article id="sunspots" class="section">
+          <span class="kicker">Cycles</span>
+          <h3>Sunspots</h3>
+          <div class="media media-center" role="group" aria-label="Sunspots image">
+            <a href="assets/sun_spots-1.jpg" target="_blank" rel="noopener noreferrer">
+              <img class="lesson-image" src="assets/sun_spots-1.jpg" alt="Sunspots on the photosphere of the Sun" loading="lazy" />
+            </a>
+            <div class="caption">Sunspots on the photosphere of the Sun.</div>
+          </div>
+          <p>
+            Some regions on the photosphere are cooler than others. These darker regions are called <strong>sunspots</strong>.
+            Sunspots vary in size, often appear in pairs or groups, and can last from a few hours to a few months.
+          </p>
+          <p>
+            The number of sunspots changes in a cycle of about 11 years.
+            This cyclical behaviour is governed by the changing magnetic fields of the Sun.
+          </p>
+          <div class="media" role="group" aria-label="Video about sunspots">
+            <iframe class="video" src="https://www.youtube.com/embed/F8hStTFQHq8" title="Sunspots video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: Sunspots (YouTube)</div>
+          </div>
+        </article>
+
+        <article id="flares" class="section">
+          <span class="kicker">Magnetism</span>
+          <h3>Solar Flares</h3>
+          <p>
+            <strong>Solar flares</strong> occur when magnetic energy is discharged from the Sun's corona.
+            Sudden streams of protons and electrons shoot violently into space and can interfere with power and communications on Earth.
+          </p>
+          <div class="media" role="group" aria-label="Video about solar flares">
+            <iframe class="video" src="https://www.youtube.com/embed/nmDZhQAIeXM" title="Solar Flares video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: Solar Flares (YouTube)</div>
+          </div>
+          <div class="media media-banner" role="group" aria-label="Solar flare fact banner">
+            <a href="assets/didyouknow-2.gif" target="_blank" rel="noopener noreferrer">
+              <img class="lesson-image banner" src="assets/didyouknow-2.gif" alt="Did you know banner about solar flare facts" loading="lazy" />
+            </a>
+            <div class="caption">Fact banner related to solar flares.</div>
+          </div>
+          <div class="callout">
+            <strong>Example:</strong> In 1989, a solar flare caused a blackout across Quebec that left residents without power for more than nine hours.
+          </div>
+        </article>
+
+        <article id="prominences" class="section">
+          <span class="kicker">Gas loops</span>
+          <h3>Solar Prominences</h3>
+          <div class="media media-center" role="group" aria-label="Solar prominence image">
+            <a href="assets/Solar_Prominence.jpg" target="_blank" rel="noopener noreferrer">
+              <img class="lesson-image" src="assets/Solar_Prominence.jpg" alt="Solar prominence extending from the Sun" loading="lazy" />
+            </a>
+            <div class="caption">Solar prominence extending from the Sun.</div>
+          </div>
+          <p>
+            A <strong>solar prominence</strong> is an eruption of gas from the chromosphere in the form of columns or loops.
+            These columns can shoot straight out from the Sun, or remain suspended by magnetic fields and curve back toward the surface.
+          </p>
+          <div class="media" role="group" aria-label="Video about solar prominences">
+            <iframe class="video" src="https://www.youtube.com/embed/Q_3u_0NN7OM" title="Solar Prominences video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: Solar Prominences (YouTube)</div>
+          </div>
+        </article>
+
+        <article id="wind" class="section">
+          <span class="kicker">Charged particles</span>
+          <h3>Solar Wind</h3>
+          <p>
+            The solar wind is made up of charged particles called plasma, mainly electrons and protons, that escape the Sun's gravity and race across the solar system.
+          </p>
+          <p>
+            The solar wind can strip away atmospheres from planets with weaker protection.
+            Earth's magnetic and gravitational fields protect our atmosphere from this constant stream.
+          </p>
+          <p>
+            Near the poles, interactions between solar wind and Earth's magnetic field can produce beautiful lights called auroras.
+          </p>
+          <div class="media" role="group" aria-label="Video about solar wind">
+            <iframe class="video" src="https://www.youtube.com/embed/2zOlkIyg3iE" title="Solar Wind video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: Solar Wind (YouTube)</div>
+          </div>
+        </article>
+
+        <article id="challenge" class="section">
+          <span class="kicker">Review</span>
+          <h3>Crossword Challenge</h3>
+          <div class="challenge-box">Crossword Challenge</div>
+        </article>
+      </section>
+    </div>
+
+    <footer>
+      <div style="margin-top:18px">Built as a single self-contained HTML page • Responsive + print-friendly • Styled to match the layout pattern used in Earth4.2.html.</div>
+    </footer>
+  </main>
+
+  <script>
+    (function(){
+      const wrapEnglishContent = (el) => {
+        if (!el || el.querySelector(':scope > .i18n-en')) return;
+        const childNodes = Array.from(el.childNodes);
+        if (!childNodes.length) return;
+        const hasBlockChild = childNodes.some((node) => node.nodeType === Node.ELEMENT_NODE && /^(DIV|P|UL|OL|TABLE|SECTION|ARTICLE|FIGURE|BLOCKQUOTE)$/i.test(node.tagName));
+        const wrapper = document.createElement(hasBlockChild ? 'div' : 'span');
+        wrapper.className = `i18n-en${hasBlockChild ? ' block' : ''}`;
+        childNodes.forEach((node) => wrapper.appendChild(node));
+        el.appendChild(wrapper);
+      };
+
+      const addZh = (el, zh, opts = {}) => {
+        if (!el || !zh) return;
+        if (opts.append) wrapEnglishContent(el);
+        else el.classList.add('i18n-en');
+        const node = document.createElement(opts.tag || 'div');
+        node.className = `i18n-zh ${opts.className || ''}`.trim();
+        node.innerHTML = zh;
+        if (opts.append) el.appendChild(node);
+        else el.insertAdjacentElement('afterend', node);
+      };
+
+      const addZhInline = (el, zh, opts = {}) => {
+        const className = ['inline', opts.className || ''].join(' ').trim();
+        addZh(el, zh, { ...opts, append: true, tag: 'span', className });
+      };
+
+      const addZhAll = (selector, zhList, opts = {}) => {
+        const nodes = Array.from(document.querySelectorAll(selector));
+        zhList.forEach((zh, i) => addZh(nodes[i], zh, opts));
+      };
+
+      const addZhAllInline = (selector, zhList, opts = {}) => {
+        const nodes = Array.from(document.querySelectorAll(selector));
+        zhList.forEach((zh, i) => addZhInline(nodes[i], zh, opts));
+      };
+
+      addZh(document.querySelector('.brand h1'), '地球与空间科学 • 太阳的能量', { append: true });
+      addZh(document.querySelector('.hero h1'), '4.5 太阳的能量');
+      addZhInline(document.querySelector('.hero p'), '太阳是一颗普通的黄矮星，但它对地球生命至关重要。本课将学习太阳的结构、它如何产生能量，以及黑子、耀斑、日珥和太阳风等太阳活动。');
+      addZh(document.querySelector('.sticky h2'), '本页内容');
+      addZh(document.querySelector('.sticky .subtle'), '跳转到各个主题部分。');
+      addZhAll('.toc a', [
+        '导入 · 概览',
+        '太阳的结构 · 各层',
+        '太阳能量来源 · 聚变',
+        '太阳黑子 · 周期',
+        '太阳耀斑 · 磁场',
+        '日珥 · 气体环',
+        '太阳风 · 带电粒子',
+        '纵横字谜挑战 · 复习'
+      ], { append: true });
+      addZhAll('.section .kicker', [
+        '概览',
+        '各层',
+        '聚变',
+        '周期',
+        '磁场',
+        '气体环',
+        '带电粒子',
+        '复习'
+      ]);
+      addZhAll('.section h3', [
+        '导言',
+        '太阳的结构',
+        '太阳能量来源',
+        '太阳黑子',
+        '太阳耀斑',
+        '日珥',
+        '太阳风',
+        '纵横字谜挑战'
+      ]);
+      addZhAllInline('.section > p', [
+        '我们的太阳是一颗恒星。它并不算特别大，也不算特别小。就恒星而言，它相当普通。它是一颗黄矮星，也是离地球最近的恒星。',
+        '虽然太阳在恒星中并不特别，但它对地球上的我们极其重要。太阳控制着我们的气候和天气，并维持地球上的全部生命。没有太阳，我们就无法存在。',
+        '科学家仔细研究太阳，并从中了解了许多关于恒星的一般知识，包括它们的结构和驱动它们的过程。',
+        '太阳系中绝大多数物质都集中在太阳中。事实上，太阳占据了整个太阳系总质量的 99.8% 以上。',
+        '我们只能观察太阳的外层，也就是太阳大气层。太阳大气层分为三个不同的部分：光球层、色球层和日冕。',
+        '太阳的能量来自<strong>太阳核心</strong>。在这个中心区域，<strong>核聚变</strong>把氢转化为氦，并产生极其巨大的能量。',
+        '在数百万年间，这些能量从太阳核心传递到太阳大气的外层。到达外层后，它以热、紫外线和 X 射线的形式辐射到太空中。',
+        '光球层中的一些区域比周围更冷。这些较暗的区域叫作<strong>太阳黑子</strong>。黑子大小不一，常常成对或成群出现，寿命从几小时到几个月不等。',
+        '太阳黑子的数量会以大约 11 年为周期发生变化。这种周期性行为由太阳不断变化的磁场控制。',
+        '<strong>太阳耀斑</strong>发生在太阳日冕中的磁能被释放时。大量质子和电子会猛烈地喷射到太空中，并可能干扰地球上的电力和通信。',
+        '<strong>日珥</strong>是色球层气体以柱状或环状从太阳喷发出来的现象。这些气体柱有时会直接向外喷出，有时会被磁场悬挂并重新弯回太阳表面。',
+        '太阳风由称为等离子体的带电粒子组成，主要是电子和质子。它们逃离太阳引力并穿越整个太阳系。',
+        '太阳风能够剥离保护较弱行星的大气层。地球的磁场和引力场帮助保护了我们的大气层。',
+        '在靠近两极的地区，太阳风与地球磁场相互作用时，会产生美丽的极光。'
+      ]);
+      addZhAllInline('.section ol > li > strong', [
+        '光球层。',
+        '色球层。',
+        '日冕。'
+      ]);
+      addZhAllInline('.section ol > li > p', [
+        '虽然太阳主要由氢和氦组成，但它也含有许多地球上常见的元素。由于太阳温度极高，这些元素都以气体形式存在。我们所见到的“表面”其实是无法再透视过去的那一层气体。',
+        '光球层之外还有两层透明区域，分别叫作<strong>色球层</strong>和<strong>日冕</strong>。',
+        '色球层位于光球层之外，厚度大约为 2500 千米。离开光球层越远，密度越低，但温度却会上升。',
+        '日冕是太阳最外层的大气，向太空延伸数百万千米，温度极高。该区域的大部分辐射是 X 射线和紫外线。',
+        '通常情况下，光球层的强光会遮挡我们对日冕的观察。日食时，月球遮住光球层，我们才能看到它。'
+      ]);
+      addZhAllInline('.media .caption', [
+        '视频：太阳导入（YouTube）',
+        '视频：太阳的结构（YouTube）',
+        '表示太阳可见光球层的图像。',
+        '日食期间看到的太阳日冕。',
+        '视频：太阳能量来源（YouTube）',
+        '太阳光球层上的黑子。',
+        '视频：太阳黑子（YouTube）',
+        '视频：太阳耀斑（YouTube）',
+        '与太阳耀斑有关的知识横幅。',
+        '太阳表面的日珥。',
+        '视频：日珥（YouTube）',
+        '视频：太阳风（YouTube）'
+      ]);
+      addZhInline(document.querySelector('#flares .callout > strong'), '示例：');
+      addZhInline(document.querySelector('#flares .callout'), '1989 年，一次太阳耀斑曾导致魁北克大停电，居民断电超过九小时。');
+      addZh(document.querySelector('#challenge .challenge-box'), '纵横字谜挑战');
+      addZh(document.querySelector('footer > div'), '本页面为单文件 HTML • 响应式 + 适合打印 • 版式与 Earth4.2.html 保持一致。');
+
+      const langToggle = document.getElementById('langToggle');
+      const setLangMode = (mode) => {
+        const currentMode = ['en', 'enzh', 'zh'].includes(mode) ? mode : 'en';
+        document.body.classList.toggle('lang-bilingual', currentMode === 'enzh');
+        document.body.classList.toggle('lang-zh', currentMode === 'zh');
+        langToggle.textContent = currentMode === 'enzh' ? 'Language: EN+ZH' : currentMode === 'zh' ? 'Language: ZH' : 'Language: EN';
+        langToggle.setAttribute('aria-pressed', currentMode === 'en' ? 'false' : 'true');
+        langToggle.setAttribute('aria-label', currentMode === 'enzh' ? 'Language mode: English and Chinese' : currentMode === 'zh' ? 'Language mode: Chinese only' : 'Language mode: English only');
+        localStorage.setItem('earth45LangMode', currentMode);
+      };
+
+      langToggle.addEventListener('click', () => {
+        const currentMode = document.body.classList.contains('lang-zh') ? 'zh' : document.body.classList.contains('lang-bilingual') ? 'enzh' : 'en';
+        setLangMode(currentMode === 'en' ? 'enzh' : currentMode === 'enzh' ? 'zh' : 'en');
+      });
+      setLangMode(localStorage.getItem('earth45LangMode'));
+
+      const body = document.body;
+      const navToggle = document.getElementById('navToggle');
+      const pageNav = document.getElementById('pageNav');
+      const setNavCollapsed = (collapsed) => {
+        body.classList.toggle('nav-collapsed', collapsed);
+        if (navToggle){
+          navToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+          navToggle.textContent = collapsed ? '☰ Outline: Show' : '☰ Outline: Hide';
+        }
+        if (pageNav){
+          pageNav.setAttribute('aria-hidden', collapsed ? 'true' : 'false');
+          if ('inert' in pageNav) pageNav.inert = collapsed;
+        }
+        try{ localStorage.setItem('earth45NavCollapsed', collapsed ? '1' : '0'); }catch(_){}
+      };
+
+      if (navToggle){
+        navToggle.addEventListener('click', () => {
+          setNavCollapsed(!body.classList.contains('nav-collapsed'));
+        });
+        setNavCollapsed(localStorage.getItem('earth45NavCollapsed') === '1');
+      }
+
+      const links = Array.from(document.querySelectorAll('.toc a'));
+      const sections = links.map((a) => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+      const setActive = (id) => {
+        links.forEach((a) => {
+          const on = a.getAttribute('href') === '#' + id;
+          a.style.background = on ? 'rgba(37,99,235,.08)' : '';
+          a.style.borderColor = on ? 'rgba(37,99,235,.25)' : '';
+        });
+      };
+      const obs = new IntersectionObserver((entries) => {
+        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActive(visible.target.id);
+      }, { rootMargin: '-20% 0px -70% 0px', threshold: [0.05, 0.1, 0.2, 0.35] });
+      sections.forEach((section) => obs.observe(section));
+      if (sections[0]) setActive(sections[0].id);
+    })();
+  </script>
+</body>
+</html>
