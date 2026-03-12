@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>4.4 Formation of the Solar System</title>
+  <meta name="description" content="An interactive lesson page: Formation of the Solar System." />
+
+  <style>
+    :root{
+      --bg:#f7f8fb;
+      --panel:#ffffff;
+      --text:#111827;
+      --muted:#4b5563;
+      --faint:#6b7280;
+      --border:rgba(17,24,39,.10);
+      --shadow: 0 10px 30px rgba(17,24,39,.08);
+      --accent:#2563eb;
+      --accent2:#16a34a;
+      --radius:18px;
+      --maxw: 1120px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, rgba(37,99,235,.10), transparent 60%),
+        radial-gradient(900px 500px at 90% 0%, rgba(22,163,74,.10), transparent 55%),
+        var(--bg);
+      line-height:1.6;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter:saturate(160%) blur(10px);
+      background:rgba(247,248,251,.78);
+      border-bottom:1px solid var(--border);
+    }
+
+    .topbar .inner{
+      max-width:var(--maxw);
+      margin:0 auto;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .badge{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      background:linear-gradient(135deg, rgba(37,99,235,.95), rgba(22,163,74,.75));
+      box-shadow:var(--shadow);
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight:800;
+      letter-spacing:.2px;
+      flex:0 0 auto;
+    }
+
+    .brand h1{
+      font-size:14px;
+      margin:0;
+      color:var(--muted);
+      font-weight:600;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .actions{display:flex; gap:10px; flex-wrap:wrap;}
+
+    .btn{
+      appearance:none;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.75);
+      color:var(--text);
+      padding:9px 12px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:600;
+      cursor:pointer;
+      transition:transform .06s ease, background .2s ease, border-color .2s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .btn:hover{background:rgba(255,255,255,.95); border-color:rgba(17,24,39,.18)}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:rgba(37,99,235,.10); border-color:rgba(37,99,235,.25); color:rgba(37,99,235,1)}
+    .btn.primary:hover{background:rgba(37,99,235,.14); border-color:rgba(37,99,235,.35)}
+
+    .wrap{max-width:var(--maxw); margin:0 auto; padding:22px 18px 52px;}
+    .grid{display:grid; grid-template-columns:320px minmax(0, 1fr); gap:18px; align-items:start; transition:grid-template-columns .20s ease, gap .20s ease;}
+    @media (max-width: 980px){.grid{grid-template-columns:1fr}}
+
+    .sidebar{will-change:opacity, transform}
+    body.nav-collapsed .grid{grid-template-columns:0px minmax(0, 1fr); gap:0}
+    body.nav-collapsed .sidebar{
+      opacity:0;
+      transform:translateX(-8px);
+      pointer-events:none;
+      border:0;
+      box-shadow:none;
+    }
+    @media (max-width: 980px){
+      body.nav-collapsed .grid{grid-template-columns:1fr; gap:18px}
+      body.nav-collapsed .sidebar{display:none}
+    }
+
+    .card{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .card .pad{padding:18px}
+    .card h2{margin:0 0 8px; font-size:16px; letter-spacing:.2px}
+    .subtle{color:var(--muted); font-size:14px}
+
+    .hero{
+      padding:22px 18px;
+      background:
+        radial-gradient(900px 380px at 10% 0%, rgba(37,99,235,.16), transparent 55%),
+        radial-gradient(700px 380px at 90% 0%, rgba(22,163,74,.14), transparent 55%);
+      border-bottom:1px solid var(--border);
+    }
+
+    .hero h1{margin:0 0 8px; font-size:22px; line-height:1.2; letter-spacing:-.2px}
+    .hero p{margin:0; color:var(--muted); max-width:72ch}
+
+    .toc a{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 12px;
+      border-radius:12px;
+      text-decoration:none;
+      color:var(--text);
+      border:1px solid transparent;
+      transition:background .2s ease, border-color .2s ease;
+      font-weight:600;
+      font-size:14px;
+    }
+
+    .toc a:hover{background:rgba(17,24,39,.03); border-color:rgba(17,24,39,.08)}
+    .toc small{color:var(--faint); font-weight:600}
+    .sticky{position:sticky; top:76px}
+    @media (max-width: 980px){.sticky{position:static}}
+
+    .section{
+      scroll-margin-top:92px;
+      padding:18px;
+      border-bottom:1px solid var(--border);
+    }
+
+    .section:last-child{border-bottom:none}
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(17,24,39,.02);
+      color:var(--muted);
+      font-weight:700;
+      font-size:12px;
+      letter-spacing:.3px;
+      text-transform:uppercase;
+    }
+
+    .section h3{margin:10px 0 8px; font-size:18px; letter-spacing:-.2px}
+    .section p{margin:0 0 10px}
+    .section ul{margin:0 0 12px 22px; padding:0}
+    .section li{margin-bottom:6px}
+
+    .callout{
+      border:1px solid rgba(37,99,235,.25);
+      background:rgba(37,99,235,.06);
+      border-radius:16px;
+      padding:14px;
+      margin:12px 0 2px;
+      color:var(--text);
+    }
+
+    .callout strong{color:rgba(37,99,235,1)}
+
+    .media{
+      margin-top:12px;
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      background:rgba(17,24,39,.02);
+    }
+
+    .media .caption{
+      padding:10px 12px;
+      font-size:12.5px;
+      color:var(--muted);
+      border-top:1px solid var(--border);
+    }
+
+    .media-center{
+      max-width:520px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    .video{
+      aspect-ratio:16 / 9;
+      width:100%;
+      display:block;
+      border:0;
+    }
+
+    .lesson-image{width:100%; height:auto; display:block}
+
+    footer{margin-top:18px; color:var(--muted); font-size:13px; text-align:center}
+    .i18n-en.block{display:block}
+    .i18n-zh{display:none; margin-top:6px; color:var(--muted); font-size:.95em; line-height:1.5}
+    body.lang-bilingual .i18n-zh{display:block}
+    .i18n-zh.inline{display:none; margin-top:0; margin-left:.45em; font-size:inherit; line-height:inherit; color:var(--faint)}
+    body.lang-bilingual .i18n-zh.inline{display:inline}
+    body.lang-zh .i18n-en{display:none !important}
+    body.lang-zh .i18n-zh{display:block}
+    body.lang-zh .i18n-zh.inline{display:inline}
+    .brand .i18n-zh,.toc .i18n-zh{font-size:12px; color:var(--faint); font-weight:600}
+    .callout .i18n-zh{color:#1e3a8a}
+    .callout .i18n-zh.inline{color:#1e3a8a}
+
+    @media print{
+      .topbar, .actions, .sticky {display:none !important}
+      body{background:#fff}
+      .card{box-shadow:none}
+      .grid{grid-template-columns:1fr}
+      .section{break-inside:avoid}
+      a{color:inherit; text-decoration:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="inner">
+      <div class="brand">
+        <div class="badge">4.4</div>
+        <h1>Earth &amp; Space Science • Formation of the Solar System</h1>
+      </div>
+      <div class="actions">
+        <button class="btn primary" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑ Top</button>
+        <button class="btn" id="navToggle" type="button" aria-controls="pageNav" aria-expanded="true">☰ Outline: Hide</button>
+        <button class="btn" id="langToggle" type="button" aria-pressed="false">Language: EN</button>
+        <button class="btn" onclick="window.print()">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <div class="card">
+      <div class="hero">
+        <h1>4.4 Formation of the Solar System</h1>
+        <p>
+          The most widely accepted explanation for how our solar system formed is the nebular theory.
+          This lesson follows the collapse of a cloud of gas and dust, the birth of the Sun, the formation of planets, and the leftovers that became moons, comets, and asteroids.
+        </p>
+      </div>
+    </div>
+
+    <div style="height:16px"></div>
+
+    <div class="grid">
+      <aside class="card sticky sidebar" id="pageNav">
+        <div class="pad">
+          <h2>On this page</h2>
+          <p class="subtle" style="margin:0 0 10px">Jump to a topic section.</p>
+          <nav class="toc" aria-label="Table of contents">
+            <a href="#nebular"><span>Nebular Theory of Formation</span><small>Overview</small></a>
+            <a href="#born"><span>A Solar System Is Born</span><small>Animation</small></a>
+            <a href="#sun"><span>Birth of a Sun</span><small>Protosun</small></a>
+            <a href="#inner"><span>Birth of the Inner Planets</span><small>Protoplanets</small></a>
+            <a href="#diverse"><span>Why Are the Planets so Diverse?</span><small>Temperature</small></a>
+            <a href="#moons"><span>Moons</span><small>Origin</small></a>
+            <a href="#comets"><span>Comets &amp; Asteroids</span><small>Leftovers</small></a>
+          </nav>
+        </div>
+      </aside>
+
+      <section class="card" aria-label="Lesson content">
+        <article id="nebular" class="section">
+          <span class="kicker">Overview</span>
+          <h3>Nebular Theory of Formation</h3>
+          <p>
+            The most widely accepted theory of the formation of the solar system is the <strong>nebular theory</strong>.
+            This theory states that the solar system formed during the gravitational collapse of a nebula, a cloud of dust and gas, about 5 billion years ago.
+          </p>
+          <p>
+            As the cloud collapsed, it spun faster, flattened into a disk, and separated into regions that later formed the Sun, planets, moons, and smaller bodies.
+          </p>
+          <div class="media" role="group" aria-label="Video about the nebular theory">
+            <iframe class="video" src="https://www.youtube.com/embed/y7eXbIPSYes" title="Nebular Theory of Formation video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: Nebular Theory of Formation (YouTube)</div>
+          </div>
+        </article>
+
+        <article id="born" class="section">
+          <span class="kicker">Animation</span>
+          <h3>A Solar System Is Born</h3>
+          <p>
+            The early solar system began as a rotating cloud of gas and dust.
+            Gravity pulled material inward while motion spread material into a broad spinning disk.
+          </p>
+          <div class="media" role="group" aria-label="Video about the birth of a solar system">
+            <iframe class="video" src="https://www.youtube.com/embed/Uhy1fucSRQI" title="A Solar System is born video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: A Solar System Is Born (YouTube)</div>
+          </div>
+        </article>
+
+        <article id="sun" class="section">
+          <span class="kicker">Protosun</span>
+          <h3>Birth of a Sun</h3>
+          <p>
+            The bulge at the centre became more and more condensed as matter was pulled in.
+            This bulge was becoming a new star, our Sun.
+            We call this still-condensing future sun a <strong>protosun</strong>.
+          </p>
+          <div class="media media-center" role="group" aria-label="Animation of a collapsing cloud forming a protosun">
+            <a href="assets/collapse4.gif" target="_blank" rel="noopener noreferrer">
+              <img class="lesson-image" src="assets/collapse4.gif" alt="Animation of a collapsing cloud forming a protosun" loading="lazy" />
+            </a>
+            <div class="caption">Animation of a protosun forming at the centre of the nebula.</div>
+          </div>
+        </article>
+
+        <article id="inner" class="section">
+          <span class="kicker">Protoplanets</span>
+          <h3>Birth of the Inner Planets</h3>
+          <p>
+            As the Sun continued to grow, clumps of matter began to form in the area around the Sun.
+            In the great heat, these lumps continued to condense and became planets.
+            We call these still-condensing future planets <strong>protoplanets</strong>.
+          </p>
+          <p>
+            As matter condensed, the dust cleared and a hole began to form around the Sun.
+            The inner planets became fully formed, while the outer planets were still emerging from the dust.
+          </p>
+          <div class="media media-center" role="group" aria-label="Animation of protoplanets forming around the Sun">
+            <a href="assets/protoplanets.gif" target="_blank" rel="noopener noreferrer">
+              <img class="lesson-image" src="assets/protoplanets.gif" alt="Animation of protoplanets forming around the Sun" loading="lazy" />
+            </a>
+            <div class="caption">Animation of protoplanets forming in the solar disk.</div>
+          </div>
+        </article>
+
+        <article id="diverse" class="section">
+          <span class="kicker">Temperature zones</span>
+          <h3>Why Are the Planets so Diverse?</h3>
+          <p>
+            If the planets all formed in the same process, why are they all so different from each other?
+            The answer is that each planet formed in a different part of the nebula, where temperatures were different.
+          </p>
+          <p>
+            Near the <strong>centre</strong>, where the <strong>Sun</strong> formed, temperatures were very high.
+            Ices were vapourized, and light atoms such as hydrogen and helium were kept from condensing.
+            In this region, particles of rock and metal gathered to form the small rocky <strong>terrestrial planets</strong>.
+          </p>
+          <ul>
+            <li>Mercury</li>
+            <li>Venus</li>
+            <li>Earth</li>
+            <li>Mars</li>
+          </ul>
+          <p>
+            Farther out from the Sun, ices survived and joined with other particles to form the cores of planets.
+            At these colder temperatures, hydrogen, helium, and other gases were able to condense.
+            These large planets became the <strong>Jovian planets</strong>.
+          </p>
+          <ul>
+            <li>Jupiter</li>
+            <li>Saturn</li>
+            <li>Uranus</li>
+            <li>Neptune</li>
+          </ul>
+          <div class="callout">
+            <strong>Key idea:</strong> Distance from the Sun affected temperature, and temperature affected which materials could condense. That is why the inner and outer planets formed so differently.
+          </div>
+          <div class="media" role="group" aria-label="Video about why the planets are so diverse">
+            <iframe class="video" src="https://www.youtube.com/embed/B1AXbpYndGc" title="Why Are the Planets so Diverse video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: Why Are the Planets so Diverse? (YouTube)</div>
+          </div>
+        </article>
+
+        <article id="moons" class="section">
+          <span class="kicker">Natural satellites</span>
+          <h3>Moons</h3>
+          <p>
+            A moon is a large body that orbits a planet.
+            Most of the moons in our solar system likely formed when their parent planets formed.
+          </p>
+          <p>
+            One exception may be Earth's moon.
+            Scientists think it formed when a large body hit Earth, throwing debris and molten rock into orbit.
+            Over time, this material joined together to form our moon.
+          </p>
+          <div class="media" role="group" aria-label="Video about moons">
+            <iframe class="video" src="https://www.youtube.com/embed/2zS6zWKbFxI" title="Moons video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: Moons (YouTube)</div>
+          </div>
+        </article>
+
+        <article id="comets" class="section">
+          <span class="kicker">Leftover material</span>
+          <h3>Comets &amp; Asteroids</h3>
+          <p>
+            A comet is a ball of rock and ice that orbits the Sun.
+            Comets are thought to come from a giant cloud that surrounds our solar system, known as the Oort cloud.
+          </p>
+          <div class="media" role="group" aria-label="Video about comets">
+            <iframe class="video" src="https://www.youtube.com/embed/dvd47rMYia0" title="Comets video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="caption">Video: Comets (YouTube)</div>
+          </div>
+          <p>
+            Between Mars and Jupiter there is a large asteroid belt.
+            Asteroids are small rocky bodies that orbit the Sun.
+            They are thought to be debris that never quite became a planet, probably because of the huge gravity of Jupiter.
+          </p>
+          <div class="media media-center" role="group" aria-label="Animation of the asteroid belt between Mars and Jupiter">
+            <a href="assets/41d_asteroidbelt.gif" target="_blank" rel="noopener noreferrer">
+              <img class="lesson-image" src="assets/41d_asteroidbelt.gif" alt="Animation of the asteroid belt between Mars and Jupiter" loading="lazy" />
+            </a>
+            <div class="caption">Animation of the asteroid belt between Mars and Jupiter.</div>
+          </div>
+        </article>
+      </section>
+    </div>
+
+    <footer>
+      <div style="margin-top:18px">Built as a single self-contained HTML page • Responsive + print-friendly • Styled to match the layout pattern used in Earth4.2.html.</div>
+    </footer>
+  </main>
+
+  <script>
+    (function(){
+      const wrapEnglishContent = (el) => {
+        if (!el || el.querySelector(':scope > .i18n-en')) return;
+        const childNodes = Array.from(el.childNodes);
+        if (!childNodes.length) return;
+        const hasBlockChild = childNodes.some((node) => node.nodeType === Node.ELEMENT_NODE && /^(DIV|P|UL|OL|TABLE|SECTION|ARTICLE|FIGURE|BLOCKQUOTE)$/i.test(node.tagName));
+        const wrapper = document.createElement(hasBlockChild ? 'div' : 'span');
+        wrapper.className = `i18n-en${hasBlockChild ? ' block' : ''}`;
+        childNodes.forEach((node) => wrapper.appendChild(node));
+        el.appendChild(wrapper);
+      };
+
+      const addZh = (el, zh, opts = {}) => {
+        if (!el || !zh) return;
+        if (opts.append) wrapEnglishContent(el);
+        else el.classList.add('i18n-en');
+        const node = document.createElement(opts.tag || 'div');
+        node.className = `i18n-zh ${opts.className || ''}`.trim();
+        node.innerHTML = zh;
+        if (opts.append) el.appendChild(node);
+        else el.insertAdjacentElement('afterend', node);
+      };
+
+      const addZhInline = (el, zh, opts = {}) => {
+        const className = ['inline', opts.className || ''].join(' ').trim();
+        addZh(el, zh, { ...opts, append: true, tag: 'span', className });
+      };
+
+      const addZhAll = (selector, zhList, opts = {}) => {
+        const nodes = Array.from(document.querySelectorAll(selector));
+        zhList.forEach((zh, i) => addZh(nodes[i], zh, opts));
+      };
+
+      const addZhAllInline = (selector, zhList, opts = {}) => {
+        const nodes = Array.from(document.querySelectorAll(selector));
+        zhList.forEach((zh, i) => addZhInline(nodes[i], zh, opts));
+      };
+
+      addZh(document.querySelector('.brand h1'), '地球与空间科学 • 太阳系的形成', { append: true });
+      addZh(document.querySelector('.hero h1'), '4.4 太阳系的形成');
+      addZhInline(document.querySelector('.hero p'), '关于太阳系如何形成，最被广泛接受的解释是星云理论。本课将追踪气体与尘埃云的坍缩、太阳的诞生、行星的形成，以及后来成为卫星、彗星和小行星的剩余物质。');
+      addZh(document.querySelector('.sticky h2'), '本页内容');
+      addZh(document.querySelector('.sticky .subtle'), '跳转到各个主题部分。');
+      addZhAll('.toc a', [
+        '星云形成理论 · 概览',
+        '太阳系诞生 · 动画',
+        '太阳的诞生 · 原太阳',
+        '内行星的诞生 · 原行星',
+        '为什么行星差异很大？ · 温度',
+        '卫星 · 起源',
+        '彗星和小行星 · 剩余物质'
+      ], { append: true });
+      addZhAll('.section .kicker', [
+        '概览',
+        '动画',
+        '原太阳',
+        '原行星',
+        '温度区域',
+        '天然卫星',
+        '剩余物质'
+      ]);
+      addZhAll('.section h3', [
+        '星云形成理论',
+        '太阳系诞生',
+        '太阳的诞生',
+        '内行星的诞生',
+        '为什么行星差异很大？',
+        '卫星',
+        '彗星和小行星'
+      ]);
+      addZhAllInline('.section > p', [
+        '关于太阳系形成，最被广泛接受的理论是<strong>星云理论</strong>。这一理论认为，太阳系是在大约 50 亿年前，一个由尘埃和气体组成的星云发生引力坍缩时形成的。',
+        '随着云团坍缩，它自转得更快，压扁成一个圆盘，并逐渐分成不同区域，后来分别形成了太阳、行星、卫星以及较小天体。',
+        '早期太阳系开始于一团旋转的气体和尘埃云。引力把物质向内拉，而运动则把物质铺展成一个宽大的旋转圆盘。',
+        '中心处的隆起随着更多物质被拉入而变得越来越致密。这个隆起正在变成一颗新的恒星，也就是我们的太阳。我们把这颗仍在凝聚中的未来太阳称为<strong>原太阳</strong>。',
+        '随着太阳继续增长，太阳周围区域开始形成物质团块。在高温环境中，这些团块继续凝聚并形成行星。我们把这些仍在凝聚中的未来行星称为<strong>原行星</strong>。',
+        '随着物质继续凝聚，尘埃逐渐散去，太阳周围开始形成空洞。内行星逐渐完全形成，而外行星仍在尘埃中继续出现。',
+        '如果所有行星都在同一过程中形成，为什么它们会彼此如此不同？答案在于每颗行星形成于星云中的不同位置，而这些位置的温度不同。',
+        '靠近<strong>中心</strong>、也就是<strong>太阳</strong>形成的地方，温度非常高。冰会被汽化，氢和氦等轻原子也无法凝聚。在这一地区，岩石和金属颗粒聚集，形成了小型岩石质的<strong>类地行星</strong>。',
+        '离太阳更远的地方，冰能够保留下来，并与其他颗粒结合形成行星核心。在这些较低温区域，氢、氦和其他气体都可以凝聚。这些大型行星最终形成了<strong>类木行星</strong>。',
+        '月球是绕行星运行的大天体。我们太阳系中的大多数卫星很可能是在它们母行星形成时一起形成的。',
+        '地球的月球可能是个例外。科学家认为，它是在一个大型天体撞击地球后形成的。撞击将碎片和熔融岩石抛入轨道，随后这些物质逐渐聚集形成了月球。',
+        '彗星是绕太阳运行的岩石和冰球体。人们认为彗星来自包围太阳系的一大片云，叫作奥尔特云。',
+        '在火星和木星之间有一条大型小行星带。小行星是绕太阳运行的小型岩石天体。它们被认为是没有完全形成行星的碎屑，可能是因为木星巨大的引力造成的。'
+      ]);
+      addZhAllInline('.section li', [
+        '水星',
+        '金星',
+        '地球',
+        '火星',
+        '木星',
+        '土星',
+        '天王星',
+        '海王星'
+      ]);
+      addZhAllInline('.media .caption', [
+        '视频：星云形成理论（YouTube）',
+        '视频：太阳系诞生（YouTube）',
+        '显示星云中心形成原太阳的动画。',
+        '显示太阳盘中形成原行星的动画。',
+        '视频：为什么行星差异很大？（YouTube）',
+        '视频：卫星（YouTube）',
+        '视频：彗星（YouTube）',
+        '火星和木星之间小行星带的动画。'
+      ]);
+      addZhInline(document.querySelector('#diverse .callout > strong'), '关键观点：');
+      addZhInline(document.querySelector('#diverse .callout'), '距离太阳的远近决定了温度，而温度又决定了哪些物质能够凝聚。这就是内行星和外行星形成方式不同的原因。');
+      addZh(document.querySelector('footer > div'), '本页面为单文件 HTML • 响应式 + 适合打印 • 版式与 Earth4.2.html 保持一致。');
+
+      const langToggle = document.getElementById('langToggle');
+      const setLangMode = (mode) => {
+        const currentMode = ['en', 'enzh', 'zh'].includes(mode) ? mode : 'en';
+        document.body.classList.toggle('lang-bilingual', currentMode === 'enzh');
+        document.body.classList.toggle('lang-zh', currentMode === 'zh');
+        langToggle.textContent = currentMode === 'enzh' ? 'Language: EN+ZH' : currentMode === 'zh' ? 'Language: ZH' : 'Language: EN';
+        langToggle.setAttribute('aria-pressed', currentMode === 'en' ? 'false' : 'true');
+        langToggle.setAttribute('aria-label', currentMode === 'enzh' ? 'Language mode: English and Chinese' : currentMode === 'zh' ? 'Language mode: Chinese only' : 'Language mode: English only');
+        localStorage.setItem('earth44LangMode', currentMode);
+      };
+
+      langToggle.addEventListener('click', () => {
+        const currentMode = document.body.classList.contains('lang-zh') ? 'zh' : document.body.classList.contains('lang-bilingual') ? 'enzh' : 'en';
+        setLangMode(currentMode === 'en' ? 'enzh' : currentMode === 'enzh' ? 'zh' : 'en');
+      });
+
+      setLangMode(localStorage.getItem('earth44LangMode'));
+
+      const body = document.body;
+      const navToggle = document.getElementById('navToggle');
+      const pageNav = document.getElementById('pageNav');
+      const setNavCollapsed = (collapsed) => {
+        body.classList.toggle('nav-collapsed', collapsed);
+        if (navToggle){
+          navToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+          navToggle.textContent = collapsed ? '☰ Outline: Show' : '☰ Outline: Hide';
+        }
+        if (pageNav){
+          pageNav.setAttribute('aria-hidden', collapsed ? 'true' : 'false');
+          if ('inert' in pageNav) pageNav.inert = collapsed;
+        }
+        try{ localStorage.setItem('earth44NavCollapsed', collapsed ? '1' : '0'); }catch(_){}
+      };
+
+      if (navToggle){
+        navToggle.addEventListener('click', () => {
+          setNavCollapsed(!body.classList.contains('nav-collapsed'));
+        });
+        setNavCollapsed(localStorage.getItem('earth44NavCollapsed') === '1');
+      }
+
+      const links = Array.from(document.querySelectorAll('.toc a'));
+      const sections = links.map((a) => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+      const setActive = (id) => {
+        links.forEach((a) => {
+          const on = a.getAttribute('href') === '#' + id;
+          a.style.background = on ? 'rgba(37,99,235,.08)' : '';
+          a.style.borderColor = on ? 'rgba(37,99,235,.25)' : '';
+        });
+      };
+      const obs = new IntersectionObserver((entries) => {
+        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActive(visible.target.id);
+      }, { rootMargin: '-20% 0px -70% 0px', threshold: [0.05, 0.1, 0.2, 0.35] });
+      sections.forEach((section) => obs.observe(section));
+      if (sections[0]) setActive(sections[0].id);
+    })();
+  </script>
+</body>
+</html>
