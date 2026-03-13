@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PROJ-BI-0021</title>
+  <style>
+    html {
+      background: #eef1f4;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 8.5in;
+      min-height: 11in;
+      padding: 0.9in 1in 1in;
+      background: #ffffff;
+      color: #111827;
+      font-family: "Aptos", "Calibri", "Carlito", "Segoe UI", Arial, sans-serif;
+      font-size: 12pt;
+      line-height: 1.5;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+    }
+    h1, h2, h3 {
+      color: #111827;
+      margin-top: 1.4rem;
+      margin-bottom: 0.65rem;
+      line-height: 1.25;
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 24pt;
+      text-align: center;
+    }
+    h2 {
+      font-size: 16pt;
+    }
+    h3 {
+      font-size: 13pt;
+    }
+    p, li {
+      font-size: 12pt;
+    }
+    .meta {
+      margin: 0 auto 1.3rem;
+      max-width: 5.8in;
+    }
+    .meta p {
+      margin: 0.2rem 0;
+    }
+    .lang-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin: 0 0 1.2rem;
+      padding: 0.65rem 0.8rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.65rem;
+      background: #f8fafc;
+      position: sticky;
+      top: 0.5rem;
+      z-index: 5;
+    }
+    .lang-toolbar label {
+      font-size: 11pt;
+      font-weight: 600;
+      color: #1f2937;
+    }
+    .lang-toolbar select {
+      font: inherit;
+      padding: 0.35rem 0.55rem;
+      border: 1px solid #9ca3af;
+      border-radius: 0.45rem;
+      background: #ffffff;
+      color: #111827;
+    }
+    .i18n-block {
+      display: block;
+    }
+    .i18n-inline .i18n-block {
+      display: inline;
+    }
+    .i18n-zh {
+      color: #1f2937;
+    }
+    body.lang-en .i18n-zh {
+      display: none;
+    }
+    body.lang-enzh .i18n-zh {
+      display: block;
+      margin-top: 0.45rem;
+      padding-top: 0.3rem;
+      border-top: 1px dashed #cbd5e1;
+    }
+    body.lang-enzh .i18n-inline .i18n-zh {
+      display: inline;
+      margin-top: 0;
+      margin-left: 0.35rem;
+      padding-top: 0;
+      border-top: 0;
+    }
+    body.lang-zh .i18n-en {
+      display: none;
+    }
+    body.lang-zh .i18n-zh {
+      display: block;
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+    body.lang-zh .i18n-inline .i18n-zh {
+      display: inline;
+    }
+    .formula {
+      margin: 0.9rem 0;
+      padding: 0.8rem 1rem;
+      background: #f8fafc;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      white-space: pre-wrap;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.5rem;
+      table-layout: fixed;
+    }
+    th, td {
+      border: 1px solid #6b7280;
+      padding: 0.5rem 0.6rem;
+      vertical-align: top;
+      overflow-wrap: anywhere;
+    }
+    th {
+      background: #f8fafc;
+      font-weight: 600;
+      text-align: left;
+    }
+    td.num, th.num {
+      text-align: center;
+    }
+    .chart-card {
+      margin: 1rem 0 1.5rem;
+      padding: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.65rem;
+      background: #fbfdff;
+    }
+    .chart-title {
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+    .chart-legend {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .legend-swatch {
+      width: 0.95rem;
+      height: 0.95rem;
+      border-radius: 0.2rem;
+    }
+    .legend-yes {
+      background: #2563eb;
+    }
+    .legend-no {
+      background: #f97316;
+    }
+    .bar-chart {
+      display: grid;
+      gap: 0.8rem;
+    }
+    .bar-row {
+      display: grid;
+      grid-template-columns: 13rem 1fr;
+      gap: 0.9rem;
+      align-items: center;
+    }
+    .bar-label {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .bar-pair {
+      display: grid;
+      gap: 0.35rem;
+    }
+    .bar-track {
+      width: 100%;
+      height: 1.1rem;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+    .bar {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 0.4rem;
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      box-sizing: border-box;
+      min-width: 2rem;
+    }
+    .bar.yes {
+      background: #2563eb;
+    }
+    .bar.no {
+      background: #f97316;
+    }
+    ul, ol {
+      padding-left: 1.3rem;
+    }
+    @media (max-width: 900px) {
+      html {
+        background: #ffffff;
+      }
+      body {
+        box-shadow: none;
+        padding: 1rem;
+      }
+      .bar-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media print {
+      .lang-toolbar {
+        display: none;
+      }
+      html, body {
+        background: #ffffff;
+      }
+      body {
+        max-width: none;
+        min-height: auto;
+        padding: 0.5in 0.65in;
+        box-shadow: none;
+      }
+      h2, h3 {
+        break-after: avoid;
+      }
+      table, .chart-card {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="lang-toolbar" aria-label="Language controls">
+    <label for="langMode">Language / 语言</label>
+    <select id="langMode">
+      <option value="en">English</option>
+      <option value="enzh">En + Zh</option>
+      <option value="zh">中文</option>
+    </select>
+  </div>
+  <h1>How Do My Genetic Traits Compare to Those of Others?</h1>
+
+  <div class="meta">
+    <p><strong>Student Name:</strong> [Your Name]</p>
+    <p><strong>Course:</strong> Science 10</p>
+    <p><strong>Project Code:</strong> PROJ-BI-0021</p>
+    <p><strong>Date:</strong> [Month Day, Year]</p>
+  </div>
+
+  <h2>Inquiry Question</h2>
+  <p>How do my genetic traits compare to those of others?</p>
+
+  <h2>Introduction</h2>
+  <p>Human traits are influenced by genetic information inherited from our biological parents, but the way traits appear in a population is often more complex than a simple dominant-versus-recessive pattern. Some easily observed traits, such as detached earlobes, freckles, tongue rolling, and handedness, are commonly used in introductory genetics because they allow students to compare variation within a group. By collecting data from multiple people, it becomes possible to see that individuals share some traits while differing in others, and that no single person has the exact same combination of traits as everyone else.</p>
+  <p>This project investigates how my own observable genetic traits compare with those of a sample group of 20 people. The purpose is to identify patterns in trait frequency, represent those patterns clearly in a data table and bar graph, and compare the class or family sample with approximate frequencies reported for the general population. This investigation connects genetics with data literacy because it requires careful observation, organized recording, graphical communication, and interpretation of numerical results. Overall, the project shows that inherited traits vary across groups and that population data can be used to place an individual's traits in a broader biological context.</p>
+
+  <h2>Materials</h2>
+  <ul>
+    <li>Genetic trait survey form</li>
+    <li>Responses from 20 participants</li>
+    <li>Pencil or pen</li>
+    <li>Spreadsheet or graphing software such as Excel or Google Sheets, or graph paper and colored pencils</li>
+  </ul>
+
+  <h2>Method</h2>
+  <ol>
+    <li>I reviewed the trait inventory provided in the assignment handout.</li>
+    <li>I recorded my own observable genetic traits.</li>
+    <li>I surveyed 20 people and marked whether each participant answered <strong>yes</strong> or <strong>no</strong> for each trait.</li>
+    <li>I counted the total number of <strong>yes</strong> and <strong>no</strong> responses for every trait.</li>
+    <li>I entered the totals into a summary data table.</li>
+    <li>I created a bar graph showing the number of <strong>yes</strong> and <strong>no</strong> responses for each trait.</li>
+    <li>I converted selected trait counts into percentages using the formula below.</li>
+    <li>I compared my sample frequencies with the approximate frequencies listed in the assignment sheet for the general population.</li>
+    <li>I interpreted the patterns and wrote a conclusion and reflection.</li>
+  </ol>
+
+  <h2>Formula</h2>
+  <div class="formula">Frequency (%) = (Number of people with the trait / Total number of people surveyed) × 100</div>
+  <p><strong>Example:</strong></p>
+  <div class="formula">17 / 20 × 100 = 85%</div>
+
+  <h2>My Trait Inventory</h2>
+  <table id="trait-inventory">
+    <thead>
+      <tr><th>Trait</th><th>My Result</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Detached earlobes</td><td>Yes</td></tr>
+      <tr><td>Tongue rolling</td><td>Yes</td></tr>
+      <tr><td>Dimples</td><td>No</td></tr>
+      <tr><td>Right-handed</td><td>Yes</td></tr>
+      <tr><td>Freckles</td><td>No</td></tr>
+      <tr><td>Naturally curly hair</td><td>No</td></tr>
+      <tr><td>Cleft chin</td><td>No</td></tr>
+      <tr><td>Allergies</td><td>Yes</td></tr>
+      <tr><td>Left thumb over right in hand clasping</td><td>No</td></tr>
+      <tr><td>Can see red and green</td><td>Yes</td></tr>
+      <tr><td>Straight hairline</td><td>Yes</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Raw Survey Data</h2>
+  <table id="raw-survey-data">
+    <thead>
+      <tr>
+        <th>Participant</th>
+        <th>Earlobes</th>
+        <th>Tongue Roll</th>
+        <th>Dimples</th>
+        <th>Right-Handed</th>
+        <th>Freckles</th>
+        <th>Curly Hair</th>
+        <th>Cleft Chin</th>
+        <th>Allergies</th>
+        <th>Left Thumb on Top</th>
+        <th>Sees Red/Green</th>
+        <th>Straight Hairline</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td class="num">2</td><td>No</td><td>Yes</td><td>No</td><td>Yes</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td class="num">3</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>Yes</td><td>No</td></tr>
+      <tr><td class="num">4</td><td>No</td><td>Yes</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+      <tr><td class="num">5</td><td>Yes</td><td>No</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td class="num">6</td><td>Yes</td><td>No</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td class="num">7</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>No</td></tr>
+      <tr><td class="num">8</td><td>Yes</td><td>No</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+      <tr><td class="num">9</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+      <tr><td class="num">10</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td><td>No</td></tr>
+      <tr><td class="num">11</td><td>Yes</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td class="num">12</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+      <tr><td class="num">13</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+      <tr><td class="num">14</td><td>No</td><td>Yes</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td class="num">15</td><td>No</td><td>Yes</td><td>No</td><td>Yes</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+      <tr><td class="num">16</td><td>No</td><td>Yes</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td class="num">17</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+      <tr><td class="num">18</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+      <tr><td class="num">19</td><td>Yes</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+      <tr><td class="num">20</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Summary Data Table</h2>
+  <table id="summary-data">
+    <thead>
+      <tr><th>Genetic Trait</th><th class="num">Yes</th><th class="num">No</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Detached earlobes</td><td class="num">14</td><td class="num">6</td></tr>
+      <tr><td>Tongue rolling</td><td class="num">15</td><td class="num">5</td></tr>
+      <tr><td>Dimples</td><td class="num">6</td><td class="num">14</td></tr>
+      <tr><td>Right-handed</td><td class="num">18</td><td class="num">2</td></tr>
+      <tr><td>Freckles</td><td class="num">3</td><td class="num">17</td></tr>
+      <tr><td>Naturally curly hair</td><td class="num">4</td><td class="num">16</td></tr>
+      <tr><td>Cleft chin</td><td class="num">5</td><td class="num">15</td></tr>
+      <tr><td>Allergies</td><td class="num">7</td><td class="num">13</td></tr>
+      <tr><td>Left thumb over right (hand clasping)</td><td class="num">11</td><td class="num">9</td></tr>
+      <tr><td>Can see red and green</td><td class="num">19</td><td class="num">1</td></tr>
+      <tr><td>Straight hairline</td><td class="num">8</td><td class="num">12</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Bar Graph</h2>
+  <div class="chart-card">
+    <div class="chart-title">An Inventory of Genetic Traits</div>
+    <div class="chart-legend">
+      <span class="legend-item"><span class="legend-swatch legend-yes"></span><span class="legend-text">Yes</span></span>
+      <span class="legend-item"><span class="legend-swatch legend-no"></span><span class="legend-text">No</span></span>
+    </div>
+    <div class="bar-chart">
+      <div class="bar-row"><div class="bar-label">Detached earlobes</div><div class="bar-pair"><div class="bar-track"><div class="bar yes" style="width: 70%;">14</div></div><div class="bar-track"><div class="bar no" style="width: 30%;">6</div></div></div></div>
+      <div class="bar-row"><div class="bar-label">Tongue rolling</div><div class="bar-pair"><div class="bar-track"><div class="bar yes" style="width: 75%;">15</div></div><div class="bar-track"><div class="bar no" style="width: 25%;">5</div></div></div></div>
+      <div class="bar-row"><div class="bar-label">Dimples</div><div class="bar-pair"><div class="bar-track"><div class="bar yes" style="width: 30%;">6</div></div><div class="bar-track"><div class="bar no" style="width: 70%;">14</div></div></div></div>
+      <div class="bar-row"><div class="bar-label">Right-handed</div><div class="bar-pair"><div class="bar-track"><div class="bar yes" style="width: 90%;">18</div></div><div class="bar-track"><div class="bar no" style="width: 10%;">2</div></div></div></div>
+      <div class="bar-row"><div class="bar-label">Freckles</div><div class="bar-pair"><div class="bar-track"><div class="bar yes" style="width: 15%;">3</div></div><div class="bar-track"><div class="bar no" style="width: 85%;">17</div></div></div></div>
+      <div class="bar-row"><div class="bar-label">Naturally curly hair</div><div class="bar-pair"><div class="bar-track"><div class="bar yes" style="width: 20%;">4</div></div><div class="bar-track"><div class="bar no" style="width: 80%;">16</div></div></div></div>
+      <div class="bar-row"><div class="bar-label">Cleft chin</div><div class="bar-pair"><div class="bar-track"><div class="bar yes" style="width: 25%;">5</div></div><div class="bar-track"><div class="bar no" style="width: 75%;">15</div></div></div></div>
+      <div class="bar-row"><div class="bar-label">Allergies</div><div class="bar-pair"><div class="bar-track"><div class="bar yes" style="width: 35%;">7</div></div><div class="bar-track"><div class="bar no" style="width: 65%;">13</div></div></div></div>
+      <div class="bar-row"><div class="bar-label">Left thumb on top</div><div class="bar-pair"><div class="bar-track"><div class="bar yes" style="width: 55%;">11</div></div><div class="bar-track"><div class="bar no" style="width: 45%;">9</div></div></div></div>
+      <div class="bar-row"><div class="bar-label">Can see red and green</div><div class="bar-pair"><div class="bar-track"><div class="bar yes" style="width: 95%;">19</div></div><div class="bar-track"><div class="bar no" style="width: 5%;">1</div></div></div></div>
+      <div class="bar-row"><div class="bar-label">Straight hairline</div><div class="bar-pair"><div class="bar-track"><div class="bar yes" style="width: 40%;">8</div></div><div class="bar-track"><div class="bar no" style="width: 60%;">12</div></div></div></div>
+    </div>
+  </div>
+  <p>The trait is the independent variable on the x-axis, and the number of people is the dependent variable on the y-axis.</p>
+
+  <h2>Frequency Comparison Table</h2>
+  <table id="frequency-comparison">
+    <thead>
+      <tr><th>Genetic Trait</th><th>Frequency in My Group</th><th>Frequency in the General Population</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Tongue rolling</td><td>75%</td><td>Can roll tongue: 70%; Cannot roll tongue: 30%</td></tr>
+      <tr><td>Handedness</td><td>90% right-handed</td><td>Right-handed: 93%; Left-handed: 7%</td></tr>
+      <tr><td>Hand clasping</td><td>55% left thumb on top</td><td>Left thumb on top: 55%; Right thumb on top: 44%; No preference: 1%</td></tr>
+      <tr><td>Can see red and green</td><td>95%</td><td>Can see red and green: 95.5%; Cannot see red and green: 4.5%</td></tr>
+      <tr><td>Allergies</td><td>35%</td><td>Allergies: 30%; No allergies: 70%</td></tr>
+      <tr><td>Cleft chin</td><td>25%</td><td>Cleft chin: 26%; No cleft chin: 74%</td></tr>
+      <tr><td>Detached earlobes</td><td>70%</td><td>Detached earlobes: 72%</td></tr>
+      <tr><td>Dimples</td><td>30%</td><td>Has dimples: 25%; Does not have dimples: 75%</td></tr>
+      <tr><td>Freckles</td><td>15%</td><td>Has freckles: 5%; Does not have freckles: 95%</td></tr>
+      <tr><td>Curly hair</td><td>20%</td><td>Naturally curly hair: 11%; Not naturally curly hair: 89%</td></tr>
+      <tr><td>Straight hairline</td><td>40%</td><td>Straight hairline: 41%; Not straight hairline: 59%</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Analysis</h2>
+  <p>The survey results show that the traits were not distributed evenly across the group. The most common traits in the sample were the ability to see red and green (19 out of 20 people, or 95%), being right-handed (18 out of 20, or 90%), tongue rolling (15 out of 20, or 75%), and detached earlobes (14 out of 20, or 70%). In contrast, the least common traits were freckles (3 out of 20, or 15%), naturally curly hair (4 out of 20, or 20%), and cleft chin (5 out of 20, or 25%). The bar graph makes these differences easy to see because the tallest <strong>yes</strong> bars represent the most frequent traits, while the shortest bars show the least frequent ones.</p>
+  <p>When I compared my sample to the approximate general-population frequencies in the assignment handout, several of my results were very close. Left-thumb-on-top hand clasping in my group was exactly 55%, which matched the handout. Straight hairline was 40% in my group compared with 41% in the general population, cleft chin was 25% compared with 26%, detached earlobes were 70% compared with 72%, and red-green color vision was 95% compared with 95.5%. These close matches suggest that, for some traits, my sample group was fairly representative of the broader pattern.</p>
+  <p>Some traits showed larger differences. Freckles appeared in 15% of my group, which was higher than the 5% listed in the handout. Naturally curly hair was 20% in my group compared with 11% in the general population, and allergies were 35% compared with 30%. These differences do not necessarily mean the handout is wrong. A sample of 20 people is small, so one class or family group can differ from the general population simply because of chance or because the group shares similar backgrounds. This shows why sample size matters when interpreting biological data.</p>
+  <p>Overall, the investigation demonstrates that observable traits can be used to study variation in a population, but it also shows the limits of simple classroom genetics. These traits are useful for introducing inheritance patterns, yet many human characteristics are influenced by multiple genes and by environmental factors. Therefore, the project works well as an introductory model of genetics and data analysis, but it should not be treated as a complete explanation of how inheritance works in all cases.</p>
+
+  <h2>Conclusion</h2>
+  <p>My genetic traits are similar to those of others in some ways and different in others. In my own results, I had detached earlobes, could roll my tongue, was right-handed, had allergies, could see red and green, and had a straight hairline. I did not have dimples, freckles, naturally curly hair, or a cleft chin, and I did not cross my left thumb over my right when clasping my hands. Several of my traits matched the more common traits in the sample, especially right-handedness, tongue rolling, detached earlobes, and red-green color vision. Other traits I did not have, such as freckles and curly hair, were also uncommon in the survey group.</p>
+  <p>The completed survey shows that each person had a different combination of traits, even though some traits appeared much more often than others. By organizing the observations into a summary table, calculating percentages, and comparing the class or family sample with general-population frequencies, I was able to answer the inquiry question with evidence rather than guesses. Overall, this project demonstrates that inherited traits vary across groups and that comparing personal traits with population data is a useful way to understand human genetic variation.</p>
+
+  <h2>Reflection</h2>
+  <p>This project helped me understand that genetics is not only about vocabulary such as genes, alleles, dominant traits, and recessive traits. It is also about collecting reliable observations, organizing evidence, and presenting results in a clear visual form. A major strength of this investigation was that the traits were easy to observe, which made it possible to collect data quickly and compare responses across the whole group. Another strength was the bar graph, because it made trends in the survey much easier to see than a list of raw counts.</p>
+  <p>One challenge in this project is that observable classroom traits do not always follow simple one-gene inheritance patterns in real life. In addition, a sample size of only 20 people can produce results that differ from the general population. If I repeated this project, I would survey more people and use a more diverse sample so that the percentages would likely be more representative. I would also double-check each response before graphing the results. Overall, this project improved my understanding of inherited traits, population variation, and how biological data can be analyzed and communicated.</p>
+
+  <h2>Presentation Notes</h2>
+  <ul>
+    <li>Use clear headings throughout the document.</li>
+    <li>Keep tables neatly aligned.</li>
+    <li>Insert the bar graph close to the analysis section.</li>
+    <li>Check spelling, punctuation, capitalization, and consistency.</li>
+    <li>If exporting to Word or PDF, apply APA spacing, margins, and page numbers.</li>
+  </ul>
+
+  <h2>Rubric</h2>
+  <h3>BC Proficiency Scale</h3>
+  <table id="rubric">
+    <thead>
+      <tr>
+        <th>Criteria</th>
+        <th>Emerging</th>
+        <th>Developing</th>
+        <th>Proficient</th>
+        <th>Extending</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Understanding of genetic traits</td><td>Shows limited understanding of observable genetic traits and inheritance.</td><td>Shows partial understanding with some correct explanations.</td><td>Shows clear and accurate understanding of the investigated traits and their comparison.</td><td>Shows deep understanding and explains patterns, limits, and biological complexity in detail.</td></tr>
+      <tr><td>Data collection and accuracy</td><td>Data are incomplete, unclear, or contain major errors.</td><td>Data are mostly complete but may contain some errors or unclear entries.</td><td>Data are complete, organized, and accurate.</td><td>Data are exceptionally clear, accurate, and carefully checked for reliability.</td></tr>
+      <tr><td>Graph and visual representation</td><td>Graph is missing or difficult to interpret.</td><td>Graph is present but may have labeling or clarity issues.</td><td>Graph is clearly labeled, accurate, and supports the investigation well.</td><td>Graph is highly polished, precise, and especially effective in communicating patterns.</td></tr>
+      <tr><td>Analysis and conclusion</td><td>Analysis is limited or only restates results.</td><td>Analysis includes some interpretation but lacks depth or precision.</td><td>Analysis explains results clearly and connects them to the inquiry question.</td><td>Analysis is insightful, well supported, and thoughtfully discusses patterns and limitations.</td></tr>
+      <tr><td>Presentation does count</td><td>Organization, formatting, and writing make the project hard to follow.</td><td>Organization is adequate but inconsistencies remain in formatting or writing.</td><td>Project is well organized, readable, and professionally presented.</td><td>Project is exceptionally polished, coherent, and visually effective.</td></tr>
+      <tr><td>Reflection and self-assessment</td><td>Reflection is brief or superficial.</td><td>Reflection identifies some learning and areas for improvement.</td><td>Reflection clearly explains learning, strengths, and next steps.</td><td>Reflection is thoughtful, specific, and shows strong personal insight.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Self-Evaluation</h2>
+  <table id="self-evaluation">
+    <thead>
+      <tr><th>Criteria</th><th>Self-Assessment</th><th>Evidence</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Understanding of genetic traits</td><td>Proficient</td><td>I explained how my traits compared with the sample and with general-population frequencies.</td></tr>
+      <tr><td>Data collection and accuracy</td><td>Proficient</td><td>I included a full 20-person survey table, summary totals, and percentage calculations.</td></tr>
+      <tr><td>Graph and visual representation</td><td>Proficient</td><td>I presented the results in a labeled yes/no bar chart and connected it to the data table.</td></tr>
+      <tr><td>Analysis and conclusion</td><td>Proficient</td><td>I identified the most and least common traits and discussed where my group matched or differed from the general population.</td></tr>
+      <tr><td>Presentation does count</td><td>Proficient</td><td>The report uses clear headings, organized tables, consistent formatting, and complete sections.</td></tr>
+      <tr><td>Reflection and self-assessment</td><td>Proficient</td><td>I explained what I learned, noted limitations, and described how I would improve the investigation.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>References</h2>
+  <p>Course materials. (2025, July 29). <em>Science 10 inquiry projects</em> [Course project guide].</p>
+  <p>Course materials. (n.d.). <em>How do my genetic traits compare to those of others?</em> [Project handout].</p>
+  <script>
+    (() => {
+      const STORAGE_KEY = 'proj-bi-0021-lang-mode';
+      const modes = ['lang-en', 'lang-enzh', 'lang-zh'];
+      const modeSelect = document.getElementById('langMode');
+      const body = document.body;
+      const translations = {
+        'How Do My Genetic Traits Compare to Those of Others?': '我的遗传特征与别人相比如何？',
+        '<strong>Student Name:</strong> [Your Name]': '<strong>学生姓名：</strong>[你的名字]',
+        '<strong>Course:</strong> Science 10': '<strong>课程：</strong>科学 10',
+        '<strong>Project Code:</strong> PROJ-BI-0021': '<strong>项目编号：</strong>PROJ-BI-0021',
+        '<strong>Date:</strong> [Month Day, Year]': '<strong>日期：</strong>[月 日, 年]',
+        'Inquiry Question': '探究问题',
+        'Introduction': '引言',
+        'Materials': '材料',
+        'Method': '方法',
+        'Formula': '公式',
+        'My Trait Inventory': '我的性状记录',
+        'Raw Survey Data': '原始调查数据',
+        'Summary Data Table': '汇总数据表',
+        'Bar Graph': '条形图',
+        'Frequency Comparison Table': '频率比较表',
+        'Analysis': '分析',
+        'Conclusion': '结论',
+        'Reflection': '反思',
+        'Presentation Notes': '展示说明',
+        'Rubric': '评分量规',
+        'BC Proficiency Scale': 'BC 省等级表现量表',
+        'Self-Evaluation': '自我评价',
+        'References': '参考文献',
+        'How do my genetic traits compare to those of others?': '我的遗传特征与别人相比如何？',
+        'Human traits are influenced by genetic information inherited from our biological parents, but the way traits appear in a population is often more complex than a simple dominant-versus-recessive pattern. Some easily observed traits, such as detached earlobes, freckles, tongue rolling, and handedness, are commonly used in introductory genetics because they allow students to compare variation within a group. By collecting data from multiple people, it becomes possible to see that individuals share some traits while differing in others, and that no single person has the exact same combination of traits as everyone else.': '人的性状会受到从亲生父母那里继承的遗传信息影响，但这些性状在群体中的呈现方式往往比简单的显性与隐性模式更复杂。一些较容易观察到的性状，例如分离耳垂、雀斑、卷舌和惯用手，常用于遗传学入门学习，因为它们便于学生比较群体内部的差异。通过收集多人的数据，我们可以看到个体之间既有共同点，也有差异，而且没有任何一个人的性状组合会与所有人完全相同。',
+        'This project investigates how my own observable genetic traits compare with those of a sample group of 20 people. The purpose is to identify patterns in trait frequency, represent those patterns clearly in a data table and bar graph, and compare the class or family sample with approximate frequencies reported for the general population. This investigation connects genetics with data literacy because it requires careful observation, organized recording, graphical communication, and interpretation of numerical results. Overall, the project shows that inherited traits vary across groups and that population data can be used to place an individual&#39;s traits in a broader biological context.': '本项目探究我自己的可观察遗传性状与一个 20 人样本群体相比有何异同。目标是找出各性状出现频率的规律，用数据表和条形图清楚展示这些规律，并把班级或家庭样本与作业说明中给出的总体人群近似频率进行比较。这个探究将遗传学与数据素养联系起来，因为它要求仔细观察、系统记录、图表表达以及对数值结果进行解释。总体而言，本项目说明了遗传性状在不同群体中会发生变化，而总体人口数据可以帮助我们把个人性状放到更广泛的生物学背景中理解。',
+        'Genetic trait survey form': '遗传性状调查表',
+        'Responses from 20 participants': '20 位参与者的回答',
+        'Pencil or pen': '铅笔或钢笔',
+        'Spreadsheet or graphing software such as Excel or Google Sheets, or graph paper and colored pencils': '电子表格或制图软件，如 Excel 或 Google Sheets，或者方格纸和彩色铅笔',
+        'I reviewed the trait inventory provided in the assignment handout.': '我查看了作业讲义中提供的性状清单。',
+        'I recorded my own observable genetic traits.': '我记录了自己可观察到的遗传性状。',
+        'I surveyed 20 people and marked whether each participant answered <strong>yes</strong> or <strong>no</strong> for each trait.': '我调查了 20 个人，并记录每位参与者对每个性状的回答是<strong>是</strong>还是<strong>否</strong>。',
+        'I counted the total number of <strong>yes</strong> and <strong>no</strong> responses for every trait.': '我统计了每个性状回答<strong>是</strong>和<strong>否</strong>的人数总数。',
+        'I entered the totals into a summary data table.': '我把总数整理进汇总数据表。',
+        'I created a bar graph showing the number of <strong>yes</strong> and <strong>no</strong> responses for each trait.': '我制作了条形图，显示每个性状中回答<strong>是</strong>和<strong>否</strong>的人数。',
+        'I converted selected trait counts into percentages using the formula below.': '我使用下面的公式把选定性状的人数换算成百分比。',
+        'I compared my sample frequencies with the approximate frequencies listed in the assignment sheet for the general population.': '我把自己的样本频率与作业单中列出的总体人群近似频率进行了比较。',
+        'I interpreted the patterns and wrote a conclusion and reflection.': '我解释了这些规律，并写出了结论和反思。',
+        '<strong>Example:</strong>': '<strong>示例：</strong>',
+        'Trait': '性状',
+        'My Result': '我的结果',
+        'Participant': '参与者',
+        'Earlobes': '耳垂',
+        'Tongue Roll': '卷舌',
+        'Dimples': '酒窝',
+        'Right-Handed': '右利手',
+        'Freckles': '雀斑',
+        'Curly Hair': '卷发',
+        'Cleft Chin': '下巴凹陷',
+        'Allergies': '过敏',
+        'Left Thumb on Top': '左拇指在上',
+        'Sees Red/Green': '能分辨红绿色',
+        'Straight Hairline': '平直发际线',
+        'Genetic Trait': '遗传性状',
+        'Yes': '是',
+        'No': '否',
+        'Detached earlobes': '分离耳垂',
+        'Tongue rolling': '卷舌',
+        'Right-handed': '右利手',
+        'Naturally curly hair': '天然卷发',
+        'Left thumb over right (hand clasping)': '双手交握时左拇指在上',
+        'Can see red and green': '能分辨红绿色',
+        'An Inventory of Genetic Traits': '遗传性状统计图',
+        'The trait is the independent variable on the x-axis, and the number of people is the dependent variable on the y-axis.': '横轴上的性状是自变量，纵轴上的人数是因变量。',
+        'Frequency in My Group': '我所在小组中的频率',
+        'Frequency in the General Population': '总体人群中的频率',
+        'Handedness': '惯用手',
+        'Hand clasping': '双手交握',
+        '75%': '75%',
+        '90% right-handed': '90% 为右利手',
+        '55% left thumb on top': '55% 左拇指在上',
+        '95%': '95%',
+        '35%': '35%',
+        '25%': '25%',
+        '70%': '70%',
+        '30%': '30%',
+        '15%': '15%',
+        '20%': '20%',
+        '40%': '40%',
+        'Can roll tongue: 70%; Cannot roll tongue: 30%': '会卷舌：70%；不会卷舌：30%',
+        'Right-handed: 93%; Left-handed: 7%': '右利手：93%；左利手：7%',
+        'Left thumb on top: 55%; Right thumb on top: 44%; No preference: 1%': '左拇指在上：55%；右拇指在上：44%；无明显偏好：1%',
+        'Can see red and green: 95.5%; Cannot see red and green: 4.5%': '能分辨红绿色：95.5%；不能分辨红绿色：4.5%',
+        'Allergies: 30%; No allergies: 70%': '有过敏：30%；无过敏：70%',
+        'Cleft chin: 26%; No cleft chin: 74%': '下巴凹陷：26%；无下巴凹陷：74%',
+        'Detached earlobes: 72%': '分离耳垂：72%',
+        'Has dimples: 25%; Does not have dimples: 75%': '有酒窝：25%；无酒窝：75%',
+        'Has freckles: 5%; Does not have freckles: 95%': '有雀斑：5%；无雀斑：95%',
+        'Naturally curly hair: 11%; Not naturally curly hair: 89%': '天然卷发：11%；非天然卷发：89%',
+        'Straight hairline: 41%; Not straight hairline: 59%': '平直发际线：41%；非平直发际线：59%',
+        'The survey results show that the traits were not distributed evenly across the group. The most common traits in the sample were the ability to see red and green (19 out of 20 people, or 95%), being right-handed (18 out of 20, or 90%), tongue rolling (15 out of 20, or 75%), and detached earlobes (14 out of 20, or 70%). In contrast, the least common traits were freckles (3 out of 20, or 15%), naturally curly hair (4 out of 20, or 20%), and cleft chin (5 out of 20, or 25%). The bar graph makes these differences easy to see because the tallest <strong>yes</strong> bars represent the most frequent traits, while the shortest bars show the least frequent ones.': '调查结果显示，这些性状在小组中的分布并不均匀。样本中最常见的性状是能分辨红绿色（20 人中有 19 人，即 95%）、右利手（20 人中有 18 人，即 90%）、卷舌（20 人中有 15 人，即 75%）以及分离耳垂（20 人中有 14 人，即 70%）。相反，最少见的性状是雀斑（20 人中有 3 人，即 15%）、天然卷发（20 人中有 4 人，即 20%）和下巴凹陷（20 人中有 5 人，即 25%）。条形图使这些差异一目了然，因为最高的<strong>是</strong>栏代表最常见的性状，而最短的栏则代表最少见的性状。',
+        'When I compared my sample to the approximate general-population frequencies in the assignment handout, several of my results were very close. Left-thumb-on-top hand clasping in my group was exactly 55%, which matched the handout. Straight hairline was 40% in my group compared with 41% in the general population, cleft chin was 25% compared with 26%, detached earlobes were 70% compared with 72%, and red-green color vision was 95% compared with 95.5%. These close matches suggest that, for some traits, my sample group was fairly representative of the broader pattern.': '当我把自己的样本与作业讲义中给出的总体人群近似频率进行比较时，发现其中几项结果非常接近。我的样本中双手交握时左拇指在上的比例正好是 55%，与讲义一致。平直发际线在我的样本中为 40%，总体人群为 41%；下巴凹陷为 25%，总体为 26%；分离耳垂为 70%，总体为 72%；红绿色视觉正常为 95%，总体为 95.5%。这些接近的结果说明，对于某些性状来说，我的样本组能够较好地代表更广泛的人群规律。',
+        'Some traits showed larger differences. Freckles appeared in 15% of my group, which was higher than the 5% listed in the handout. Naturally curly hair was 20% in my group compared with 11% in the general population, and allergies were 35% compared with 30%. These differences do not necessarily mean the handout is wrong. A sample of 20 people is small, so one class or family group can differ from the general population simply because of chance or because the group shares similar backgrounds. This shows why sample size matters when interpreting biological data.': '有些性状则表现出较大的差异。我的样本中有雀斑的人占 15%，高于讲义中列出的 5%。天然卷发在我的样本中占 20%，而总体人群中为 11%；过敏在我的样本中为 35%，总体中为 30%。这些差异并不一定说明讲义是错误的。20 人的样本规模较小，因此一个班级或家庭组与总体人群出现差异，可能只是偶然，也可能是因为组内成员有相似背景。这说明在解释生物数据时，样本大小非常重要。',
+        'Overall, the investigation demonstrates that observable traits can be used to study variation in a population, but it also shows the limits of simple classroom genetics. These traits are useful for introducing inheritance patterns, yet many human characteristics are influenced by multiple genes and by environmental factors. Therefore, the project works well as an introductory model of genetics and data analysis, but it should not be treated as a complete explanation of how inheritance works in all cases.': '总体来看，这项探究表明可观察性状可以用来研究群体中的差异，但它也显示了课堂中简化遗传学模型的局限性。这些性状适合用来介绍遗传模式，不过许多人类特征会同时受到多个基因和环境因素的影响。因此，这个项目作为遗传学和数据分析的入门模型非常合适，但不应被视为对所有遗传情况的完整解释。',
+        'My genetic traits are similar to those of others in some ways and different in others. In my own results, I had detached earlobes, could roll my tongue, was right-handed, had allergies, could see red and green, and had a straight hairline. I did not have dimples, freckles, naturally curly hair, or a cleft chin, and I did not cross my left thumb over my right when clasping my hands. Several of my traits matched the more common traits in the sample, especially right-handedness, tongue rolling, detached earlobes, and red-green color vision. Other traits I did not have, such as freckles and curly hair, were also uncommon in the survey group.': '我的遗传性状在某些方面与他人相似，在另一些方面则不同。根据我的结果，我有分离耳垂、会卷舌、是右利手、有过敏、能分辨红绿色，并且有平直发际线。我没有酒窝、雀斑、天然卷发或下巴凹陷，而且在双手交握时并不是左拇指压在右拇指上。我的多项性状与样本中较常见的性状一致，尤其是右利手、卷舌、分离耳垂和红绿色视觉正常。另一方面，我所没有的雀斑和卷发在调查组中也同样不常见。',
+        'The completed survey shows that each person had a different combination of traits, even though some traits appeared much more often than others. By organizing the observations into a summary table, calculating percentages, and comparing the class or family sample with general-population frequencies, I was able to answer the inquiry question with evidence rather than guesses. Overall, this project demonstrates that inherited traits vary across groups and that comparing personal traits with population data is a useful way to understand human genetic variation.': '完成后的调查显示，尽管有些性状出现得比其他性状频繁得多，但每个人的性状组合仍然各不相同。通过把观察结果整理成汇总表、计算百分比，并把班级或家庭样本与总体人群频率进行比较，我能够用证据而不是猜测来回答探究问题。总体而言，这个项目说明遗传性状会在不同群体之间发生变化，而把个人性状与人口数据进行比较，是理解人类遗传差异的一种有效方式。',
+        'This project helped me understand that genetics is not only about vocabulary such as genes, alleles, dominant traits, and recessive traits. It is also about collecting reliable observations, organizing evidence, and presenting results in a clear visual form. A major strength of this investigation was that the traits were easy to observe, which made it possible to collect data quickly and compare responses across the whole group. Another strength was the bar graph, because it made trends in the survey much easier to see than a list of raw counts.': '这个项目让我明白，遗传学不仅仅是关于基因、等位基因、显性性状和隐性性状这些术语。它也涉及收集可靠观察、整理证据，并以清晰的可视化方式展示结果。这项探究的一个主要优点是这些性状都比较容易观察，因此能够快速收集数据并比较整个小组的回答。另一个优点是条形图，因为它比单纯列出原始计数更容易看出调查趋势。',
+        'One challenge in this project is that observable classroom traits do not always follow simple one-gene inheritance patterns in real life. In addition, a sample size of only 20 people can produce results that differ from the general population. If I repeated this project, I would survey more people and use a more diverse sample so that the percentages would likely be more representative. I would also double-check each response before graphing the results. Overall, this project improved my understanding of inherited traits, population variation, and how biological data can be analyzed and communicated.': '这个项目的一个挑战在于，课堂中观察到的性状在现实生活里并不总是遵循简单的单基因遗传模式。此外，只有 20 人的样本可能会产生与总体人群不同的结果。如果我再次进行这个项目，我会调查更多的人，并采用更多样化的样本，使所得百分比更具有代表性。我也会在制作图表前再次核对每一份回答。总体来说，这个项目提升了我对遗传性状、群体差异以及生物数据如何被分析和表达的理解。',
+        'Use clear headings throughout the document.': '在整篇文档中使用清晰的标题。',
+        'Keep tables neatly aligned.': '保持表格整齐对齐。',
+        'Insert the bar graph close to the analysis section.': '把条形图放在接近分析部分的位置。',
+        'Check spelling, punctuation, capitalization, and consistency.': '检查拼写、标点、大写和整体一致性。',
+        'If exporting to Word or PDF, apply APA spacing, margins, and page numbers.': '如果导出为 Word 或 PDF，请应用 APA 的行距、页边距和页码要求。',
+        'Criteria': '评价标准',
+        'Emerging': '初步呈现',
+        'Developing': '发展中',
+        'Proficient': '达标',
+        'Extending': '拓展',
+        'Understanding of genetic traits': '对遗传性状的理解',
+        'Data collection and accuracy': '数据收集与准确性',
+        'Graph and visual representation': '图表与视觉表达',
+        'Analysis and conclusion': '分析与结论',
+        'Presentation does count': '展示表现也计分',
+        'Reflection and self-assessment': '反思与自我评价',
+        'Shows limited understanding of observable genetic traits and inheritance.': '对可观察遗传性状及其遗传表现出有限理解。',
+        'Shows partial understanding with some correct explanations.': '表现出部分理解，并有一些正确解释。',
+        'Shows clear and accurate understanding of the investigated traits and their comparison.': '对所探究的性状及其比较表现出清晰且准确的理解。',
+        'Shows deep understanding and explains patterns, limits, and biological complexity in detail.': '表现出深入理解，并能详细解释规律、局限和生物学复杂性。',
+        'Data are incomplete, unclear, or contain major errors.': '数据不完整、不清楚，或存在重大错误。',
+        'Data are mostly complete but may contain some errors or unclear entries.': '数据大体完整，但可能存在一些错误或不清楚的记录。',
+        'Data are complete, organized, and accurate.': '数据完整、有条理且准确。',
+        'Data are exceptionally clear, accurate, and carefully checked for reliability.': '数据非常清晰、准确，并经过认真核查以确保可靠性。',
+        'Graph is missing or difficult to interpret.': '缺少图表，或图表难以解读。',
+        'Graph is present but may have labeling or clarity issues.': '已有图表，但标签或清晰度可能存在问题。',
+        'Graph is clearly labeled, accurate, and supports the investigation well.': '图表标签清楚、数据准确，并能很好支持探究。',
+        'Graph is highly polished, precise, and especially effective in communicating patterns.': '图表制作精良、准确，并且特别善于传达规律。',
+        'Analysis is limited or only restates results.': '分析有限，或只是重复结果。',
+        'Analysis includes some interpretation but lacks depth or precision.': '分析包含一定解释，但缺乏深度或准确性。',
+        'Analysis explains results clearly and connects them to the inquiry question.': '分析能清楚解释结果，并将其与探究问题联系起来。',
+        'Analysis is insightful, well supported, and thoughtfully discusses patterns and limitations.': '分析有见地、证据充分，并能深入讨论规律与局限。',
+        'Organization, formatting, and writing make the project hard to follow.': '组织、格式和写作使项目难以阅读和理解。',
+        'Organization is adequate but inconsistencies remain in formatting or writing.': '组织基本合格，但格式或写作仍存在不一致。',
+        'Project is well organized, readable, and professionally presented.': '项目组织良好、易于阅读，并具有专业呈现效果。',
+        'Project is exceptionally polished, coherent, and visually effective.': '项目非常精致、连贯，并具有良好的视觉表达效果。',
+        'Reflection is brief or superficial.': '反思简短或较为表面。',
+        'Reflection identifies some learning and areas for improvement.': '反思指出了一些学习收获和改进方向。',
+        'Reflection clearly explains learning, strengths, and next steps.': '反思清楚说明了学习收获、优势和下一步计划。',
+        'Reflection is thoughtful, specific, and shows strong personal insight.': '反思深入、具体，并展现出较强的个人洞见。',
+        'Self-Assessment': '自我评价等级',
+        'Evidence': '证据',
+        'I explained how my traits compared with the sample and with general-population frequencies.': '我解释了自己的性状如何与样本以及总体人群频率进行比较。',
+        'I included a full 20-person survey table, summary totals, and percentage calculations.': '我加入了完整的 20 人调查表、汇总总数和百分比计算。',
+        'I presented the results in a labeled yes/no bar chart and connected it to the data table.': '我用带标签的是/否条形图展示结果，并将其与数据表对应起来。',
+        'I identified the most and least common traits and discussed where my group matched or differed from the general population.': '我指出了最常见和最少见的性状，并讨论了我的样本在哪些方面与总体人群一致或不同。',
+        'The report uses clear headings, organized tables, consistent formatting, and complete sections.': '这份报告使用了清晰标题、整齐表格、一致格式和完整章节。',
+        'I explained what I learned, noted limitations, and described how I would improve the investigation.': '我说明了自己的学习收获、记录了局限性，并描述了如何改进这项探究。',
+        'Course materials. (2025, July 29). <em>Science 10 inquiry projects</em> [Course project guide].': '课程资料。（2025 年 7 月 29 日）。<em>Science 10 inquiry projects</em>［课程项目指南］。',
+        'Course materials. (n.d.). <em>How do my genetic traits compare to those of others?</em> [Project handout].': '课程资料。（无日期）。<em>How do my genetic traits compare to those of others?</em>［项目讲义］。'
+      };
+
+      function normalize(value) {
+        return value.replace(/\s+/g, ' ').trim();
+      }
+
+      function applyBilingual(node, translation) {
+        const isInline = node.tagName === 'TH' || node.tagName === 'TD' || node.classList.contains('legend-text');
+        if (isInline) node.classList.add('i18n-inline');
+
+        const enWrap = document.createElement('span');
+        enWrap.className = 'i18n-en i18n-block';
+        while (node.firstChild) {
+          enWrap.appendChild(node.firstChild);
+        }
+
+        const zhWrap = document.createElement('span');
+        zhWrap.className = 'i18n-zh i18n-block';
+        zhWrap.innerHTML = translation;
+
+        node.appendChild(enWrap);
+        node.appendChild(zhWrap);
+      }
+
+      const targets = Array.from(document.querySelectorAll([
+        'h1', 'h2', 'h3', 'p', 'li', 'th', '.chart-title', '.bar-label', '.legend-text',
+        '#trait-inventory td', '#summary-data td', '#frequency-comparison td', '#rubric td', '#self-evaluation td'
+      ].join(',')));
+
+      targets.forEach((node) => {
+        const key = normalize(node.innerHTML);
+        const translation = translations[key];
+        if (!translation) return;
+        applyBilingual(node, translation);
+      });
+
+      function setMode(mode) {
+        if (!['en', 'enzh', 'zh'].includes(mode)) mode = 'en';
+        body.classList.remove(...modes);
+        body.classList.add(`lang-${mode}`);
+        document.documentElement.lang = mode === 'zh' ? 'zh-CN' : 'en';
+        modeSelect.value = mode;
+        try {
+          localStorage.setItem(STORAGE_KEY, mode);
+        } catch (err) {
+          // Ignore storage failures.
+        }
+      }
+
+      let initialMode = 'en';
+      try {
+        initialMode = localStorage.getItem(STORAGE_KEY) || 'en';
+      } catch (err) {
+        initialMode = 'en';
+      }
+
+      modeSelect.addEventListener('change', (event) => setMode(event.target.value));
+      setMode(initialMode);
+    })();
+  </script>
+</body>
+</html>
