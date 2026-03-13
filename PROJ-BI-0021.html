@@ -20,6 +20,10 @@
       --grid: #cbd5e1;
     }
 
+    @page {
+      margin: 1in;
+    }
+
     html {
       background: var(--page-bg);
     }
@@ -28,12 +32,12 @@
       margin: 0 auto;
       max-width: 8.5in;
       min-height: 11in;
-      padding: 0.75in 0.85in 0.9in;
+      padding: 1in;
       background: var(--paper);
       color: var(--ink);
       font-family: "Aptos", "Calibri", "Carlito", "Segoe UI", Arial, sans-serif;
       font-size: 12pt;
-      line-height: 1.45;
+      line-height: 2;
       box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
     }
 
@@ -57,10 +61,49 @@
       margin: 0.4rem 0 0.65rem;
     }
 
-    .meta-line {
-      margin-bottom: 1rem;
-      font-weight: 600;
-      letter-spacing: 0.01em;
+    .running-head {
+      display: none;
+      font-size: 10pt;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .title-page {
+      min-height: calc(11in - 2in);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .title-page h1 {
+      font-size: 22pt;
+      margin-bottom: 1.2rem;
+    }
+
+    .title-page p {
+      margin: 0.2rem 0;
+    }
+
+    .title-page .title-meta {
+      margin-top: 1.6rem;
+    }
+
+    .report-section {
+      margin-bottom: 1.2rem;
+    }
+
+    .report-paragraph {
+      margin: 0;
+      text-indent: 0.5in;
+    }
+
+    .report-paragraph + .report-paragraph {
+      margin-top: 0.2rem;
     }
 
     .lang-toolbar {
@@ -163,7 +206,6 @@
       text-align: left;
     }
 
-    .inquiry-table th,
     .instructions-table th {
       background: var(--accent-fill);
       text-align: center;
@@ -441,6 +483,24 @@
       background-size: 100% 1.78rem;
     }
 
+    .references-section {
+      page-break-before: always;
+      break-before: page;
+    }
+
+    .reference-entry {
+      margin: 0;
+      padding-left: 0.5in;
+      text-indent: -0.5in;
+    }
+
+    .rubric-table th,
+    .rubric-table td,
+    .self-eval-table th,
+    .self-eval-table td {
+      font-size: 11pt;
+    }
+
     @media (max-width: 900px) {
       html {
         background: #ffffff;
@@ -476,6 +536,20 @@
         display: none;
       }
 
+      .running-head {
+        display: flex;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .page-counter::after {
+        content: counter(page);
+      }
+
       html,
       body {
         background: #ffffff;
@@ -484,7 +558,7 @@
       body {
         max-width: none;
         min-height: auto;
-        padding: 0.5in 0.6in;
+        padding: 0.35in 0 0;
         box-shadow: none;
       }
 
@@ -501,6 +575,11 @@
   </style>
 </head>
 <body>
+  <div class="running-head" aria-hidden="true">
+    <span>PROJ-BI-0021</span>
+    <span>Page <span class="page-counter"></span></span>
+  </div>
+
   <div class="lang-toolbar" aria-label="Language controls">
     <label for="langMode">Language / 语言</label>
     <select id="langMode">
@@ -510,18 +589,23 @@
     </select>
   </div>
 
-  <div class="meta-line">Name: ___________________________ Date: ____________</div>
+  <section class="title-page" aria-label="Title page">
+    <h1>How Do My Genetic Traits Compare to Those of Others?</h1>
+    <p>Science 10 Biology Inquiry Project</p>
+    <div class="title-meta">
+      <p>Student Name: ___________________________</p>
+      <p>Teacher: ___________________________</p>
+      <p>Course: Science 10</p>
+      <p>Project Code: PROJ-BI-0021</p>
+      <p>Date: ___________________________</p>
+    </div>
+  </section>
 
-  <table class="boxed-table inquiry-table">
-    <tbody>
-      <tr>
-        <th>Inquiry Question</th>
-      </tr>
-      <tr>
-        <td>How do my genetic traits compare to those of others?</td>
-      </tr>
-    </tbody>
-  </table>
+  <section class="report-section">
+    <h2>Introduction</h2>
+    <p class="report-paragraph">This inquiry project examines how my own observable genetic traits compare with those of other people in a sample group of 20. The project was selected from the Science 10 biology inquiry list and focuses on inherited traits, dominant and recessive patterns, and data literacy through observation, organization, and graphical representation (Course materials, 2025).</p>
+    <p class="report-paragraph">To complete the investigation, I recorded my own visible traits, surveyed 20 participants using the assigned trait inventory, counted the number of yes and no responses for each trait, and compared several frequencies with the approximate values provided in the project handout. This approach supports the inquiry question by combining personal observations with class-style population data and formal comparison (Course materials, n.d.).</p>
+  </section>
 
   <div class="illustration">
     <img src="assets/proj-bi-0021/image2.png" alt="Examples of dominant and recessive genetic traits" />
@@ -775,8 +859,88 @@
   </table>
 
   <h2>Conclusion</h2>
-  <p>My genetic traits are similar to those of others in some ways and different in others. In my own results, I had detached earlobes, could roll my tongue, was right-handed, had allergies, could see red and green, and had a straight hairline. I did not have dimples, freckles, naturally curly hair, or a cleft chin, and I did not cross my left thumb over my right when clasping my hands. Several of my traits matched the more common traits in the sample, especially right-handedness, tongue rolling, detached earlobes, and red-green colour vision. Other traits I did not have, such as freckles and curly hair, were also uncommon in the survey group.</p>
-  <p>Overall, the completed survey showed that each person had a different combination of traits, even though some traits appeared much more often than others. By organizing the observations into a summary table, graphing the results, and comparing the group frequencies with approximate population data, I was able to answer the inquiry question with evidence. My traits were partly typical of the group and partly different, which shows that inherited traits vary from person to person.</p>
+  <p class="report-paragraph">My genetic traits are similar to those of others in some ways and different in others. In my own results, I had detached earlobes, could roll my tongue, was right-handed, had allergies, could see red and green, and had a straight hairline. I did not have dimples, freckles, naturally curly hair, or a cleft chin, and I did not cross my left thumb over my right when clasping my hands. Several of my traits matched the more common traits in the sample, especially right-handedness, tongue rolling, detached earlobes, and red-green colour vision. Other traits I did not have, such as freckles and curly hair, were also uncommon in the survey group.</p>
+  <p class="report-paragraph">Overall, the completed survey showed that each person had a different combination of traits, even though some traits appeared much more often than others. By organizing the observations into a summary table, graphing the results, and comparing the group frequencies with approximate population data, I was able to answer the inquiry question with evidence. My traits were partly typical of the group and partly different, which shows that inherited traits vary from person to person.</p>
+
+  <section class="report-section">
+    <h2>Reflection</h2>
+    <p class="report-paragraph">This project helped me understand that genetics is not only about memorizing terms such as gene, allele, dominant, and recessive. It also involves collecting reliable observations, organizing data carefully, and communicating results clearly. The survey and graph made it easier to see patterns in the sample and to recognize that some traits are much more common than others.</p>
+    <p class="report-paragraph">If I repeated this investigation, I would survey a larger and more varied sample group to improve the reliability of the percentages. I would also double-check every response before graphing the data. Overall, this inquiry strengthened my understanding of inherited traits, biological variation, and how evidence can be used to answer a science question in a clear format.</p>
+  </section>
+
+  <h2>Rubric</h2>
+  <table class="data-table rubric-table">
+    <thead>
+      <tr>
+        <th>Criteria</th>
+        <th>Emerging</th>
+        <th>Developing</th>
+        <th>Proficient</th>
+        <th>Extending</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Understanding of genetic traits</td>
+        <td>Shows limited understanding of the traits or their meanings.</td>
+        <td>Shows partial understanding with some correct explanations.</td>
+        <td>Shows clear and accurate understanding of the traits and comparison.</td>
+        <td>Shows deep understanding and explains patterns and limitations in detail.</td>
+      </tr>
+      <tr>
+        <td>Data collection and accuracy</td>
+        <td>Data are incomplete, unclear, or contain major errors.</td>
+        <td>Data are mostly complete but may contain some errors.</td>
+        <td>Data are complete, organized, and accurate.</td>
+        <td>Data are exceptionally clear, accurate, and carefully verified.</td>
+      </tr>
+      <tr>
+        <td>Graph and mathematical comparison</td>
+        <td>Graph or frequency work is missing or difficult to follow.</td>
+        <td>Graph and math are present but may have clarity or calculation issues.</td>
+        <td>Graph and frequency comparisons are accurate, labeled, and support the inquiry well.</td>
+        <td>Graph and math work are highly polished, precise, and especially effective.</td>
+      </tr>
+      <tr>
+        <td>Analysis, conclusion, and reflection</td>
+        <td>Writing is brief or mostly restates the results.</td>
+        <td>Writing includes some interpretation but lacks depth or detail.</td>
+        <td>Writing explains results clearly and connects them to the inquiry question.</td>
+        <td>Writing is thoughtful, well supported, and insightfully discusses patterns and next steps.</td>
+      </tr>
+      <tr>
+        <td>Presentation does count</td>
+        <td>Formatting is inconsistent and the project is difficult to follow.</td>
+        <td>Formatting is adequate but some elements are missing or unclear.</td>
+        <td>Project is well organized, readable, and professionally presented.</td>
+        <td>Project is exceptionally polished, coherent, and visually effective.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Self-Evaluation</h2>
+  <table class="data-table self-eval-table">
+    <thead>
+      <tr>
+        <th>Criteria</th>
+        <th>Self-Assessment</th>
+        <th>Evidence</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Understanding of genetic traits</td><td>Proficient</td><td>I explained how my traits compared with both the sample and the general population values.</td></tr>
+      <tr><td>Data collection and accuracy</td><td>Proficient</td><td>I included a completed trait survey, a filled data table, and frequency calculations based on 20 participants.</td></tr>
+      <tr><td>Graph and mathematical comparison</td><td>Proficient</td><td>I created a labeled yes/no bar graph and showed fraction, decimal, and percentage conversions.</td></tr>
+      <tr><td>Analysis, conclusion, and reflection</td><td>Proficient</td><td>I interpreted the most common and least common traits and reflected on how to improve the investigation.</td></tr>
+      <tr><td>Presentation does count</td><td>Proficient</td><td>The project includes a title page, headings, organized tables, APA-style references, and consistent formatting.</td></tr>
+    </tbody>
+  </table>
+
+  <section class="references-section">
+    <h2>References</h2>
+    <p class="reference-entry">Course materials. (2025, July 29). <em>Science 10 inquiry projects</em> [Course project guide].</p>
+    <p class="reference-entry">Course materials. (n.d.). <em>How do my genetic traits compare to those of others?</em> [Project handout].</p>
+  </section>
 
   <script>
     (() => {
@@ -785,10 +949,18 @@
       const modeSelect = document.getElementById('langMode');
       const body = document.body;
       const translations = {
-        'Name: ___________________________ Date: ____________': '姓名：___________________________ 日期：____________',
-        'Inquiry Question': '探究问题',
+        'How Do My Genetic Traits Compare to Those of Others?': '我的遗传特征与别人相比如何？',
+        'Science 10 Biology Inquiry Project': '科学 10 生物探究项目',
+        'Student Name: ___________________________': '学生姓名：___________________________',
+        'Teacher: ___________________________': '教师：___________________________',
+        'Course: Science 10': '课程：科学 10',
+        'Project Code: PROJ-BI-0021': '项目编号：PROJ-BI-0021',
+        'Date: ___________________________': '日期：___________________________',
+        'Introduction': '引言',
         'How do my genetic traits compare to those of others?': '我的遗传特征与别人相比如何？',
         'In this completed project, I used the survey below to record genetic trait observations for a group of 20 people, organized the counts in a data table, and created a bar graph to show which traits were most common in the group.': '在这份完成的项目中，我使用下面的调查表记录了一个 20 人小组的遗传性状观察结果，把统计结果整理成数据表，并制作了条形图来显示小组中哪些性状最常见。',
+        'This inquiry project examines how my own observable genetic traits compare with those of other people in a sample group of 20. The project was selected from the Science 10 biology inquiry list and focuses on inherited traits, dominant and recessive patterns, and data literacy through observation, organization, and graphical representation (Course materials, 2025).': '这项探究项目研究我自己可观察到的遗传性状与一个 20 人样本群体中的其他人相比有何异同。该项目选自 Science 10 生物探究项目列表，重点关注遗传性状、显性与隐性模式，以及通过观察、整理和图表表达来体现的数据素养（课程资料，2025）。',
+        'To complete the investigation, I recorded my own visible traits, surveyed 20 participants using the assigned trait inventory, counted the number of yes and no responses for each trait, and compared several frequencies with the approximate values provided in the project handout. This approach supports the inquiry question by combining personal observations with class-style population data and formal comparison (Course materials, n.d.).': '为了完成这项探究，我记录了自己可见的性状，使用指定的性状清单调查了 20 位参与者，统计了每种性状回答“是”和“否”的人数，并将若干频率与项目讲义中提供的近似数值进行了比较。这种方法把个人观察与课堂式的人群数据及正式比较结合起来，从而支持探究问题（课程资料，n.d.）。',
         'General Instructions': '一般说明',
         'The goal of this project is to familiarize yourself with genetic traits, both your own and those of others.': '本项目的目标是帮助你熟悉遗传性状，包括你自己的性状以及他人的性状。',
         'Materials used: the Survey: An Inventory of Genetic Traits; graphing software or graph paper; and recorded responses from 20 participants.': '所用材料：Survey: An Inventory of Genetic Traits 调查表；作图软件或方格纸；以及 20 位参与者的记录结果。',
@@ -860,7 +1032,20 @@
         'Have a straight hairline – 41%<br>Not have a straight hairline – 59%': '有平直发际线 - 41%<br>无平直发际线 - 59%',
         'Conclusion': '结论',
         'My genetic traits are similar to those of others in some ways and different in others. In my own results, I had detached earlobes, could roll my tongue, was right-handed, had allergies, could see red and green, and had a straight hairline. I did not have dimples, freckles, naturally curly hair, or a cleft chin, and I did not cross my left thumb over my right when clasping my hands. Several of my traits matched the more common traits in the sample, especially right-handedness, tongue rolling, detached earlobes, and red-green colour vision. Other traits I did not have, such as freckles and curly hair, were also uncommon in the survey group.': '我的遗传性状在某些方面与他人相似，在另一些方面则不同。根据我的结果，我有分离耳垂、会卷舌、是右利手、有过敏、能分辨红色和绿色，并且有平直发际线。我没有酒窝、雀斑、天然卷发或下巴凹陷，而且在双手交握时并不是左拇指压在右拇指上。我的多项性状与样本中较常见的性状一致，尤其是右利手、卷舌、分离耳垂和红绿色视觉正常。另一方面，我所没有的雀斑和卷发在调查组中也同样不常见。',
-        'Overall, the completed survey showed that each person had a different combination of traits, even though some traits appeared much more often than others. By organizing the observations into a summary table, graphing the results, and comparing the group frequencies with approximate population data, I was able to answer the inquiry question with evidence. My traits were partly typical of the group and partly different, which shows that inherited traits vary from person to person.': '总体来看，这份完成的调查显示，尽管有些性状比其他性状出现得更频繁，但每个人的性状组合仍然不同。通过把观察结果整理成汇总表、把结果制成图表，并将小组频率与总体人群的近似数据进行比较，我能够用证据来回答探究问题。我的性状有些与小组中常见的模式一致，有些则不同，这说明遗传性状会因人而异。'
+        'Overall, the completed survey showed that each person had a different combination of traits, even though some traits appeared much more often than others. By organizing the observations into a summary table, graphing the results, and comparing the group frequencies with approximate population data, I was able to answer the inquiry question with evidence. My traits were partly typical of the group and partly different, which shows that inherited traits vary from person to person.': '总体来看，这份完成的调查显示，尽管有些性状比其他性状出现得更频繁，但每个人的性状组合仍然不同。通过把观察结果整理成汇总表、把结果制成图表，并将小组频率与总体人群的近似数据进行比较，我能够用证据来回答探究问题。我的性状有些与小组中常见的模式一致，有些则不同，这说明遗传性状会因人而异。',
+        'Reflection': '反思',
+        'This project helped me understand that genetics is not only about memorizing terms such as gene, allele, dominant, and recessive. It also involves collecting reliable observations, organizing data carefully, and communicating results clearly. The survey and graph made it easier to see patterns in the sample and to recognize that some traits are much more common than others.': '这个项目让我明白，遗传学不仅仅是记住基因、等位基因、显性和隐性等术语。它还涉及收集可靠观察、认真整理数据以及清楚地表达结果。调查和图表使我更容易看出样本中的规律，并认识到有些性状比其他性状常见得多。',
+        'If I repeated this investigation, I would survey a larger and more varied sample group to improve the reliability of the percentages. I would also double-check every response before graphing the data. Overall, this inquiry strengthened my understanding of inherited traits, biological variation, and how evidence can be used to answer a science question in a clear format.': '如果我再次进行这项探究，我会调查一个更大且更多样化的样本群体，以提高百分比结果的可靠性。我也会在制图之前再次核对每一份回答。总体而言，这项探究增强了我对遗传性状、生物差异以及如何用证据清楚回答科学问题的理解。',
+        'Rubric': '评分量规',
+        'Self-Evaluation': '自我评价',
+        'References': '参考文献',
+        'Graph and mathematical comparison': '图表与数学比较',
+        'Analysis, conclusion, and reflection': '分析、结论与反思',
+        'Presentation does count': '展示表现也计分',
+        'Self-Assessment': '自我评价等级',
+        'Evidence': '证据',
+        'Course materials. (2025, July 29). <em>Science 10 inquiry projects</em> [Course project guide].': '课程资料。（2025 年 7 月 29 日）。<em>Science 10 inquiry projects</em>［课程项目指南］。',
+        'Course materials. (n.d.). <em>How do my genetic traits compare to those of others?</em> [Project handout].': '课程资料。（无日期）。<em>How do my genetic traits compare to those of others?</em>［项目讲义］。'
       };
 
       function normalize(value) {
@@ -888,7 +1073,6 @@
       }
 
       const targets = Array.from(document.querySelectorAll([
-        '.meta-line',
         'h1',
         'h2',
         'p',
