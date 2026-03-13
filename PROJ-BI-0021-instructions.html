@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PROJ-BI-0021 Instructions</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --page-bg: #eef1f4;
+      --paper: #ffffff;
+      --ink: #111827;
+      --muted: #4b5563;
+      --line: #6b7280;
+      --soft-line: #d1d5db;
+      --header-fill: #f1f5f9;
+      --accent-fill: #eef2ff;
+    }
+
+    html {
+      background: var(--page-bg);
+    }
+
+    body {
+      margin: 0 auto;
+      max-width: 8.5in;
+      min-height: 11in;
+      padding: 0.75in 0.85in 0.9in;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Aptos", "Calibri", "Carlito", "Segoe UI", Arial, sans-serif;
+      font-size: 12pt;
+      line-height: 1.45;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+    }
+
+    h1,
+    h2 {
+      margin: 1.2rem 0 0.5rem;
+      line-height: 1.25;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 18pt;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 14pt;
+    }
+
+    p {
+      margin: 0.4rem 0 0.65rem;
+    }
+
+    .meta-line {
+      margin-bottom: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .lang-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin: 0 0 1rem;
+      padding: 0.65rem 0.8rem;
+      border: 1px solid var(--soft-line);
+      border-radius: 0.65rem;
+      background: #f8fafc;
+      position: sticky;
+      top: 0.5rem;
+      z-index: 5;
+    }
+
+    .lang-toolbar label {
+      font-size: 11pt;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .lang-toolbar select {
+      font: inherit;
+      padding: 0.35rem 0.55rem;
+      border: 1px solid #9ca3af;
+      border-radius: 0.45rem;
+      background: #ffffff;
+      color: #111827;
+    }
+
+    .i18n-block {
+      display: block;
+    }
+
+    .i18n-inline .i18n-block {
+      display: inline;
+    }
+
+    .i18n-zh {
+      color: #1f2937;
+    }
+
+    body.lang-en .i18n-zh {
+      display: none;
+    }
+
+    body.lang-enzh .i18n-zh {
+      display: block;
+      margin-top: 0.45rem;
+      padding-top: 0.3rem;
+      border-top: 1px dashed #cbd5e1;
+    }
+
+    body.lang-enzh .i18n-inline .i18n-zh {
+      display: inline;
+      margin-top: 0;
+      margin-left: 0.35rem;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    body.lang-zh .i18n-en {
+      display: none;
+    }
+
+    body.lang-zh .i18n-zh {
+      display: block;
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    body.lang-zh .i18n-inline .i18n-zh {
+      display: inline;
+    }
+
+    .boxed-table,
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.75rem 0 1rem;
+      table-layout: fixed;
+    }
+
+    .boxed-table th,
+    .boxed-table td,
+    .data-table th,
+    .data-table td {
+      border: 1px solid var(--line);
+      padding: 0.5rem 0.6rem;
+      vertical-align: top;
+      overflow-wrap: anywhere;
+    }
+
+    .boxed-table th,
+    .data-table th {
+      background: var(--header-fill);
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .inquiry-table th,
+    .instructions-table th {
+      background: var(--accent-fill);
+      text-align: center;
+      font-size: 12.5pt;
+    }
+
+    .illustration {
+      margin: 0.85rem auto 1rem;
+      text-align: center;
+    }
+
+    .illustration img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid var(--soft-line);
+    }
+
+    .intro-note {
+      margin-bottom: 0.9rem;
+    }
+
+    .survey-list {
+      margin: 0.6rem 0 1rem 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .survey-list li {
+      display: flex;
+      gap: 0.8rem;
+      align-items: baseline;
+      padding: 0.32rem 0;
+      border-bottom: 1px dotted #d1d5db;
+    }
+
+    .survey-text {
+      flex: 1 1 auto;
+    }
+
+    .choice-set {
+      flex: 0 0 auto;
+      white-space: nowrap;
+      font-size: 11.5pt;
+    }
+
+    .choice-set span {
+      display: inline-block;
+      min-width: 2.75rem;
+      margin-left: 0.55rem;
+    }
+
+    .blank {
+      display: inline-block;
+      min-width: 8rem;
+      border-bottom: 1px solid var(--ink);
+      transform: translateY(-1px);
+    }
+
+    .math-box {
+      margin: 0.8rem 0;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--soft-line);
+      background: #f8fafc;
+      border-radius: 0.45rem;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      white-space: pre-wrap;
+    }
+
+    .sample-graph img {
+      max-width: 92%;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .narrow {
+      width: 12%;
+      text-align: center;
+    }
+
+    .wide {
+      width: 52%;
+    }
+
+    .conclusion-box {
+      min-height: 7rem;
+      border: 1px solid var(--line);
+      margin-top: 0.5rem;
+      padding: 0.7rem;
+      background:
+        linear-gradient(to bottom, transparent 1.7rem, #e5e7eb 1.7rem, #e5e7eb 1.78rem, transparent 1.78rem);
+      background-size: 100% 1.78rem;
+    }
+
+    @media (max-width: 900px) {
+      html {
+        background: #ffffff;
+      }
+
+      body {
+        box-shadow: none;
+        padding: 1rem;
+      }
+
+      .survey-list li {
+        display: block;
+      }
+
+      .choice-set {
+        display: block;
+        margin-top: 0.35rem;
+      }
+    }
+
+    @media print {
+      .lang-toolbar {
+        display: none;
+      }
+
+      html,
+      body {
+        background: #ffffff;
+      }
+
+      body {
+        max-width: none;
+        min-height: auto;
+        padding: 0.5in 0.6in;
+        box-shadow: none;
+      }
+
+      h2,
+      .boxed-table,
+      .data-table,
+      .illustration,
+      .math-box,
+      .conclusion-box {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="lang-toolbar" aria-label="Language controls">
+    <label for="langMode">Language / 语言</label>
+    <select id="langMode">
+      <option value="en">English</option>
+      <option value="enzh">En + Zh</option>
+      <option value="zh">中文</option>
+    </select>
+  </div>
+
+  <div class="meta-line">Name: ___________________________ Date: ____________</div>
+
+  <table class="boxed-table inquiry-table">
+    <tbody>
+      <tr>
+        <th>Inquiry Question</th>
+      </tr>
+      <tr>
+        <td>How do my genetic traits compare to those of others?</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="illustration">
+    <img src="assets/proj-bi-0021/image2.png" alt="Examples of dominant and recessive genetic traits" />
+  </div>
+
+  <p class="intro-note">In this project, you will take an inventory of your own easily-observable genetic traits. Use the survey below to record the results of 20 people. Record your observations in a data table and make a bar graph to show the most common traits in your group. This activity can also be done with your family members.</p>
+
+  <table class="boxed-table instructions-table">
+    <tbody>
+      <tr>
+        <th>General Instructions</th>
+      </tr>
+      <tr>
+        <td>The goal of this project is to familiarize yourself with genetic traits, both your own and of others.</td>
+      </tr>
+      <tr>
+        <td>Materials you&rsquo;ll need: the Survey: An Inventory of Genetic Traits; graphing software such as Excel or web-based graphing tools such as Google Sheets, if graphing electronically. Otherwise, you will need paper, a ruler and coloured pencils.</td>
+      </tr>
+      <tr>
+        <td>Ideas and Hints: 1. Complete the following Survey: An Inventory of Genetic Traits with 20 responders. 2. Save your completed work.</td>
+      </tr>
+      <tr>
+        <td>Project submission: Upload your completed trait inventory to the project drop box at the end of the unit.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h1>Survey: An Inventory of Genetic Traits</h1>
+  <p><strong>What combination of these traits do you have?</strong></p>
+  <p>Complete the following survey to find out.</p>
+
+  <ol class="survey-list">
+    <li>
+      <span class="survey-text">1. I have detached earlobes</span>
+      <span class="choice-set"><span>Yes</span><span>No</span></span>
+    </li>
+    <li>
+      <span class="survey-text">2. I can roll my tongue</span>
+      <span class="choice-set"><span>Yes</span><span>No</span></span>
+    </li>
+    <li>
+      <span class="survey-text">3. I have dimples</span>
+      <span class="choice-set"><span>Yes</span><span>No</span></span>
+    </li>
+    <li>
+      <span class="survey-text">4. I am right-handed</span>
+      <span class="choice-set"><span>Yes</span><span>No</span></span>
+    </li>
+    <li>
+      <span class="survey-text">5. I have freckles</span>
+      <span class="choice-set"><span>Yes</span><span>No</span></span>
+    </li>
+    <li>
+      <span class="survey-text">6. I have naturally curly hair</span>
+      <span class="choice-set"><span>Yes</span><span>No</span></span>
+    </li>
+    <li>
+      <span class="survey-text">7. I have a cleft chin</span>
+      <span class="choice-set"><span>Yes</span><span>No</span></span>
+    </li>
+    <li>
+      <span class="survey-text">8. I have allergies</span>
+      <span class="choice-set"><span>Yes</span><span>No</span></span>
+    </li>
+    <li>
+      <span class="survey-text">9. I cross my left thumb over my right when I clasp my hands together</span>
+      <span class="choice-set"><span>Yes</span><span>No</span></span>
+    </li>
+    <li>
+      <span class="survey-text">10. I can see the colours red and green (I am not colour blind)</span>
+      <span class="choice-set"><span>Yes</span><span>No</span></span>
+    </li>
+    <li>
+      <span class="survey-text">11. The hairline on my forehead is straight.</span>
+      <span class="choice-set"><span>Yes</span><span>No</span></span>
+    </li>
+  </ol>
+
+  <h2>An Inventory of Genetic Traits - Data Table</h2>
+  <p>How many people in your group of 20 have each trait?</p>
+  <p>Fill in the data table below by counting the number of people who marked &ldquo;yes&rdquo; and the number who marked &ldquo;no&rdquo; for each trait.</p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th class="wide">GENETIC TRAIT</th>
+        <th class="narrow">YES</th>
+        <th class="narrow">NO</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Detached earlobes</td><td></td><td></td></tr>
+      <tr><td>Tongue rolling</td><td></td><td></td></tr>
+      <tr><td>Dimples</td><td></td><td></td></tr>
+      <tr><td>Right-handed</td><td></td><td></td></tr>
+      <tr><td>Freckles</td><td></td><td></td></tr>
+      <tr><td>Naturally curly hair</td><td></td><td></td></tr>
+      <tr><td>Cleft chin</td><td></td><td></td></tr>
+      <tr><td>Allergies</td><td></td><td></td></tr>
+      <tr><td>Cross left thumb over right - handclasping</td><td></td><td></td></tr>
+      <tr><td>See the colours red and green.</td><td></td><td></td></tr>
+      <tr><td>Have a straight hairline.</td><td></td><td></td></tr>
+    </tbody>
+  </table>
+
+  <h2>An Inventory of Genetic Traits – Bar Graph</h2>
+  <p>Make a bar graph showing how many people in your survey answered &lsquo;yes&rsquo; for each trait and how many people answered &lsquo;no&rsquo;. The bar graph should include a legend to indicate which colour represents the &lsquo;yes&rsquo; and which colour shows the &lsquo;no&rsquo; replies.</p>
+  <p>Be sure to label each trait under the bar. The trait will be the &lsquo;independent variable&rsquo; and is shown on the x-axis (horizontal). On the y-axis (vertical), the number of people will be your &lsquo;dependent variable&rsquo; as the number depends upon what trait you are considering. Both the x and y axes should be labelled to indicate what they represent.</p>
+  <p>Your graph should look similar to this;</p>
+
+  <div class="illustration sample-graph">
+    <img src="assets/proj-bi-0021/image1.png" alt="Sample bar graph for the genetic traits survey" />
+  </div>
+
+  <h2>An Inventory of Genetic Traits - Math Extension</h2>
+  <p>Practice converting fractions into decimals and then decimals into percentages by calculating the frequency of the following traits in your survey.</p>
+
+  <div class="math-box"># of people with the trait in your survey divided by the # of people in the sample group x 100 = ________%
+
+17 tongue rollers / 20 students in the group x 100 = 85% (from graph)</div>
+
+  <p>Fill in the table below and compare your calculated frequencies with those for the general population (as provided in the table).</p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Genetic Trait</th>
+        <th>Frequency in Your Group</th>
+        <th>Frequency in the General Population<br /><span class="muted">Note: many are approximations</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Tongue rolling</td><td></td><td>Can roll tongue &ndash; 70%<br />Cannot roll tongue &ndash; 30%</td></tr>
+      <tr><td>Handedness</td><td></td><td>Right-handed &ndash; 93%<br />Left-handed &ndash; 7%</td></tr>
+      <tr><td>Hand clasping</td><td></td><td>Left thumb on top &ndash; 55%<br />Right thumb on top &ndash; 44%<br />No preference &ndash; 1%</td></tr>
+      <tr><td>Can see Red and Green</td><td></td><td>Can see Red and Green &ndash; 95.5%<br />Cannot see Red and Green &ndash; 4.5%</td></tr>
+      <tr><td>Allergies</td><td></td><td>Allergies &ndash; 30%<br />No Allergies &ndash; 70%</td></tr>
+      <tr><td>Cleft Chin</td><td></td><td>Cleft chin &ndash; 26%<br />No cleft chin &ndash; 74%</td></tr>
+      <tr><td>Detached earlobes</td><td></td><td>Detached earlobes &ndash; 72%<br />Attached earlobes</td></tr>
+      <tr><td>Dimples</td><td></td><td>Has dimples &ndash; 25%<br />Does not have dimples &ndash; 75%</td></tr>
+      <tr><td>Freckles</td><td></td><td>Has freckles &ndash; 5%<br />Does not have freckles &ndash; 95%</td></tr>
+      <tr><td>Curly Hair</td><td></td><td>Naturally curly hair &ndash; 11%<br />Not natural curly hair &ndash; 89%</td></tr>
+      <tr><td>Have a straight hairline</td><td></td><td>Have a straight hairline &ndash; 41%<br />Not have a straight hairline &ndash; 59%</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Conclusion</h2>
+  <p>Write a short paragraph below (or attach a page) that addresses the inquiry question: &ldquo;How do my genetic traits compare to those of others?&rdquo;</p>
+  <div class="conclusion-box" aria-label="Conclusion writing area"></div>
+  <script>
+    (() => {
+      const STORAGE_KEY = 'proj-bi-0021-instructions-lang-mode';
+      const modes = ['lang-en', 'lang-enzh', 'lang-zh'];
+      const modeSelect = document.getElementById('langMode');
+      const body = document.body;
+      const translations = {
+        'Name: ___________________________ Date: ____________': '姓名：___________________________ 日期：____________',
+        'Inquiry Question': '探究问题',
+        'How do my genetic traits compare to those of others?': '我的遗传特征与别人相比如何？',
+        'In this project, you will take an inventory of your own easily-observable genetic traits. Use the survey below to record the results of 20 people. Record your observations in a data table and make a bar graph to show the most common traits in your group. This activity can also be done with your family members.': '在这个项目中，你将统计自己容易观察到的遗传性状。请使用下面的调查表记录 20 个人的结果。把你的观察结果整理到数据表中，并制作条形图，展示你所在小组中最常见的性状。本活动也可以与家庭成员一起完成。',
+        'General Instructions': '一般说明',
+        'The goal of this project is to familiarize yourself with genetic traits, both your own and of others.': '本项目的目标是帮助你熟悉遗传性状，包括你自己的性状以及他人的性状。',
+        'Materials you’ll need: the Survey: An Inventory of Genetic Traits; graphing software such as Excel or web-based graphing tools such as Google Sheets, if graphing electronically. Otherwise, you will need paper, a ruler and coloured pencils.': '你需要的材料：Survey: An Inventory of Genetic Traits 调查表；如果使用电子方式作图，可使用 Excel 或 Google Sheets 等在线绘图工具。否则，你需要纸张、尺子和彩色铅笔。',
+        'Ideas and Hints: 1. Complete the following Survey: An Inventory of Genetic Traits with 20 responders. 2. Save your completed work.': '提示与建议：1. 使用下面的 Survey: An Inventory of Genetic Traits 调查表，完成 20 位回答者的数据收集。2. 保存你完成的作业。',
+        'Project submission: Upload your completed trait inventory to the project drop box at the end of the unit.': '项目提交：请在本单元结束时，把你完成的性状统计作业上传到项目提交箱。',
+        'Survey: An Inventory of Genetic Traits': '调查：遗传性状统计',
+        '<strong>What combination of these traits do you have?</strong>': '<strong>你拥有哪些性状组合？</strong>',
+        'Complete the following survey to find out.': '完成下面的调查来找出答案。',
+        '1. I have detached earlobes': '1. 我有分离耳垂',
+        '2. I can roll my tongue': '2. 我会卷舌',
+        '3. I have dimples': '3. 我有酒窝',
+        '4. I am right-handed': '4. 我是右利手',
+        '5. I have freckles': '5. 我有雀斑',
+        '6. I have naturally curly hair': '6. 我有天然卷发',
+        '7. I have a cleft chin': '7. 我有下巴凹陷',
+        '8. I have allergies': '8. 我有过敏',
+        '9. I cross my left thumb over my right when I clasp my hands together': '9. 当我双手交握时，我会把左拇指压在右拇指上',
+        '10. I can see the colours red and green (I am not colour blind)': '10. 我能分辨红色和绿色（我不是色盲）',
+        '11. The hairline on my forehead is straight.': '11. 我额头上的发际线是平直的。',
+        'Yes': '是',
+        'No': '否',
+        'An Inventory of Genetic Traits - Data Table': '遗传性状统计 - 数据表',
+        'How many people in your group of 20 have each trait?': '在你这组 20 人中，每种性状各有多少人具备？',
+        'Fill in the data table below by counting the number of people who marked “yes” and the number who marked “no” for each trait.': '请通过统计每种性状中勾选“是”和勾选“否”的人数，填写下面的数据表。',
+        'GENETIC TRAIT': '遗传性状',
+        'YES': '是',
+        'NO': '否',
+        'Detached earlobes': '分离耳垂',
+        'Tongue rolling': '卷舌',
+        'Dimples': '酒窝',
+        'Right-handed': '右利手',
+        'Freckles': '雀斑',
+        'Naturally curly hair': '天然卷发',
+        'Cleft chin': '下巴凹陷',
+        'Allergies': '过敏',
+        'Cross left thumb over right - handclasping': '双手交握时左拇指在上',
+        'See the colours red and green.': '能分辨红色和绿色。',
+        'Have a straight hairline.': '有平直发际线。',
+        'An Inventory of Genetic Traits – Bar Graph': '遗传性状统计 - 条形图',
+        'Make a bar graph showing how many people in your survey answered ‘yes’ for each trait and how many people answered ‘no’. The bar graph should include a legend to indicate which colour represents the ‘yes’ and which colour shows the ‘no’ replies.': '请制作一张条形图，展示调查中每种性状回答“是”的人数以及回答“否”的人数。条形图应包含图例，以说明哪种颜色表示“是”，哪种颜色表示“否”。',
+        'Be sure to label each trait under the bar. The trait will be the ‘independent variable’ and is shown on the x-axis (horizontal). On the y-axis (vertical), the number of people will be your ‘dependent variable’ as the number depends upon what trait you are considering. Both the x and y axes should be labelled to indicate what they represent.': '请务必在每组柱子下方标明对应的性状。性状是“自变量”，应放在 x 轴（横轴）上；人数是“因变量”，因为人数取决于你所考察的性状，应放在 y 轴（纵轴）上。x 轴和 y 轴都必须标明它们所表示的内容。',
+        'Your graph should look similar to this;': '你的图表应与下面的示例大致相似：',
+        'An Inventory of Genetic Traits - Math Extension': '遗传性状统计 - 数学拓展',
+        'Practice converting fractions into decimals and then decimals into percentages by calculating the frequency of the following traits in your survey.': '通过计算你调查中以下性状的频率，练习把分数转换为小数，再把小数转换为百分数。',
+        '# of people with the trait in your survey divided by the # of people in the sample group x 100 = ________%\n\n17 tongue rollers / 20 students in the group x 100 = 85% (from graph)': '你调查中具有该性状的人数 ÷ 样本组总人数 x 100 = ________%\n\n17 个会卷舌的人 ÷ 组内 20 名学生 x 100 = 85%（来自图表）',
+        'Fill in the table below and compare your calculated frequencies with those for the general population (as provided in the table).': '填写下表，并将你计算出的频率与总体人群的频率进行比较（如下表所示）。',
+        'Genetic Trait': '遗传性状',
+        'Frequency in Your Group': '你所在小组中的频率',
+        'Frequency in the General Population<br><span class="muted">Note: many are approximations</span>': '总体人群中的频率<br><span class="muted">注意：其中很多是近似值</span>',
+        'Handedness': '惯用手',
+        'Hand clasping': '双手交握',
+        'Can see Red and Green': '能分辨红色和绿色',
+        'Cleft Chin': '下巴凹陷',
+        'Curly Hair': '卷发',
+        'Have a straight hairline': '有平直发际线',
+        'Can roll tongue – 70%<br>Cannot roll tongue – 30%': '会卷舌 - 70%<br>不会卷舌 - 30%',
+        'Right-handed – 93%<br>Left-handed – 7%': '右利手 - 93%<br>左利手 - 7%',
+        'Left thumb on top – 55%<br>Right thumb on top – 44%<br>No preference – 1%': '左拇指在上 - 55%<br>右拇指在上 - 44%<br>无明显偏好 - 1%',
+        'Can see Red and Green – 95.5%<br>Cannot see Red and Green – 4.5%': '能分辨红色和绿色 - 95.5%<br>不能分辨红色和绿色 - 4.5%',
+        'Allergies – 30%<br>No Allergies – 70%': '有过敏 - 30%<br>无过敏 - 70%',
+        'Cleft chin – 26%<br>No cleft chin – 74%': '下巴凹陷 - 26%<br>无下巴凹陷 - 74%',
+        'Detached earlobes – 72%<br>Attached earlobes': '分离耳垂 - 72%<br>附着耳垂',
+        'Has dimples – 25%<br>Does not have dimples – 75%': '有酒窝 - 25%<br>无酒窝 - 75%',
+        'Has freckles – 5%<br>Does not have freckles – 95%': '有雀斑 - 5%<br>无雀斑 - 95%',
+        'Naturally curly hair – 11%<br>Not natural curly hair – 89%': '天然卷发 - 11%<br>非天然卷发 - 89%',
+        'Have a straight hairline – 41%<br>Not have a straight hairline – 59%': '有平直发际线 - 41%<br>无平直发际线 - 59%',
+        'Conclusion': '结论',
+        'Write a short paragraph below (or attach a page) that addresses the inquiry question: “How do my genetic traits compare to those of others?”': '请在下方写一小段文字（或另附一页），回答探究问题：“我的遗传特征与别人相比如何？”'
+      };
+
+      function normalize(value) {
+        return value.replace(/\s+/g, ' ').trim();
+      }
+
+      function applyBilingual(node, translation) {
+        const inlineTags = ['TH', 'TD', 'SPAN', 'STRONG'];
+        if (inlineTags.includes(node.tagName)) {
+          node.classList.add('i18n-inline');
+        }
+
+        const enWrap = document.createElement('span');
+        enWrap.className = 'i18n-en i18n-block';
+        while (node.firstChild) {
+          enWrap.appendChild(node.firstChild);
+        }
+
+        const zhWrap = document.createElement('span');
+        zhWrap.className = 'i18n-zh i18n-block';
+        zhWrap.innerHTML = translation;
+
+        node.appendChild(enWrap);
+        node.appendChild(zhWrap);
+      }
+
+      const targets = Array.from(document.querySelectorAll([
+        '.meta-line',
+        'h1',
+        'h2',
+        'p',
+        'th',
+        'td',
+        '.survey-text',
+        '.choice-set span'
+      ].join(',')));
+
+      targets.forEach((node) => {
+        const key = normalize(node.innerHTML);
+        const translation = translations[key];
+        if (!translation) return;
+        applyBilingual(node, translation);
+      });
+
+      function setMode(mode) {
+        if (!['en', 'enzh', 'zh'].includes(mode)) mode = 'en';
+        body.classList.remove(...modes);
+        body.classList.add(`lang-${mode}`);
+        document.documentElement.lang = mode === 'zh' ? 'zh-CN' : 'en';
+        if (modeSelect) modeSelect.value = mode;
+        try {
+          localStorage.setItem(STORAGE_KEY, mode);
+        } catch (err) {
+          // Ignore storage failures.
+        }
+      }
+
+      let initialMode = 'en';
+      try {
+        initialMode = localStorage.getItem(STORAGE_KEY) || 'en';
+      } catch (err) {
+        initialMode = 'en';
+      }
+
+      if (modeSelect) {
+        modeSelect.addEventListener('change', (event) => setMode(event.target.value));
+      }
+
+      setMode(initialMode);
+    })();
+  </script>
+</body>
+</html>
