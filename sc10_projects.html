@@ -132,11 +132,84 @@ break-after: avoid;
 }
 }
 </style>
+  <style>
+.lang-toolbar {
+display: flex;
+align-items: center;
+gap: 0.7rem;
+margin: 0 0 1.2rem;
+padding: 0.65rem 0.8rem;
+border: 1px solid #d1d5db;
+border-radius: 0.65rem;
+background: #f8fafc;
+position: sticky;
+top: 0.5rem;
+z-index: 5;
+}
+.lang-toolbar label {
+font-size: 11pt;
+font-weight: 600;
+color: #1f2937;
+}
+.lang-toolbar select {
+font: inherit;
+padding: 0.35rem 0.55rem;
+border: 1px solid #9ca3af;
+border-radius: 0.45rem;
+background: #ffffff;
+color: #111827;
+}
+.i18n-block {
+display: block;
+}
+.i18n-zh {
+color: #1f2937;
+}
+body.lang-en .i18n-zh {
+display: none;
+}
+body.lang-enzh .i18n-zh {
+display: block;
+margin-top: 0.45rem;
+padding-top: 0.3rem;
+border-top: 1px dashed #cbd5e1;
+}
+body.lang-zh .i18n-en {
+display: none;
+}
+body.lang-zh .i18n-zh {
+display: block;
+margin-top: 0;
+padding-top: 0;
+border-top: 0;
+}
+.i18n-link-list {
+display: block;
+margin-top: 0.35rem;
+font-size: 0.95em;
+}
+.i18n-link-list a {
+margin-right: 0.6rem;
+}
+@media print {
+.lang-toolbar {
+display: none;
+}
+}
+</style>
 </head>
 <body>
 <header id="title-block-header">
 <h1 class="title">Science 10 Inquiry Projects</h1>
 </header>
+<div class="lang-toolbar" aria-label="Language controls">
+<label for="langMode">Language / 语言</label>
+<select id="langMode">
+<option value="en">English</option>
+<option value="enzh">En + Zh</option>
+<option value="zh">中文</option>
+</select>
+</div>
 <h2 id="introduction">Introduction</h2>
 <p>Below you find a list of project ideas. Review the topics and select
 the inquiry questions that interest you the most. Our goal is to offer a
@@ -659,5 +732,205 @@ food sample by burning it.</mark></p>
 <tbody>
 </tbody>
 </table>
+<script>
+(() => {
+  const zhTranslations = {
+    1: `科学 10 探究项目`,
+    2: `引言`,
+    3: `下方列出了一系列项目构想。请查看这些主题，并选择最让你感兴趣的探究问题。我们的目标是提供多样化的选择，让你能够追随自己的兴趣。所有项目的共同点是：它们都能帮助你更深入地理解这些主题与现实世界的联系。项目通常包含研究、模拟或动手活动，并且常常需要按指定格式完成展示或报告。如果你没有看到特别契合的主题，可以向老师提出相关的新题目。完成项目时，请保持创造力与探究精神。`,
+    4: `要求`,
+    5: `你需要完成四个项目，每个单元各做一个。`,
+    6: `从下面列表中为某个单元选择一个项目。`,
+    7: `每个项目都必须用打字方式完成。`,
+    8: `每个项目都应整理在一个文件中（通常是 Word 文档），并包含所有相关数据、图片、扫描件和其他材料。文件应正确命名并完成提交。`,
+    9: `文件大小建议不要超过每页约 1 MB。若文档有 10 页，总大小最好控制在约 10 MB 左右。你可以尝试使用 Adobe 在线 PDF 压缩工具：https://www.adobe.com/ca/acrobat/online/compress-pdf.html`,
+    10: `如果你想偏离项目清单，请先与老师确认。`,
+    11: `你的项目应包含引言和反思。`,
+    12: `展示表现也计分。最终论文应采用 APA 格式。这里提供 APA 格式实验报告示例和 APA 格式论文示例。请确保：`,
+    13: `最终项目模板链接：https://docs.google.com/document/d/1BNoiax7iF3B1Bp754N94g-R-j22OUm_uBqvd2k2KYx4/edit?usp=sharing`,
+    14: `标题页`,
+    15: `页边距：四边均设为 2.54 厘米。`,
+    16: `行距：整篇文档都应为双倍行距，包括标题页、摘要、长引文和参考文献页。段落之间不要额外加空行。`,
+    17: `引言或摘要`,
+    18: `页码`,
+    19: `文内引用`,
+    20: `标题层级设置正确`,
+    21: `表格、图表与插图设置正确`,
+    22: `每段首行要缩进`,
+    23: `反思`,
+    24: `参考文献：必须另起一页开始。`,
+    25: `项目需用打字方式完成，并附上评分量规。量规中应包含 BC 省等级表现量表（Emerging、Developing、Proficient、Extending）。`,
+    26: `BC 省等级表现量表`,
+    27: `初步呈现`,
+    28: `发展中`,
+    29: `达标`,
+    30: `拓展`,
+    31: `学生对预期学习所涉及的概念与能力表现出初步理解。`,
+    32: `学生对预期学习所涉及的概念与能力表现出部分理解。`,
+    33: `学生对预期学习所涉及的概念与能力表现出完整理解。`,
+    34: `学生对预期学习所涉及的概念与能力表现出较高层次、较成熟的理解。`,
+    35: `“Emerging（初步呈现）”表示学生刚开始表现出与学习标准相关的学习，但尚未稳定做到，这并不等同于不及格。“Developing（发展中）”表示学生越来越稳定地表现出与学习标准相关的学习，已经有初步理解，但仍在发展相关能力。“Proficient（达标）”是学生的目标，表示学生已经达到学习标准所期望的学习表现。`,
+    36: `“Extending（拓展）”并不等同于完美。它表示学生在学习标准上展现出更深入、更复杂的理解与表现。`,
+    37: `这些组成部分都应有相应描述。请用表格形式制作量规，并完成一次自我评价。务必至少加入一条与“展示表现也计分”相关的评价标准。`,
+    38: `评价标准`,
+    39: `初步呈现`,
+    40: `发展中`,
+    41: `达标`,
+    42: `拓展`,
+    43: `此外，参考文献必须使用 APA 格式。`,
+    44: `所有资料来源都应采用 APA 格式。如需帮助，请到 Virtual Learning Commons（Brightspace）中的 Content > Information Centre > Citations。`,
+    45: `或使用：https://www.citationmachine.net/apa`,
+    46: `为网站创建 APA 引用时，请按以下步骤进行：`,
+    47: `作者：先写作者姓氏，再写名字缩写。若没有作者，则以标题开头。`,
+    48: `日期：在括号中写出发布日期（年、月、日）。如果没有日期，则使用（n.d.）。`,
+    49: `标题：网页标题用斜体书写。除首词、标题/副标题首词和专有名词外，其余单词一般不大写。`,
+    50: `网站名称：在标题之后，用普通字体写出网站名称。`,
+    51: `URL：最后写出网页的完整网址。`,
+    52: `示例：`,
+    53: `Smith, J.（2023 年 10 月 15 日）。《理解气候变化》。Environmental News。https://www.environmentalnews.com/climate-change`,
+    54: `这种格式能使你的引用更清晰、更一致。`,
+    55: `本文件最后更新于 2025 年 7 月 29 日。`,
+    56: `生物项目`,
+    57: `这些项目聚焦于遗传学主题，例如染色体、DNA、基因突变、遗传特征、生殖和自然选择，同时也训练数据素养能力，如评估资料来源是否有用、提出高质量问题、区分观察与推论，以及有效地进行图像/图表表达。`,
+    58: `什么样的图形化信息表达才是有效的？`,
+    59: `本项目旨在帮助学生了解什么是图形摘要，以及如何制作高质量图形摘要。项目强调：科学信息若要让更广泛的读者容易理解并便于获取，就必须进行有效表达，图形摘要正是重要方式之一。`,
+    60: `主题：TC2、批判性思维、科学传播、视觉表达、图表、表格、图形摘要`,
+    61: `什么才算高质量的观察、推论和结论？`,
+    62: `本项目帮助学生评估观察与推论的质量，从而形成有根据的结论。`,
+    63: `主题：TC2、批判性思维、观察、推论、结论`,
+    64: `你如何确定自己使用的信息来源是可靠的？`,
+    65: `本探究项目聚焦于帮助学生判断信息来源的可靠性，尤其适用于研究过程中遇到互相冲突观点的情况。`,
+    66: `主题：批判性思维、横向阅读、TC2`,
+    67: `什么样的问题才算强有力的问题？`,
+    68: `本项目探讨“强有力的问题”具备哪些特征，帮助学生在不同情境中提升提问能力，特别是在新闻与社交媒体中判断信息是否准确、来源是否可信时。`,
+    69: `主题：批判性思维、TC2、准确信息、可靠来源`,
+    70: `你如何判断资料是否有用？本项目旨在教授一种研究策略，用来判断资料对研究是否真正有帮助。`,
+    71: `主题：批判性思维、TC2、可靠来源、可信、研究、数据素养`,
+    72: `DNA 是活细胞中的“主说明书”。我们能否从厨房里曾经有生命的材料中提取 DNA？`,
+    73: `本项目聚焦于从厨房中曾有生命的材料里提取 DNA，具体材料是干裂豌豆。你将通过一个厨房实验学习 DNA 及其提取方法。`,
+    74: `主题：提取、DNA`,
+    75: `把染色体配对起来很有趣，那么一个人的染色体有序图会是什么样子？`,
+    76: `本项目关于染色体与核型图。学生将通过按大小、带纹图样和着丝点位置配对 22 对染色体，制作一个虚拟核型图，从而学习核型图的概念。`,
+    77: `主题：核型图、染色体`,
+    78: `从众多遗传疾病中选择一种：基因组发生了什么变化？为什么会出现这种变化？`,
+    79: `这是一个关于遗传疾病的生物项目。学生需要研究一种自己选择的遗传疾病，并制作电子展示。`,
+    80: `主题：变化、遗传疾病`,
+    81: `灵熊（Spirit Bear）背后有什么故事？`,
+    82: `你需要制作一本关于灵熊的电子故事书。故事书应向儿童介绍 Kitasoo Xai'xais 民族关于灵熊的传说，以及其中涉及的遗传学内容。`,
+    83: `主题：遗传学、灵熊`,
+    84: `我们的基因由 DNA 序列决定。基因突变会怎样影响这些 DNA 序列？`,
+    85: `本项目聚焦于基因突变如何改变 DNA 序列。目标是理解缺失、添加、替换等突变如何发生，以及它们如何影响 DNA 序列和氨基酸的生成。`,
+    86: `主题：DNA 序列、基因、基因突变`,
+    87: `我的遗传特征与别人相比如何？`,
+    88: `本项目的目标是让你熟悉遗传特征，包括你自己的特征以及他人的特征。`,
+    89: `主题：显性、遗传特征、隐性、性状`,
+    90: `兔子生存的秘诀是什么？`,
+    91: `本项目的核心目标是帮助学生理解：不同性状与环境因素，例如捕食者、食物有限以及伪装机会，如何随着时间影响一个物种的种群数量。`,
+    92: `主题：自然选择`,
+    93: `当两个生物结合时，会产生什么样的后代？`,
+    94: `本项目的探究问题是：“当两个生物结合时，会产生什么样的后代？”项目聚焦于理解后代如何通过显性和隐性基因从父母那里继承特征。`,
+    95: `主题：后代、有性生殖、性状`,
+    96: `地球科学项目`,
+    97: `这些项目探讨与太空相关的地球科学主题，例如设计“太阳系元素周期表”、利用赫罗图研究恒星特征，以及分析地外撞击造成的影响。`,
+    98: `外星人来了会发生什么？一个地外撞击体会造成多大破坏？`,
+    99: `主题：破坏、密度、撞击体、小行星`,
+    100: `“我真想知道你到底有多老？”`,
+    101: `主题：黑洞、赫罗图、主序星、红巨星、温度、光度`,
+    102: `我们太阳系中的行星是否具有共同特征？`,
+    103: `这个项目的链接已失效，请改选其他项目。`,
+    104: `本项目要求学生设计一个“太阳系元素周期表”，用来探索各行星之间共同的特征与规律。`,
+    105: `主题：分组、行星、性质`,
+    106: `你有“天选之资”吗？你会是“隐藏人物”吗？`,
+    107: `主题：加拿大、宇航员、特质`,
+    108: `化学项目`,
+    109: `这些项目涵盖化学反应，包括能量变化（放热与吸热反应）、化学方程式配平，以及使用家用产品进行 pH 探究。`,
+    110: `既然不能无中生有，那么化学反应究竟如何发生？本项目通过一个 PhET 模拟帮助学生理解质量守恒定律。`,
+    111: `主题：质量守恒定律`,
+    112: `我们烤蛋糕需要热量，而暖手包会释放热量。热能在化学反应中扮演什么角色？本项目通过这些例子探讨热量如何参与化学反应。`,
+    113: `主题：放热、吸热`,
+    114: `化学反应展示了物质如何变化。对你来说，哪个化学反应最重要？它为什么重要？本项目强调化学家研究的是物质如何变化；理解这些变化对于制造想要的产品、减少不想要的结果（例如生锈）都很关键。学生需要思考一个在个人、地方或全球层面都重要的化学反应。`,
+    115: `主题：化学反应`,
+    116: `化学反应有许多不同类型。它们有哪些相同点与不同点？本项目要求你用 Prezi、Google Slides 或 PowerPoint 等展示软件制作概念图，比对本单元学习到的六大类化学反应。`,
+    117: `主题：化学反应`,
+    118: `我能只利用厨房里现有的材料估计不同家用产品的 pH 吗？本项目的主要目标是让学生通过使用红甘蓝汁自制指示剂，来探究酸、碱与 pH。`,
+    119: `主题：指示剂、红甘蓝、pH`,
+    120: `物理项目`,
+    121: `这些项目探索能量概念，包括在模拟滑板公园中研究能量守恒、测定简单玩具的功率，以及通过量热法测量食物中的卡路里。`,
+    122: `什么是“功率”？你能设计一个实验来测定一个简单玩具的功率吗？你还能改进它，让它“更有功率”吗？本项目要求学生设计实验测定简单玩具的功率，并提出改进方案。项目把功率定义为能量转化速率，给出公式 P = ΔE/t = W/t，匀速运动时也可写作 P = Fv。`,
+    123: `主题：效率、能量、功率`,
+    124: `你能设计出多“高效”的滑板公园轨道？不同轨道的效率一样吗？涉及哪些能量转化？本项目旨在展示能量守恒，尤其是重力势能、做功和动能之间的转化，同时也考虑现实世界中摩擦的影响。`,
+    125: `学生将使用在线模拟 “PHET Sim: Energy Skate Park: Basics” 完成本项目。关键公式包括 KE = ½mv²、PE = mgh，以及 W = ΔE。`,
+    126: `主题：动能、势能、能量`,
+    127: `什么是“卡路里”？它与能量有什么关系？我们如何测定某种食物样品能提供多少卡路里？本项目的核心探究是理解卡路里的含义、它与能量的关系，以及如何通过燃烧食物样品测定其热量。`,
+    128: `主题：能量、热量、卡路里`
+  };
+
+  const STORAGE_KEY = 'sc10-projects-lang-mode';
+  const modes = ['lang-en', 'lang-enzh', 'lang-zh'];
+  const body = document.body;
+  const modeSelect = document.getElementById('langMode');
+  const textNodes = Array.from(document.querySelectorAll('h1, h2, p, th'))
+    .filter((el) => el.textContent.trim().length > 0)
+    .filter((el) => !(el.tagName === 'TH' && el.querySelector('p')));
+
+  textNodes.forEach((node, index) => {
+    const translation = zhTranslations[index + 1];
+    if (!translation) return;
+
+    const enWrap = document.createElement('span');
+    enWrap.className = 'i18n-en i18n-block';
+
+    while (node.firstChild) {
+      enWrap.appendChild(node.firstChild);
+    }
+
+    const zhWrap = document.createElement('span');
+    zhWrap.className = 'i18n-zh i18n-block';
+    zhWrap.innerHTML = translation;
+
+    const anchors = Array.from(enWrap.querySelectorAll('a[href]'));
+    if (anchors.length) {
+      const linkList = document.createElement('span');
+      linkList.className = 'i18n-link-list';
+      linkList.appendChild(document.createTextNode('相关链接：'));
+      anchors.forEach((anchor, anchorIndex) => {
+        const clone = anchor.cloneNode(true);
+        clone.textContent = anchors.length === 1 ? '打开原链接' : `打开链接 ${anchorIndex + 1}`;
+        linkList.appendChild(clone);
+      });
+      zhWrap.appendChild(linkList);
+    }
+
+    node.appendChild(enWrap);
+    node.appendChild(zhWrap);
+  });
+
+  function setMode(mode) {
+    if (!['en', 'enzh', 'zh'].includes(mode)) mode = 'en';
+    body.classList.remove(...modes);
+    body.classList.add(`lang-${mode}`);
+    document.documentElement.lang = mode === 'zh' ? 'zh-CN' : 'en';
+    if (modeSelect) modeSelect.value = mode;
+    try {
+      localStorage.setItem(STORAGE_KEY, mode);
+    } catch (err) {
+      // Ignore storage failures.
+    }
+  }
+
+  let initialMode = 'en';
+  try {
+    initialMode = localStorage.getItem(STORAGE_KEY) || 'en';
+  } catch (err) {
+    initialMode = 'en';
+  }
+
+  if (modeSelect) {
+    modeSelect.addEventListener('change', (event) => setMode(event.target.value));
+  }
+
+  setMode(initialMode);
+})();
+</script>
 </body>
 </html>
