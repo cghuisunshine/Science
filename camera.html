@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Take Photo</title>
+<style>
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background:
+    radial-gradient(circle at top right, #fef3c7 0, #fef3c7 18%, transparent 18%),
+    linear-gradient(135deg, #f8fafc 0%, #e0f2fe 55%, #dbeafe 100%);
+}
+
+#photo-stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.55) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.55) 1px, transparent 1px);
+  background-size: 32px 32px;
+  outline: none;
+}
+
+#capture-zone {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1000;
+  width: min(360px, calc(100vw - 32px));
+  padding: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+  backdrop-filter: blur(12px);
+}
+
+h2 {
+  margin: 0 0 12px;
+  font-size: 22px;
+}
+
+video {
+  display: block;
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  background: #0f172a;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin: 12px 0 10px;
+}
+
+button {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: #0f766e;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #115e59;
+}
+
+button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.status,
+.hint {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #334155;
+}
+
+.photo-item {
+  position: absolute;
+  border: 3px solid transparent;
+  border-radius: 16px;
+  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.24);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  transform-origin: center center;
+}
+
+.photo-item.selected {
+  border-color: #2563eb;
+}
+
+.photo-item.dragging,
+.photo-item.resizing,
+.photo-item.rotating {
+  cursor: grabbing;
+}
+
+.photo-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.photo-label {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.72);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.handle {
+  position: absolute;
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: #2563eb;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+}
+
+.photo-item.selected .handle {
+  display: block;
+}
+
+.resize-handle {
+  right: -10px;
+  bottom: -10px;
+  cursor: nwse-resize;
+}
+
+.rotate-handle {
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: grab;
+  background: #f97316;
+  box-shadow: 0 4px 10px rgba(249, 115, 22, 0.35);
+}
+
+@media (max-width: 700px) {
+  #capture-zone {
+    width: calc(100vw - 24px);
+    top: 12px;
+    left: 12px;
+    padding: 14px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div id="photo-stage" tabindex="0" aria-label="Photo stage"></div>
+
+<div id="capture-zone">
+  <h2>Camera Capture</h2>
+  <video id="video" autoplay playsinline></video>
+  <div class="controls">
+    <button id="snap">Take Photo</button>
+    <button id="undo" disabled>Undo</button>
+    <button id="redo" disabled>Redo</button>
+    <button id="delete-photo" disabled>Delete Selected</button>
+    <button id="export-photo" disabled>Export Selected</button>
+    <button id="export-all" disabled>Export All</button>
+    <button id="clear-all" disabled>Clear All</button>
+  </div>
+  <p id="gamepad-status" class="status">Gamepad: not connected</p>
+  <p class="hint">Take many photos, shift-click or cmd/ctrl-click to multi-select, drag a selected stack together, use the blue corner to resize, the orange handle to rotate, or scroll/pinch on the photo to zoom. Arrow keys move the selected set, cmd/ctrl+Z undoes, shift+cmd/ctrl+Z redoes. Gamepad: A / RB / RT = photo, X = next photo, B = clear selection, left stick / D-pad = move, right stick left/right = rotate.</p>
+</div>
+
+<canvas id="snapshot-canvas" hidden></canvas>
+
+<script>
+const STORAGE_KEY = 'camera-layout-v2';
+
+const video = document.getElementById('video');
+const snap = document.getElementById('snap');
+const undoButton = document.getElementById('undo');
+const redoButton = document.getElementById('redo');
+const deletePhotoButton = document.getElementById('delete-photo');
+const exportPhotoButton = document.getElementById('export-photo');
+const exportAllButton = document.getElementById('export-all');
+const clearAllButton = document.getElementById('clear-all');
+const stage = document.getElementById('photo-stage');
+const captureZone = document.getElementById('capture-zone');
+const gamepadStatus = document.getElementById('gamepad-status');
+const snapshotCanvas = document.getElementById('snapshot-canvas');
+const snapshotContext = snapshotCanvas.getContext('2d');
+
+const photos = [];
+let nextPhotoId = 1;
+let topZIndex = 1;
+let selectedPhotoId = null;
+let selectedPhotoIds = [];
+let gamepadCaptureHeld = false;
+let gamepadSelectHeld = false;
+let gamepadClearHeld = false;
+let gamepadRotateActive = false;
+let lastSavedState = null;
+const undoStack = [];
+const redoStack = [];
+const HISTORY_LIMIT = 80;
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function toRadians(degrees) {
+  return degrees * Math.PI / 180;
+}
+
+function getRotatedSize(width, height, rotation) {
+  const radians = toRadians(rotation);
+  const cosine = Math.abs(Math.cos(radians));
+  const sine = Math.abs(Math.sin(radians));
+
+  return {
+    width: width * cosine + height * sine,
+    height: width * sine + height * cosine
+  };
+}
+
+function makeRect(x, y, width, height) {
+  return {
+    left: x,
+    top: y,
+    right: x + width,
+    bottom: y + height
+  };
+}
+
+function rectsOverlap(rectA, rectB) {
+  return rectA.left < rectB.right
+    && rectA.right > rectB.left
+    && rectA.top < rectB.bottom
+    && rectA.bottom > rectB.top;
+}
+
+function getCaptureRect() {
+  return captureZone.getBoundingClientRect();
+}
+
+function getPhotoBox(photo, centerX, centerY, width, height, rotation) {
+  const rotatedSize = getRotatedSize(width, height, rotation);
+  return makeRect(
+    centerX - rotatedSize.width / 2,
+    centerY - rotatedSize.height / 2,
+    rotatedSize.width,
+    rotatedSize.height
+  );
+}
+
+function getPhotoById(id) {
+  return photos.find(photo => photo.id === id) || null;
+}
+
+function getSelectedPhoto() {
+  return getPhotoById(selectedPhotoId);
+}
+
+function getSelectedPhotos() {
+  return selectedPhotoIds.map(getPhotoById).filter(Boolean);
+}
+
+function serializeLayoutState() {
+  return {
+    nextPhotoId,
+    topZIndex,
+    selectedPhotoIds: selectedPhotoIds.slice(),
+    photos: photos.map(photo => ({
+      id: photo.id,
+      src: photo.src,
+      x: photo.x,
+      y: photo.y,
+      width: photo.width,
+      height: photo.height,
+      rotation: photo.rotation,
+      zIndex: photo.zIndex,
+      capturedAt: photo.capturedAt,
+      label: photo.label,
+      naturalWidth: photo.naturalWidth,
+      naturalHeight: photo.naturalHeight
+    }))
+  };
+}
+
+function formatTimestamp(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return 'Unknown time';
+  }
+
+  return date.toLocaleString([], {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+function updateHistoryControls() {
+  undoButton.disabled = undoStack.length === 0;
+  redoButton.disabled = redoStack.length === 0;
+}
+
+function updateSelectionControls() {
+  const selectionCount = selectedPhotoIds.length;
+  const hasSelection = selectionCount > 0;
+  deletePhotoButton.disabled = !hasSelection;
+  exportPhotoButton.disabled = !selectedPhotoId;
+  exportAllButton.disabled = photos.length === 0;
+  clearAllButton.disabled = photos.length === 0;
+  deletePhotoButton.textContent = selectionCount > 1 ? 'Delete Selected (' + selectionCount + ')' : 'Delete Selected';
+}
+
+function saveLayout(recordHistory = true) {
+  const serialized = JSON.stringify(serializeLayoutState());
+
+  if (recordHistory && lastSavedState !== null && serialized !== lastSavedState) {
+    undoStack.push(lastSavedState);
+    if (undoStack.length > HISTORY_LIMIT) {
+      undoStack.shift();
+    }
+    redoStack.length = 0;
+  }
+
+  localStorage.setItem(STORAGE_KEY, serialized);
+  lastSavedState = serialized;
+  updateHistoryControls();
+}
+
+function bringPhotoToFront(photo) {
+  topZIndex += 1;
+  photo.zIndex = topZIndex;
+  photo.element.style.zIndex = String(photo.zIndex);
+}
+
+function updatePhotoElement(photo) {
+  photo.element.style.left = (photo.x - photo.width / 2) + 'px';
+  photo.element.style.top = (photo.y - photo.height / 2) + 'px';
+  photo.element.style.width = photo.width + 'px';
+  photo.element.style.height = photo.height + 'px';
+  photo.element.style.transform = 'rotate(' + photo.rotation + 'deg)';
+  photo.element.style.zIndex = String(photo.zIndex);
+  photo.labelElement.textContent = photo.label;
+}
+
+function setSelectedPhotos(photoIds, primaryPhotoId) {
+  const uniqueIds = [];
+  photoIds.forEach(photoId => {
+    if (getPhotoById(photoId) && !uniqueIds.includes(photoId)) {
+      uniqueIds.push(photoId);
+    }
+  });
+
+  selectedPhotoIds = uniqueIds;
+  if (uniqueIds.length === 0) {
+    selectedPhotoId = null;
+  } else if (primaryPhotoId && uniqueIds.includes(primaryPhotoId)) {
+    selectedPhotoId = primaryPhotoId;
+  } else if (!selectedPhotoId || !uniqueIds.includes(selectedPhotoId)) {
+    selectedPhotoId = uniqueIds[uniqueIds.length - 1];
+  }
+
+  photos.forEach(photo => {
+    photo.element.classList.toggle('selected', uniqueIds.includes(photo.id));
+  });
+  updateSelectionControls();
+  stage.focus();
+}
+
+function setSelectedPhoto(photoId) {
+  setSelectedPhotos(photoId ? [photoId] : [], photoId);
+}
+
+function togglePhotoSelection(photoId) {
+  if (selectedPhotoIds.includes(photoId)) {
+    setSelectedPhotos(selectedPhotoIds.filter(id => id !== photoId));
+  } else {
+    setSelectedPhotos(selectedPhotoIds.concat(photoId), photoId);
+  }
+}
+
+function clearSelection() {
+  setSelectedPhotos([]);
+}
+
+function cycleSelectedPhoto() {
+  if (!photos.length) {
+    return;
+  }
+
+  const currentIndex = photos.findIndex(photo => photo.id === selectedPhotoId);
+  const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % photos.length;
+  const nextPhoto = photos[nextIndex];
+  setSelectedPhoto(nextPhoto.id);
+  bringPhotoToFront(nextPhoto);
+  saveLayout();
+}
+
+function constrainPhotoPlacement(width, height, rotation, proposedX, proposedY) {
+  const rotatedSize = getRotatedSize(width, height, rotation);
+  const halfBoxWidth = rotatedSize.width / 2;
+  const halfBoxHeight = rotatedSize.height / 2;
+  const minX = halfBoxWidth;
+  const maxX = window.innerWidth - halfBoxWidth;
+  const minY = halfBoxHeight;
+  const maxY = window.innerHeight - halfBoxHeight;
+  const captureRect = getCaptureRect();
+  const safeGap = 12;
+  const boundedX = clamp(proposedX, minX, maxX);
+  const boundedY = clamp(proposedY, minY, maxY);
+  const proposedRect = getPhotoBox(null, boundedX, boundedY, width, height, rotation);
+
+  if (!rectsOverlap(proposedRect, captureRect)) {
+    return { x: boundedX, y: boundedY };
+  }
+
+  const candidates = [
+    { x: captureRect.right + safeGap + halfBoxWidth, y: boundedY },
+    { x: captureRect.left - safeGap - halfBoxWidth, y: boundedY },
+    { x: boundedX, y: captureRect.bottom + safeGap + halfBoxHeight },
+    { x: boundedX, y: captureRect.top - safeGap - halfBoxHeight },
+    { x: captureRect.right + safeGap + halfBoxWidth, y: captureRect.bottom + safeGap + halfBoxHeight },
+    { x: captureRect.right + safeGap + halfBoxWidth, y: captureRect.top - safeGap - halfBoxHeight },
+    { x: captureRect.left - safeGap - halfBoxWidth, y: captureRect.bottom + safeGap + halfBoxHeight },
+    { x: captureRect.left - safeGap - halfBoxWidth, y: captureRect.top - safeGap - halfBoxHeight }
+  ].map(candidate => ({
+    x: clamp(candidate.x, minX, maxX),
+    y: clamp(candidate.y, minY, maxY)
+  }));
+
+  let bestCandidate = { x: boundedX, y: boundedY };
+  let bestDistance = Number.POSITIVE_INFINITY;
+
+  candidates.forEach(candidate => {
+    const candidateRect = getPhotoBox(null, candidate.x, candidate.y, width, height, rotation);
+    if (rectsOverlap(candidateRect, captureRect)) {
+      return;
+    }
+
+    const distance = Math.hypot(candidate.x - boundedX, candidate.y - boundedY);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      bestCandidate = candidate;
+    }
+  });
+
+  return bestCandidate;
+}
+
+function findNewPhotoPosition(width, height, rotation) {
+  const captureRect = getCaptureRect();
+  const rotatedSize = getRotatedSize(width, height, rotation);
+  const spread = (photos.length * 34) % 200;
+  const proposals = [
+    { x: captureRect.right + 28 + rotatedSize.width / 2 + spread, y: captureRect.top + rotatedSize.height / 2 + spread },
+    { x: captureRect.left + rotatedSize.width / 2 + spread, y: captureRect.bottom + 28 + rotatedSize.height / 2 + spread },
+    { x: window.innerWidth - rotatedSize.width / 2 - 24 - spread, y: captureRect.bottom + 28 + rotatedSize.height / 2 + spread },
+    { x: window.innerWidth - rotatedSize.width / 2 - 24, y: window.innerHeight - rotatedSize.height / 2 - 24 }
+  ];
+
+  for (const proposal of proposals) {
+    const resolved = constrainPhotoPlacement(width, height, rotation, proposal.x, proposal.y);
+    const overlapsExisting = photos.some(photo => rectsOverlap(
+      getPhotoBox(null, resolved.x, resolved.y, width, height, rotation),
+      getPhotoBox(null, photo.x, photo.y, photo.width, photo.height, photo.rotation)
+    ));
+
+    if (!overlapsExisting) {
+      return resolved;
+    }
+  }
+
+  return constrainPhotoPlacement(width, height, rotation, proposals[0].x, proposals[0].y);
+}
+
+function getDisplaySize(naturalWidth, naturalHeight) {
+  const maxWidth = Math.min(320, Math.round(window.innerWidth * 0.3));
+  const maxHeight = Math.min(240, Math.round(window.innerHeight * 0.3));
+  const scale = Math.min(1, maxWidth / naturalWidth, maxHeight / naturalHeight);
+
+  return {
+    width: Math.max(120, Math.round(naturalWidth * scale)),
+    height: Math.max(90, Math.round(naturalHeight * scale))
+  };
+}
+
+function getDimensionsForWidth(photo, targetWidth) {
+  const aspectRatio = photo.naturalWidth / photo.naturalHeight;
+  const minWidth = 80;
+  const maxWidth = Math.max(140, window.innerWidth * 0.7);
+  const width = clamp(targetWidth, minWidth, maxWidth);
+
+  return {
+    width,
+    height: width / aspectRatio
+  };
+}
+
+function resizePhoto(photo, targetWidth, shouldSave) {
+  const resized = getDimensionsForWidth(photo, targetWidth);
+  const constrained = constrainPhotoPlacement(
+    resized.width,
+    resized.height,
+    photo.rotation,
+    photo.x,
+    photo.y
+  );
+
+  photo.width = resized.width;
+  photo.height = resized.height;
+  photo.x = constrained.x;
+  photo.y = constrained.y;
+  updatePhotoElement(photo);
+
+  if (shouldSave) {
+    saveLayout();
+  }
+}
+
+function movePhoto(photo, deltaX, deltaY) {
+  const nextPosition = constrainPhotoPlacement(
+    photo.width,
+    photo.height,
+    photo.rotation,
+    photo.x + deltaX,
+    photo.y + deltaY
+  );
+
+  photo.x = nextPosition.x;
+  photo.y = nextPosition.y;
+  updatePhotoElement(photo);
+}
+
+function movePhotos(photoList, deltaX, deltaY, shouldSave) {
+  if (!photoList.length) {
+    return;
+  }
+
+  photoList.forEach(photo => {
+    movePhoto(photo, deltaX, deltaY);
+  });
+
+  if (shouldSave) {
+    saveLayout();
+  }
+}
+
+function moveSelectedPhoto(deltaX, deltaY) {
+  movePhotos(getSelectedPhotos(), deltaX, deltaY, true);
+}
+
+function rotatePhoto(photo, deltaDegrees) {
+  const nextRotation = photo.rotation + deltaDegrees;
+  const constrained = constrainPhotoPlacement(
+    photo.width,
+    photo.height,
+    nextRotation,
+    photo.x,
+    photo.y
+  );
+
+  photo.rotation = nextRotation;
+  photo.x = constrained.x;
+  photo.y = constrained.y;
+  updatePhotoElement(photo);
+}
+
+function rotatePhotos(photoList, deltaDegrees, shouldSave) {
+  if (!photoList.length || deltaDegrees === 0) {
+    return;
+  }
+
+  photoList.forEach(photo => {
+    rotatePhoto(photo, deltaDegrees);
+  });
+
+  if (shouldSave) {
+    saveLayout();
+  }
+}
+
+function rotateSelectedPhotos(deltaDegrees, shouldSave) {
+  rotatePhotos(getSelectedPhotos(), deltaDegrees, shouldSave);
+}
+
+function removePhotos(photoIds) {
+  const toRemove = new Set(photoIds);
+  if (toRemove.size === 0) {
+    return;
+  }
+
+  for (let index = photos.length - 1; index >= 0; index -= 1) {
+    const photo = photos[index];
+    if (!toRemove.has(photo.id)) {
+      continue;
+    }
+
+    photos.splice(index, 1);
+    photo.element.remove();
+  }
+
+  const remainingSelectedIds = selectedPhotoIds.filter(id => !toRemove.has(id));
+  if (remainingSelectedIds.length) {
+    setSelectedPhotos(remainingSelectedIds, remainingSelectedIds[remainingSelectedIds.length - 1]);
+  } else {
+    const fallbackPhoto = photos[photos.length - 1] || null;
+    setSelectedPhoto(fallbackPhoto ? fallbackPhoto.id : null);
+  }
+
+  saveLayout();
+}
+
+function deleteSelectedPhotos() {
+  if (!selectedPhotoIds.length) {
+    return;
+  }
+
+  removePhotos(selectedPhotoIds);
+}
+
+function clearAllPhotos() {
+  clearStagePhotos();
+  clearSelection();
+  saveLayout();
+  updateSelectionControls();
+}
+
+function exportSelectedPhoto() {
+  const photo = getSelectedPhoto();
+  if (!photo) {
+    return;
+  }
+
+  const radians = toRadians(photo.rotation);
+  const rotatedSize = getRotatedSize(photo.width, photo.height, photo.rotation);
+  const exportCanvas = document.createElement('canvas');
+  exportCanvas.width = Math.ceil(rotatedSize.width);
+  exportCanvas.height = Math.ceil(rotatedSize.height);
+
+  const exportContext = exportCanvas.getContext('2d');
+  const image = photo.imageElement;
+
+  exportContext.translate(exportCanvas.width / 2, exportCanvas.height / 2);
+  exportContext.rotate(radians);
+  exportContext.drawImage(image, -photo.width / 2, -photo.height / 2, photo.width, photo.height);
+
+  const link = document.createElement('a');
+  link.href = exportCanvas.toDataURL('image/png');
+  link.download = photo.id + '.png';
+  link.click();
+}
+
+function drawStageBackground(context, width, height) {
+  const background = context.createLinearGradient(0, 0, width, height);
+  background.addColorStop(0, '#f8fafc');
+  background.addColorStop(0.55, '#e0f2fe');
+  background.addColorStop(1, '#dbeafe');
+  context.fillStyle = background;
+  context.fillRect(0, 0, width, height);
+
+  context.fillStyle = '#fef3c7';
+  context.beginPath();
+  context.arc(width * 0.88, 0, Math.max(120, width * 0.18), 0, Math.PI * 2);
+  context.fill();
+
+  context.strokeStyle = 'rgba(255, 255, 255, 0.55)';
+  context.lineWidth = 1;
+  for (let x = 0; x <= width; x += 32) {
+    context.beginPath();
+    context.moveTo(x, 0);
+    context.lineTo(x, height);
+    context.stroke();
+  }
+  for (let y = 0; y <= height; y += 32) {
+    context.beginPath();
+    context.moveTo(0, y);
+    context.lineTo(width, y);
+    context.stroke();
+  }
+}
+
+function exportAllPhotos() {
+  if (!photos.length) {
+    return;
+  }
+
+  const exportCanvas = document.createElement('canvas');
+  exportCanvas.width = window.innerWidth;
+  exportCanvas.height = window.innerHeight;
+  const exportContext = exportCanvas.getContext('2d');
+
+  drawStageBackground(exportContext, exportCanvas.width, exportCanvas.height);
+
+  const orderedPhotos = photos.slice().sort((left, right) => left.zIndex - right.zIndex);
+  orderedPhotos.forEach(photo => {
+    exportContext.save();
+    exportContext.translate(photo.x, photo.y);
+    exportContext.rotate(toRadians(photo.rotation));
+    exportContext.shadowColor = 'rgba(15, 23, 42, 0.24)';
+    exportContext.shadowBlur = 28;
+    exportContext.shadowOffsetY = 16;
+    exportContext.drawImage(photo.imageElement, -photo.width / 2, -photo.height / 2, photo.width, photo.height);
+    exportContext.shadowColor = 'transparent';
+    exportContext.fillStyle = 'rgba(15, 23, 42, 0.72)';
+    exportContext.fillRect(-photo.width / 2 + 10, photo.height / 2 - 34, photo.width - 20, 24);
+    exportContext.fillStyle = '#ffffff';
+    exportContext.font = '700 12px Arial';
+    exportContext.textAlign = 'center';
+    exportContext.textBaseline = 'middle';
+    exportContext.fillText(photo.label, 0, photo.height / 2 - 22, Math.max(0, photo.width - 28));
+    exportContext.restore();
+  });
+
+  const link = document.createElement('a');
+  link.href = exportCanvas.toDataURL('image/png');
+  link.download = 'photo-stage.png';
+  link.click();
+}
+
+function getResizeFromDelta(photo, startWidth, deltaX, deltaY) {
+  const delta = Math.max(deltaX, deltaY);
+  return getDimensionsForWidth(photo, startWidth + delta);
+}
+
+function getCenterAngle(photo, clientX, clientY) {
+  return Math.atan2(clientY - photo.y, clientX - photo.x) * 180 / Math.PI;
+}
+
+function isAdditiveSelectionEvent(event) {
+  return event.shiftKey || event.metaKey || event.ctrlKey;
+}
+
+function startDrag(photo, event) {
+  const dragPhotos = selectedPhotoIds.includes(photo.id) ? getSelectedPhotos() : [photo];
+
+  photo.dragging = true;
+  photo.pointerId = event.pointerId;
+  photo.offsetX = event.clientX - photo.x;
+  photo.offsetY = event.clientY - photo.y;
+  photo.dragStartClientX = event.clientX;
+  photo.dragStartClientY = event.clientY;
+  photo.dragPhotoIds = dragPhotos.map(item => item.id);
+  photo.dragStartPositions = dragPhotos.map(item => ({
+    id: item.id,
+    x: item.x,
+    y: item.y
+  }));
+  photo.element.classList.add('dragging');
+  photo.element.setPointerCapture(event.pointerId);
+}
+
+function startResize(photo, event) {
+  photo.resizing = true;
+  photo.pointerId = event.pointerId;
+  photo.startWidth = photo.width;
+  photo.startHeight = photo.height;
+  photo.startX = event.clientX;
+  photo.startY = event.clientY;
+  photo.element.classList.add('resizing');
+  photo.resizeHandle.setPointerCapture(event.pointerId);
+}
+
+function startRotate(photo, event) {
+  photo.rotating = true;
+  photo.pointerId = event.pointerId;
+  photo.startRotation = photo.rotation;
+  photo.startAngle = getCenterAngle(photo, event.clientX, event.clientY);
+  photo.element.classList.add('rotating');
+  photo.rotateHandle.setPointerCapture(event.pointerId);
+}
+
+function stopPointerAction(photo, event) {
+  if (event.pointerId !== photo.pointerId) {
+    return;
+  }
+
+  if (photo.dragging) {
+    photo.dragging = false;
+    photo.element.classList.remove('dragging');
+    photo.dragPhotoIds = [];
+    photo.dragStartPositions = [];
+    if (photo.element.hasPointerCapture(event.pointerId)) {
+      photo.element.releasePointerCapture(event.pointerId);
+    }
+  }
+
+  if (photo.resizing) {
+    photo.resizing = false;
+    photo.element.classList.remove('resizing');
+    if (photo.resizeHandle.hasPointerCapture(event.pointerId)) {
+      photo.resizeHandle.releasePointerCapture(event.pointerId);
+    }
+  }
+
+  if (photo.rotating) {
+    photo.rotating = false;
+    photo.element.classList.remove('rotating');
+    if (photo.rotateHandle.hasPointerCapture(event.pointerId)) {
+      photo.rotateHandle.releasePointerCapture(event.pointerId);
+    }
+  }
+
+  photo.pointerId = null;
+  saveLayout();
+}
+
+function stopDragImmediately(photo) {
+  if (!photo.dragging) {
+    return;
+  }
+
+  photo.dragging = false;
+  photo.element.classList.remove('dragging');
+  photo.dragPhotoIds = [];
+  photo.dragStartPositions = [];
+  if (photo.pointerId !== null && photo.element.hasPointerCapture(photo.pointerId)) {
+    photo.element.releasePointerCapture(photo.pointerId);
+  }
+  photo.pointerId = null;
+}
+
+function getTouchDistance(touchA, touchB) {
+  return Math.hypot(touchA.clientX - touchB.clientX, touchA.clientY - touchB.clientY);
+}
+
+function attachPhotoInteractions(photo) {
+  photo.element.addEventListener('pointerdown', event => {
+    if (event.target.closest('.handle')) {
+      return;
+    }
+
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (isAdditiveSelectionEvent(event)) {
+      togglePhotoSelection(photo.id);
+      bringPhotoToFront(photo);
+      saveLayout();
+      return;
+    }
+
+    if (!selectedPhotoIds.includes(photo.id)) {
+      setSelectedPhoto(photo.id);
+    } else {
+      setSelectedPhotos(selectedPhotoIds, photo.id);
+    }
+
+    bringPhotoToFront(photo);
+    saveLayout();
+    startDrag(photo, event);
+  });
+
+  photo.element.addEventListener('pointermove', event => {
+    if (!photo.dragging || event.pointerId !== photo.pointerId) {
+      return;
+    }
+
+    const deltaX = event.clientX - photo.dragStartClientX;
+    const deltaY = event.clientY - photo.dragStartClientY;
+    photo.dragStartPositions.forEach(position => {
+      const dragPhoto = getPhotoById(position.id);
+      if (!dragPhoto) {
+        return;
+      }
+
+      const nextPosition = constrainPhotoPlacement(
+        dragPhoto.width,
+        dragPhoto.height,
+        dragPhoto.rotation,
+        position.x + deltaX,
+        position.y + deltaY
+      );
+
+      dragPhoto.x = nextPosition.x;
+      dragPhoto.y = nextPosition.y;
+      updatePhotoElement(dragPhoto);
+    });
+  });
+
+  photo.resizeHandle.addEventListener('pointerdown', event => {
+    event.stopPropagation();
+    event.preventDefault();
+    bringPhotoToFront(photo);
+    setSelectedPhoto(photo.id);
+    saveLayout();
+    startResize(photo, event);
+  });
+
+  photo.resizeHandle.addEventListener('pointermove', event => {
+    if (!photo.resizing || event.pointerId !== photo.pointerId) {
+      return;
+    }
+
+    const resized = getResizeFromDelta(
+      photo,
+      photo.startWidth,
+      event.clientX - photo.startX,
+      event.clientY - photo.startY
+    );
+    resizePhoto(photo, resized.width, false);
+  });
+
+  photo.rotateHandle.addEventListener('pointerdown', event => {
+    event.stopPropagation();
+    event.preventDefault();
+    bringPhotoToFront(photo);
+    setSelectedPhoto(photo.id);
+    saveLayout();
+    startRotate(photo, event);
+  });
+
+  photo.rotateHandle.addEventListener('pointermove', event => {
+    if (!photo.rotating || event.pointerId !== photo.pointerId) {
+      return;
+    }
+
+    const currentAngle = getCenterAngle(photo, event.clientX, event.clientY);
+    const nextRotation = photo.startRotation + (currentAngle - photo.startAngle);
+    const constrained = constrainPhotoPlacement(
+      photo.width,
+      photo.height,
+      nextRotation,
+      photo.x,
+      photo.y
+    );
+
+    photo.rotation = nextRotation;
+    photo.x = constrained.x;
+    photo.y = constrained.y;
+    updatePhotoElement(photo);
+  });
+
+  const stopAction = event => {
+    stopPointerAction(photo, event);
+  };
+
+  photo.element.addEventListener('pointerup', stopAction);
+  photo.element.addEventListener('pointercancel', stopAction);
+  photo.resizeHandle.addEventListener('pointerup', stopAction);
+  photo.resizeHandle.addEventListener('pointercancel', stopAction);
+  photo.rotateHandle.addEventListener('pointerup', stopAction);
+  photo.rotateHandle.addEventListener('pointercancel', stopAction);
+
+  photo.element.addEventListener('wheel', event => {
+    if (!selectedPhotoIds.includes(photo.id)) {
+      return;
+    }
+
+    event.preventDefault();
+    bringPhotoToFront(photo);
+    const scale = Math.exp(-event.deltaY * 0.0025);
+    resizePhoto(photo, photo.width * scale, true);
+  }, { passive: false });
+
+  photo.element.addEventListener('touchstart', event => {
+    if (event.touches.length !== 2) {
+      return;
+    }
+
+    event.preventDefault();
+    bringPhotoToFront(photo);
+    if (!selectedPhotoIds.includes(photo.id)) {
+      setSelectedPhoto(photo.id);
+    }
+    stopDragImmediately(photo);
+    photo.pinching = true;
+    photo.pinchStartDistance = getTouchDistance(event.touches[0], event.touches[1]);
+    photo.pinchStartWidth = photo.width;
+  }, { passive: false });
+
+  photo.element.addEventListener('touchmove', event => {
+    if (!photo.pinching || event.touches.length !== 2) {
+      return;
+    }
+
+    event.preventDefault();
+    const distance = getTouchDistance(event.touches[0], event.touches[1]);
+    const scale = distance / photo.pinchStartDistance;
+    resizePhoto(photo, photo.pinchStartWidth * scale, false);
+  }, { passive: false });
+
+  function stopPinch(event) {
+    if (!photo.pinching || event.touches.length >= 2) {
+      return;
+    }
+
+    photo.pinching = false;
+    saveLayout();
+  }
+
+  photo.element.addEventListener('touchend', stopPinch);
+  photo.element.addEventListener('touchcancel', stopPinch);
+}
+
+function buildPhotoElement(photo) {
+  const element = document.createElement('div');
+  const imageElement = document.createElement('img');
+  const labelElement = document.createElement('div');
+  const resizeHandle = document.createElement('button');
+  const rotateHandle = document.createElement('button');
+
+  element.className = 'photo-item';
+  imageElement.className = 'photo-image';
+  imageElement.src = photo.src;
+  imageElement.alt = photo.id;
+  imageElement.draggable = false;
+
+  labelElement.className = 'photo-label';
+  labelElement.textContent = photo.label;
+
+  resizeHandle.className = 'handle resize-handle';
+  resizeHandle.type = 'button';
+  resizeHandle.title = 'Resize photo';
+
+  rotateHandle.className = 'handle rotate-handle';
+  rotateHandle.type = 'button';
+  rotateHandle.title = 'Rotate photo';
+
+  element.appendChild(imageElement);
+  element.appendChild(labelElement);
+  element.appendChild(resizeHandle);
+  element.appendChild(rotateHandle);
+
+  photo.element = element;
+  photo.imageElement = imageElement;
+  photo.labelElement = labelElement;
+  photo.resizeHandle = resizeHandle;
+  photo.rotateHandle = rotateHandle;
+
+  stage.appendChild(element);
+}
+
+function createPhotoFromData(data, shouldSave) {
+  const photo = {
+    id: data.id,
+    src: data.src,
+    x: data.x,
+    y: data.y,
+    width: data.width,
+    height: data.height,
+    rotation: data.rotation || 0,
+    zIndex: data.zIndex || 1,
+    capturedAt: data.capturedAt || new Date().toISOString(),
+    label: data.label || data.id,
+    naturalWidth: data.naturalWidth,
+    naturalHeight: data.naturalHeight,
+    dragging: false,
+    resizing: false,
+    rotating: false,
+    pinching: false,
+    pointerId: null,
+    offsetX: 0,
+    offsetY: 0,
+    dragStartClientX: 0,
+    dragStartClientY: 0,
+    dragPhotoIds: [],
+    dragStartPositions: [],
+    startWidth: 0,
+    startHeight: 0,
+    startX: 0,
+    startY: 0,
+    startRotation: 0,
+    startAngle: 0,
+    pinchStartDistance: 0,
+    pinchStartWidth: 0,
+    element: null,
+    imageElement: null,
+    labelElement: null,
+    resizeHandle: null,
+    rotateHandle: null
+  };
+
+  buildPhotoElement(photo);
+  attachPhotoInteractions(photo);
+
+  const constrained = constrainPhotoPlacement(photo.width, photo.height, photo.rotation, photo.x, photo.y);
+  photo.x = constrained.x;
+  photo.y = constrained.y;
+
+  photos.push(photo);
+  updatePhotoElement(photo);
+  topZIndex = Math.max(topZIndex, photo.zIndex);
+  nextPhotoId = Math.max(nextPhotoId, Number(photo.id.replace('photo-', '')) + 1 || nextPhotoId);
+
+  if (shouldSave) {
+    saveLayout();
+  }
+
+  return photo;
+}
+
+function createPhoto(src, naturalWidth, naturalHeight) {
+  const photoNumber = nextPhotoId;
+  const capturedAt = new Date().toISOString();
+  const size = getDisplaySize(naturalWidth, naturalHeight);
+  const rotation = 0;
+  const position = findNewPhotoPosition(size.width, size.height, rotation);
+  const photo = createPhotoFromData({
+    id: 'photo-' + photoNumber,
+    src,
+    x: position.x,
+    y: position.y,
+    width: size.width,
+    height: size.height,
+    rotation,
+    zIndex: topZIndex + 1,
+    capturedAt,
+    label: 'Photo ' + photoNumber + ' - ' + formatTimestamp(capturedAt),
+    naturalWidth,
+    naturalHeight
+  }, false);
+
+  setSelectedPhoto(photo.id);
+  bringPhotoToFront(photo);
+  saveLayout();
+}
+
+function capturePhoto() {
+  if (!video.videoWidth || !video.videoHeight) {
+    return;
+  }
+
+  snapshotCanvas.width = video.videoWidth;
+  snapshotCanvas.height = video.videoHeight;
+  snapshotContext.drawImage(video, 0, 0);
+  createPhoto(snapshotCanvas.toDataURL('image/png'), video.videoWidth, video.videoHeight);
+}
+
+function clearStagePhotos() {
+  photos.splice(0, photos.length).forEach(photo => {
+    photo.element.remove();
+  });
+}
+
+function applySerializedState(serialized, sourceStack, targetStack) {
+  if (!serialized) {
+    return;
+  }
+
+  if (lastSavedState !== null) {
+    targetStack.push(lastSavedState);
+    if (targetStack.length > HISTORY_LIMIT) {
+      targetStack.shift();
+    }
+  }
+
+  const data = JSON.parse(serialized);
+  clearStagePhotos();
+  topZIndex = Number(data.topZIndex) || 1;
+  nextPhotoId = Number(data.nextPhotoId) || 1;
+
+  if (Array.isArray(data.photos)) {
+    data.photos.forEach(photoData => {
+      createPhotoFromData(photoData, false);
+    });
+  }
+
+  setSelectedPhotos(Array.isArray(data.selectedPhotoIds) ? data.selectedPhotoIds : []);
+  saveLayout(false);
+  updateSelectionControls();
+  updateHistoryControls();
+}
+
+function undoLayoutChange() {
+  if (!undoStack.length) {
+    return;
+  }
+
+  const previousState = undoStack.pop();
+  applySerializedState(previousState, undoStack, redoStack);
+}
+
+function redoLayoutChange() {
+  if (!redoStack.length) {
+    return;
+  }
+
+  const nextState = redoStack.pop();
+  applySerializedState(nextState, redoStack, undoStack);
+}
+
+function restoreLayout() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) {
+    saveLayout(false);
+    updateSelectionControls();
+    return;
+  }
+
+  try {
+    const data = JSON.parse(raw);
+    topZIndex = Number(data.topZIndex) || 1;
+    nextPhotoId = Number(data.nextPhotoId) || 1;
+
+    if (Array.isArray(data.photos)) {
+      data.photos.forEach(photoData => {
+        createPhotoFromData(photoData, false);
+      });
+    }
+    setSelectedPhotos(Array.isArray(data.selectedPhotoIds) ? data.selectedPhotoIds : []);
+  } catch (error) {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+
+  saveLayout(false);
+  updateSelectionControls();
+}
+
+function isCaptureButtonPressed(gamepad) {
+  const captureButtons = [0, 5, 7];
+  return captureButtons.some(index => gamepad.buttons[index] && gamepad.buttons[index].pressed);
+}
+
+function isSelectButtonPressed(gamepad) {
+  return Boolean(gamepad.buttons[2] && gamepad.buttons[2].pressed);
+}
+
+function isClearButtonPressed(gamepad) {
+  return Boolean(gamepad.buttons[1] && gamepad.buttons[1].pressed);
+}
+
+function getGamepadMoveDelta(gamepad) {
+  const deadZone = 0.2;
+  const axisX = Math.abs(gamepad.axes[0] || 0) > deadZone ? gamepad.axes[0] : 0;
+  const axisY = Math.abs(gamepad.axes[1] || 0) > deadZone ? gamepad.axes[1] : 0;
+  const dpadX = (gamepad.buttons[15] && gamepad.buttons[15].pressed ? 1 : 0)
+    - (gamepad.buttons[14] && gamepad.buttons[14].pressed ? 1 : 0);
+  const dpadY = (gamepad.buttons[13] && gamepad.buttons[13].pressed ? 1 : 0)
+    - (gamepad.buttons[12] && gamepad.buttons[12].pressed ? 1 : 0);
+  const speed = 8;
+
+  return {
+    x: Math.round((axisX + dpadX) * speed),
+    y: Math.round((axisY + dpadY) * speed)
+  };
+}
+
+function getGamepadRotateDelta(gamepad) {
+  const deadZone = 0.2;
+  const rotateAxis = Math.abs(gamepad.axes[2] || 0) > deadZone ? gamepad.axes[2] : 0;
+  const rotateSpeed = 4;
+
+  return rotateAxis * rotateSpeed;
+}
+
+function pollGamepad() {
+  const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+  const gamepad = Array.from(gamepads).find(Boolean);
+
+  if (!gamepad) {
+    if (gamepadRotateActive) {
+      saveLayout();
+    }
+    gamepadStatus.textContent = 'Gamepad: not connected';
+    gamepadCaptureHeld = false;
+    gamepadSelectHeld = false;
+    gamepadClearHeld = false;
+    gamepadRotateActive = false;
+    requestAnimationFrame(pollGamepad);
+    return;
+  }
+
+  gamepadStatus.textContent = 'Gamepad: ' + gamepad.id + ' (A / RB / RT = photo, X = next photo, B = clear selection, left stick / D-pad = move, right stick left/right = rotate)';
+
+  const capturePressed = isCaptureButtonPressed(gamepad);
+  if (capturePressed && !gamepadCaptureHeld) {
+    capturePhoto();
+  }
+  gamepadCaptureHeld = capturePressed;
+
+  const selectPressed = isSelectButtonPressed(gamepad);
+  if (selectPressed && !gamepadSelectHeld) {
+    cycleSelectedPhoto();
+  }
+  gamepadSelectHeld = selectPressed;
+
+  const clearPressed = isClearButtonPressed(gamepad);
+  if (clearPressed && !gamepadClearHeld) {
+    clearSelection();
+    saveLayout();
+  }
+  gamepadClearHeld = clearPressed;
+
+  const movement = getGamepadMoveDelta(gamepad);
+  if (movement.x !== 0 || movement.y !== 0) {
+    moveSelectedPhoto(movement.x, movement.y);
+  }
+
+  const rotation = getGamepadRotateDelta(gamepad);
+  if (rotation !== 0) {
+    rotateSelectedPhotos(rotation, false);
+    gamepadRotateActive = true;
+  } else if (gamepadRotateActive) {
+    saveLayout();
+    gamepadRotateActive = false;
+  }
+
+  requestAnimationFrame(pollGamepad);
+}
+
+navigator.mediaDevices.getUserMedia({ video: true })
+  .then(stream => {
+    video.srcObject = stream;
+  })
+  .catch(err => {
+    alert('Camera access denied: ' + err);
+  });
+
+window.addEventListener('gamepadconnected', event => {
+  gamepadStatus.textContent = 'Gamepad: ' + event.gamepad.id + ' connected';
+});
+
+window.addEventListener('gamepaddisconnected', () => {
+  if (gamepadRotateActive) {
+    saveLayout();
+  }
+  gamepadStatus.textContent = 'Gamepad: not connected';
+  gamepadCaptureHeld = false;
+  gamepadSelectHeld = false;
+  gamepadClearHeld = false;
+  gamepadRotateActive = false;
+});
+
+window.addEventListener('resize', () => {
+  photos.forEach(photo => {
+    const constrained = constrainPhotoPlacement(photo.width, photo.height, photo.rotation, photo.x, photo.y);
+    photo.x = constrained.x;
+    photo.y = constrained.y;
+    updatePhotoElement(photo);
+  });
+  saveLayout();
+});
+
+snap.addEventListener('click', capturePhoto);
+undoButton.addEventListener('click', undoLayoutChange);
+redoButton.addEventListener('click', redoLayoutChange);
+deletePhotoButton.addEventListener('click', deleteSelectedPhotos);
+exportPhotoButton.addEventListener('click', exportSelectedPhoto);
+exportAllButton.addEventListener('click', exportAllPhotos);
+clearAllButton.addEventListener('click', clearAllPhotos);
+
+stage.addEventListener('pointerdown', event => {
+  if (event.target === stage && !isAdditiveSelectionEvent(event)) {
+    clearSelection();
+    saveLayout();
+    stage.focus();
+  }
+});
+
+stage.addEventListener('keydown', event => {
+  const step = event.shiftKey ? 20 : 10;
+
+  if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
+    event.preventDefault();
+    if (event.shiftKey) {
+      redoLayoutChange();
+    } else {
+      undoLayoutChange();
+    }
+    return;
+  }
+
+  if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'y') {
+    event.preventDefault();
+    redoLayoutChange();
+    return;
+  }
+
+  if (event.key === 'Escape') {
+    clearSelection();
+    saveLayout();
+    return;
+  }
+
+  if ((event.key === 'Delete' || event.key === 'Backspace') && selectedPhotoIds.length) {
+    event.preventDefault();
+    deleteSelectedPhotos();
+    return;
+  }
+
+  if (event.key === 'Tab' && photos.length) {
+    event.preventDefault();
+    cycleSelectedPhoto();
+    return;
+  }
+
+  if (event.key === 'ArrowLeft') {
+    moveSelectedPhoto(-step, 0);
+    event.preventDefault();
+  } else if (event.key === 'ArrowRight') {
+    moveSelectedPhoto(step, 0);
+    event.preventDefault();
+  } else if (event.key === 'ArrowUp') {
+    moveSelectedPhoto(0, -step);
+    event.preventDefault();
+  } else if (event.key === 'ArrowDown') {
+    moveSelectedPhoto(0, step);
+    event.preventDefault();
+  }
+});
+
+restoreLayout();
+stage.focus();
+pollGamepad();
+</script>
+
+</body>
+</html>
