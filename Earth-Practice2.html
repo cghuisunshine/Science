@@ -294,6 +294,13 @@
     .result.wrong { color: var(--bad); }
     .result.warn { color: var(--warn); }
 
+    .result-detail {
+      margin-top: 8px;
+      font-weight: 400;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
     .hint {
       color: var(--muted);
       background: #f8fafc;
@@ -375,28 +382,28 @@
       font-size: 0.95rem;
     }
 
-    .lang-en,
-    .lang-zh {
+    .i18n-en,
+    .i18n-zh {
       display: block;
     }
 
-    .lang-zh {
+    .i18n-zh {
       display: none;
       margin-top: 6px;
       color: var(--muted);
       font-size: 0.96em;
     }
 
-    body.lang-bilingual .lang-zh,
-    body.lang-zh .lang-zh {
+    body.lang-bilingual .i18n-zh,
+    body.lang-zh .i18n-zh {
       display: block;
     }
 
-    body.lang-zh .lang-en {
+    body.lang-zh .i18n-en {
       display: none;
     }
 
-    body.lang-zh .lang-zh {
+    body.lang-zh .i18n-zh {
       margin-top: 0;
       color: inherit;
       font-size: inherit;
@@ -919,7 +926,7 @@
     }
 
     function langHtml(en, zh) {
-      return `<div class="lang-en">${escapeHtml(en)}</div><div class="lang-zh">${escapeHtml(zh)}</div>`;
+      return `<div class="i18n-en">${escapeHtml(en)}</div><div class="i18n-zh">${escapeHtml(zh)}</div>`;
     }
 
     function setLangContent(el, en, zh) {
@@ -1002,6 +1009,111 @@
       resultText.className = `result ${kind}`;
     }
 
+    function lowerFirst(text) {
+      if (!text) return '';
+      return text.charAt(0).toLowerCase() + text.slice(1);
+    }
+
+    function getRelatedKnowledgeText(index) {
+      const q = questions[index];
+      const question = q.question.toLowerCase();
+
+      if (q.section === "Earth's Structure") {
+        if (question.includes('outermost') || question.includes('crust') || question.includes('moho')) {
+          return {
+            en: 'Related knowledge: The crust is Earth\'s thin outer rock layer. Continental crust is usually thicker and less dense than oceanic crust, and the Moho marks where the crust changes into mantle rock.',
+            zh: '相关知识：地壳是地球最外面很薄的岩石层。大陆地壳通常比海洋地壳更厚、密度更小，而莫霍面是地壳过渡到地幔岩石的位置。'
+          };
+        }
+        if (question.includes('outer core') || question.includes('inner core') || question.includes('magnetic field')) {
+          return {
+            en: 'Related knowledge: Earth has a liquid outer core and a solid inner core. Motion in the liquid iron-rich outer core helps generate Earth\'s magnetic field, while extreme pressure keeps the inner core solid.',
+            zh: '相关知识：地球有液态外核和固态内核。富含铁的液态外核在流动时会帮助产生地球磁场，而巨大的压力使内核保持固态。'
+          };
+        }
+        if (question.includes('seismic') || question.includes('interior')) {
+          return {
+            en: 'Related knowledge: Scientists cannot drill to the center of Earth, so they use seismic waves from earthquakes. Changes in wave speed and whether waves pass through a layer help reveal whether that layer is solid or liquid.',
+            zh: '相关知识：科学家无法直接钻到地心，所以会利用地震产生的地震波。波速变化以及某些波能否穿过某一层，可以帮助判断那一层是固态还是液态。'
+          };
+        }
+        return {
+          en: 'Related knowledge: The mantle makes up most of Earth\'s volume. Heat from deeper inside Earth causes mantle material to move slowly, and those movements help transfer energy and influence plate motion at the surface.',
+          zh: '相关知识：地幔占了地球体积的大部分。来自地球内部的热量会让地幔物质缓慢流动，这种运动能够传递能量，并影响地表板块的移动。'
+        };
+      }
+
+      if (q.section === 'Plate Tectonics') {
+        if (question.includes('divergent') || question.includes('mid-ocean') || question.includes('new ocean crust')) {
+          return {
+            en: 'Related knowledge: At divergent boundaries, plates move apart and magma rises to fill the gap. When the magma cools, it forms new crust, which is why mid-ocean ridges are major places of seafloor spreading.',
+            zh: '相关知识：在张裂边界，板块彼此分开，岩浆会上升填补空隙。岩浆冷却后会形成新的地壳，所以大洋中脊是海底扩张的重要地点。'
+          };
+        }
+        if (question.includes('convergent') || question.includes('subduction') || question.includes('trench') || question.includes('himalayas') || question.includes('collide')) {
+          return {
+            en: 'Related knowledge: At convergent boundaries, plates come together. Dense oceanic crust usually subducts beneath another plate, forming trenches and volcanoes, while continent-continent collision tends to crumple crust upward into mountain ranges like the Himalayas.',
+            zh: '相关知识：在汇聚边界，板块彼此靠近。密度较大的海洋地壳通常会俯冲到另一块板块下方，形成海沟和火山；而大陆与大陆碰撞时，地壳更容易被挤压抬升，形成像喜马拉雅山这样的高大山脉。'
+          };
+        }
+        if (question.includes('transform') || question.includes('san andreas') || question.includes('earthquake')) {
+          return {
+            en: 'Related knowledge: At transform boundaries, plates slide past each other. No major crust is created or destroyed there, but friction can lock the plates until stress is released suddenly as an earthquake.',
+            zh: '相关知识：在转换边界，板块彼此横向滑动。这里通常不会大量产生或消耗地壳，但摩擦会让板块暂时卡住，之后应力突然释放，就会发生地震。'
+          };
+        }
+        return {
+          en: 'Related knowledge: Tectonic plates are pieces of the lithosphere, which includes the crust and uppermost mantle. They move slowly over the softer asthenosphere, mainly because of heat-driven movement inside Earth.',
+          zh: '相关知识：构造板块是岩石圈的一部分，而岩石圈包括地壳和最上层地幔。它们在较软的软流层上缓慢移动，主要动力来自地球内部热量引起的运动。'
+        };
+      }
+
+      if (question.includes('fusion') || question.includes('core') || question.includes('temperature')) {
+        return {
+          en: 'Related knowledge: The Sun\'s energy comes from nuclear fusion in its core, where hydrogen nuclei join to form helium. This process releases enormous amounts of energy because some mass is converted into energy.',
+          zh: '相关知识：太阳的能量来自核心中的核聚变，在那里氢原子核结合形成氦。这个过程会释放巨大的能量，因为一部分质量转化成了能量。'
+        };
+      }
+      if (question.includes('photosphere') || question.includes('corona') || question.includes('radiation') || question.includes('convection') || question.includes('sunspots')) {
+        return {
+          en: 'Related knowledge: The Sun has several layers. Energy starts in the core, moves outward through the radiative zone and convective zone, and reaches the photosphere, which is the visible surface. The corona is the outer atmosphere.',
+          zh: '相关知识：太阳有多个层次。能量先在核心产生，再穿过辐射层和对流区，最后到达我们看到的光球层。日冕则是太阳最外层的大气。'
+        };
+      }
+      if (question.includes('weather') || question.includes('climate') || question.includes('water cycle') || question.includes('plants') || question.includes('without the sun') || question.includes('light from the sun')) {
+        return {
+          en: 'Related knowledge: Solar energy drives weather, climate, and the water cycle, and it also supports photosynthesis. Without continuous solar input, Earth would quickly become much colder and most life would not survive.',
+          zh: '相关知识：太阳能驱动天气、气候和水循环，也支持植物进行光合作用。如果没有持续的太阳能输入，地球会很快变得更冷，大多数生命也无法生存。'
+        };
+      }
+      return {
+        en: 'Related knowledge: The Sun is a medium-sized main-sequence star often called a yellow dwarf. It contains almost all of the solar system\'s mass, so its gravity keeps planets, comets, and asteroids in orbit.',
+        zh: '相关知识：太阳是一颗中等大小的主序星，常被称为黄矮星。它包含了太阳系几乎全部的质量，因此它的引力能够让行星、彗星和小行星保持在轨道上运行。'
+      };
+    }
+
+    function getExplanationText(index) {
+      const q = questions[index];
+      const t = getTranslation(index);
+      const answerEn = `${letter(q.answer)}. ${q.choices[q.answer]}`;
+      const answerZh = `${letter(q.answer)}. ${getLocalizedChoice(q.choices[q.answer])}`;
+      const related = getRelatedKnowledgeText(index);
+      return {
+        en: `Explanation: ${answerEn} is correct because ${lowerFirst(q.hint)}\n${related.en}`,
+        zh: `解析：${answerZh} 是正确答案，因为${t.hint}\n${related.zh}`
+      };
+    }
+
+    function setResultFeedback(statusEn, statusZh, detailEn, detailZh, kind) {
+      resultText.innerHTML = `
+        ${langHtml(statusEn, statusZh)}
+        <div class="result-detail">
+          ${langHtml(detailEn, detailZh)}
+        </div>
+      `;
+      resultText.className = `result ${kind}`;
+    }
+
     function renderQuestion() {
       const q = questions[currentIndex];
       const t = getTranslation(currentIndex);
@@ -1050,20 +1162,35 @@
     function showCheckedResult() {
       const q = questions[currentIndex];
       const userAnswer = selectedAnswers[currentIndex];
+      const explanation = getExplanationText(currentIndex);
 
       if (userAnswer === null) {
-        setResultMessage('No answer selected yet.', '还没有选择答案。', 'warn');
+        setResultFeedback(
+          `No answer selected yet. Correct answer: ${letter(q.answer)}. ${q.choices[q.answer]}`,
+          `还没有选择答案。正确答案：${letter(q.answer)}. ${getLocalizedChoice(q.choices[q.answer])}`,
+          explanation.en,
+          explanation.zh,
+          'warn'
+        );
         return;
       }
 
       if (userAnswer === q.answer) {
-        setResultMessage('Correct!', '答对了！', 'correct');
+        setResultFeedback(
+          'Correct!',
+          '答对了！',
+          explanation.en,
+          explanation.zh,
+          'correct'
+        );
         return;
       }
 
-      setResultMessage(
+      setResultFeedback(
         `Incorrect. Correct answer: ${letter(q.answer)}. ${q.choices[q.answer]}`,
         `不正确。正确答案：${letter(q.answer)}. ${getLocalizedChoice(q.choices[q.answer])}`,
+        explanation.en,
+        explanation.zh,
         'wrong'
       );
     }
