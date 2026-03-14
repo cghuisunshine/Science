@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Earth Practice 2</title>
+  <style>
+    :root {
+      --bg: #f6f8fc;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --accent: #1d4ed8;
+      --accent-2: #0f766e;
+      --good: #166534;
+      --good-bg: #dcfce7;
+      --bad: #991b1b;
+      --bad-bg: #fee2e2;
+      --warn: #92400e;
+      --warn-bg: #fef3c7;
+      --border: #dbe3ef;
+      --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 100%);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #1d4ed8, #0f766e);
+      color: white;
+      padding: 28px;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.8rem, 3.8vw, 3rem);
+      line-height: 1.15;
+    }
+
+    .hero p {
+      margin: 8px 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .card,
+    .quiz-card,
+    .summary {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin-top: 0;
+      line-height: 1.25;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      background: #e8f0ff;
+      color: #153e91;
+      border: 1px solid #c8dafd;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    label.inline {
+      display: inline-block;
+      margin-right: 12px;
+      font-weight: 700;
+    }
+
+    input[type="text"] {
+      width: min(360px, 100%);
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 1rem;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0 8px;
+    }
+
+    .lang-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 14px 0 6px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #f8fbff;
+    }
+
+    .lang-bar strong {
+      color: var(--accent);
+      font-size: 0.98rem;
+    }
+
+    .lang-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .lang-mode-btn {
+      background: #eef2f7;
+      color: #334155;
+      padding: 10px 14px;
+      border-radius: 12px;
+      box-shadow: none;
+    }
+
+    .lang-mode-btn.active {
+      background: linear-gradient(135deg, #1d4ed8, #0f766e);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(29, 78, 216, 0.18);
+    }
+
+    button {
+      appearance: none;
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+    button:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    .primary { background: var(--accent); color: #fff; }
+    .secondary { background: #e5eefc; color: #163b8c; }
+    .success { background: var(--accent-2); color: #fff; }
+    .ghost { background: #eef2f7; color: #374151; }
+
+    .inline-status {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .scoreboard {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .scorebox {
+      background: #f8fbff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .scorebox strong {
+      display: block;
+      font-size: 1.45rem;
+      margin-bottom: 4px;
+    }
+
+    .sticky-nav {
+      position: sticky;
+      top: 10px;
+      align-self: start;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .quiz-card {
+      margin-bottom: 18px;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: .95rem;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .question {
+      font-size: 1.25rem;
+      line-height: 1.5;
+      margin: 8px 0 18px;
+      font-weight: 700;
+    }
+
+    .choices {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .choice {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      cursor: pointer;
+      background: #fff;
+      transition: border-color .2s ease, background .2s ease;
+    }
+
+    .choice:hover {
+      border-color: #93c5fd;
+      background: #f8fbff;
+    }
+
+    .choice input {
+      margin-top: 3px;
+      transform: scale(1.15);
+    }
+
+    .choice > div {
+      flex: 1;
+    }
+
+    .choice.selected {
+      border-color: #60a5fa;
+      background: #eff6ff;
+    }
+
+    .choice.correct-choice {
+      border-color: #86efac;
+      background: #f0fdf4;
+    }
+
+    .choice.wrong-choice {
+      border-color: #fca5a5;
+      background: #fff7f7;
+    }
+
+    .result {
+      min-height: 28px;
+      font-weight: 700;
+      margin: 8px 0 14px;
+    }
+
+    .result.correct { color: var(--good); }
+    .result.wrong { color: var(--bad); }
+    .result.warn { color: var(--warn); }
+
+    .hint {
+      color: var(--muted);
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .footer-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .progress {
+      height: 12px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.28);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 16px;
+    }
+
+    .progress > div {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #bfdbfe, #ffffff);
+      transition: width .25s ease;
+    }
+
+    .summary {
+      display: none;
+      margin-top: 18px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 16px 0 20px;
+    }
+
+    .stat {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      background: #fafcff;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+    }
+
+    .review {
+      margin-top: 12px;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+    }
+
+    .review-item {
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    .review-item:last-child { border-bottom: none; }
+    .hidden { display: none; }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 24px 0 8px;
+      font-size: 0.95rem;
+    }
+
+    .lang-en,
+    .lang-zh {
+      display: block;
+    }
+
+    .lang-zh {
+      display: none;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.96em;
+    }
+
+    body.lang-bilingual .lang-zh,
+    body.lang-zh .lang-zh {
+      display: block;
+    }
+
+    body.lang-zh .lang-en {
+      display: none;
+    }
+
+    body.lang-zh .lang-zh {
+      margin-top: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .scoreboard {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .sticky-nav {
+        position: static;
+      }
+
+      .lang-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .wrap { padding: 16px; }
+      .hero,
+      .card,
+      .quiz-card,
+      .summary { padding: 18px; }
+      .question { font-size: 1.1rem; }
+    }
+
+    @media print {
+      body { background: white; }
+      .hero {
+        background: #1d4ed8 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .toolbar button,
+      .footer-bar button { display: none; }
+      .card,
+      .quiz-card,
+      .summary { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1 id="heroTitle">Earth Practice 2</h1>
+      <p id="heroUnits"><strong>Units:</strong> 4.3 Earth's Interior + 4.4 Plate Tectonics + 4.5 The Sun's Energy</p>
+      <p id="heroDesc">This practice page follows the same exam-style layout as the Earth and Universe review, but keeps the 60-question multiple-choice format for independent practice and quick checking.</p>
+      <div class="pill-row">
+        <span class="pill" id="pill1">60 Multiple-Choice Questions</span>
+        <span class="pill" id="pill2">Check by Question</span>
+        <span class="pill" id="pill3">Reveal Full Review</span>
+        <span class="pill" id="pill4">Print-Friendly</span>
+      </div>
+      <div class="progress" aria-label="Quiz progress">
+        <div id="progressBar"></div>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <h2 id="studentInfoTitle">Student Info</h2>
+        <p><label class="inline" id="studentNameLabel" for="studentName">Name:</label><input id="studentName" type="text" placeholder="Enter student name" /></p>
+        <p class="small" id="studentTip">Tip: work through the questions first, check individual items only when needed, then use the full review to study patterns in your mistakes.</p>
+
+        <div class="lang-bar">
+          <strong id="langBarLabel">Language / 语言</strong>
+          <div class="lang-buttons">
+            <button class="lang-mode-btn active" id="langBtnEn" data-lang-mode="en" type="button">EN</button>
+            <button class="lang-mode-btn" id="langBtnEnZh" data-lang-mode="enzh" type="button">En+Zh</button>
+            <button class="lang-mode-btn" id="langBtnZh" data-lang-mode="zh" type="button">Zh</button>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <button class="primary" id="btnGradeQuiz" type="button">Submit &amp; Grade Quiz</button>
+          <button class="success" id="btnRevealAll" type="button">Reveal All Answers</button>
+          <button class="secondary" id="btnHideReview" type="button">Hide Review</button>
+          <button class="ghost" id="btnResetQuiz" type="button">Reset Quiz</button>
+          <button class="ghost" id="btnPrintPage" type="button">Print Page</button>
+        </div>
+        <span class="inline-status" id="quizStatus">Choose an answer to begin. Your selection saves automatically.</span>
+
+        <div class="scoreboard">
+          <div class="scorebox"><strong id="scoreRaw">0/60</strong><span id="scoreRawLabel">Raw Score</span></div>
+          <div class="scorebox"><strong id="scorePct">0%</strong><span id="scorePctLabel">Percent</span></div>
+          <div class="scorebox"><strong id="scoreAnswered">0/60</strong><span id="scoreAnsweredLabel">Answered</span></div>
+          <div class="scorebox"><strong id="scoreSection">1/3</strong><span id="scoreSectionLabelBox">Current Section</span></div>
+        </div>
+      </section>
+
+      <aside class="card sticky-nav">
+        <h2 id="reviewTitle">What to Review</h2>
+        <ul id="reviewListStatic">
+          <li>Layers of Earth: crust, mantle, outer core, inner core</li>
+          <li>Seismic waves and evidence for Earth's interior</li>
+          <li>Convection currents and plate movement</li>
+          <li>Divergent, convergent, and transform boundaries</li>
+          <li>Subduction, trenches, ridges, earthquakes, and mountains</li>
+          <li>The Sun as a star powered by nuclear fusion</li>
+          <li>Core, radiative zone, convective zone, photosphere, corona</li>
+          <li>How solar energy affects weather, climate, and life on Earth</li>
+        </ul>
+        <p class="small" id="reviewTip">Study strategy: master the layer and boundary vocabulary first, then connect each process to a real Earth feature or effect.</p>
+      </aside>
+    </div>
+
+    <section class="quiz-card" id="quizCard">
+      <h2 id="partATitle">Part A — Multiple Choice Practice</h2>
+      <div class="meta">
+        <div id="sectionLabel">Section 1 of 3</div>
+        <div id="questionCounter">Question 1 of 60</div>
+      </div>
+      <div class="question" id="questionText"></div>
+      <div class="choices" id="choicesContainer"></div>
+      <div class="result" id="resultText"></div>
+      <div class="footer-bar">
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="primary" id="checkBtn" type="button">Check This Question</button>
+          <button class="secondary" id="hintBtn" type="button">Show Hint</button>
+          <button class="secondary" id="prevBtn" type="button">Previous</button>
+          <button class="secondary" id="nextBtn" type="button">Next</button>
+        </div>
+        <div class="small">Keyboard: use Left and Right arrow keys to move between questions.</div>
+      </div>
+      <div class="hint" id="hintBox"></div>
+    </section>
+
+    <section class="summary" id="summaryBox">
+      <h2 id="summaryTitle">Quiz Review</h2>
+      <div class="summary-grid">
+        <div class="stat"><strong id="finalScore">0 / 60</strong><span id="finalScoreLabel">Total Score</span></div>
+        <div class="stat"><strong id="finalPercent">0%</strong><span id="finalPercentLabel">Percentage</span></div>
+        <div class="stat"><strong id="finalCorrect">0</strong><span id="finalCorrectLabel">Correct Answers</span></div>
+        <div class="stat"><strong id="finalWrong">0</strong><span id="finalWrongLabel">Incorrect Answers</span></div>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="secondary" id="restartBottom" type="button">Restart Quiz</button>
+        <button class="primary" id="reviewBtn" type="button">Show Review</button>
+      </div>
+      <div class="review hidden" id="reviewList"></div>
+    </section>
+
+    <div class="footer" id="footerText">Built as a single self-contained HTML study page for Earth Science practice.</div>
+  </div>
+
+  <script>
+    const questions = [
+      {section:"Earth's Structure", question:"What is the outermost layer of Earth?", choices:["Mantle","Crust","Outer Core","Inner Core"], answer:1, hint:"This is the thin layer where continents and oceans are found."},
+      {section:"Earth's Structure", question:"Which layer of Earth is the thickest?", choices:["Crust","Mantle","Outer Core","Inner Core"], answer:1, hint:"It lies between the crust and the core."},
+      {section:"Earth's Structure", question:"What is the outer core mainly made of?", choices:["Liquid iron and nickel","Solid rock","Ice","Gas"], answer:0, hint:"It is metallic and not solid."},
+      {section:"Earth's Structure", question:"What is the inner core mostly made of?", choices:["Solid iron and nickel","Water","Granite","Sand"], answer:0, hint:"It is the dense center of Earth."},
+      {section:"Earth's Structure", question:"Which Earth layer do humans live on?", choices:["Mantle","Crust","Outer core","Inner core"], answer:1, hint:"It is the outermost surface layer."},
+      {section:"Earth's Structure", question:"Approximately how thick is the mantle?", choices:["100 km","500 km","2900 km","10 km"], answer:2, hint:"It is much thicker than the crust."},
+      {section:"Earth's Structure", question:"What is the state of the outer core?", choices:["Solid","Liquid","Gas","Plasma"], answer:1, hint:"It flows around the inner core."},
+      {section:"Earth's Structure", question:"Why is the inner core solid even though it is very hot?", choices:["Low temperature","High pressure","Magnetic field","Low density"], answer:1, hint:"The force squeezing inward is enormous."},
+      {section:"Earth's Structure", question:"What scientific evidence helps scientists study Earth's interior?", choices:["Satellite images","Seismic waves","Wind patterns","Ocean currents"], answer:1, hint:"These travel through Earth during earthquakes."},
+      {section:"Earth's Structure", question:"Which layer produces Earth's magnetic field?", choices:["Crust","Mantle","Outer Core","Inner Core"], answer:2, hint:"Its moving liquid metal is important."},
+      {section:"Earth's Structure", question:"The crust is mainly composed of what?", choices:["Molten metal","Rock and minerals","Hydrogen","Ice"], answer:1, hint:"It forms continents and ocean floors."},
+      {section:"Earth's Structure", question:"Oceanic crust is generally ______ than continental crust.", choices:["thicker","thinner","heavier","older"], answer:1, hint:"Continental crust is usually deeper from top to bottom."},
+      {section:"Earth's Structure", question:"What lies directly below the crust?", choices:["Outer core","Mantle","Inner core","Ocean"], answer:1, hint:"This layer starts right under the Moho."},
+      {section:"Earth's Structure", question:"Which Earth layer contains convection currents?", choices:["Crust","Mantle","Inner core","Atmosphere"], answer:1, hint:"Hot material rises and cooler material sinks here."},
+      {section:"Earth's Structure", question:"Convection currents in the mantle help cause:", choices:["Weather","Plate movement","Seasons","Tides"], answer:1, hint:"These currents drive tectonic activity."},
+      {section:"Earth's Structure", question:"The center of Earth is called the:", choices:["Core","Mantle","Crust","Lithosphere"], answer:0, hint:"It includes an inner and outer part."},
+      {section:"Earth's Structure", question:"Earth's temperature generally ______ with depth.", choices:["decreases","increases","stays constant","freezes"], answer:1, hint:"The deeper you go, the hotter it gets."},
+      {section:"Earth's Structure", question:"The boundary between crust and mantle is called the:", choices:["Moho","Ridge","Fault","Rift"], answer:0, hint:"Short for Mohorovicic discontinuity."},
+      {section:"Earth's Structure", question:"What percentage of Earth's volume is mantle?", choices:["about 10%","about 50%","about 84%","about 95%"], answer:2, hint:"It makes up most of Earth's volume."},
+      {section:"Earth's Structure", question:"The inner core temperature is about:", choices:["500°C","2000°C","5000–6000°C","100°C"], answer:2, hint:"It is roughly as hot as the Sun's surface."},
+
+      {section:"Plate Tectonics", question:"The theory that Earth's crust is divided into moving plates is called:", choices:["Continental drift","Plate tectonics","Rock cycle","Gravity theory"], answer:1, hint:"This theory explains many large-scale Earth processes."},
+      {section:"Plate Tectonics", question:"Tectonic plates float on the:", choices:["Inner core","Mantle","Ocean","Atmosphere"], answer:1, hint:"More specifically, they move over the softer upper mantle."},
+      {section:"Plate Tectonics", question:"Plates move because of:", choices:["Wind","Gravity","Mantle convection currents","Moon pull"], answer:2, hint:"Heat inside Earth causes this circulation."},
+      {section:"Plate Tectonics", question:"At a divergent boundary, plates:", choices:["move apart","collide","slide past","stop moving"], answer:0, hint:"New crust can form there."},
+      {section:"Plate Tectonics", question:"Mid-ocean ridges form at:", choices:["Convergent boundaries","Divergent boundaries","Transform boundaries","Subduction zones"], answer:1, hint:"Two plates are separating."},
+      {section:"Plate Tectonics", question:"At a convergent boundary, plates:", choices:["move apart","collide","rotate","melt instantly"], answer:1, hint:"This can build mountains or cause subduction."},
+      {section:"Plate Tectonics", question:"A transform boundary occurs when plates:", choices:["collide","move apart","slide past each other","sink"], answer:2, hint:"The San Andreas Fault is a classic example."},
+      {section:"Plate Tectonics", question:"Which boundary type causes many earthquakes?", choices:["Transform boundary","Divergent boundary","Ocean boundary","Core boundary"], answer:0, hint:"Friction builds until plates suddenly slip."},
+      {section:"Plate Tectonics", question:"The San Andreas Fault is an example of:", choices:["Divergent boundary","Transform boundary","Convergent boundary","Rift valley"], answer:1, hint:"The plates mainly move sideways past each other."},
+      {section:"Plate Tectonics", question:"When an ocean plate sinks beneath a continental plate, it is called:", choices:["Divergence","Subduction","Compression","Expansion"], answer:1, hint:"This process forms trenches and volcanoes."},
+      {section:"Plate Tectonics", question:"Subduction zones often produce:", choices:["volcanoes","deserts","glaciers","tides"], answer:0, hint:"Magma can rise to the surface there."},
+      {section:"Plate Tectonics", question:"Which feature forms when continents collide?", choices:["Trenches","Mountains","Coral reefs","Rivers"], answer:1, hint:"Think of the Himalayas."},
+      {section:"Plate Tectonics", question:"The Himalayas formed from collision between:", choices:["Africa and Europe","India and Asia","Australia and Antarctica","North America and Europe"], answer:1, hint:"One of the colliding plates is the Indian plate."},
+      {section:"Plate Tectonics", question:"Ocean trenches form at:", choices:["Divergent boundaries","Subduction zones","Transform faults","Mid-ocean ridges"], answer:1, hint:"One plate bends and sinks below another."},
+      {section:"Plate Tectonics", question:"Plate tectonics explains:", choices:["earthquakes","volcanoes","mountain building","all of the above"], answer:3, hint:"It connects several major Earth processes."},
+      {section:"Plate Tectonics", question:"The lithosphere includes:", choices:["crust and upper mantle","mantle and core","outer core and crust","only crust"], answer:0, hint:"It is the rigid outer shell of Earth."},
+      {section:"Plate Tectonics", question:"Earth's plates move about:", choices:["meters per day","centimeters per year","kilometers per year","millimeters per century"], answer:1, hint:"Their motion is slow, about as fast as fingernails grow."},
+      {section:"Plate Tectonics", question:"The Mid-Atlantic Ridge is a:", choices:["divergent boundary","convergent boundary","transform boundary","volcanic island"], answer:0, hint:"It is where seafloor spreading happens."},
+      {section:"Plate Tectonics", question:"New ocean crust forms at:", choices:["trenches","ridges","volcanoes","mountains"], answer:1, hint:"Magma rises where plates pull apart."},
+      {section:"Plate Tectonics", question:"Earthquakes occur when:", choices:["plates suddenly slip","oceans heat","air pressure changes","the Moon moves"], answer:0, hint:"Energy is released along faults."},
+
+      {section:"The Sun's Energy", question:"The Sun is a:", choices:["planet","asteroid","star","moon"], answer:2, hint:"It gives off its own light."},
+      {section:"The Sun's Energy", question:"The Sun's energy is produced by:", choices:["burning gas","nuclear fusion","electricity","gravity"], answer:1, hint:"Hydrogen nuclei join together."},
+      {section:"The Sun's Energy", question:"Fusion in the Sun converts:", choices:["helium to hydrogen","hydrogen to helium","oxygen to carbon","nitrogen to oxygen"], answer:1, hint:"The lighter element becomes a heavier one."},
+      {section:"The Sun's Energy", question:"Fusion occurs in the:", choices:["corona","photosphere","core","chromosphere"], answer:2, hint:"This is the hottest region."},
+      {section:"The Sun's Energy", question:"The visible surface of the Sun is the:", choices:["photosphere","corona","mantle","radiative zone"], answer:0, hint:"This is the layer we see."},
+      {section:"The Sun's Energy", question:"The outer atmosphere of the Sun is the:", choices:["corona","core","mantle","lithosphere"], answer:0, hint:"It extends far into space."},
+      {section:"The Sun's Energy", question:"Which Sun layer transports energy by radiation?", choices:["radiative zone","convective zone","corona","photosphere"], answer:0, hint:"Photons slowly move through this region."},
+      {section:"The Sun's Energy", question:"Which Sun layer moves energy by convection?", choices:["convective zone","core","corona","mantle"], answer:0, hint:"Hot gases rise and cool gases sink here."},
+      {section:"The Sun's Energy", question:"The Sun provides energy for:", choices:["weather","climate","water cycle","all of the above"], answer:3, hint:"It powers several Earth systems."},
+      {section:"The Sun's Energy", question:"Without the Sun Earth would be:", choices:["frozen and lifeless","hotter","wetter","unchanged"], answer:0, hint:"Life depends on solar energy."},
+      {section:"The Sun's Energy", question:"The Sun contains about ______ of the mass of the solar system.", choices:["50%","75%","90%","99.8%"], answer:3, hint:"Almost all the solar system's mass is in the Sun."},
+      {section:"The Sun's Energy", question:"The Sun's gravity keeps ______ in orbit.", choices:["planets","comets","asteroids","all of the above"], answer:3, hint:"It holds the solar system together."},
+      {section:"The Sun's Energy", question:"Light from the Sun takes about:", choices:["8 minutes to reach Earth","1 second","1 hour","1 day"], answer:0, hint:"It is a little over 8 minutes."},
+      {section:"The Sun's Energy", question:"The Sun is mainly made of:", choices:["hydrogen and helium","oxygen and nitrogen","iron and nickel","silicon"], answer:0, hint:"These are the two lightest common elements in stars."},
+      {section:"The Sun's Energy", question:"The temperature of the Sun's core is about:", choices:["1000°C","1 million °C","15 million °C","100°C"], answer:2, hint:"Fusion needs an extremely high temperature."},
+      {section:"The Sun's Energy", question:"Sunspots are:", choices:["cooler areas on the Sun","hotter areas","explosions","storms"], answer:0, hint:"They look dark because they are cooler than nearby regions."},
+      {section:"The Sun's Energy", question:"Solar energy reaches Earth as:", choices:["light and heat","sound","gravity","water"], answer:0, hint:"These forms of energy warm and illuminate our planet."},
+      {section:"The Sun's Energy", question:"Plants use sunlight for:", choices:["respiration","photosynthesis","digestion","evaporation"], answer:1, hint:"This process makes food using light energy."},
+      {section:"The Sun's Energy", question:"The Sun drives the:", choices:["water cycle","wind","climate system","all of the above"], answer:3, hint:"Its energy powers all three."},
+      {section:"The Sun's Energy", question:"The Sun is classified as a:", choices:["red giant","white dwarf","yellow dwarf star","neutron star"], answer:2, hint:"It is an ordinary main-sequence star."}
+    ];
+
+    const sectionTranslations = {
+      "Earth's Structure": "地球结构",
+      "Plate Tectonics": "板块构造",
+      "The Sun's Energy": "太阳能量"
+    };
+
+    const choiceTranslations = {
+      "Mantle": "地幔",
+      "Crust": "地壳",
+      "Outer Core": "外核",
+      "Inner Core": "内核",
+      "Liquid iron and nickel": "液态铁和镍",
+      "Solid rock": "固体岩石",
+      "Ice": "冰",
+      "Gas": "气体",
+      "Solid iron and nickel": "固态铁和镍",
+      "Water": "水",
+      "Granite": "花岗岩",
+      "Sand": "沙子",
+      "Outer core": "外核",
+      "Inner core": "内核",
+      "100 km": "100 千米",
+      "500 km": "500 千米",
+      "2900 km": "2900 千米",
+      "10 km": "10 千米",
+      "Solid": "固态",
+      "Liquid": "液态",
+      "Plasma": "等离子体",
+      "Low temperature": "低温",
+      "High pressure": "高压",
+      "Magnetic field": "磁场",
+      "Low density": "低密度",
+      "Satellite images": "卫星图像",
+      "Seismic waves": "地震波",
+      "Wind patterns": "风的模式",
+      "Ocean currents": "洋流",
+      "Molten metal": "熔融金属",
+      "Rock and minerals": "岩石和矿物",
+      "Hydrogen": "氢",
+      "thicker": "更厚",
+      "thinner": "更薄",
+      "heavier": "更重",
+      "older": "更古老",
+      "Ocean": "海洋",
+      "Atmosphere": "大气层",
+      "Weather": "天气",
+      "Plate movement": "板块运动",
+      "Seasons": "季节",
+      "Tides": "潮汐",
+      "Core": "地核",
+      "Lithosphere": "岩石圈",
+      "decreases": "降低",
+      "increases": "升高",
+      "stays constant": "保持不变",
+      "freezes": "冻结",
+      "Moho": "莫霍面",
+      "Ridge": "山脊",
+      "Fault": "断层",
+      "Rift": "裂谷",
+      "about 10%": "大约 10%",
+      "about 50%": "大约 50%",
+      "about 84%": "大约 84%",
+      "about 95%": "大约 95%",
+      "500°C": "500°C",
+      "2000°C": "2000°C",
+      "5000–6000°C": "5000–6000°C",
+      "100°C": "100°C",
+      "Continental drift": "大陆漂移",
+      "Plate tectonics": "板块构造学说",
+      "Rock cycle": "岩石循环",
+      "Gravity theory": "重力理论",
+      "Wind": "风",
+      "Gravity": "重力",
+      "Mantle convection currents": "地幔对流",
+      "Moon pull": "月球引力",
+      "move apart": "分开移动",
+      "collide": "相互碰撞",
+      "slide past": "滑动经过",
+      "stop moving": "停止移动",
+      "Convergent boundaries": "汇聚边界",
+      "Divergent boundaries": "张裂边界",
+      "Transform boundaries": "转换边界",
+      "Subduction zones": "俯冲带",
+      "rotate": "旋转",
+      "melt instantly": "立刻熔化",
+      "slide past each other": "彼此滑过",
+      "sink": "下沉",
+      "Transform boundary": "转换边界",
+      "Ocean boundary": "海洋边界",
+      "Core boundary": "地核边界",
+      "Rift valley": "裂谷",
+      "Divergence": "张裂作用",
+      "Subduction": "俯冲作用",
+      "Compression": "挤压作用",
+      "Expansion": "膨胀作用",
+      "volcanoes": "火山",
+      "deserts": "沙漠",
+      "glaciers": "冰川",
+      "Trenches": "海沟",
+      "Mountains": "山脉",
+      "Coral reefs": "珊瑚礁",
+      "Rivers": "河流",
+      "Africa and Europe": "非洲和欧洲",
+      "India and Asia": "印度和亚洲",
+      "Australia and Antarctica": "澳大利亚和南极洲",
+      "North America and Europe": "北美洲和欧洲",
+      "Transform faults": "转换断层",
+      "Mid-ocean ridges": "大洋中脊",
+      "earthquakes": "地震",
+      "mountain building": "造山作用",
+      "all of the above": "以上全部",
+      "crust and upper mantle": "地壳和上地幔",
+      "mantle and core": "地幔和地核",
+      "outer core and crust": "外核和地壳",
+      "only crust": "只有地壳",
+      "meters per day": "每天数米",
+      "centimeters per year": "每年数厘米",
+      "kilometers per year": "每年数千米",
+      "millimeters per century": "每世纪数毫米",
+      "divergent boundary": "张裂边界",
+      "convergent boundary": "汇聚边界",
+      "transform boundary": "转换边界",
+      "volcanic island": "火山岛",
+      "trenches": "海沟",
+      "ridges": "山脊",
+      "plates suddenly slip": "板块突然滑动",
+      "oceans heat": "海洋变热",
+      "air pressure changes": "气压变化",
+      "the Moon moves": "月球移动",
+      "planet": "行星",
+      "asteroid": "小行星",
+      "star": "恒星",
+      "moon": "卫星",
+      "burning gas": "燃烧气体",
+      "nuclear fusion": "核聚变",
+      "electricity": "电",
+      "gravity": "重力",
+      "helium to hydrogen": "氦变成氢",
+      "hydrogen to helium": "氢变成氦",
+      "oxygen to carbon": "氧变成碳",
+      "nitrogen to oxygen": "氮变成氧",
+      "corona": "日冕",
+      "photosphere": "光球层",
+      "core": "核心",
+      "chromosphere": "色球层",
+      "mantle": "地幔",
+      "radiative zone": "辐射层",
+      "lithosphere": "岩石圈",
+      "convective zone": "对流区",
+      "weather": "天气",
+      "climate": "气候",
+      "water cycle": "水循环",
+      "frozen and lifeless": "冰冻且没有生命",
+      "hotter": "更热",
+      "wetter": "更潮湿",
+      "unchanged": "不变",
+      "50%": "50%",
+      "75%": "75%",
+      "90%": "90%",
+      "99.8%": "99.8%",
+      "planets": "行星",
+      "comets": "彗星",
+      "asteroids": "小行星",
+      "8 minutes to reach Earth": "8 分钟到达地球",
+      "1 second": "1 秒",
+      "1 hour": "1 小时",
+      "1 day": "1 天",
+      "hydrogen and helium": "氢和氦",
+      "oxygen and nitrogen": "氧和氮",
+      "iron and nickel": "铁和镍",
+      "silicon": "硅",
+      "1000°C": "1000°C",
+      "1 million °C": "100 万°C",
+      "15 million °C": "1500 万°C",
+      "cooler areas on the Sun": "太阳上较冷的区域",
+      "hotter areas": "更热的区域",
+      "explosions": "爆炸",
+      "storms": "风暴",
+      "light and heat": "光和热",
+      "sound": "声音",
+      "water": "水",
+      "respiration": "呼吸作用",
+      "photosynthesis": "光合作用",
+      "digestion": "消化作用",
+      "evaporation": "蒸发",
+      "climate system": "气候系统",
+      "red giant": "红巨星",
+      "white dwarf": "白矮星",
+      "yellow dwarf star": "黄矮星",
+      "neutron star": "中子星"
+    };
+
+    const questionTranslations = [
+      { question: "地球最外层是什么？", hint: "这是大陆和海洋所在的薄层。" },
+      { question: "地球哪一层最厚？", hint: "它位于地壳和地核之间。" },
+      { question: "外核主要由什么构成？", hint: "它是金属质的，而且不是固体。" },
+      { question: "内核主要由什么构成？", hint: "它是地球致密的中心。" },
+      { question: "人类生活在地球的哪一层？", hint: "它是最外面的表层。" },
+      { question: "地幔大约有多厚？", hint: "它比地壳厚得多。" },
+      { question: "外核是什么状态？", hint: "它围绕内核流动。" },
+      { question: "为什么内核非常热却仍然是固体？", hint: "向内挤压的压力非常巨大。" },
+      { question: "什么科学证据帮助科学家研究地球内部？", hint: "这些会在地震时穿过地球传播。" },
+      { question: "哪一层产生地球的磁场？", hint: "其中流动的液态金属很重要。" },
+      { question: "地壳主要由什么组成？", hint: "它构成大陆和海洋底部。" },
+      { question: "海洋地壳通常比大陆地壳更______。", hint: "大陆地壳通常从上到下更厚。" },
+      { question: "地壳正下方是什么？", hint: "这一层从莫霍面正下方开始。" },
+      { question: "地球哪一层含有对流？", hint: "热物质在这里上升，较冷的物质下沉。" },
+      { question: "地幔中的对流有助于造成什么？", hint: "这些对流驱动构造活动。" },
+      { question: "地球的中心叫作什么？", hint: "它包括内外两部分。" },
+      { question: "地球温度通常会随着深度______。", hint: "越往下走，温度越高。" },
+      { question: "地壳和地幔之间的边界叫作什么？", hint: "这是 Mohorovicic discontinuity 的简称。" },
+      { question: "地幔约占地球体积的百分之多少？", hint: "它占据了地球体积的大部分。" },
+      { question: "内核温度大约是多少？", hint: "它大致和太阳表面一样热。" },
+      { question: "认为地壳分成许多移动板块的理论叫作什么？", hint: "这个理论解释了许多大尺度的地球过程。" },
+      { question: "构造板块漂浮在什么之上？", hint: "更准确地说，它们在较软的上地幔上移动。" },
+      { question: "板块为什么会移动？", hint: "地球内部的热量造成这种循环。" },
+      { question: "在张裂边界，板块会怎样？", hint: "那里可以形成新的地壳。" },
+      { question: "大洋中脊形成于哪里？", hint: "两个板块正在彼此分开。" },
+      { question: "在汇聚边界，板块会怎样？", hint: "这会形成山脉或造成俯冲。" },
+      { question: "什么时候会出现转换边界？", hint: "圣安地列斯断层是经典例子。" },
+      { question: "哪一种边界会引起许多地震？", hint: "摩擦会不断积累，直到板块突然滑动。" },
+      { question: "圣安地列斯断层是哪一种边界的例子？", hint: "那里的板块主要是侧向彼此滑动。" },
+      { question: "当海洋板块沉到大陆板块下面时，这叫作什么？", hint: "这个过程会形成海沟和火山。" },
+      { question: "俯冲带通常会产生什么？", hint: "岩浆可以在那里上升到地表。" },
+      { question: "当大陆彼此碰撞时，会形成什么地形？", hint: "想想喜马拉雅山。" },
+      { question: "喜马拉雅山是由哪两块陆地碰撞形成的？", hint: "其中一个碰撞的板块是印度板块。" },
+      { question: "海沟形成于哪里？", hint: "一个板块弯曲并沉到另一个板块下面。" },
+      { question: "板块构造学说解释了什么？", hint: "它把几个重要的地球过程联系在一起。" },
+      { question: "岩石圈包括什么？", hint: "它是地球刚性的外壳。" },
+      { question: "地球板块移动的速度大约是？", hint: "它们移动得很慢，大约和指甲生长一样快。" },
+      { question: "大西洋中脊属于哪一种？", hint: "那里发生海底扩张。" },
+      { question: "新的海洋地壳形成于哪里？", hint: "在板块拉开的地方，岩浆会上升。" },
+      { question: "地震发生在什么时候？", hint: "能量会沿着断层释放出来。" },
+      { question: "太阳是一个什么天体？", hint: "它会自己发出光。" },
+      { question: "太阳的能量是怎样产生的？", hint: "氢原子核会结合在一起。" },
+      { question: "太阳中的核聚变把什么转变成什么？", hint: "较轻的元素会变成较重的元素。" },
+      { question: "核聚变发生在太阳的哪一层？", hint: "这是温度最高的区域。" },
+      { question: "太阳可见的表面叫作什么？", hint: "这是我们能够看到的那一层。" },
+      { question: "太阳最外层的大气叫作什么？", hint: "它向太空延伸得很远。" },
+      { question: "太阳的哪一层通过辐射传递能量？", hint: "光子会缓慢穿过这个区域。" },
+      { question: "太阳的哪一层通过对流传递能量？", hint: "热气体在这里上升，冷气体下沉。" },
+      { question: "太阳为哪些过程提供能量？", hint: "它为多个地球系统提供能量。" },
+      { question: "没有太阳，地球会变成什么样？", hint: "生命依赖太阳能。" },
+      { question: "太阳大约占太阳系总质量的多少？", hint: "太阳系几乎全部质量都在太阳里。" },
+      { question: "太阳的引力使什么保持在轨道上？", hint: "它把整个太阳系维系在一起。" },
+      { question: "太阳光到达地球大约需要多久？", hint: "略多于 8 分钟。" },
+      { question: "太阳主要由什么组成？", hint: "这些是恒星中最常见的两种较轻元素。" },
+      { question: "太阳核心的温度大约是多少？", hint: "核聚变需要极高的温度。" },
+      { question: "太阳黑子是什么？", hint: "它们看起来较暗，因为比周围区域更冷。" },
+      { question: "太阳能以什么形式到达地球？", hint: "这些形式使我们的星球变暖并被照亮。" },
+      { question: "植物利用阳光进行什么作用？", hint: "这个过程利用光能制造食物。" },
+      { question: "太阳驱动什么过程？", hint: "它为这三者都提供能量。" },
+      { question: "太阳被归类为什么类型的恒星？", hint: "它是一颗普通的主序星。" }
+    ];
+
+    const staticReviewItemsEn = [
+      "Layers of Earth: crust, mantle, outer core, inner core",
+      "Seismic waves and evidence for Earth's interior",
+      "Convection currents and plate movement",
+      "Divergent, convergent, and transform boundaries",
+      "Subduction, trenches, ridges, earthquakes, and mountains",
+      "The Sun as a star powered by nuclear fusion",
+      "Core, radiative zone, convective zone, photosphere, corona",
+      "How solar energy affects weather, climate, and life on Earth"
+    ];
+
+    const staticReviewItemsZh = [
+      "地球的各层：地壳、地幔、外核、内核",
+      "地震波与地球内部结构的证据",
+      "对流与板块运动",
+      "张裂边界、汇聚边界和转换边界",
+      "俯冲、海沟、山脊、地震和山脉",
+      "太阳是一颗由核聚变供能的恒星",
+      "核心、辐射层、对流区、光球层和日冕",
+      "太阳能如何影响天气、气候和地球上的生命"
+    ];
+
+    const languageButtons = Array.from(document.querySelectorAll('[data-lang-mode]'));
+    let currentIndex = 0;
+    let selectedAnswers = Array(questions.length).fill(null);
+    let checked = Array(questions.length).fill(false);
+    let languageMode = 'en';
+
+    const questionText = document.getElementById('questionText');
+    const choicesContainer = document.getElementById('choicesContainer');
+    const resultText = document.getElementById('resultText');
+    const hintBox = document.getElementById('hintBox');
+    const questionCounter = document.getElementById('questionCounter');
+    const sectionLabel = document.getElementById('sectionLabel');
+    const progressBar = document.getElementById('progressBar');
+    const quizStatus = document.getElementById('quizStatus');
+    const summaryBox = document.getElementById('summaryBox');
+    const reviewList = document.getElementById('reviewList');
+
+    function escapeHtml(text) {
+      return String(text ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function langHtml(en, zh) {
+      return `<div class="lang-en">${escapeHtml(en)}</div><div class="lang-zh">${escapeHtml(zh)}</div>`;
+    }
+
+    function setLangContent(el, en, zh) {
+      if (!el) return;
+      el.innerHTML = langHtml(en, zh);
+    }
+
+    function isBilingual() {
+      return languageMode === 'enzh';
+    }
+
+    function isZhOnly() {
+      return languageMode === 'zh';
+    }
+
+    function uiText(en, zh) {
+      if (isZhOnly()) return zh;
+      if (isBilingual()) return `${en} / ${zh}`;
+      return en;
+    }
+
+    function letter(index) {
+      return String.fromCharCode(65 + index);
+    }
+
+    function getSectionNumber(idx) {
+      if (idx < 20) return 1;
+      if (idx < 40) return 2;
+      return 3;
+    }
+
+    function getLocalizedChoice(choice) {
+      return choiceTranslations[choice] || choice;
+    }
+
+    function getTranslation(index) {
+      return {
+        section: sectionTranslations[questions[index].section] || questions[index].section,
+        question: questionTranslations[index]?.question || questions[index].question,
+        hint: questionTranslations[index]?.hint || questions[index].hint
+      };
+    }
+
+    function getCorrectCount() {
+      return selectedAnswers.reduce((sum, answer, index) => sum + (answer === questions[index].answer ? 1 : 0), 0);
+    }
+
+    function getAnsweredCount() {
+      return selectedAnswers.filter((value) => value !== null).length;
+    }
+
+    function updateDashboard() {
+      const answered = getAnsweredCount();
+      const correct = getCorrectCount();
+      const percent = Math.round((correct / questions.length) * 100);
+      document.getElementById('scoreRaw').textContent = `${correct}/${questions.length}`;
+      document.getElementById('scorePct').textContent = `${percent}%`;
+      document.getElementById('scoreAnswered').textContent = `${answered}/${questions.length}`;
+      document.getElementById('scoreSection').textContent = `${getSectionNumber(currentIndex)}/3`;
+      progressBar.style.width = `${(answered / questions.length) * 100}%`;
+      quizStatus.textContent = answered === 0
+        ? uiText('Choose an answer to begin. Your selection saves automatically.', '请选择一个答案开始。你的选择会自动保存。')
+        : uiText(`Progress saved: ${answered} of ${questions.length} answered.`, `进度已保存：已完成 ${questions.length} 题中的 ${answered} 题。`);
+    }
+
+    function applyChoiceState(label, index, userAnswer, correctAnswer, isChecked) {
+      if (userAnswer === index) {
+        label.classList.add('selected');
+      }
+      if (isChecked && index === correctAnswer) {
+        label.classList.add('correct-choice');
+      }
+      if (isChecked && userAnswer === index && userAnswer !== correctAnswer) {
+        label.classList.add('wrong-choice');
+      }
+    }
+
+    function setResultMessage(en, zh, kind) {
+      setLangContent(resultText, en, zh);
+      resultText.className = `result ${kind}`;
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+      const t = getTranslation(currentIndex);
+      const isChecked = checked[currentIndex];
+      const userAnswer = selectedAnswers[currentIndex];
+
+      setLangContent(questionText, q.question, t.question);
+      questionCounter.textContent = uiText(`Question ${currentIndex + 1} of ${questions.length}`, `第 ${currentIndex + 1} 题，共 ${questions.length} 题`);
+      sectionLabel.textContent = uiText(`Section ${getSectionNumber(currentIndex)} of 3 • ${q.section}`, `第 ${getSectionNumber(currentIndex)} / 3 部分 • ${t.section}`);
+      resultText.textContent = '';
+      resultText.className = 'result';
+      hintBox.style.display = 'none';
+      setLangContent(hintBox, q.hint, t.hint);
+
+      choicesContainer.innerHTML = '';
+      q.choices.forEach((choice, index) => {
+        const label = document.createElement('label');
+        label.className = 'choice';
+
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = 'choice';
+        input.value = index;
+        input.checked = userAnswer === index;
+        input.addEventListener('change', () => {
+          selectedAnswers[currentIndex] = index;
+          updateDashboard();
+          renderQuestion();
+        });
+
+        const textWrap = document.createElement('div');
+        textWrap.innerHTML = langHtml(`${letter(index)}. ${choice}`, `${letter(index)}. ${getLocalizedChoice(choice)}`);
+
+        label.appendChild(input);
+        label.appendChild(textWrap);
+        applyChoiceState(label, index, userAnswer, q.answer, isChecked);
+        choicesContainer.appendChild(label);
+      });
+
+      if (isChecked) {
+        showCheckedResult();
+      }
+      updateDashboard();
+    }
+
+    function showCheckedResult() {
+      const q = questions[currentIndex];
+      const userAnswer = selectedAnswers[currentIndex];
+
+      if (userAnswer === null) {
+        setResultMessage('No answer selected yet.', '还没有选择答案。', 'warn');
+        return;
+      }
+
+      if (userAnswer === q.answer) {
+        setResultMessage('Correct!', '答对了！', 'correct');
+        return;
+      }
+
+      setResultMessage(
+        `Incorrect. Correct answer: ${letter(q.answer)}. ${q.choices[q.answer]}`,
+        `不正确。正确答案：${letter(q.answer)}. ${getLocalizedChoice(q.choices[q.answer])}`,
+        'wrong'
+      );
+    }
+
+    function updateSummary() {
+      const correct = getCorrectCount();
+      const wrong = questions.length - correct;
+      const percent = Math.round((correct / questions.length) * 100);
+      document.getElementById('finalScore').textContent = `${correct} / ${questions.length}`;
+      document.getElementById('finalPercent').textContent = `${percent}%`;
+      document.getElementById('finalCorrect').textContent = correct;
+      document.getElementById('finalWrong').textContent = wrong;
+      summaryBox.style.display = 'block';
+    }
+
+    function checkCurrent() {
+      checked[currentIndex] = true;
+      renderQuestion();
+    }
+
+    function showReview() {
+      reviewList.innerHTML = questions.map((q, index) => {
+        const t = getTranslation(index);
+        const answer = selectedAnswers[index];
+        const isCorrect = answer === q.answer;
+        const yourTextEn = answer === null ? 'No answer selected' : `${letter(answer)}. ${q.choices[answer]}`;
+        const yourTextZh = answer === null ? '未选择答案' : `${letter(answer)}. ${getLocalizedChoice(q.choices[answer])}`;
+        const rightTextEn = `${letter(q.answer)}. ${q.choices[q.answer]}`;
+        const rightTextZh = `${letter(q.answer)}. ${getLocalizedChoice(q.choices[q.answer])}`;
+        return `
+          <div class="review-item">
+            <div>${langHtml(`Q${index + 1}. ${q.question}`, `第 ${index + 1} 题：${t.question}`)}</div>
+            <div class="small">${langHtml(`Section: ${q.section}`, `部分：${t.section}`)}</div>
+            <div style="margin-top:6px; color:${isCorrect ? '#15803d' : '#b91c1c'};">${langHtml(`Your answer: ${yourTextEn}`, `你的答案：${yourTextZh}`)}</div>
+            <div class="small">${langHtml(`Correct answer: ${rightTextEn}`, `正确答案：${rightTextZh}`)}</div>
+            <div class="small">${langHtml(`Hint: ${q.hint}`, `提示：${t.hint}`)}</div>
+          </div>
+        `;
+      }).join('');
+      summaryBox.style.display = 'block';
+      reviewList.classList.remove('hidden');
+    }
+
+    function submitAll() {
+      checked = checked.map(() => true);
+      updateSummary();
+      showReview();
+      renderQuestion();
+      window.scrollTo({ top: summaryBox.offsetTop - 10, behavior: 'smooth' });
+    }
+
+    function hideReview() {
+      reviewList.classList.add('hidden');
+    }
+
+    function revealAllAnswers() {
+      checked = checked.map(() => true);
+      updateSummary();
+      showReview();
+      renderQuestion();
+      window.scrollTo({ top: summaryBox.offsetTop - 10, behavior: 'smooth' });
+    }
+
+    function restartQuiz() {
+      currentIndex = 0;
+      selectedAnswers = Array(questions.length).fill(null);
+      checked = Array(questions.length).fill(false);
+      summaryBox.style.display = 'none';
+      reviewList.classList.add('hidden');
+      reviewList.innerHTML = '';
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function applyLanguageMode(mode) {
+      languageMode = ['en', 'enzh', 'zh'].includes(mode) ? mode : 'en';
+      document.body.classList.toggle('lang-bilingual', languageMode === 'enzh');
+      document.body.classList.toggle('lang-zh', languageMode === 'zh');
+
+      languageButtons.forEach((button) => {
+        button.classList.toggle('active', button.dataset.langMode === languageMode);
+        button.setAttribute('aria-pressed', button.dataset.langMode === languageMode ? 'true' : 'false');
+      });
+
+      document.getElementById('heroTitle').textContent = uiText('Earth Practice 2', '地球练习 2');
+      document.getElementById('heroUnits').innerHTML = `<strong>${uiText('Units:', '单元：')}</strong> ${uiText("4.3 Earth's Interior + 4.4 Plate Tectonics + 4.5 The Sun's Energy", '4.3 地球内部 + 4.4 板块构造 + 4.5 太阳的能量')}`;
+      document.getElementById('heroDesc').textContent = uiText(
+        'This practice page follows the same exam-style layout as the Earth and Universe review, but keeps the 60-question multiple-choice format for independent practice and quick checking.',
+        '这个练习页沿用了 Earth and Universe 复习页的考试风格版式，同时保留了 60 题选择题格式，方便学生独立练习和快速检查。'
+      );
+      document.getElementById('pill1').textContent = uiText('60 Multiple-Choice Questions', '60 道选择题');
+      document.getElementById('pill2').textContent = uiText('Check by Question', '逐题检查');
+      document.getElementById('pill3').textContent = uiText('Reveal Full Review', '显示完整讲评');
+      document.getElementById('pill4').textContent = uiText('Print-Friendly', '适合打印');
+
+      document.getElementById('studentInfoTitle').textContent = uiText('Student Info', '学生信息');
+      document.getElementById('studentNameLabel').textContent = uiText('Name:', '姓名：');
+      document.getElementById('studentName').placeholder = uiText('Enter student name', '输入学生姓名');
+      document.getElementById('studentTip').textContent = uiText(
+        'Tip: work through the questions first, check individual items only when needed, then use the full review to study patterns in your mistakes.',
+        '提示：先完整做题，只在需要时检查单题，然后利用完整讲评找出自己的错误规律。'
+      );
+      document.getElementById('langBarLabel').textContent = uiText('Language / 语言', '语言 / Language');
+
+      document.getElementById('btnGradeQuiz').textContent = uiText('Submit & Grade Quiz', '提交并评分');
+      document.getElementById('btnRevealAll').textContent = uiText('Reveal All Answers', '显示全部答案');
+      document.getElementById('btnHideReview').textContent = uiText('Hide Review', '隐藏讲评');
+      document.getElementById('btnResetQuiz').textContent = uiText('Reset Quiz', '重置测验');
+      document.getElementById('btnPrintPage').textContent = uiText('Print Page', '打印页面');
+
+      document.getElementById('scoreRawLabel').textContent = uiText('Raw Score', '原始得分');
+      document.getElementById('scorePctLabel').textContent = uiText('Percent', '百分比');
+      document.getElementById('scoreAnsweredLabel').textContent = uiText('Answered', '已作答');
+      document.getElementById('scoreSectionLabelBox').textContent = uiText('Current Section', '当前部分');
+
+      document.getElementById('reviewTitle').textContent = uiText('What to Review', '复习重点');
+      document.getElementById('reviewListStatic').innerHTML = staticReviewItemsEn.map((item, index) => `<li>${langHtml(item, staticReviewItemsZh[index])}</li>`).join('');
+      document.getElementById('reviewTip').textContent = uiText(
+        'Study strategy: master the layer and boundary vocabulary first, then connect each process to a real Earth feature or effect.',
+        '复习策略：先掌握各层和边界的关键词，再把每个过程和真实的地球现象或影响联系起来。'
+      );
+
+      document.getElementById('partATitle').textContent = uiText('Part A — Multiple Choice Practice', 'A 部分：选择题练习');
+      document.getElementById('summaryTitle').textContent = uiText('Quiz Review', '测验讲评');
+      document.getElementById('finalScoreLabel').textContent = uiText('Total Score', '总分');
+      document.getElementById('finalPercentLabel').textContent = uiText('Percentage', '百分比');
+      document.getElementById('finalCorrectLabel').textContent = uiText('Correct Answers', '答对题数');
+      document.getElementById('finalWrongLabel').textContent = uiText('Incorrect Answers', '答错题数');
+      document.getElementById('restartBottom').textContent = uiText('Restart Quiz', '重新开始');
+      document.getElementById('reviewBtn').textContent = uiText('Show Review', '显示讲评');
+      document.getElementById('checkBtn').textContent = uiText('Check This Question', '检查本题');
+      document.getElementById('hintBtn').textContent = uiText('Show Hint', '显示提示');
+      document.getElementById('prevBtn').textContent = uiText('Previous', '上一题');
+      document.getElementById('nextBtn').textContent = uiText('Next', '下一题');
+      document.getElementById('footerText').textContent = uiText(
+        'Built as a single self-contained HTML study page for Earth Science practice.',
+        '这是一个单文件、自包含的 HTML 地球科学练习页面。'
+      );
+
+      if (!reviewList.classList.contains('hidden')) {
+        showReview();
+      }
+      if (summaryBox.style.display === 'block') {
+        updateSummary();
+      }
+      renderQuestion();
+    }
+
+    function initLanguageMode() {
+      const key = 'earthPractice2LangMode';
+      const saved = (() => {
+        try { return localStorage.getItem(key); } catch { return null; }
+      })();
+      applyLanguageMode(saved || 'en');
+      languageButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          applyLanguageMode(button.dataset.langMode);
+          try { localStorage.setItem(key, button.dataset.langMode); } catch {}
+        });
+      });
+    }
+
+    document.getElementById('checkBtn').addEventListener('click', checkCurrent);
+    document.getElementById('hintBtn').addEventListener('click', () => {
+      hintBox.style.display = hintBox.style.display === 'block' ? 'none' : 'block';
+    });
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex -= 1;
+        renderQuestion();
+      }
+    });
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (currentIndex < questions.length - 1) {
+        currentIndex += 1;
+        renderQuestion();
+      }
+    });
+    document.getElementById('btnGradeQuiz').addEventListener('click', submitAll);
+    document.getElementById('btnRevealAll').addEventListener('click', revealAllAnswers);
+    document.getElementById('btnHideReview').addEventListener('click', hideReview);
+    document.getElementById('btnResetQuiz').addEventListener('click', restartQuiz);
+    document.getElementById('btnPrintPage').addEventListener('click', () => window.print());
+    document.getElementById('restartBottom').addEventListener('click', restartQuiz);
+    document.getElementById('reviewBtn').addEventListener('click', () => {
+      updateSummary();
+      showReview();
+      window.scrollTo({ top: summaryBox.offsetTop - 10, behavior: 'smooth' });
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight' && currentIndex < questions.length - 1) {
+        currentIndex += 1;
+        renderQuestion();
+      }
+      if (event.key === 'ArrowLeft' && currentIndex > 0) {
+        currentIndex -= 1;
+        renderQuestion();
+      }
+    });
+
+    initLanguageMode();
+  </script>
+</body>
+</html>
