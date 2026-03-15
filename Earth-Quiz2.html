@@ -297,6 +297,7 @@
       reset: { en: 'Reset', zh: '重置' },
       showAnswers: { en: 'Show Answers', zh: '显示答案' },
       displayMode: { en: 'Display Mode', zh: '显示模式' },
+      englishOnly: { en: 'English Only', zh: '仅英文' },
       bilingual: { en: 'English + Chinese', zh: '英文 + 中文' },
       zhOnly: { en: 'Chinese Only', zh: '仅中文' },
       scoreLabel: { en: 'Score', zh: '分数' },
@@ -313,6 +314,7 @@
     };
 
     const languageOptions = [
+      { value: 'en', label: uiText.englishOnly },
       { value: 'bilingual', label: uiText.bilingual },
       { value: 'zh', label: uiText.zhOnly }
     ];
@@ -461,7 +463,7 @@
     const scoreBox = document.getElementById('scoreBox');
     const languageMode = document.getElementById('languageMode');
     let lastAction = 'initial';
-    let currentLanguageMode = 'bilingual';
+    let currentLanguageMode = 'en';
 
     function escapeHtml(text) {
       return String(text)
@@ -474,6 +476,7 @@
 
     function getLocalizedHTML(text, stacked = true) {
       if (typeof text === 'string') return escapeHtml(text);
+      if (currentLanguageMode === 'en') return escapeHtml(text.en);
       if (currentLanguageMode === 'zh') return escapeHtml(text.zh);
       const wrapperClass = stacked ? 'localized-text localized-stacked' : 'localized-text localized-inline';
       return `<span class="${wrapperClass}"><span class="lang-en">${escapeHtml(text.en)}</span><span class="lang-zh">${escapeHtml(text.zh)}</span></span>`;
@@ -481,6 +484,7 @@
 
     function getLocalizedPlain(text) {
       if (typeof text === 'string') return text;
+      if (currentLanguageMode === 'en') return text.en;
       return currentLanguageMode === 'zh' ? text.zh : `${text.en} / ${text.zh}`;
     }
 
