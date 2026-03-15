@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solar System & Stars Quiz</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --correct: #166534;
+      --correct-bg: #dcfce7;
+      --wrong: #991b1b;
+      --wrong-bg: #fee2e2;
+      --warn: #92400e;
+      --warn-bg: #fef3c7;
+      --border: #d1d5db;
+      --shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 16px 60px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+      color: white;
+      border-radius: 24px;
+      padding: 28px 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+    }
+
+    .hero p {
+      margin: 0;
+      opacity: 0.95;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 18px 0 24px;
+      align-items: center;
+    }
+
+    .mode-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .mode-control label {
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease, background 0.2s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .secondary {
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .score-box {
+      margin-left: auto;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 14px;
+      min-width: 210px;
+      text-align: center;
+      font-weight: bold;
+      box-shadow: var(--shadow);
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 22px 20px;
+      margin-bottom: 18px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .card.question.correct {
+      border-color: #86efac;
+      background: #f0fdf4;
+    }
+
+    .card.question.incorrect {
+      border-color: #fca5a5;
+      background: #fff7f7;
+    }
+
+    .question-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 0 0 14px;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: #fafafa;
+      cursor: pointer;
+    }
+
+    .option:hover {
+      background: #f3f4f6;
+    }
+
+    .option input {
+      margin-top: 3px;
+      transform: scale(1.15);
+    }
+
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      background: white;
+    }
+
+    .feedback {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      display: none;
+      font-weight: 600;
+    }
+
+    .feedback.correct {
+      display: block;
+      background: var(--correct-bg);
+      color: var(--correct);
+      border: 1px solid #86efac;
+    }
+
+    .feedback.wrong {
+      display: block;
+      background: var(--wrong-bg);
+      color: var(--wrong);
+      border: 1px solid #fca5a5;
+    }
+
+    .feedback.unanswered {
+      display: block;
+      background: var(--warn-bg);
+      color: var(--warn);
+      border: 1px solid #fcd34d;
+    }
+
+    .explanation {
+      margin-top: 8px;
+      font-weight: normal;
+    }
+
+    .hidden { display: none; }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 12px;
+    }
+
+    .localized-text {
+      display: inline;
+    }
+
+    .localized-stacked {
+      display: inline-block;
+    }
+
+    .localized-stacked .lang-en,
+    .localized-stacked .lang-zh {
+      display: block;
+    }
+
+    .localized-stacked .lang-zh {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.96em;
+    }
+
+    .localized-inline .lang-zh {
+      color: var(--muted);
+    }
+
+    .hero .localized-stacked .lang-zh,
+    .hero .localized-inline .lang-zh,
+    .primary .localized-stacked .lang-zh,
+    .primary .localized-inline .lang-zh {
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    @media (max-width: 640px) {
+      .score-box {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .hero {
+        padding: 22px 18px;
+      }
+
+      .mode-control {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <h1 id="heroTitle"></h1>
+      <p id="heroDescription"></p>
+    </section>
+
+    <div class="toolbar">
+      <button class="primary" id="submitBtn"></button>
+      <button class="secondary" id="resetBtn"></button>
+      <button class="secondary" id="showBtn"></button>
+      <div class="mode-control">
+        <label id="languageModeLabel" for="languageMode"></label>
+        <select id="languageMode"></select>
+      </div>
+      <div class="score-box" id="scoreBox">Score: Not graded yet</div>
+    </div>
+
+    <div id="quiz"></div>
+
+    <p class="footer-note" id="footerNote"></p>
+  </div>
+
+  <script>
+    const uiText = {
+      title: { en: 'Solar System & Stars Practice Quiz', zh: '太阳系与恒星练习测验' },
+      instructions: {
+        en: 'Use Grade Quiz to check the whole quiz and see your score, or show the answers for review.',
+        zh: '点击“批改测验”可检查整份测验并查看分数，或点击“显示答案”进行复习。'
+      },
+      gradeQuiz: { en: 'Grade Quiz', zh: '批改测验' },
+      reset: { en: 'Reset', zh: '重置' },
+      showAnswers: { en: 'Show Answers', zh: '显示答案' },
+      displayMode: { en: 'Display Mode', zh: '显示模式' },
+      bilingual: { en: 'English + Chinese', zh: '英文 + 中文' },
+      zhOnly: { en: 'Chinese Only', zh: '仅中文' },
+      scoreLabel: { en: 'Score', zh: '分数' },
+      scoreNotGraded: { en: 'Score: Not graded yet', zh: '分数：尚未批改' },
+      scoreAnswersDisplayed: { en: 'Score: Answers displayed', zh: '分数：已显示答案' },
+      correct: { en: 'Correct.', zh: '正确。' },
+      incorrect: { en: 'Incorrect.', zh: '不正确。' },
+      notAnswered: { en: 'Not answered.', zh: '未作答。' },
+      correctAnswer: { en: 'Correct answer:', zh: '正确答案：' },
+      footerTip: {
+        en: 'Tip: Review the explanation under each question after grading to reinforce the astronomy concepts.',
+        zh: '提示：批改后查看每题下方的解释，帮助巩固天文学概念。'
+      }
+    };
+
+    const languageOptions = [
+      { value: 'bilingual', label: uiText.bilingual },
+      { value: 'zh', label: uiText.zhOnly }
+    ];
+
+    const quizData = [
+      {
+        question: {
+          en: 'The correct life cycle to death for a very large mass star is',
+          zh: '大质量恒星从形成到死亡的正确生命历程是'
+        },
+        options: [
+          { en: 'main sequence, supergiant, supernova, red giant', zh: '主序星，超巨星，超新星，红巨星' },
+          { en: 'main sequence, red giant, white dwarf', zh: '主序星，红巨星，白矮星' },
+          { en: 'black hole, supernova, red giant, nebulae', zh: '黑洞，超新星，红巨星，星云' },
+          { en: 'main sequence, supergiant, supernova, black hole', zh: '主序星，超巨星，超新星，黑洞' }
+        ],
+        answer: 3,
+        explanation: {
+          en: 'A very large mass star evolves from main sequence to supergiant, then explodes as a supernova, and may end as a black hole.',
+          zh: '大质量恒星会先经历主序星阶段，再变成超巨星，随后发生超新星爆炸，最后可能形成黑洞。'
+        }
+      },
+      {
+        question: {
+          en: 'When comparing two stars, the star that is brighter but further away would have a(n)',
+          zh: '比较两颗恒星时，那颗更亮但距离更远的恒星会有一个'
+        },
+        options: [
+          { en: 'sixth-magnitude.', zh: '第六星等。' },
+          { en: 'absolute magnitude equal to that of the other star.', zh: '与另一颗恒星相同的绝对星等。' },
+          { en: 'smaller absolute magnitude.', zh: '更小的绝对星等。' },
+          { en: 'greater absolute magnitude.', zh: '更大的绝对星等。' }
+        ],
+        answer: 3,
+        explanation: {
+          en: 'In this quiz key, the correct choice is “greater absolute magnitude.” Remember that magnitude scales can be tricky, so always follow how your course defines brightness and magnitude.',
+          zh: '按照这份测验的答案，正确选项是“更大的绝对星等”。要注意星等系统较容易混淆，解题时要以课堂中的定义为准。'
+        }
+      },
+      {
+        question: {
+          en: 'The Solar System consists of',
+          zh: '太阳系由以下哪些组成'
+        },
+        options: [
+          { en: 'the Sun, planets and moons out to and including Jupiter.', zh: '太阳、直到木星为止的行星及其卫星。' },
+          { en: 'all the planets and moons except those of Earth.', zh: '除了地球卫星以外的所有行星和卫星。' },
+          { en: 'all the planets and moons except those of Pluto.', zh: '除了冥王星以外的所有行星和卫星。' },
+          { en: 'the Sun and all the planets and moons that orbit it.', zh: '太阳以及所有绕它运行的行星和卫星。' }
+        ],
+        answer: 3,
+        explanation: {
+          en: 'The Solar System includes the Sun and the objects that orbit it, including planets and their moons.',
+          zh: '太阳系包括太阳，以及所有围绕太阳运行的天体，包括行星和它们的卫星。'
+        }
+      },
+      {
+        question: {
+          en: 'Where is the asteroid belt located?',
+          zh: '小行星带位于哪里？'
+        },
+        options: [
+          { en: 'between Earth and Mars.', zh: '在地球和火星之间。' },
+          { en: 'between Mars and Jupiter.', zh: '在火星和木星之间。' },
+          { en: 'between Jupiter and Saturn.', zh: '在木星和土星之间。' },
+          { en: 'between Venus and Earth.', zh: '在金星和地球之间。' }
+        ],
+        answer: 1,
+        explanation: {
+          en: 'The main asteroid belt lies between the orbits of Mars and Jupiter.',
+          zh: '主要的小行星带位于火星轨道和木星轨道之间。'
+        }
+      },
+      {
+        question: {
+          en: 'Which of the following objects are composed of material that is closest to the original composition of the solar system in its early stages of formation?',
+          zh: '下列哪一种天体由最接近太阳系形成初期原始成分的物质组成？'
+        },
+        options: [
+          { en: 'Comets and asteroids.', zh: '彗星和小行星。' },
+          { en: 'Cores of the terrestrial planets.', zh: '类地行星的核心。' },
+          { en: 'Moons of the jovian planets.', zh: '类木行星的卫星。' },
+          { en: 'Cores of the jovian planets.', zh: '类木行星的核心。' },
+          { en: "Earth's Moon.", zh: '地球的月球。' }
+        ],
+        answer: 0,
+        explanation: {
+          en: 'Comets and many asteroids preserve ancient material from the early solar system.',
+          zh: '彗星和许多小行星保留了太阳系早期形成时的古老物质。'
+        }
+      },
+      {
+        question: {
+          en: 'The "surface" of the Sun that we see in visible wavelengths is the',
+          zh: '我们用可见光看到的太阳“表面”是'
+        },
+        options: [
+          { en: 'corona', zh: '日冕' },
+          { en: 'photosphere', zh: '光球层' },
+          { en: 'chromosphere', zh: '色球层' },
+          { en: 'core', zh: '核心' }
+        ],
+        answer: 1,
+        explanation: {
+          en: 'The photosphere is the visible layer of the Sun that we usually call its surface.',
+          zh: '光球层是太阳能够被我们看见的那一层，通常被称为太阳的表面。'
+        }
+      },
+      {
+        question: {
+          en: 'What are solar prominences?',
+          zh: '什么是太阳日珥？'
+        },
+        options: [
+          { en: 'The region where nuclear fusion takes place.', zh: '发生核聚变的区域。' },
+          { en: 'Large sheets of glowing gases bursting from the chromosphere.', zh: '从色球层喷出的巨大炽热气体。' },
+          { en: 'The outer atmosphere of the Sun.', zh: '太阳的外层大气。' },
+          { en: 'Dark spots on the solar surface.', zh: '太阳表面的暗斑。' }
+        ],
+        answer: 1,
+        explanation: {
+          en: 'Solar prominences are large arcs or sheets of glowing gas extending outward from the Sun.',
+          zh: '太阳日珥是从太阳向外延伸的大型发光气体弧或气体片。'
+        }
+      },
+      {
+        question: {
+          en: 'The hottest layer of the atmosphere of the Sun is the',
+          zh: '太阳大气层中最热的一层是'
+        },
+        options: [
+          { en: 'chromosphere', zh: '色球层' },
+          { en: 'transition region', zh: '过渡区' },
+          { en: 'photosphere', zh: '光球层' },
+          { en: 'corona', zh: '日冕' }
+        ],
+        answer: 3,
+        explanation: {
+          en: 'The corona is the hottest outer layer of the Sun’s atmosphere.',
+          zh: '日冕是太阳大气最外层、也是温度最高的一层。'
+        }
+      }
+    ];
+
+    const quizEl = document.getElementById('quiz');
+    const scoreBox = document.getElementById('scoreBox');
+    const languageMode = document.getElementById('languageMode');
+    let lastAction = 'initial';
+    let currentLanguageMode = 'bilingual';
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function getLocalizedHTML(text, stacked = true) {
+      if (typeof text === 'string') return escapeHtml(text);
+      if (currentLanguageMode === 'zh') return escapeHtml(text.zh);
+      const wrapperClass = stacked ? 'localized-text localized-stacked' : 'localized-text localized-inline';
+      return `<span class="${wrapperClass}"><span class="lang-en">${escapeHtml(text.en)}</span><span class="lang-zh">${escapeHtml(text.zh)}</span></span>`;
+    }
+
+    function getLocalizedPlain(text) {
+      if (typeof text === 'string') return text;
+      return currentLanguageMode === 'zh' ? text.zh : `${text.en} / ${text.zh}`;
+    }
+
+    function getSelections() {
+      return quizData.map((_, qIndex) => {
+        const selected = document.querySelector(`input[name="question-${qIndex}"]:checked`);
+        return selected ? selected.value : '';
+      });
+    }
+
+    function renderLanguageOptions() {
+      languageMode.innerHTML = languageOptions
+        .map(option => `<option value="${option.value}">${escapeHtml(getLocalizedPlain(option.label))}</option>`)
+        .join('');
+      languageMode.value = currentLanguageMode;
+    }
+
+    function renderStaticText() {
+      document.documentElement.lang = currentLanguageMode === 'zh' ? 'zh' : 'en';
+      document.title = getLocalizedPlain(uiText.title);
+      document.getElementById('heroTitle').innerHTML = getLocalizedHTML(uiText.title);
+      document.getElementById('heroDescription').innerHTML = getLocalizedHTML(uiText.instructions);
+      document.getElementById('submitBtn').innerHTML = getLocalizedHTML(uiText.gradeQuiz, false);
+      document.getElementById('resetBtn').innerHTML = getLocalizedHTML(uiText.reset, false);
+      document.getElementById('showBtn').innerHTML = getLocalizedHTML(uiText.showAnswers, false);
+      document.getElementById('languageModeLabel').innerHTML = getLocalizedHTML(uiText.displayMode, false);
+      document.getElementById('footerNote').innerHTML = getLocalizedHTML(uiText.footerTip);
+      renderLanguageOptions();
+    }
+
+    function renderQuiz(selections = []) {
+      quizEl.innerHTML = '';
+
+      quizData.forEach((item, qIndex) => {
+        const card = document.createElement('section');
+        card.className = 'card question';
+        card.id = `question-${qIndex}`;
+        card.innerHTML = `
+          <h2 class="question-title">${qIndex + 1}. ${getLocalizedHTML(item.question)}</h2>
+          <div class="options"></div>
+          <div class="feedback hidden" id="feedback-${qIndex}"></div>
+        `;
+
+        const optionsEl = card.querySelector('.options');
+
+        item.options.forEach((option, oIndex) => {
+          const optionLabel = document.createElement('label');
+          optionLabel.className = 'option';
+          optionLabel.innerHTML = `
+            <input type="radio" name="question-${qIndex}" value="${oIndex}" ${String(selections[qIndex]) === String(oIndex) ? 'checked' : ''} />
+            <span>${getLocalizedHTML(option)}</span>
+          `;
+          optionsEl.appendChild(optionLabel);
+        });
+
+        quizEl.appendChild(card);
+      });
+    }
+
+    function updateScoreBox(score = 0, percent = 0) {
+      if (lastAction === 'graded') {
+        scoreBox.textContent = `${getLocalizedPlain(uiText.scoreLabel)}: ${score}/${quizData.length} (${percent}%)`;
+        return;
+      }
+
+      if (lastAction === 'answers') {
+        scoreBox.textContent = getLocalizedPlain(uiText.scoreAnswersDisplayed);
+        return;
+      }
+
+      scoreBox.textContent = getLocalizedPlain(uiText.scoreNotGraded);
+    }
+
+    function gradeQuiz(showAnswers = false) {
+      let score = 0;
+
+      quizData.forEach((item, qIndex) => {
+        const card = document.getElementById(`question-${qIndex}`);
+        const allOptions = [...document.querySelectorAll(`input[name="question-${qIndex}"]`)];
+        let selected = document.querySelector(`input[name="question-${qIndex}"]:checked`);
+        const feedback = document.getElementById(`feedback-${qIndex}`);
+
+        card.classList.remove('correct', 'incorrect');
+
+        allOptions.forEach(input => {
+          const wrapper = input.closest('.option');
+          wrapper.style.borderColor = '';
+          wrapper.style.background = '';
+        });
+
+        if (showAnswers) {
+          allOptions.forEach((input, index) => {
+            input.checked = index === item.answer;
+          });
+          selected = allOptions[item.answer];
+        }
+
+        if (selected) {
+          const selectedIndex = Number(selected.value);
+          if (selectedIndex === item.answer) {
+            if (!showAnswers) score++;
+            card.classList.add('correct');
+            feedback.className = 'feedback correct';
+            feedback.innerHTML = `${getLocalizedHTML(uiText.correct, false)}<div class="explanation">${getLocalizedHTML(item.explanation)}</div>`;
+          } else {
+            card.classList.add('incorrect');
+            feedback.className = 'feedback wrong';
+            feedback.innerHTML = `${getLocalizedHTML(uiText.incorrect, false)}<div class="explanation">${getLocalizedHTML(uiText.correctAnswer, false)} <strong>${getLocalizedHTML(item.options[item.answer], false)}</strong><br>${getLocalizedHTML(item.explanation)}</div>`;
+          }
+        } else {
+          feedback.className = 'feedback unanswered';
+          feedback.innerHTML = `${getLocalizedHTML(uiText.notAnswered, false)}<div class="explanation">${getLocalizedHTML(uiText.correctAnswer, false)} <strong>${getLocalizedHTML(item.options[item.answer], false)}</strong><br>${getLocalizedHTML(item.explanation)}</div>`;
+        }
+
+        feedback.classList.remove('hidden');
+      });
+
+      const percent = Math.round((score / quizData.length) * 100);
+      lastAction = showAnswers ? 'answers' : 'graded';
+      updateScoreBox(score, percent);
+    }
+
+    function resetQuiz() {
+      lastAction = 'initial';
+      renderQuiz();
+      updateScoreBox();
+    }
+
+    function setLanguageMode(mode) {
+      const selections = getSelections();
+      currentLanguageMode = mode;
+      renderStaticText();
+      renderQuiz(selections);
+
+      if (lastAction === 'graded') {
+        gradeQuiz(false);
+      } else if (lastAction === 'answers') {
+        gradeQuiz(true);
+      } else {
+        updateScoreBox();
+      }
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', () => gradeQuiz(false));
+    document.getElementById('showBtn').addEventListener('click', () => gradeQuiz(true));
+    document.getElementById('resetBtn').addEventListener('click', resetQuiz);
+    languageMode.addEventListener('change', event => setLanguageMode(event.target.value));
+
+    renderStaticText();
+    renderQuiz();
+    updateScoreBox();
+  </script>
+</body>
+</html>
