@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>4.6 Astronomical Data & Collection Methods</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --ink:#1f2937;
+      --muted:#6b7280;
+      --line:#d6dee8;
+      --accent:#1d4ed8;
+      --accent-2:#0f766e;
+      --soft:#eaf2ff;
+      --shadow:0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius:18px;
+      --max:1120px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at top right, rgba(29,78,216,.08), transparent 28%),
+        radial-gradient(circle at top left, rgba(15,118,110,.07), transparent 24%),
+        var(--bg);
+      line-height:1.7;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter:saturate(160%) blur(10px);
+      background:rgba(244,247,251,.8);
+      border-bottom:1px solid var(--line);
+    }
+
+    .topbar .inner{
+      width:min(calc(100% - 32px), var(--max));
+      margin:0 auto;
+      padding:14px 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .badge{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      background:linear-gradient(135deg, #1d4ed8, #0f766e);
+      box-shadow:var(--shadow);
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight:800;
+      flex:0 0 auto;
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:14px;
+      color:var(--muted);
+      font-weight:600;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      appearance:none;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.78);
+      color:var(--ink);
+      padding:9px 12px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:600;
+      cursor:pointer;
+      transition:transform .06s ease, background .2s ease, border-color .2s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .btn:hover{
+      background:rgba(255,255,255,.95);
+      border-color:#b9c7d8;
+    }
+
+    .btn:active{transform:translateY(1px)}
+
+    .btn.primary{
+      background:rgba(29,78,216,.1);
+      border-color:rgba(29,78,216,.25);
+      color:var(--accent);
+    }
+
+    .btn.primary:hover{
+      background:rgba(29,78,216,.14);
+      border-color:rgba(29,78,216,.35);
+    }
+
+    .i18n-en.block{display:block}
+    .i18n-zh{
+      display:none;
+      margin-top:6px;
+      color:var(--muted);
+      font-size:.95em;
+      line-height:1.5;
+    }
+    body.lang-bilingual .i18n-zh{display:block}
+    .i18n-zh.inline{
+      display:none;
+      margin-top:0;
+      margin-left:.45em;
+      font-size:inherit;
+      line-height:inherit;
+      color:var(--muted);
+    }
+    body.lang-bilingual .i18n-zh.inline{display:inline}
+    body.lang-zh .i18n-en{display:none !important}
+    body.lang-zh .i18n-zh{display:block}
+    body.lang-zh .i18n-zh.inline{display:inline}
+    .brand .i18n-zh,
+    .toc .i18n-zh{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:600;
+    }
+    .callout .i18n-zh{color:#1e3a8a}
+    .callout .i18n-zh.inline{color:#1e3a8a}
+
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .wrap{
+      width:min(calc(100% - 32px), var(--max));
+      margin:0 auto;
+    }
+
+    header.hero{
+      padding:52px 0 28px;
+    }
+
+    .hero-card{
+      background:linear-gradient(135deg, #0b132b 0%, #102a43 45%, #1d4ed8 100%);
+      color:#fff;
+      border-radius:28px;
+      padding:34px 28px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-card::after{
+      content:"";
+      position:absolute;
+      inset:auto -40px -60px auto;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.25), rgba(255,255,255,0) 70%);
+    }
+
+    .eyebrow{
+      display:inline-block;
+      font-size:.82rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      opacity:.88;
+      margin-bottom:8px;
+    }
+
+    h1{
+      font-size:clamp(2rem, 4vw, 3rem);
+      line-height:1.15;
+      margin:0 0 10px;
+    }
+
+    .subtitle{
+      max-width:760px;
+      font-size:1.02rem;
+      opacity:.95;
+      margin:0;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:300px minmax(0, 1fr);
+      gap:18px;
+      align-items:start;
+    }
+
+    body.nav-collapsed .grid{
+      grid-template-columns:0 minmax(0, 1fr);
+      gap:0;
+    }
+
+    body.nav-collapsed .sidebar{
+      opacity:0;
+      transform:translateX(-8px);
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    nav.toc .toc-card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:18px 20px;
+      box-shadow:var(--shadow);
+    }
+
+    nav.toc h2{
+      font-size:1rem;
+      margin:0 0 10px;
+    }
+
+    .subtle{
+      color:var(--muted);
+      font-size:14px;
+      margin:0 0 10px;
+    }
+
+    .sticky{
+      position:sticky;
+      top:76px;
+    }
+
+    .toc-grid{
+      display:grid;
+      gap:8px;
+    }
+
+    .toc-grid a{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 12px;
+      border-radius:12px;
+      color:var(--ink);
+      border:1px solid transparent;
+      transition:background .2s ease, border-color .2s ease;
+      font-weight:600;
+      font-size:14px;
+      text-decoration:none;
+    }
+
+    .toc-grid a:hover{
+      background:rgba(15,23,42,.03);
+      border-color:#dbe3ee;
+      text-decoration:none;
+    }
+
+    .toc-grid small{
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    main{
+      padding:0 0 60px;
+    }
+
+    section.block{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:26px 22px;
+      margin:0 0 18px;
+      box-shadow:var(--shadow);
+      scroll-margin-top:92px;
+    }
+
+    section.block h2{
+      margin:0 0 14px;
+      font-size:1.6rem;
+      line-height:1.25;
+      color:#0f172a;
+    }
+
+    section.block h3{
+      margin:22px 0 10px;
+      font-size:1.18rem;
+      color:#111827;
+    }
+
+    p{margin:0 0 14px}
+
+    .figure-placeholder{
+      margin:18px 0 20px;
+      border:2px dashed #9db5d3;
+      background:linear-gradient(180deg, #eef5ff 0%, #f8fbff 100%);
+      border-radius:18px;
+      min-height:220px;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding:18px;
+      color:#47607a;
+    }
+
+    .lesson-figure{
+      margin:18px 0 20px;
+    }
+
+    .lesson-figure img,
+    .fact-heading img{
+      display:block;
+      max-width:100%;
+      height:auto;
+    }
+
+    .lesson-figure img{
+      width:100%;
+      border-radius:18px;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      background:#fff;
+    }
+
+    .fact-heading{
+      margin:18px 0 12px;
+    }
+
+    .figure-placeholder strong{
+      display:block;
+      color:#274c77;
+      font-size:1.02rem;
+      margin-bottom:6px;
+    }
+
+    .two-col{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:22px;
+      align-items:start;
+    }
+
+    .callout{
+      background:var(--soft);
+      border:1px solid #c8dafc;
+      border-left:5px solid var(--accent);
+      border-radius:16px;
+      padding:16px 16px 14px;
+      color:#12335c;
+    }
+
+    .fact-box{
+      background:#f0fdf4;
+      border:1px solid #bbe5c4;
+      border-left:5px solid var(--accent-2);
+      border-radius:16px;
+      padding:16px;
+    }
+
+    .video-card{
+      background:#fbfdff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:16px;
+      margin-top:14px;
+    }
+
+    .video-card h4{
+      margin:0 0 8px;
+      font-size:1rem;
+    }
+
+    .video-embed{
+      position:relative;
+      width:100%;
+      padding-top:56.25%;
+      border-radius:14px;
+      overflow:hidden;
+      background:#000;
+    }
+
+    .video-embed iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:18px;
+    }
+
+    footer{
+      padding:0 0 60px;
+      color:var(--muted);
+      font-size:.95rem;
+      text-align:center;
+    }
+
+    @media (max-width: 820px){
+      .topbar .inner{
+        align-items:flex-start;
+      }
+      .brand{
+        min-width:0;
+      }
+      .actions{
+        justify-content:flex-end;
+      }
+      .grid{
+        grid-template-columns:1fr;
+      }
+      body.nav-collapsed .grid{
+        grid-template-columns:1fr;
+        gap:18px;
+      }
+      body.nav-collapsed .sidebar{
+        display:none;
+      }
+      .sticky{
+        position:static;
+      }
+      .two-col,
+      .grid-2{
+        grid-template-columns:1fr;
+      }
+      .hero-card{
+        padding:28px 22px;
+      }
+      section.block{
+        padding:22px 18px;
+      }
+      .figure-placeholder{
+        min-height:180px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="inner">
+      <div class="brand">
+        <div class="badge">4.6</div>
+        <h1>Earth &amp; Space Science • Astronomical Data &amp; Collection Methods</h1>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="topButton" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑ Top</button>
+        <button class="btn" id="navToggle" type="button" aria-controls="pageNav" aria-expanded="true">☰ Outline: Hide</button>
+        <button class="btn" id="langToggle" type="button" aria-pressed="false">Language: EN</button>
+        <button class="btn" id="printButton" onclick="window.print()">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="hero-card">
+        <div class="eyebrow">Science 10 • Space Exploration</div>
+        <h1>4.6 Astronomical Data &amp; Collection Methods</h1>
+        <p class="subtitle">A structured lesson page covering how astronomers observe space from Earth and from space, along with major instruments, probes, and missions that have expanded our understanding of the universe.</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="grid">
+      <aside class="sidebar" id="pageNav">
+        <nav class="toc sticky" aria-label="Table of contents">
+          <div class="toc-card">
+            <h2>On this page</h2>
+            <p class="subtle">Jump to a topic section.</p>
+            <div class="toc-grid">
+              <a href="#intro"><span>Introduction</span><small>Overview</small></a>
+              <a href="#earth"><span>Observing From Earth</span><small>Telescopes</small></a>
+              <a href="#space"><span>Observing from Space</span><small>Satellites</small></a>
+              <a href="#hubble"><span>Hubble Space Telescope</span><small>Orbiting observatory</small></a>
+              <a href="#spaceplanes"><span>Spaceplanes</span><small>Aircraft and spacecraft</small></a>
+              <a href="#iss"><span>International Space Station</span><small>Research platform</small></a>
+              <a href="#cassini"><span>Cassini &amp; Saturn</span><small>Grand Finale</small></a>
+              <a href="#curiosity"><span>Curiosity &amp; Mars</span><small>Rover mission</small></a>
+              <a href="#parker"><span>Parker Solar Probe</span><small>Touching the Sun</small></a>
+            </div>
+          </div>
+        </nav>
+      </aside>
+
+      <main>
+      <section class="block" id="intro">
+        <h2>Introduction</h2>
+        <figure class="lesson-figure">
+          <img src="assets/spaceplane.jpg" alt="Concept art showing a spaceplane flying above Earth." />
+        </figure>
+        <p>When you look at the night sky, you might see what appears to be a black curtain with millions of tiny holes in it. Many early people thought all of the stars were the same distance from Earth, fixed on a single layer in space. When instruments were developed to see farther into space, people began to realize that their perceptions were not correct.</p>
+        <p>As technology advances, we can see further and further into space. Determining the positions of bodies in space and their distances from each other allows us to develop a fuller understanding of the universe.</p>
+        <p>Today, a mix of ancient principles and new technologies are employed to see space in the most accurate way possible.</p>
+        <p>This section explores the many technologies developed for space exploration.</p>
+      </section>
+
+      <section class="block" id="earth">
+        <h2>Observing From Earth</h2>
+        <div class="two-col">
+          <div>
+            <p>Telescopes allow us to view space from the comfort of our own backyard. The first telescope was an <strong>optical telescope</strong>. Optical telescopes collect and focus visible light so that you can see a magnified image of a distant object. Optical telescopes come in a variety of sizes; from small, portable ones you could use in your backyard, to huge stationary ones in scientific observatories.</p>
+            <p>Optical telescopes are not the only kinds of telescopes available. Visible light makes up only a small portion of the radiation energy in the universe. The electromagnetic spectrum shows these different forms of energy.</p>
+            <p>Other types of telescopes use these other forms of energy to create pictures of the universe.</p>
+          </div>
+          <aside class="callout">
+            <strong>Key idea:</strong><br />
+            Visible light is only one small part of the electromagnetic spectrum. Astronomers also use other forms of energy to study the universe.
+          </aside>
+        </div>
+        <figure class="lesson-figure">
+          <img src="assets/43a_electrospectrum.jpg" alt="Electromagnetic spectrum showing wavelength ranges from radio waves to gamma rays." />
+        </figure>
+      </section>
+
+      <section class="block" id="space">
+        <h2>Observing from Space</h2>
+        <p>Our view of space from Earth is not perfect. Air and light pollution, cloudy weather, and distortion from heat and atmosphere are all factors that can obscure the view of space. To get a better view, astronomers position instruments outside the Earth's atmosphere.</p>
+        <p>Some devices that astronomers use in space are <strong>satellites</strong> and <strong>probes</strong>.</p>
+        <p>A satellite is anything that orbits around something else. There are natural satellites such as our Moon, and artificial satellites such as communications devices orbiting Earth right at this moment.</p>
+        <p>Probes are devices sent, with no human pilot, to another celestial body to gather information. Sending probes into space is usually less costly than sending humans, and less dangerous. However, there is some debate as to whether a machine can gather information as well as a human being. What do you think?</p>
+        <div class="fact-heading">
+          <img src="assets/didyouknow.gif" alt="Did You Know?" />
+        </div>
+        <div class="fact-box">
+          Over fifty years ago the Soviet Union launched the first artificial satellite to orbit the Earth. Since then, countries all over the world have launched satellites into space. Today there are over 9 000 artificial satellites orbiting Earth, but only about one-third of these are actually functioning. That means there are over 6 000 pieces of space junk orbiting the Earth.
+        </div>
+      </section>
+
+      <section class="block" id="hubble">
+        <h2>The Hubble Space Telescope</h2>
+        <p>Hubble, the observatory, is the first major optical telescope to be placed in space, the ultimate mountaintop. Above the distortion of the atmosphere, far far above rain clouds and light pollution, Hubble has an unobstructed view of the universe. Scientists have used Hubble to observe the most distant stars and galaxies as well as the planets in our solar system. Hubble's launch and deployment aboard the space shuttle Discovery, in April 1990, marked the most significant advance in astronomy since Galileo's telescope. Thanks to four servicing missions and more than 25 years of operation, our view of the universe and our place within it has never been the same.</p>
+        <p>Hubble is one of the most productive scientific instruments ever built. Hubble does not travel to stars, planets or galaxies. It takes pictures of them as it whirls around Earth at about 17 000 mph. Hubble has travelled more than 4 billion miles along a circular low Earth orbit currently about 340 miles in altitude. Hubble has peered back into the very distant past, to locations more than 13.4 billion light years from Earth. Hubble weighed about 24 000 pounds at launch and currently weighs about 27 000 pounds following the final servicing mission in 2009 – on the order of two full-grown African elephants. Hubble's primary mirror is 2.4 meters (7 feet, 10.5 inches) across. Hubble is 13.3 meters (43.5 feet) long -- the length of a large school bus.</p>
+        <figure class="lesson-figure">
+          <img src="assets/hubble_earth.jpg" alt="The Hubble Space Telescope orbiting above Earth." />
+        </figure>
+      </section>
+
+      <section class="block" id="spaceplanes">
+        <h2>Spaceplanes</h2>
+        <p>A spaceplane is an aerospace vehicle that operates as an aircraft in Earth's atmosphere, as well as a spacecraft when it is in space. It combines features of an aircraft and a spacecraft, which can be thought of as an aircraft that can endure and maneuver in the vacuum of space or likewise a spacecraft that can fly like an airplane. Typically, it takes the form of a spacecraft equipped with wings, although lifting bodies have been designed and tested as well. The propulsion to reach space may be purely rocket based or may use the assistance of airbreathing jet engines. The spaceflight is then followed by an unpowered glide return to landing.</p>
+        <div class="video-card">
+          <h4>Video</h4>
+          <div class="video-embed">
+            <iframe
+              src="https://www.youtube.com/embed/4FROxZ5i67k"
+              title="Spaceplanes video"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="iss">
+        <h2>The International Space Station</h2>
+        <p>The International Space Station (ISS) is the most complex international scientific and engineering project in history and the largest structure humans have ever put into space. This high-flying satellite is a laboratory for new technologies and an observation platform for astronomical, environmental and geological research. As a permanently occupied outpost in outer space, it serves as a stepping-stone for further space exploration. The space station flies at an average altitude of 400 kilometres above Earth. It circles the globe every 90 minutes at a speed of about 28 000 kph. In one day, the station travels about the distance it would take to go from Earth to the moon and back. The space station can rival the brilliant planet, Venus, in brightness and appears as a bright moving light across the night sky. It can be seen from Earth without the use of a telescope by night sky observers who know when and where to look.</p>
+        <div class="video-card">
+          <h4>Video</h4>
+          <div class="video-embed">
+            <iframe
+              src="https://www.youtube.com/embed/SGP6Y0Pnhe4"
+              title="International Space Station video"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+        <p>Five different space agencies representing 15 countries built the $100-billion International Space Station and continue to operate it today. NASA, Russia's Roscosmos State Corporation for Space Activities (Roscosmos), the European Space Agency, the Canadian Space Agency and the Japan Aerospace Exploration Agency is the primary space agency partners on the project.</p>
+      </section>
+
+      <section class="block" id="cassini">
+        <h2>Cassini Spacecraft &amp; Exploration of Saturn</h2>
+        <p>NASA's Cassini spacecraft successfully completed its historic mission on September 15, 2017, after carrying out an unprecedented series of 22 dives between the planet Saturn and its rings—a region no other spacecraft had ever explored.</p>
+        <p>During its Grand Finale, Cassini transmitted invaluable science and engineering data back to Earth via NASA’s Deep Space Network, greatly enhancing our understanding of Saturn's structure, ring system, and magnetic environment. The mission, which lasted nearly 20 years, included a final close flyby of Saturn’s moon Titan before embarking on its daring final orbits.</p>
+        <p>The legacy of the Cassini mission continues to inform studies of giant planets and planetary formation, providing insights that help scientists understand how planetary systems across the universe evolve.</p>
+        <div class="video-card">
+          <h4>Video</h4>
+          <div class="video-embed">
+            <iframe
+              src="https://www.youtube.com/embed/xrGAQCq9BMU"
+              title="Cassini spacecraft video"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="curiosity">
+        <h2>Curiosity Rover &amp; Exploration of Mars</h2>
+        <p>Curiosity is a car-sized robotic rover exploring Gale Crater on Mars as part of NASA's Mars Science Laboratory mission. Curiosity was launched from Cape Canaveral on November 26, 2011, aboard the MSL spacecraft and landed on Aeolis Palus in Gale Crater on Mars on August 6, 2012. The Bradbury Landing site was less than 2.4 km from the center of the rover's touchdown target after a 560 million km journey. The rover's goals include investigation of the Martian climate and geology; assessment of whether the selected field site inside Gale Crater has ever offered environmental conditions favourable for microbial life, including investigation of the role of water; and planetary habitability studies in preparation for future human exploration.</p>
+        <div class="video-card">
+          <h4>Video</h4>
+          <div class="video-embed">
+            <iframe
+              src="https://www.youtube.com/embed/E6t1kxX-EpI"
+              title="Curiosity rover video"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="parker">
+        <h2>Parker Solar Probe</h2>
+        <div class="grid-2">
+          <div>
+            <p>NASA’s Parker Solar Probe will be the first-ever mission to "touch" the Sun. The spacecraft, about the size of a small car, will travel directly into the sun's atmosphere about 4 million miles from our star's surface. It was named after Eugene Parker who discovered 'solar wind'. The launch of this unprecedented mission was on August 12, 2018.</p>
+            <p>NASA's Parker Solar Probe has recently achieved significant milestones in its mission to study the Sun up close.</p>
+            <p>On December 24, 2024, the probe made its closest approach to the Sun to date, coming within approximately 3.8 million miles (6.1 million kilometers) of the solar surface. During this perihelion, it reached a record-breaking speed of about 430,000 miles per hour (692,000 kilometers per hour)(The Hub)</p>
+            <p>Following this close encounter, the Parker Solar Probe successfully transmitted detailed telemetry data back to Earth, confirming that all systems and instruments are healthy and operating normally.(Space.com)</p>
+            <p>These achievements mark a significant advancement in our understanding of solar phenomena, as the data collected will provide unprecedented insights into the Sun's behavior and its influence on the solar system.</p>
+          </div>
+          <aside class="callout">
+            <strong>Why it matters:</strong><br />
+            Parker Solar Probe gathers close-up data that helps scientists better understand solar wind, solar activity, and how the Sun affects the entire solar system.
+          </aside>
+        </div>
+        <div class="video-card">
+          <h4>Video</h4>
+          <div class="video-embed">
+            <iframe
+              src="https://www.youtube.com/embed/c80TzqNoqMg"
+              title="Parker Solar Probe video"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+      </section>
+      </main>
+    </div>
+
+    <footer>
+      Page recreated as a clean responsive HTML lesson. Replace any image placeholder blocks with the original images when available.
+    </footer>
+  </div>
+  <script>
+    (function(){
+      const wrapEnglishContent = (el) => {
+        if (!el || el.querySelector(':scope > .i18n-en')) return;
+        const childNodes = Array.from(el.childNodes);
+        if (!childNodes.length) return;
+        const hasBlockChild = childNodes.some((node) => node.nodeType === Node.ELEMENT_NODE && /^(DIV|P|UL|OL|TABLE|SECTION|ARTICLE|FIGURE|BLOCKQUOTE)$/i.test(node.tagName));
+        const wrapper = document.createElement(hasBlockChild ? 'div' : 'span');
+        wrapper.className = `i18n-en${hasBlockChild ? ' block' : ''}`;
+        childNodes.forEach((node) => wrapper.appendChild(node));
+        el.appendChild(wrapper);
+      };
+
+      const addZh = (el, zh, opts = {}) => {
+        if (!el || !zh) return;
+        if (opts.append) wrapEnglishContent(el);
+        else el.classList.add('i18n-en');
+        const node = document.createElement(opts.tag || 'div');
+        node.className = `i18n-zh ${opts.className || ''}`.trim();
+        node.innerHTML = zh;
+        if (opts.append) el.appendChild(node);
+        else el.insertAdjacentElement('afterend', node);
+      };
+
+      const addZhInline = (el, zh, opts = {}) => {
+        const className = ['inline', opts.className || ''].join(' ').trim();
+        addZh(el, zh, { ...opts, append: true, tag: 'span', className });
+      };
+
+      const addZhAll = (selector, zhList, opts = {}) => {
+        const nodes = Array.from(document.querySelectorAll(selector));
+        zhList.forEach((zh, i) => addZh(nodes[i], zh, opts));
+      };
+
+      const addZhAllInline = (selector, zhList, opts = {}) => {
+        const nodes = Array.from(document.querySelectorAll(selector));
+        zhList.forEach((zh, i) => addZhInline(nodes[i], zh, opts));
+      };
+
+      addZh(document.querySelector('.eyebrow'), '科学 10 • 太空探索', { append: true });
+      addZh(document.querySelector('.brand h1'), '地球与空间科学 • 天文数据与收集方法', { append: true });
+      addZh(document.querySelector('.hero h1'), '4.6 天文数据与收集方法');
+      addZhInline(document.querySelector('.hero .subtitle'), '这是一个结构清晰的课程页面，内容涵盖天文学家如何从地球以及从太空观测宇宙，以及那些扩展了我们对宇宙认识的重要仪器、探测器和航天任务。');
+      addZh(document.querySelector('.toc h2'), '本页内容');
+      addZh(document.querySelector('.toc .subtle'), '跳转到某个主题部分。');
+      addZhAll('.toc a', [
+        '引言 · 概览',
+        '从地球观测 · 望远镜',
+        '从太空观测 · 卫星',
+        '哈勃太空望远镜 · 轨道观测站',
+        '太空飞机 · 飞机与航天器',
+        '国际空间站 · 研究平台',
+        '卡西尼航天器与土星 · 大终章',
+        '好奇号与火星 · 火星车任务',
+        '帕克太阳探测器 · 接触太阳'
+      ], { append: true });
+      addZhAll('main section.block > h2', [
+        '引言',
+        '从地球观测',
+        '从太空观测',
+        '哈勃太空望远镜',
+        '太空飞机',
+        '国际空间站',
+        '卡西尼航天器与土星探测',
+        '好奇号火星车与火星探测',
+        '帕克太阳探测器'
+      ]);
+      addZhAllInline('#intro > p', [
+        '当你仰望夜空时，你可能会看到仿佛一块黑色幕布，上面有数百万个小孔。许多早期的人认为，所有恒星与地球的距离都相同，并且固定在太空中的同一层上。当能够看得更远的仪器被发明出来后，人们开始意识到他们的这种看法并不正确。',
+        '随着观测仪器不断进步，我们能够看得越来越远。测定天体在太空中的位置以及它们彼此之间的距离，有助于我们更完整地理解宇宙。',
+        '今天，人们运用古老的原理和新的技术，以尽可能准确的方式来观测太空。',
+        '本节将介绍多种用于太空探索的技术。'
+      ]);
+      addZhAllInline('#earth .two-col > div > p', [
+        '望远镜让我们能够舒舒服服地在自家后院观测太空。第一种望远镜是<strong>光学望远镜</strong>。光学望远镜收集并聚焦可见光，这样你就能看到远处物体的放大图像。光学望远镜有各种不同的大小，从你可以在自家后院使用的小型便携式望远镜，到科学天文台里巨大的固定式望远镜。',
+        '光学望远镜并不是唯一可用的望远镜类型。可见光只占宇宙中辐射能量的一小部分。电磁波谱展示了这些不同形式的能量。',
+        '其他类型的望远镜利用这些其他形式的能量来形成宇宙的图像。'
+      ]);
+      addZhInline(document.querySelector('#earth .callout > strong'), '关键概念：');
+      addZhInline(document.querySelector('#earth .callout'), '可见光只是电磁波谱中的一小部分。天文学家也使用其他形式的能量来研究宇宙。');
+      addZhAllInline('#space > p', [
+        '我们从地球上看到的太空并不完美。空气和光污染、多云天气，以及由热量和大气造成的扭曲，都是会遮挡太空景象的因素。为了看得更清楚，天文学家把仪器安置在地球大气层之外。',
+        '天文学家在太空中使用的一些设备包括<strong>卫星</strong>和<strong>探测器</strong>。',
+        '卫星是任何围绕其他事物运行的物体。有像我们的月球这样的天然卫星，也有像此时此刻正在绕地球运行的通信设备这样的人造卫星。',
+        '探测器是在没有人类驾驶员的情况下被送往另一个天体以收集信息的装置。把探测器送入太空通常比把人类送入太空成本更低，也更安全。然而，关于机器是否能像人类一样有效地收集信息，仍然存在一些争论。你认为呢？'
+      ]);
+      addZh(document.querySelector('#space .fact-box'), '五十多年前，苏联发射了第一颗绕地球运行的人造卫星。从那以后，世界各国都向太空发射了卫星。今天，绕地球运行的人造卫星已经超过 9 000 颗，但其中只有大约三分之一仍然在正常工作。这意味着有超过 6 000 件太空垃圾正在绕地球运行。', { append: true });
+      addZhAllInline('#hubble > p', [
+        '哈勃这个天文台是第一台被放置在太空中的大型光学望远镜，可以说是终极版的高山天文台。位于大气层扭曲之上，远远高于雨云和光污染，哈勃能够无遮挡地观测宇宙。科学家利用哈勃观测了最遥远的恒星和星系，以及我们太阳系中的行星。1990 年 4 月，哈勃由发现号航天飞机发射并部署，这标志着自伽利略望远镜以来天文学最重大的进步。由于四次维修任务以及超过 25 年的运行，我们对宇宙以及我们在宇宙中的位置的认识，已经彻底改变。',
+        '哈勃是有史以来建造过的最有成果的科学仪器之一。哈勃不会飞到恒星、行星或星系那里去。它在以大约每小时 17 000 英里的速度绕地球运行时，为它们拍照。哈勃沿着目前高度约 340 英里的近圆形低地球轨道，已经飞行了超过 40 亿英里。哈勃已经向极其遥远的过去回望，观测到距离地球超过 134 亿光年的位置。哈勃发射时重约 24 000 磅，在 2009 年最后一次维修任务之后，目前重约 27 000 磅，大约相当于两头成年非洲象。哈勃的主镜直径为 2.4 米（7 英尺 10.5 英寸）。哈勃长 13.3 米（43.5 英尺），大约相当于一辆大型校车的长度。'
+      ]);
+      addZhInline(document.querySelector('#spaceplanes > p'), '太空飞机是一种航空航天飞行器，它既能在地球大气层内像飞机一样运行，也能在太空中像航天器一样运行。它结合了飞机和航天器的特征，可以被看作是一种能够在太空真空中承受环境并进行机动的飞机，或者反过来说，是一种能够像飞机一样飞行的航天器。通常，它表现为一种装有机翼的航天器，不过人们也设计并测试过升力体。到达太空所需的推进方式可以完全基于火箭，也可以借助吸气式喷气发动机。随后，太空飞行阶段之后是无动力滑翔返回并着陆。');
+      addZhAll('#spaceplanes .video-card h4, #iss .video-card h4, #cassini .video-card h4, #curiosity .video-card h4, #parker .video-card h4', [
+        '视频',
+        '视频',
+        '视频',
+        '视频',
+        '视频'
+      ]);
+      addZhAllInline('#iss > p', [
+        '国际空间站（ISS）是历史上最复杂的国际科学与工程项目，也是人类送入太空的最大结构。这个高空飞行的卫星是一个新技术实验室，也是进行天文学、环境和地质研究的观测平台。作为一个永久有人居住的太空前哨站，它是进一步太空探索的垫脚石。空间站平均在距地球 400 千米的高度飞行。它每 90 分钟绕地球一圈，速度约为每小时 28 000 千米。一天之内，空间站飞行的距离大约相当于从地球到月球再返回一次。空间站的亮度可以与明亮的金星相媲美，并会在夜空中看起来像一个明亮移动的光点。只要夜空观测者知道何时以及在哪里看，就可以在地球上不用望远镜看到它。',
+        '代表 15 个国家的五个不同航天机构建造了这座价值 1 000 亿美元的国际空间站，并且至今仍在继续运营它。NASA、俄罗斯国家航天集团（Roscosmos）、欧洲航天局、加拿大航天局和日本宇宙航空研究开发机构是该项目的主要航天机构合作伙伴。'
+      ]);
+      addZhAllInline('#cassini > p', [
+        'NASA 的卡西尼号航天器于 2017 年 9 月 15 日成功完成了它的历史性任务，此前它完成了一系列前所未有的 22 次穿越，飞入土星与土星环之间的区域，而这一地区此前没有任何其他航天器探测过。',
+        '在它的“大终章”阶段，卡西尼号通过 NASA 的深空网络向地球回传了极其宝贵的科学与工程数据，大大增强了我们对土星结构、环系统和磁环境的理解。这项持续近 20 年的任务，在开始最后轨道飞行之前，还曾对土星的卫星土卫六进行了一次最后的近距离飞掠。',
+        '卡西尼任务留下的成果继续为巨行星和行星形成的研究提供信息，这些见解帮助科学家理解整个宇宙中行星系统是如何演化的。'
+      ]);
+      addZhInline(document.querySelector('#curiosity > p'), '好奇号是一辆汽车大小的机器人火星车，作为 NASA 火星科学实验室任务的一部分，在火星的盖尔陨石坑中进行探索。好奇号于 2011 年 11 月 26 日从卡纳维拉尔角发射，搭载于 MSL 航天器上，并于 2012 年 8 月 6 日降落在火星盖尔陨石坑中的埃俄利斯沼。布拉德伯里着陆点距离火星车的预定着陆目标中心不到 2.4 千米，此前它完成了一段 5.6 亿千米的旅程。火星车的目标包括研究火星的气候和地质；评估盖尔陨石坑内所选实地地点是否曾经具备适合微生物生命存在的环境条件，包括研究水所起的作用；以及开展行星宜居性研究，为未来的人类探索作准备。');
+      addZhAllInline('#parker .grid-2 > div > p', [
+        'NASA 的帕克太阳探测器将成为历史上第一项“接触”太阳的任务。这艘大约小汽车大小的航天器将直接飞入太阳的大气层，距离我们恒星表面大约 400 万英里。它是以发现“太阳风”的尤金·帕克命名的。这项前所未有的任务于 2018 年 8 月 12 日发射。',
+        'NASA 的帕克太阳探测器最近在其近距离研究太阳的任务中取得了重要里程碑。',
+        '在 2024 年 12 月 24 日，这个探测器实现了迄今距离太阳最近的一次接近，到达距离太阳表面大约 380 万英里（610 万千米）的位置。在这次近日点期间，它达到了大约每小时 430 000 英里（692 000 千米）的创纪录速度。(The Hub)',
+        '在这次近距离接触之后，帕克太阳探测器成功地将详细的遥测数据回传到地球，确认所有系统和仪器都健康且运行正常。(Space.com)',
+        '这些成就标志着我们对太阳现象的理解取得了重大进展，因为所收集到的数据将为太阳的行为以及它对太阳系的影响提供前所未有的见解。'
+      ]);
+      addZhInline(document.querySelector('#parker .callout > strong'), '这为什么重要：');
+      addZhInline(document.querySelector('#parker .callout'), '帕克太阳探测器收集近距离数据，这帮助科学家更好地理解太阳风、太阳活动，以及太阳如何影响整个太阳系。');
+      addZh(document.querySelector('footer'), '本页面已重新制作为一个简洁、响应式的 HTML 课程页面。当原始图片可用时，请用原始图片替换任何图片占位块。', { append: true });
+
+      const body = document.body;
+      const navToggle = document.getElementById('navToggle');
+      const pageNav = document.getElementById('pageNav');
+      const langToggle = document.getElementById('langToggle');
+      const topButton = document.getElementById('topButton');
+      const printButton = document.getElementById('printButton');
+      const setLangMode = (mode) => {
+        const currentMode = ['en', 'enzh', 'zh'].includes(mode) ? mode : 'en';
+        document.body.classList.toggle('lang-bilingual', currentMode === 'enzh');
+        document.body.classList.toggle('lang-zh', currentMode === 'zh');
+        if (langToggle) {
+          langToggle.textContent = currentMode === 'enzh' ? 'Language: EN+ZH' : currentMode === 'zh' ? 'Language: ZH' : 'Language: EN';
+          langToggle.setAttribute('aria-pressed', currentMode === 'en' ? 'false' : 'true');
+          langToggle.setAttribute('aria-label', currentMode === 'enzh' ? 'Language mode: English and Chinese' : currentMode === 'zh' ? 'Language mode: Chinese only' : 'Language mode: English only');
+        }
+        if (topButton) {
+          topButton.textContent = currentMode === 'enzh' ? '↑ Top / 顶部' : currentMode === 'zh' ? '↑ 顶部' : '↑ Top';
+        }
+        if (printButton) {
+          printButton.textContent = currentMode === 'enzh' ? 'Print / 打印' : currentMode === 'zh' ? '打印' : 'Print';
+        }
+        if (navToggle) {
+          const collapsed = document.body.classList.contains('nav-collapsed');
+          navToggle.textContent = currentMode === 'enzh'
+            ? (collapsed ? '☰ Outline: Show / 显示目录' : '☰ Outline: Hide / 隐藏目录')
+            : currentMode === 'zh'
+              ? (collapsed ? '☰ 显示目录' : '☰ 隐藏目录')
+              : (collapsed ? '☰ Outline: Show' : '☰ Outline: Hide');
+        }
+        try { localStorage.setItem('earth46LangMode', currentMode); } catch (_) {}
+      };
+
+      if (langToggle) {
+        langToggle.addEventListener('click', () => {
+          const currentMode = document.body.classList.contains('lang-zh') ? 'zh' : document.body.classList.contains('lang-bilingual') ? 'enzh' : 'en';
+          setLangMode(currentMode === 'en' ? 'enzh' : currentMode === 'enzh' ? 'zh' : 'en');
+        });
+        setLangMode(localStorage.getItem('earth46LangMode'));
+      }
+      function setNavCollapsed(collapsed) {
+        body.classList.toggle('nav-collapsed', collapsed);
+        if (navToggle) {
+          navToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+          const currentMode = document.body.classList.contains('lang-zh') ? 'zh' : document.body.classList.contains('lang-bilingual') ? 'enzh' : 'en';
+          navToggle.textContent = currentMode === 'enzh'
+            ? (collapsed ? '☰ Outline: Show / 显示目录' : '☰ Outline: Hide / 隐藏目录')
+            : currentMode === 'zh'
+              ? (collapsed ? '☰ 显示目录' : '☰ 隐藏目录')
+              : (collapsed ? '☰ Outline: Show' : '☰ Outline: Hide');
+        }
+        if (pageNav) {
+          pageNav.setAttribute('aria-hidden', collapsed ? 'true' : 'false');
+          if ('inert' in pageNav) pageNav.inert = collapsed;
+        }
+        try { localStorage.setItem('earth46NavCollapsed', collapsed ? '1' : '0'); } catch (_) {}
+      }
+
+      if (navToggle) {
+        navToggle.addEventListener('click', () => {
+          setNavCollapsed(!body.classList.contains('nav-collapsed'));
+        });
+        setNavCollapsed(localStorage.getItem('earth46NavCollapsed') === '1');
+      }
+    })();
+  </script>
+</body>
+</html>
