@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>4.8 Space Exploration &amp; Travel</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --ink:#1f2937;
+      --muted:#6b7280;
+      --line:#d6dee8;
+      --accent:#1d4ed8;
+      --shadow:0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius:18px;
+      --max:1120px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at top right, rgba(29,78,216,.08), transparent 28%),
+        radial-gradient(circle at top left, rgba(15,118,110,.07), transparent 24%),
+        var(--bg);
+      line-height:1.7;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter:saturate(160%) blur(10px);
+      background:rgba(244,247,251,.8);
+      border-bottom:1px solid var(--line);
+    }
+
+    .topbar .inner{
+      width:min(calc(100% - 32px), var(--max));
+      margin:0 auto;
+      padding:14px 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .badge{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      background:linear-gradient(135deg, #1d4ed8, #0f766e);
+      box-shadow:var(--shadow);
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight:800;
+      flex:0 0 auto;
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:14px;
+      color:var(--muted);
+      font-weight:600;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      appearance:none;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.78);
+      color:var(--ink);
+      padding:9px 12px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:600;
+      cursor:pointer;
+      transition:transform .06s ease, background .2s ease, border-color .2s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .btn:hover{
+      background:rgba(255,255,255,.95);
+      border-color:#b9c7d8;
+    }
+
+    .btn:active{transform:translateY(1px)}
+
+    .btn.primary{
+      background:rgba(29,78,216,.1);
+      border-color:rgba(29,78,216,.25);
+      color:var(--accent);
+    }
+
+    .btn.primary:hover{
+      background:rgba(29,78,216,.14);
+      border-color:rgba(29,78,216,.35);
+    }
+
+    .i18n-en.block{display:block}
+    .i18n-zh{
+      display:none;
+      margin-top:6px;
+      color:var(--muted);
+      font-size:.95em;
+      line-height:1.5;
+    }
+    body.lang-bilingual .i18n-zh{display:block}
+    .i18n-zh.inline{
+      display:none;
+      margin-top:0;
+      margin-left:.45em;
+      font-size:inherit;
+      line-height:inherit;
+      color:var(--muted);
+    }
+    body.lang-bilingual .i18n-zh.inline{display:inline}
+    body.lang-zh .i18n-en{display:none !important}
+    body.lang-zh .i18n-zh{display:block}
+    body.lang-zh .i18n-zh.inline{display:inline}
+    .brand .i18n-zh,
+    .toc .i18n-zh{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .wrap{
+      width:min(calc(100% - 32px), var(--max));
+      margin:0 auto;
+    }
+
+    header.hero{
+      padding:52px 0 28px;
+    }
+
+    .hero-card{
+      background:linear-gradient(135deg, #0b132b 0%, #102a43 45%, #1d4ed8 100%);
+      color:#fff;
+      border-radius:28px;
+      padding:34px 28px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-card::after{
+      content:"";
+      position:absolute;
+      inset:auto -40px -60px auto;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.25), rgba(255,255,255,0) 70%);
+    }
+
+    .eyebrow{
+      display:inline-block;
+      font-size:.82rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      opacity:.88;
+      margin-bottom:8px;
+    }
+
+    h1{
+      font-size:clamp(2rem, 4vw, 3rem);
+      line-height:1.15;
+      margin:0;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:300px minmax(0, 1fr);
+      gap:18px;
+      align-items:start;
+    }
+
+    body.nav-collapsed .grid{
+      grid-template-columns:0 minmax(0, 1fr);
+      gap:0;
+    }
+
+    body.nav-collapsed .sidebar{
+      opacity:0;
+      transform:translateX(-8px);
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    nav.toc .toc-card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:18px 20px;
+      box-shadow:var(--shadow);
+    }
+
+    nav.toc h2{
+      font-size:1rem;
+      margin:0 0 10px;
+    }
+
+    .subtle{
+      color:var(--muted);
+      font-size:14px;
+      margin:0 0 10px;
+    }
+
+    .sticky{
+      position:sticky;
+      top:76px;
+    }
+
+    .toc-grid{
+      display:grid;
+      gap:8px;
+    }
+
+    .toc-grid a{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 12px;
+      border-radius:12px;
+      color:var(--ink);
+      border:1px solid transparent;
+      transition:background .2s ease, border-color .2s ease;
+      font-weight:600;
+      font-size:14px;
+      text-decoration:none;
+    }
+
+    .toc-grid a:hover{
+      background:rgba(15,23,42,.03);
+      border-color:#dbe3ee;
+      text-decoration:none;
+    }
+
+    .toc-grid small{
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    main{
+      padding:0 0 60px;
+    }
+
+    section.block{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:26px 22px;
+      margin:0 0 18px;
+      box-shadow:var(--shadow);
+      scroll-margin-top:92px;
+    }
+
+    section.block h2{
+      margin:0 0 14px;
+      font-size:1.6rem;
+      line-height:1.25;
+      color:#0f172a;
+    }
+
+    p{margin:0 0 14px}
+
+    .lesson-figure{
+      margin:18px 0 20px;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      background:#fff;
+    }
+
+    .lesson-figure img{
+      display:block;
+      width:100%;
+      height:auto;
+    }
+
+    .media{
+      margin:18px 0 20px;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      background:#fbfdff;
+    }
+
+    .video{
+      aspect-ratio:16 / 9;
+      width:100%;
+      display:block;
+      border:0;
+    }
+
+    .link-line{
+      margin:18px 0 20px;
+      padding:14px 16px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fbfdff;
+      word-break:break-word;
+    }
+
+    .pros-cons{
+      margin:14px 0 18px 0;
+      padding-left:20px;
+    }
+
+    .pros-cons li{
+      margin-bottom:8px;
+    }
+
+    .category{
+      margin-top:14px;
+      font-weight:700;
+      color:#0f172a;
+    }
+
+    .questions{
+      margin:8px 0 0 0;
+      padding-left:20px;
+    }
+
+    .questions li{
+      margin-bottom:8px;
+    }
+
+    footer{
+      padding:0 0 60px;
+      color:var(--muted);
+      font-size:.95rem;
+      text-align:center;
+    }
+
+    @media (max-width: 820px){
+      .topbar .inner{align-items:flex-start}
+      .brand{min-width:0}
+      .actions{justify-content:flex-end}
+      .grid{grid-template-columns:1fr}
+      body.nav-collapsed .grid{
+        grid-template-columns:1fr;
+        gap:18px;
+      }
+      body.nav-collapsed .sidebar{display:none}
+      .sticky{position:static}
+      .hero-card{padding:28px 22px}
+      section.block{padding:22px 18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="inner">
+      <div class="brand">
+        <div class="badge">4.8</div>
+        <h1>Earth &amp; Space Science • Space Exploration &amp; Travel</h1>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="topButton" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑ Top</button>
+        <button class="btn" id="navToggle" type="button" aria-controls="pageNav" aria-expanded="true">☰ Outline: Hide</button>
+        <button class="btn" id="langToggle" type="button" aria-pressed="false">Language: EN</button>
+        <button class="btn" id="printButton" onclick="window.print()">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="hero-card">
+        <div class="eyebrow">Science 10 • Space Exploration</div>
+        <h1>4.8 Space Exploration &amp; Travel</h1>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="grid">
+      <aside class="sidebar" id="pageNav">
+        <nav class="toc sticky" aria-label="Table of contents">
+          <div class="toc-card">
+            <h2>On this page</h2>
+            <p class="subtle">Jump to a topic section.</p>
+            <div class="toc-grid">
+              <a href="#intro"><span>Introduction</span><small>Overview</small></a>
+              <a href="#risks"><span>Risks and Hazards</span><small>Disasters</small></a>
+              <a href="#junk"><span>Space Junk</span><small>Orbital debris</small></a>
+              <a href="#spacex"><span>SpaceX</span><small>Private launch</small></a>
+              <a href="#orbital"><span>Orbital ATK</span><small>Aerospace company</small></a>
+              <a href="#expandable"><span>Expandable Spacecraft in ISS</span><small>BEAM</small></a>
+              <a href="#horizons"><span>Expanding Our Horizons</span><small>Tourism</small></a>
+              <a href="#tourism"><span>Space Tourism</span><small>Sub-orbital flight</small></a>
+              <a href="#adventures"><span>Space Adventures</span><small>Private trips</small></a>
+              <a href="#terraforming"><span>Terraforming</span><small>Arguments for and against</small></a>
+              <a href="#research"><span>Research and Development</span><small>Funding and benefits</small></a>
+              <a href="#considerations"><span>Other Considerations</span><small>Ethics, environment, politics</small></a>
+            </div>
+          </div>
+        </nav>
+      </aside>
+
+      <main>
+        <section class="block" id="intro">
+          <h2>Introduction</h2>
+          <p>The idea of setting up colonies on other planets is a popular science fiction topic. Imagine flying out into space and setting up a new colony on another planet (terraforming), it can't be that hard, can it?</p>
+          <p>There are many issues to consider when discussing the exploration of space. The impact of space travel is profound, and so is the funding required! Who decides which projects are valuable? Who decides if the potential benefits outweigh the potential hazards?</p>
+          <p>In this lesson, we will examine some of the implications of space travel. It's not possible to discuss all of the problems that need solving or all of the decisions that must be made in this lesson, there are too many. The important thing is that you begin to see that the issues don't fit neatly into compartments labelled "good" or "bad." These issues require a weighing up of pros and cons.</p>
+          <figure class="lesson-figure">
+            <img src="assets/44b_intro.gif" alt="Artist impression of an astronaut near a future off-world colony." loading="lazy" />
+          </figure>
+        </section>
+
+        <section class="block" id="risks">
+          <h2>Risks and Hazards</h2>
+          <p>Flying into space is a risky business. Astronauts are exposed to great hazards. Technology is not perfect, and sometimes equipment malfunctions. Evidence of this can be seen in the accidents involving the Challenger (1986) and Columbia (2003) space shuttles.</p>
+          <div class="media" role="group" aria-label="Top 10 saddest space flight disasters video">
+            <iframe class="video" width="640" height="360" src="https://www.youtube.com/embed/MLzxB3NINIs" title="Top 10 Saddest Space Flight Disasters" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+        </section>
+
+        <section class="block" id="junk">
+          <h2>Space Junk</h2>
+          <p>Since humans travelled into space for the first time, orbiting debris has been accumulating around the Earth. Occasionally, materials break away from space shuttles and satellites and end up in orbit around the Earth. Space junk can cause a lot of damage to spacecraft in costly and possibly fatal collisions. Even a speck of paint hitting a shuttle or probe can cause serious damage.</p>
+          <div class="media" role="group" aria-label="Space junk video">
+            <iframe class="video" width="636" height="356" src="https://www.youtube.com/embed/yfQUsqOfYs0" title="Space junk: How do we solve the problem of dead satellites?" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+        </section>
+
+        <section class="block" id="spacex">
+          <h2>SpaceX</h2>
+          <p>Private enterprises such as SpaceX manufacture and launch reusable rockets and spacecraft. These 'space taxis' can ferry cargo to the International Space Station (ISS). NASA is supportive of the private business ventures of SpaceX and Orbital ATK and sees both as positive developments.</p>
+          <p>Aboard the International Space Station, Expedition Flight Engineer Don Pettit and Joe Acaba of NASA and European Space Agency Flight Engineer Andre Kuipers opened the hatch to SpaceX's Dragon cargo craft and entered the vehicle on May 26, 2012, one day after the world's first commercial cargo spacecraft was berthed to the Earth-facing port of the Harmony module. Dragon remained berthed to Harmony for 5 days, enabling the crew to unload supplies for the station's residents before it is re-grappled and released to return to Earth for a parachute-assisted splashdown in the Pacific Ocean off the coast of southern California.</p>
+          <div class="media" role="group" aria-label="Dragon hatch opened to ISS video">
+            <iframe class="video" width="560" height="315" src="https://www.youtube.com/embed/QCZwUohCp1o" title="Dragon Hatch Opened to ISS" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+        </section>
+
+        <section class="block" id="orbital">
+          <h2>Orbital ATK</h2>
+          <p>Orbital ATK Inc. is a private enterprise American aerospace manufacturer and defence industry company. Orbital ATK designs, builds and delivers space, defence and aviation-related systems to customers around the world both as a prime contractor and as a merchant supplier. It has a workforce of approximately 12 000 employees dedicated to aerospace and defence including about 4 000 engineers and scientists; 7 000 manufacturing and operations specialists; and 1 000 management and administration personnel.</p>
+          <figure class="lesson-figure">
+            <img src="assets/Orbital_ATK.png" alt="Orbital ATK promotional image showing a satellite in orbit near Earth." loading="lazy" />
+          </figure>
+        </section>
+
+        <section class="block" id="expandable">
+          <h2>Expandable Spacecraft in ISS</h2>
+          <p>When Elon Musk's SpaceX rocket roared into the skies above Cape Canaveral in June 2017, it was on a mission for NASA, carrying nearly 7 000 pounds of cargo to the International Space Station; food, supplies and Robert Bigelow's expandable spacecraft. Las Vegas real-estate tycoon, Robert Bigelow, developed an expandable spacecraft; a large, lightweight structure that inflates in space, a technology that could dramatically change how humans live and work in zero gravity. After the successful expansion of Bigelow Aerospace's BEAM aboard the International Space Station, the next steps for the technology are being looked at. Robert Bigelow explains some its potential uses.</p>
+          <div class="media" role="group" aria-label="Expandable habitats video">
+            <iframe class="video" width="640" height="360" src="https://www.youtube.com/embed/FNNoYsELT7E" title="'Out Of This World' Uses For Expandable Habitats Explained By Robert Bigelow | Video" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+        </section>
+
+        <section class="block" id="horizons">
+          <h2>Expanding Our Horizons</h2>
+          <p>Travel has become increasingly accessible to more people; the world no longer seems so big. Tourism is a big business, and far-reaching destinations are becoming more and more popular. So why not expand to outer space?</p>
+          <p>As technology develops, space travel becomes safer and more efficient. Some companies already cater to space tourism. Short flights into space and holidays at the International Space Station are just a couple of the ideas that are being marketed to adventurous (and wealthy!) tourists.</p>
+          <p>Space tourism has many benefits that include, but are not limited to:</p>
+          <ol class="pros-cons">
+            <li>increased revenue for space technologies</li>
+            <li>increased public interest in space technologies</li>
+            <li>pressure on developers to increase efficiency and decrease costs involved in space travel</li>
+            <li>opportunities for non-astronauts to experience space firsthand.</li>
+          </ol>
+        </section>
+
+        <section class="block" id="tourism">
+          <h2>Space Tourism</h2>
+          <p>Private enterprise is changing the face of human spaceflight in sub-orbital space. Companies such as Virgin Galactic are planning to offer tourists the thrill of a ride following a ballistic trajectory 100 kilometres into space, where the craft will float for about four to five minutes before returning to Earth.</p>
+          <div class="media" role="group" aria-label="TED talk about the future of space exploration">
+            <iframe class="video" width="640" height="360" src="https://embed.ted.com/talks/burt_rutan_the_real_future_of_space_exploration" title="Burt Rutan: The Real Future of Space Exploration" loading="lazy" frameborder="0" allowfullscreen></iframe>
+          </div>
+        </section>
+
+        <section class="block" id="adventures">
+          <h2>Space Adventures</h2>
+          <p>Founded in 1998, Space Adventures, Ltd. is the world’s premier private space flight company and the only company currently providing opportunities for actual private space flight and space tourism. Working side-by-side with professional astronauts and cosmonauts, they are the first and only company to have sent self-funded individuals to space. Their clients have cumulatively spent close to three months in space and travelled over 36 million miles.</p>
+          <div class="media" role="group" aria-label="Space Adventures video">
+            <iframe class="video" width="640" height="360" src="https://www.youtube.com/embed/xEKxwy31DRI" title="Space Adventures - Adventurers Wanted" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+          <p>Space travel for individuals is progressing.</p>
+          <div class="media" role="group" aria-label="Private space companies video">
+            <iframe class="video" width="640" height="360" src="https://www.youtube.com/embed/NjlMhuLBgnw" title="Private space companies gather to discuss future of commercial travel" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+        </section>
+
+        <section class="block" id="terraforming">
+          <h2>Terraforming</h2>
+          <figure class="lesson-figure">
+            <img src="assets/Terraforming_of_Mars.jpg" alt="Concept image of terraforming and settlement on Mars." loading="lazy" />
+          </figure>
+          <p>The development of new technologies is one of the possible benefits of space tourism. Terraforming is the idea that an environment can be altered in order to imitate the environment present on Earth. Basically, this involves creating an atmosphere and ecosystems similar to those on Earth, on another planet.</p>
+          <p>"The Martian" is a 2015 American science fiction film based on Andy Weir's 2011 novel 'The Martian'. Matt Damon stars as an astronaut who is mistakenly presumed dead and left behind on Mars. The film depicts his struggle to survive and others' efforts to rescue him. When Weir wrote the novel 'The Martian', he strove to present the science correctly and used reader feedback to get it right. The film received help from James L. Green, the Director of the Planetary Science Division at NASA's Science Mission Directorate. Ed Finn, director of the Centre for Science and the Imagination at Arizona State University, said, "What this story does really well is imagine a near-future scenario that doesn't push too far from where we are today technically." British physicist Brian Cox said, "The Martian is the best advert for a career in engineering I've ever seen."</p>
+          <p>There are many arguments for and against the development and implementation of terraforming.</p>
+          <p><strong>For:</strong></p>
+          <ul class="pros-cons">
+            <li>Expanding to another planet could relieve the increased overcrowding of Earth. Also, some people believe it would be a good idea to have a backup plan in case resources are depleted on Earth.</li>
+          </ul>
+          <p><strong>Against:</strong></p>
+          <ul class="pros-cons">
+            <li>Creating an Earth-like biosphere on another planet would be an extremely costly project, and may not be sustainable in the long-term. It is possible that altering the environment of another planet could result in long-term damage to that planet. In fact, the results of such an experiment are not known because it has never been done.</li>
+          </ul>
+        </section>
+
+        <section class="block" id="research">
+          <h2>Research and Development</h2>
+          <p>A great deal of money is spent on the research and development of space-related technologies. Often there is controversy surrounding projects that require public funding. People debate how limited resources should be divided among a wide range of research topics.</p>
+          <p>Like any other issue, the development of space technologies has supporters and detractors. Some people feel that money could be better spent addressing problems here on Earth. Others will point out that many developments and discoveries in the field of space exploration have benefited other areas of our life here on Earth.</p>
+          <p>Consumer items such as running shoes and bicycle helmets have improved due to space research. Technologies designed for space have provided better communications and weather satellites that have improved our communications on Earth and provided ways to monitor and manage pollution.</p>
+          <p>Space research also influences research in the area of health sciences. Astronauts exposed to zero gravity for extended periods often suffer from health problems. By researching ways to prevent conditions such as osteoporosis in astronauts, those suffering from similar conditions on Earth may one day benefit from the research.</p>
+        </section>
+
+        <section class="block" id="considerations">
+          <h2>Other Considerations</h2>
+          <p>Some of the issues surrounding space explorations have been addressed here, but there are many more that we have not touched on.</p>
+          <p>Issues surrounding space exploration often fall into three closely connected categories:</p>
+          <ol class="pros-cons">
+            <li>ethics</li>
+            <li>environment</li>
+            <li>politics</li>
+          </ol>
+          <p>The topics in these three categories overlap. Because there are so many issues around the topic of space exploration, we will conclude this lesson with a number of questions that might be asked, rather than a list of definitive answers.</p>
+
+          <div class="category">Ethics</div>
+          <ul class="questions">
+            <li>Do humans have the right to alter and colonize unique environments on other planets?</li>
+            <li>Do humans have the right to remove resources from other planets?</li>
+            <li>Should money be used for space travel when there are many problems on Earth to be addressed?</li>
+          </ul>
+
+          <div class="category">Environment</div>
+          <ul class="questions">
+            <li>How will space travel affect Earth's natural systems?</li>
+            <li>How will space travel affect the environments on other planets?</li>
+            <li>Who is responsible for assessing and regulating environmental impact and minimizing damage?</li>
+          </ul>
+
+          <div class="category">Politics</div>
+          <ul class="questions">
+            <li>Which countries (if any) have ownership of space resources?</li>
+            <li>Who is responsible for deciding how space resources should be used?</li>
+            <li>Should space technology and resources be shared amongst countries?</li>
+          </ul>
+        </section>
+      </main>
+    </div>
+
+    <footer></footer>
+  </div>
+
+  <script>
+    (function(){
+      const body = document.body;
+      const navToggle = document.getElementById("navToggle");
+      const pageNav = document.getElementById("pageNav");
+      const langToggle = document.getElementById("langToggle");
+      const topButton = document.getElementById("topButton");
+      const printButton = document.getElementById("printButton");
+
+      const wrapEnglishContent = (el) => {
+        if (!el || el.querySelector(':scope > .i18n-en')) return;
+        const childNodes = Array.from(el.childNodes);
+        if (!childNodes.length) return;
+        const hasBlockChild = childNodes.some((node) => node.nodeType === Node.ELEMENT_NODE && /^(DIV|P|UL|OL|TABLE|SECTION|ARTICLE|FIGURE|BLOCKQUOTE)$/i.test(node.tagName));
+        const wrapper = document.createElement(hasBlockChild ? "div" : "span");
+        wrapper.className = "i18n-en" + (hasBlockChild ? " block" : "");
+        childNodes.forEach((node) => wrapper.appendChild(node));
+        el.appendChild(wrapper);
+      };
+
+      const addZh = (el, zh, opts = {}) => {
+        if (!el || !zh) return;
+        if (opts.append) wrapEnglishContent(el);
+        else el.classList.add("i18n-en");
+        const node = document.createElement(opts.tag || "div");
+        node.className = ("i18n-zh " + (opts.className || "")).trim();
+        node.innerHTML = zh;
+        if (opts.append) el.appendChild(node);
+        else el.insertAdjacentElement("afterend", node);
+      };
+
+      const addZhInline = (el, zh, opts = {}) => {
+        const className = ["inline", opts.className || ""].join(" ").trim();
+        addZh(el, zh, { ...opts, append: true, tag: "span", className });
+      };
+
+      const addZhAll = (selector, zhList, opts = {}) => {
+        const nodes = Array.from(document.querySelectorAll(selector));
+        zhList.forEach((zh, i) => addZh(nodes[i], zh, opts));
+      };
+
+      const addZhAllInline = (selector, zhList, opts = {}) => {
+        const nodes = Array.from(document.querySelectorAll(selector));
+        zhList.forEach((zh, i) => addZhInline(nodes[i], zh, opts));
+      };
+
+      addZh(document.querySelector(".eyebrow"), "科学 10 • 太空探索", { append: true });
+      addZh(document.querySelector(".brand h1"), "地球与空间科学 • 太空探索与旅行", { append: true });
+      addZh(document.querySelector(".hero h1"), "4.8 太空探索与旅行");
+      addZh(document.querySelector(".toc h2"), "本页内容");
+      addZh(document.querySelector(".toc .subtle"), "跳转到某个主题部分。");
+      addZhAll(".toc a", [
+        "引言 · 概览",
+        "风险与危害 · 灾难",
+        "太空垃圾 · 轨道碎片",
+        "SpaceX · 私营发射",
+        "Orbital ATK · 航空航天公司",
+        "国际空间站中的可扩展航天器 · BEAM",
+        "扩展我们的视野 · 旅游",
+        "太空旅游 · 亚轨道飞行",
+        "Space Adventures · 私人太空旅行",
+        "地球化改造 · 正反论点",
+        "研究与开发 · 资金与益处",
+        "其他考虑事项 · 伦理、环境、政治"
+      ], { append: true });
+      addZhAll("main section.block > h2", [
+        "引言",
+        "风险与危害",
+        "太空垃圾",
+        "SpaceX",
+        "Orbital ATK",
+        "国际空间站中的可扩展航天器",
+        "扩展我们的视野",
+        "太空旅游",
+        "Space Adventures",
+        "地球化改造",
+        "研究与开发",
+        "其他考虑事项"
+      ]);
+      addZhAllInline("#intro > p", [
+        "在其他行星上建立殖民地的想法，是一个很受欢迎的科幻题材。想象一下飞向太空，并在另一颗行星上建立一个新的殖民地（地球化改造），这不可能那么难，对吗？",
+        "在讨论太空探索时，有许多问题需要考虑。太空旅行的影响是深远的，所需要的资金也是如此！由谁来决定哪些项目是有价值的？由谁来决定潜在的益处是否大于潜在的危险？",
+        "在本课中，我们将研究太空旅行的一些影响。在这一课里，不可能讨论所有需要解决的问题或所有必须作出的决定，问题实在太多了。重要的是，你开始看到这些问题并不能整齐地放进标有“好”或“坏”的格子里。这些问题都需要权衡利弊。"
+      ]);
+      addZhInline(document.querySelector("#risks > p"), "飞入太空是一件风险很高的事情。宇航员会暴露在巨大的危险之中。技术并不完美，有时设备会发生故障。挑战者号（1986）和哥伦比亚号（2003）航天飞机事故就证明了这一点。");
+      addZhInline(document.querySelector("#junk > p"), "自从人类第一次进入太空以来，环绕地球运行的碎片就一直在不断积累。偶尔会有材料从航天飞机和卫星上脱落，最终在地球周围轨道上运行。太空垃圾会在代价高昂且可能致命的碰撞中对航天器造成很大损害。即使是一小片油漆击中航天飞机或探测器，也可能造成严重损伤。");
+      addZhAllInline("#spacex > p", [
+        "像 SpaceX 这样的私营企业制造并发射可重复使用的火箭和航天器。这些“太空出租车”可以把货物运送到国际空间站（ISS）。NASA 支持 SpaceX 和 Orbital ATK 的私人商业项目，并将两者都视为积极的发展。",
+        "在国际空间站上，远征任务飞行工程师、NASA 的 Don Pettit 和 Joe Acaba，以及欧洲航天局飞行工程师 Andre Kuipers，于 2012 年 5 月 26 日打开了 SpaceX 龙飞船货运舱的舱门并进入其中。这是在世界上第一艘商业货运航天器停靠到 Harmony 模块面向地球端口的一天之后。龙飞船在 Harmony 停靠了 5 天，使机组人员能够为空间站上的驻留人员卸下补给，之后它将被重新抓取并释放，返回地球，并在加利福尼亚州南部海岸外的太平洋上借助降落伞溅落。"
+      ]);
+      addZhInline(document.querySelector("#orbital > p"), "Orbital ATK Inc. 是一家私营企业美国航空航天制造商和国防工业公司。Orbital ATK 为世界各地的客户设计、建造并交付与航天、国防和航空相关的系统，既作为主承包商，也作为商业供应商。它拥有大约 12 000 名致力于航空航天和国防的员工，其中包括大约 4 000 名工程师和科学家；7 000 名制造与运营专家；以及 1 000 名管理和行政人员。");
+      addZhInline(document.querySelector("#expandable > p"), "当 Elon Musk 的 SpaceX 火箭于 2017 年 6 月在卡纳维拉尔角上空轰鸣着飞向天空时，它正为 NASA 执行一项任务，向国际空间站运送近 7 000 磅货物，包括食物、补给以及 Robert Bigelow 的可扩展航天器。拉斯维加斯房地产大亨 Robert Bigelow 开发了一种可扩展航天器，这是一种在太空中膨胀的大型轻质结构，这项技术可能会极大改变人类在失重环境中生活和工作的方式。在 Bigelow Aerospace 的 BEAM 于国际空间站成功展开之后，人们正在研究这项技术的下一步。Robert Bigelow 解释了它的一些潜在用途。");
+      addZhAllInline("#horizons > p", [
+        "旅行对越来越多的人来说已经变得越来越容易获得；世界似乎不再那么大。旅游业是一门大生意，遥远的目的地正变得越来越受欢迎。那么，为什么不把范围扩展到外太空呢？",
+        "随着技术的发展，太空旅行变得更加安全，也更加高效。一些公司已经在提供太空旅游服务。短途太空飞行和在国际空间站度假，只是正在向爱冒险（并且富有！）的游客推销的几个想法。",
+        "太空旅游有许多益处，包括但不限于："
+      ]);
+      addZhAllInline("#horizons .pros-cons li", [
+        "增加太空技术的收入",
+        "增加公众对太空技术的兴趣",
+        "促使开发者提高效率并降低太空旅行所涉及的成本",
+        "为非宇航员提供亲身体验太空的机会。"
+      ]);
+      addZhInline(document.querySelector("#tourism > p"), "私人企业正在改变亚轨道空间中人类航天飞行的面貌。像 Virgin Galactic 这样的公司正计划为游客提供这样一种刺激体验：乘坐飞行器沿着抛物线轨道飞入距离地球 100 千米的太空，在那里悬浮大约四到五分钟后返回地球。");
+      addZhAllInline("#adventures > p", [
+        "Space Adventures, Ltd. 成立于 1998 年，是世界首屈一指的私人太空飞行公司，也是目前唯一一家提供真正私人太空飞行和太空旅游机会的公司。与专业宇航员和航天员并肩合作，他们是第一家也是唯一一家把自费个人送入太空的公司。他们的客户累计在太空中度过了接近三个月，并飞行了超过 3 600 万英里。",
+        "个人太空旅行正在不断发展。"
+      ]);
+      addZhAllInline("#terraforming > p", [
+        "新技术的发展是太空旅游可能带来的益处之一。地球化改造是这样一种想法：一个环境可以被改变，以模仿地球上的环境。基本上，这包括在另一颗行星上创造类似于地球上的大气和生态系统。",
+        "《火星救援》是一部 2015 年美国科幻电影，改编自 Andy Weir 于 2011 年出版的小说《火星救援》。Matt Damon 饰演一名被误认为已经死亡并被遗弃在火星上的宇航员。影片描绘了他为生存而进行的斗争，以及其他人为营救他所作出的努力。当 Weir 撰写小说《火星救援》时，他努力正确呈现科学内容，并利用读者反馈来把它写对。影片得到了 NASA 科学任务理事会行星科学部主任 James L. Green 的帮助。亚利桑那州立大学科学与想象中心主任 Ed Finn 说：“这个故事做得非常好的一点，是它想象了一个并没有从我们今天技术水平出发推得太远的近未来情景。”英国物理学家 Brian Cox 说：“《火星救援》是我见过的最好的工程职业广告。”",
+        "关于地球化改造的发展与实施，有许多支持和反对的论点。"
+      ]);
+      addZhInline(document.querySelector("#terraforming p strong"), "支持：");
+      addZhAllInline("#terraforming .pros-cons li", [
+        "扩展到另一颗行星，可能会缓解地球日益加剧的拥挤情况。此外，有些人认为，在地球资源耗尽的情况下，拥有一个后备计划会是个好主意。",
+        "在另一颗行星上创造一个类似地球的生物圈，将是一个极其昂贵的项目，而且从长期来看可能无法持续。改变另一颗行星的环境，可能会对那颗行星造成长期损害。事实上，由于这从未做过，这样一个实验的结果是未知的。"
+      ]);
+      addZhInline(document.querySelectorAll("#terraforming p strong")[1], "反对：");
+      addZhAllInline("#research > p", [
+        "大量资金被花在与太空相关技术的研究与开发上。围绕需要公共资金支持的项目，常常会出现争议。人们会争论，在广泛的研究主题中，有限的资源应当如何分配。",
+        "像任何其他问题一样，太空技术的发展有支持者，也有反对者。有些人认为，这些资金可以更好地用来解决地球上的问题。另一些人则会指出，太空探索领域中的许多发展和发现，已经使我们在地球上的生活的其他方面受益。",
+        "像跑鞋和自行车头盔这样的消费品，由于太空研究而得到了改进。为太空而设计的技术带来了更好的通信和气象卫星，这些技术改善了我们在地球上的通信，并提供了监测和管理污染的方法。",
+        "太空研究也影响着健康科学领域的研究。长期暴露在失重环境中的宇航员，常常会遭受健康问题。通过研究如何预防宇航员出现骨质疏松等状况，地球上患有类似疾病的人将来有一天也可能从这些研究中受益。"
+      ]);
+      addZhAllInline("#considerations > p", [
+        "这里已经提到了一些围绕太空探索的问题，但还有许多我们没有涉及。",
+        "围绕太空探索的问题，通常会落入三个紧密相关的类别：",
+        "这三个类别中的主题彼此重叠。由于围绕太空探索这一主题存在如此多的问题，我们将以一系列可能会被提出的问题来结束本课，而不是列出一份确定的答案清单。"
+      ]);
+      addZhAllInline("#considerations .pros-cons li", [
+        "伦理",
+        "环境",
+        "政治"
+      ]);
+      addZhAll("#considerations .category", [
+        "伦理",
+        "环境",
+        "政治"
+      ]);
+      addZhAllInline("#considerations .questions li", [
+        "人类有权改变并殖民其他行星上独特的环境吗？",
+        "人类有权从其他行星上移除资源吗？",
+        "当地球上有许多问题需要解决时，资金是否应该用于太空旅行？",
+        "太空旅行将如何影响地球的自然系统？",
+        "太空旅行将如何影响其他行星上的环境？",
+        "由谁负责评估和监管环境影响，并尽量减少损害？",
+        "哪些国家（如果有的话）拥有太空资源的所有权？",
+        "由谁负责决定应如何使用太空资源？",
+        "太空技术和资源是否应该在各国之间共享？"
+      ]);
+      const setLangMode = (mode) => {
+        const currentMode = ["en", "enzh", "zh"].includes(mode) ? mode : "en";
+        body.classList.toggle("lang-bilingual", currentMode === "enzh");
+        body.classList.toggle("lang-zh", currentMode === "zh");
+        if (langToggle) {
+          langToggle.textContent = currentMode === "enzh" ? "Language: EN+ZH" : currentMode === "zh" ? "Language: ZH" : "Language: EN";
+          langToggle.setAttribute("aria-pressed", currentMode === "en" ? "false" : "true");
+          langToggle.setAttribute("aria-label", currentMode === "enzh" ? "Language mode: English and Chinese" : currentMode === "zh" ? "Language mode: Chinese only" : "Language mode: English only");
+        }
+        if (topButton) {
+          topButton.textContent = currentMode === "enzh" ? "↑ Top / 顶部" : currentMode === "zh" ? "↑ 顶部" : "↑ Top";
+        }
+        if (printButton) {
+          printButton.textContent = currentMode === "enzh" ? "Print / 打印" : currentMode === "zh" ? "打印" : "Print";
+        }
+        if (navToggle) {
+          const collapsed = body.classList.contains("nav-collapsed");
+          navToggle.textContent = currentMode === "enzh"
+            ? (collapsed ? "☰ Outline: Show / 显示目录" : "☰ Outline: Hide / 隐藏目录")
+            : currentMode === "zh"
+              ? (collapsed ? "☰ 显示目录" : "☰ 隐藏目录")
+              : (collapsed ? "☰ Outline: Show" : "☰ Outline: Hide");
+        }
+        try { localStorage.setItem("earth48LangMode", currentMode); } catch (_) {}
+      };
+
+      function setNavCollapsed(collapsed) {
+        body.classList.toggle("nav-collapsed", collapsed);
+        if (navToggle) {
+          navToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
+          const currentMode = body.classList.contains("lang-zh") ? "zh" : body.classList.contains("lang-bilingual") ? "enzh" : "en";
+          navToggle.textContent = currentMode === "enzh"
+            ? (collapsed ? "☰ Outline: Show / 显示目录" : "☰ Outline: Hide / 隐藏目录")
+            : currentMode === "zh"
+              ? (collapsed ? "☰ 显示目录" : "☰ 隐藏目录")
+              : (collapsed ? "☰ Outline: Show" : "☰ Outline: Hide");
+        }
+        if (pageNav) {
+          pageNav.setAttribute("aria-hidden", collapsed ? "true" : "false");
+          if ("inert" in pageNav) pageNav.inert = collapsed;
+        }
+        try { localStorage.setItem("earth48NavCollapsed", collapsed ? "1" : "0"); } catch (_) {}
+      }
+
+      if (langToggle) {
+        langToggle.addEventListener("click", () => {
+          const currentMode = body.classList.contains("lang-zh") ? "zh" : body.classList.contains("lang-bilingual") ? "enzh" : "en";
+          setLangMode(currentMode === "en" ? "enzh" : currentMode === "enzh" ? "zh" : "en");
+        });
+        setLangMode(localStorage.getItem("earth48LangMode"));
+      }
+
+      if (navToggle) {
+        navToggle.addEventListener("click", () => {
+          setNavCollapsed(!body.classList.contains("nav-collapsed"));
+        });
+        setNavCollapsed(localStorage.getItem("earth48NavCollapsed") === "1");
+      }
+
+      const links = Array.from(document.querySelectorAll(".toc a"));
+      const sections = links.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+      const setActive = (id) => {
+        links.forEach((a) => {
+          const on = a.getAttribute("href") === "#" + id;
+          a.style.background = on ? "rgba(29,78,216,.08)" : "";
+          a.style.borderColor = on ? "rgba(29,78,216,.25)" : "";
+        });
+      };
+      const obs = new IntersectionObserver((entries) => {
+        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActive(visible.target.id);
+      }, { rootMargin: "-20% 0px -70% 0px", threshold: [0.05, 0.1, 0.2, 0.35] });
+      sections.forEach((section) => obs.observe(section));
+      if (sections[0]) setActive(sections[0].id);
+    })();
+  </script>
+</body>
+</html>
