@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Earth Practice 3</title>
+  <style>
+    :root {
+      --bg: #f6f8fc;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --accent: #1d4ed8;
+      --accent-2: #0f766e;
+      --good: #166534;
+      --good-bg: #dcfce7;
+      --bad: #991b1b;
+      --bad-bg: #fee2e2;
+      --warn: #92400e;
+      --warn-bg: #fef3c7;
+      --border: #dbe3ef;
+      --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 100%);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #1d4ed8, #0f766e);
+      color: white;
+      padding: 28px;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.8rem, 3.8vw, 3rem);
+      line-height: 1.15;
+    }
+
+    .hero p {
+      margin: 8px 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .card,
+    .quiz-card,
+    .summary {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin-top: 0;
+      line-height: 1.25;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      background: #e8f0ff;
+      color: #153e91;
+      border: 1px solid #c8dafd;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    label.inline {
+      display: inline-block;
+      margin-right: 12px;
+      font-weight: 700;
+    }
+
+    input[type="text"] {
+      width: min(360px, 100%);
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 1rem;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0 8px;
+    }
+
+    .lang-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 14px 0 6px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #f8fbff;
+    }
+
+    .lang-bar strong {
+      color: var(--accent);
+      font-size: 0.98rem;
+    }
+
+    .lang-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .lang-mode-btn {
+      background: #eef2f7;
+      color: #334155;
+      padding: 10px 14px;
+      border-radius: 12px;
+      box-shadow: none;
+    }
+
+    .lang-mode-btn.active {
+      background: linear-gradient(135deg, #1d4ed8, #0f766e);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(29, 78, 216, 0.18);
+    }
+
+    button {
+      appearance: none;
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+    button:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    .primary { background: var(--accent); color: #fff; }
+    .secondary { background: #e5eefc; color: #163b8c; }
+    .success { background: var(--accent-2); color: #fff; }
+    .ghost { background: #eef2f7; color: #374151; }
+
+    .inline-status {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .scoreboard {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .scorebox {
+      background: #f8fbff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .scorebox strong {
+      display: block;
+      font-size: 1.45rem;
+      margin-bottom: 4px;
+    }
+
+    .sticky-nav {
+      position: sticky;
+      top: 10px;
+      align-self: start;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .quiz-card {
+      margin-bottom: 18px;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: .95rem;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .question {
+      font-size: 1.25rem;
+      line-height: 1.5;
+      margin: 8px 0 18px;
+      font-weight: 700;
+    }
+
+    .choices {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .choice {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      cursor: pointer;
+      background: #fff;
+      transition: border-color .2s ease, background .2s ease;
+    }
+
+    .choice:hover {
+      border-color: #93c5fd;
+      background: #f8fbff;
+    }
+
+    .choice input {
+      margin-top: 3px;
+      transform: scale(1.15);
+    }
+
+    .choice > div {
+      flex: 1;
+    }
+
+    .choice.selected {
+      border-color: #60a5fa;
+      background: #eff6ff;
+    }
+
+    .choice.correct-choice {
+      border-color: #86efac;
+      background: #f0fdf4;
+    }
+
+    .choice.wrong-choice {
+      border-color: #fca5a5;
+      background: #fff7f7;
+    }
+
+    .result {
+      min-height: 28px;
+      font-weight: 700;
+      margin: 8px 0 14px;
+    }
+
+    .result.correct { color: var(--good); }
+    .result.wrong { color: var(--bad); }
+    .result.warn { color: var(--warn); }
+
+    .result-detail {
+      margin-top: 8px;
+      font-weight: 400;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .hint {
+      color: var(--muted);
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .footer-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .progress {
+      height: 12px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.28);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 16px;
+    }
+
+    .progress > div {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #bfdbfe, #ffffff);
+      transition: width .25s ease;
+    }
+
+    .summary {
+      display: none;
+      margin-top: 18px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 16px 0 20px;
+    }
+
+    .stat {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      background: #fafcff;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+    }
+
+    .review {
+      margin-top: 12px;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+    }
+
+    .review-item {
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    .review-item:last-child { border-bottom: none; }
+    .hidden { display: none; }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 24px 0 8px;
+      font-size: 0.95rem;
+    }
+
+    .i18n-en,
+    .i18n-zh {
+      display: block;
+    }
+
+    .i18n-zh {
+      display: none;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.96em;
+    }
+
+    body.lang-bilingual .i18n-zh,
+    body.lang-zh .i18n-zh {
+      display: block;
+    }
+
+    body.lang-zh .i18n-en {
+      display: none;
+    }
+
+    body.lang-zh .i18n-zh {
+      margin-top: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .scoreboard {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .sticky-nav {
+        position: static;
+      }
+
+      .lang-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .wrap { padding: 16px; }
+      .hero,
+      .card,
+      .quiz-card,
+      .summary { padding: 18px; }
+      .question { font-size: 1.1rem; }
+    }
+
+    @media print {
+      body { background: white; }
+      .hero {
+        background: #1d4ed8 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .toolbar button,
+      .footer-bar button { display: none; }
+      .card,
+      .quiz-card,
+      .summary { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1 id="heroTitle">Earth Practice 3</h1>
+      <p id="heroUnits"><strong>Units:</strong> 4.6 Astronomical Data &amp; Collection Methods + 4.7 Other Ways of Knowing about the Universe + 4.8 Space Exploration &amp; Travel</p>
+      <p id="heroDesc">This practice page keeps the same independent-study format as Earth Practice 2, but shifts the question bank to space observation tools, cultural knowledge about the sky, and the benefits and risks of space exploration.</p>
+      <div class="pill-row">
+        <span class="pill" id="pill1">60 Multiple-Choice Questions</span>
+        <span class="pill" id="pill2">Check by Question</span>
+        <span class="pill" id="pill3">Reveal Full Review</span>
+        <span class="pill" id="pill4">Print-Friendly</span>
+      </div>
+      <div class="progress" aria-label="Quiz progress">
+        <div id="progressBar"></div>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <h2 id="studentInfoTitle">Student Info</h2>
+        <p><label class="inline" id="studentNameLabel" for="studentName">Name:</label><input id="studentName" type="text" placeholder="Enter student name" /></p>
+        <p class="small" id="studentTip">Tip: answer each section first, then use the review panel to connect facts, definitions, and real examples from the lesson pages.</p>
+
+        <div class="lang-bar">
+          <strong id="langBarLabel">Language / 语言</strong>
+          <div class="lang-buttons">
+            <button class="lang-mode-btn active" id="langBtnEn" data-lang-mode="en" type="button">EN</button>
+            <button class="lang-mode-btn" id="langBtnEnZh" data-lang-mode="enzh" type="button">En+Zh</button>
+            <button class="lang-mode-btn" id="langBtnZh" data-lang-mode="zh" type="button">Zh</button>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <button class="primary" id="btnGradeQuiz" type="button">Submit &amp; Grade Quiz</button>
+          <button class="success" id="btnRevealAll" type="button">Reveal All Answers</button>
+          <button class="secondary" id="btnHideReview" type="button">Hide Review</button>
+          <button class="ghost" id="btnResetQuiz" type="button">Reset Quiz</button>
+          <button class="ghost" id="btnPrintPage" type="button">Print Page</button>
+        </div>
+        <span class="inline-status" id="quizStatus">Choose an answer to begin. Your selection saves automatically.</span>
+
+        <div class="scoreboard">
+          <div class="scorebox"><strong id="scoreRaw">0/60</strong><span id="scoreRawLabel">Raw Score</span></div>
+          <div class="scorebox"><strong id="scorePct">0%</strong><span id="scorePctLabel">Percent</span></div>
+          <div class="scorebox"><strong id="scoreAnswered">0/60</strong><span id="scoreAnsweredLabel">Answered</span></div>
+          <div class="scorebox"><strong id="scoreSection">1/3</strong><span id="scoreSectionLabelBox">Current Section</span></div>
+        </div>
+      </section>
+
+      <aside class="card sticky-nav">
+        <h2 id="reviewTitle">What to Review</h2>
+        <ul id="reviewListStatic">
+          <li>Optical telescopes, the electromagnetic spectrum, satellites, probes, and space observatories</li>
+          <li>Hubble, the ISS, Cassini, Curiosity, and Parker Solar Probe</li>
+          <li>Cultural perspectives on the sky and astronomy as one of the oldest sciences</li>
+          <li>Sirius, Nile flooding, calendars, creation stories, Turtle Island, and Barnumbir</li>
+          <li>Hazards of space travel and the problem of space junk</li>
+          <li>Private space companies, cargo craft, and expandable habitats</li>
+          <li>Space tourism, terraforming, and the need to weigh pros and cons</li>
+          <li>Ethics, environment, politics, and Earth benefits from space research</li>
+        </ul>
+        <p class="small" id="reviewTip">Study strategy: learn the vocabulary first, then connect each device, story, or issue to what it helps humans understand or decide.</p>
+      </aside>
+    </div>
+
+    <section class="quiz-card" id="quizCard">
+      <h2 id="partATitle">Part A — Multiple Choice Practice</h2>
+      <div class="meta">
+        <div id="sectionLabel">Section 1 of 3</div>
+        <div id="questionCounter">Question 1 of 60</div>
+      </div>
+      <div class="question" id="questionText"></div>
+      <div class="choices" id="choicesContainer"></div>
+      <div class="result" id="resultText"></div>
+      <div class="footer-bar">
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="primary" id="checkBtn" type="button">Check This Question</button>
+          <button class="secondary" id="hintBtn" type="button">Show Hint</button>
+          <button class="secondary" id="prevBtn" type="button">Previous</button>
+          <button class="secondary" id="nextBtn" type="button">Next</button>
+        </div>
+        <div class="small">Keyboard: use Left and Right arrow keys to move between questions.</div>
+      </div>
+      <div class="hint" id="hintBox"></div>
+    </section>
+
+    <section class="summary" id="summaryBox">
+      <h2 id="summaryTitle">Quiz Review</h2>
+      <div class="summary-grid">
+        <div class="stat"><strong id="finalScore">0 / 60</strong><span id="finalScoreLabel">Total Score</span></div>
+        <div class="stat"><strong id="finalPercent">0%</strong><span id="finalPercentLabel">Percentage</span></div>
+        <div class="stat"><strong id="finalCorrect">0</strong><span id="finalCorrectLabel">Correct Answers</span></div>
+        <div class="stat"><strong id="finalWrong">0</strong><span id="finalWrongLabel">Incorrect Answers</span></div>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="secondary" id="restartBottom" type="button">Restart Quiz</button>
+        <button class="primary" id="reviewBtn" type="button">Show Review</button>
+      </div>
+      <div class="review hidden" id="reviewList"></div>
+    </section>
+
+    <div class="footer" id="footerText">Built as a single self-contained HTML study page for Earth Science practice.</div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "The first telescope described in the lesson was an ______ telescope.",
+        questionZh: "课文中提到的第一种望远镜是______望远镜。",
+        choices: ["radio", "optical", "infrared", "space-based"],
+        choicesZh: ["射电", "光学", "红外", "太空型"],
+        answer: 1,
+        hint: "It collects visible light.",
+        hintZh: "它收集可见光。",
+        fact: "Optical telescopes collect and focus visible light to produce magnified images of distant objects.",
+        factZh: "光学望远镜会收集并聚焦可见光，从而形成远处天体的放大图像。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "Optical telescopes mainly collect and focus:",
+        questionZh: "光学望远镜主要收集和聚焦的是：",
+        choices: ["visible light", "sound waves", "magnetic fields", "solid particles"],
+        choicesZh: ["可见光", "声波", "磁场", "固体颗粒"],
+        answer: 0,
+        hint: "This is the part of the spectrum that human eyes can detect.",
+        hintZh: "这是人眼能够直接看到的那一部分波谱。",
+        fact: "Visible light is only one small part of the electromagnetic spectrum, but it is what classic optical telescopes use.",
+        factZh: "可见光只是电磁波谱中的一小部分，但传统光学望远镜主要使用的就是它。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "Visible light makes up only a small part of the:",
+        questionZh: "可见光只占______的一小部分。",
+        choices: ["water cycle", "electromagnetic spectrum", "solar system", "lithosphere"],
+        choicesZh: ["水循环", "电磁波谱", "太阳系", "岩石圈"],
+        answer: 1,
+        hint: "Astronomers use many forms of radiation energy besides visible light.",
+        hintZh: "除了可见光之外，天文学家还会使用许多其他形式的辐射能量。",
+        fact: "Other telescopes use other forms of energy in the electromagnetic spectrum to create pictures of the universe.",
+        factZh: "其他类型的望远镜会利用电磁波谱中的其他能量形式来生成宇宙图像。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "A major reason astronomers place instruments in space is to avoid:",
+        questionZh: "天文学家把仪器放到太空中的一个主要原因是为了避免：",
+        choices: ["plate tectonics", "atmospheric distortion and light pollution", "Earth's gravity completely", "the Moon's motion"],
+        choicesZh: ["板块构造", "大气畸变和光污染", "完全摆脱地球引力", "月球运动"],
+        answer: 1,
+        hint: "Clouds, air, heat, and city lights can interfere with observations from Earth.",
+        hintZh: "云层、空气、热扰动和城市灯光都会干扰地面观测。",
+        fact: "Observing from above Earth's atmosphere can provide a clearer and less obstructed view of space.",
+        factZh: "在地球大气层之外进行观测，可以获得更清晰、干扰更少的太空视野。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "A satellite is best defined as:",
+        questionZh: "“卫星”最准确的定义是：",
+        choices: ["a vehicle that only lands on planets", "anything that orbits something else", "a telescope built on a mountain", "a machine with no pilot"],
+        choicesZh: ["只会在行星上着陆的飞行器", "绕着其他物体运行的任何天体或装置", "建在山顶上的望远镜", "没有驾驶员的机器"],
+        answer: 1,
+        hint: "The lesson includes both natural and artificial examples.",
+        hintZh: "课文中既提到了天然卫星，也提到了人造卫星。",
+        fact: "The Moon is a natural satellite, while communications devices in orbit are artificial satellites.",
+        factZh: "月球是天然卫星，而在轨道上的通信装置属于人造卫星。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "A probe is a device sent to another celestial body:",
+        questionZh: "探测器是被送往其他天体、并且：",
+        choices: ["with no human pilot", "only carrying tourists", "to build a permanent city", "to block solar wind"],
+        choicesZh: ["没有人类驾驶员", "只搭载游客", "用于建设永久城市", "用来阻挡太阳风"],
+        answer: 0,
+        hint: "It gathers information without a person onboard.",
+        hintZh: "它在没有人类搭乘的情况下收集信息。",
+        fact: "Probes are commonly used because sending machines is usually less costly and less dangerous than sending humans.",
+        factZh: "探测器之所以常用，是因为发送机器通常比发送人类成本更低、危险更小。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "Compared with human missions, probes are usually:",
+        questionZh: "与载人任务相比，探测器通常：",
+        choices: ["more expensive and more dangerous", "less costly and less dangerous", "slower and less useful", "larger and heavier"],
+        choicesZh: ["更昂贵也更危险", "成本更低也更安全", "更慢且用途更小", "更大且更重"],
+        answer: 1,
+        hint: "This is one reason they are used so often.",
+        hintZh: "这正是它们经常被使用的原因之一。",
+        fact: "The lesson also raises the question of whether a machine can gather information as well as a human can.",
+        factZh: "课文也提出了一个问题：机器是否能像人类一样有效地收集信息。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "According to the lesson, the first artificial satellite to orbit Earth was launched by the:",
+        questionZh: "根据课文，第一颗绕地球运行的人造卫星是由______发射的。",
+        choices: ["United States", "Soviet Union", "Canada", "European Space Agency"],
+        choicesZh: ["美国", "苏联", "加拿大", "欧洲航天局"],
+        answer: 1,
+        hint: "This happened more than fifty years ago.",
+        hintZh: "这件事发生在五十多年前。",
+        fact: "The lesson notes that after that first launch, countries around the world began launching many more satellites.",
+        factZh: "课文指出，在那次首发之后，世界各国开始发射大量更多的卫星。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "Roughly how many artificial satellites does the lesson say are orbiting Earth today?",
+        questionZh: "课文说如今大约有多少颗人造卫星绕地球运行？",
+        choices: ["about 900", "about 3,000", "over 9,000", "over 90,000"],
+        choicesZh: ["约 900 颗", "约 3,000 颗", "超过 9,000 颗", "超过 90,000 颗"],
+        answer: 2,
+        hint: "The number is in the thousands, not the hundreds.",
+        hintZh: "这个数字是几千颗，而不是几百颗。",
+        fact: "Only about one-third of those satellites are still functioning, leaving thousands of pieces of space junk in orbit.",
+        factZh: "这些卫星中只有约三分之一仍在工作，这意味着轨道上还留有成千上万块太空垃圾。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "About what fraction of the artificial satellites in orbit are still functioning, according to the lesson?",
+        questionZh: "根据课文，如今在轨道上的人造卫星中，大约有多少比例仍在正常工作？",
+        choices: ["all of them", "about one-half", "about one-third", "less than one-tenth"],
+        choicesZh: ["全部", "约一半", "约三分之一", "不到十分之一"],
+        answer: 2,
+        hint: "Most of the total are no longer active.",
+        hintZh: "总数中的大部分已经不再活跃。",
+        fact: "This is one reason orbital debris and space junk have become major concerns for spacecraft safety.",
+        factZh: "这也是轨道碎片和太空垃圾会成为航天器安全重大问题的原因之一。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "Why does Hubble get a clearer view than many Earth-based telescopes?",
+        questionZh: "为什么哈勃望远镜比许多地面望远镜看得更清楚？",
+        choices: ["It is larger than the Sun", "It is above Earth's atmosphere", "It lands on other planets", "It uses sound instead of light"],
+        choicesZh: ["它比太阳还大", "它位于地球大气层之上", "它会在其他行星着陆", "它使用声音而不是光"],
+        answer: 1,
+        hint: "It avoids rain clouds, light pollution, and atmospheric distortion.",
+        hintZh: "它避开了雨云、光污染和大气畸变。",
+        fact: "Hubble was the first major optical telescope placed in space, giving it an unobstructed view of the universe.",
+        factZh: "哈勃是第一台被放入太空的重要光学望远镜，因此能够不受阻碍地观测宇宙。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "Hubble was launched aboard the space shuttle Discovery in:",
+        questionZh: "哈勃望远镜是由“发现号”航天飞机在______发射升空的。",
+        choices: ["April 1990", "July 1969", "August 2018", "September 2017"],
+        choicesZh: ["1990 年 4 月", "1969 年 7 月", "2018 年 8 月", "2017 年 9 月"],
+        answer: 0,
+        hint: "It was launched long before Curiosity or Parker Solar Probe.",
+        hintZh: "它的发射时间比“好奇号”和帕克太阳探测器都早得多。",
+        fact: "The lesson describes Hubble's deployment as one of the most significant advances in astronomy since Galileo's telescope.",
+        factZh: "课文把哈勃的部署称为自伽利略望远镜以来天文学最重要的进步之一。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "What does Hubble mainly do?",
+        questionZh: "哈勃望远镜主要做什么？",
+        choices: ["It carries astronauts to Mars", "It takes pictures while orbiting Earth", "It digs into Saturn's rings", "It inflates habitats in space"],
+        choicesZh: ["把宇航员送往火星", "在绕地球运行时拍摄图像", "钻入土星环中", "在太空中膨胀居住舱"],
+        answer: 1,
+        hint: "It observes distant objects instead of travelling to them.",
+        hintZh: "它是观测远处天体，而不是飞去那些天体。",
+        fact: "Hubble has been used to observe distant stars and galaxies as well as planets in our own solar system.",
+        factZh: "哈勃既观测了遥远的恒星和星系，也观测了太阳系中的行星。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "A spaceplane combines features of:",
+        questionZh: "航天飞机式飞行器结合了哪两类飞行器的特征？",
+        choices: ["a submarine and a rocket", "an aircraft and a spacecraft", "a probe and a telescope", "a satellite and a rover"],
+        choicesZh: ["潜艇和火箭", "飞机和航天器", "探测器和望远镜", "卫星和漫游车"],
+        answer: 1,
+        hint: "It can operate in the atmosphere and in space.",
+        hintZh: "它既能在大气中运行，也能在太空中运行。",
+        fact: "The lesson explains that a spaceplane can fly like an aircraft and also endure the vacuum of space like a spacecraft.",
+        factZh: "课文说明，航天飞机式飞行器既能像飞机一样飞行，也能像航天器一样承受太空真空环境。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "The International Space Station orbits Earth at an average altitude of about:",
+        questionZh: "国际空间站绕地球飞行的平均高度大约是：",
+        choices: ["40 km", "400 km", "4,000 km", "40,000 km"],
+        choicesZh: ["40 千米", "400 千米", "4,000 千米", "40,000 千米"],
+        answer: 1,
+        hint: "It is a few hundred kilometres above Earth, not thousands.",
+        hintZh: "它距离地球是几百千米，而不是几千千米。",
+        fact: "The ISS is described as a permanently occupied outpost and a stepping-stone for further exploration.",
+        factZh: "课文把国际空间站描述为一个永久有人居住的前哨站，也是进一步探索太空的垫脚石。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "About how long does the ISS take to circle Earth once?",
+        questionZh: "国际空间站绕地球一圈大约需要多长时间？",
+        choices: ["90 minutes", "6 hours", "24 hours", "7 days"],
+        choicesZh: ["90 分钟", "6 小时", "24 小时", "7 天"],
+        answer: 0,
+        hint: "It completes many orbits each day.",
+        hintZh: "它每天会绕地球很多圈。",
+        fact: "At about 28,000 kph, the station can travel roughly the Earth-to-Moon-and-back distance in one day.",
+        factZh: "国际空间站速度约为每小时 28,000 千米，一天飞行的距离大约相当于地球到月球再返回一次。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "Under the right conditions, the ISS can be seen from Earth:",
+        questionZh: "在合适条件下，国际空间站可以从地球上被看到，而且：",
+        choices: ["only with a giant observatory telescope", "only through radio waves", "without using a telescope", "only during eclipses"],
+        choicesZh: ["只能借助大型天文台望远镜", "只能通过无线电波看到", "不需要望远镜也能看到", "只能在日食时看到"],
+        answer: 2,
+        hint: "It appears as a bright moving light in the night sky.",
+        hintZh: "它在夜空中看起来像一个明亮移动的光点。",
+        fact: "Observers need to know when and where to look, but the station can rival Venus in brightness.",
+        factZh: "观测者需要知道何时何地去看，但空间站的亮度甚至可以与金星相媲美。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "Cassini's mission ended in 2017 after exploring:",
+        questionZh: "卡西尼任务在 2017 年结束，此前它主要探索的是：",
+        choices: ["Mars and its moons", "the Sun's corona", "Saturn and its rings", "Venus's atmosphere"],
+        choicesZh: ["火星及其卫星", "太阳日冕", "土星及其光环", "金星大气层"],
+        answer: 2,
+        hint: "Its Grand Finale included dives between a planet and its rings.",
+        hintZh: "它的“盛大终章”包括在某颗行星与其光环之间穿越。",
+        fact: "Cassini carried out 22 final dives and sent valuable data that improved understanding of Saturn's structure and ring system.",
+        factZh: "卡西尼在任务最后进行了 22 次穿越，并传回了宝贵数据，提升了人类对土星结构和光环系统的认识。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "Curiosity is a robotic rover exploring:",
+        questionZh: "“好奇号”是一辆在______上进行探测的机器人漫游车。",
+        choices: ["Europa", "the Moon", "Gale Crater on Mars", "Titan"],
+        choicesZh: ["木卫二", "月球", "火星上的盖尔陨石坑", "土卫六"],
+        answer: 2,
+        hint: "Its mission studies Martian climate, geology, and habitability.",
+        hintZh: "它的任务是研究火星的气候、地质和是否宜居。",
+        fact: "One goal of Curiosity is to assess whether the site ever had conditions favourable for microbial life and the presence of water.",
+        factZh: "“好奇号”的目标之一，是评估该地点过去是否曾经具备适合微生物生存以及有水存在的条件。"
+      },
+      {
+        section: "Astronomical Tools & Observation",
+        sectionZh: "天文工具与观测",
+        question: "Parker Solar Probe was named after Eugene Parker because he discovered:",
+        questionZh: "帕克太阳探测器以尤金·帕克命名，因为他发现了：",
+        choices: ["black holes", "solar wind", "the rings of Saturn", "the ISS orbit"],
+        choicesZh: ["黑洞", "太阳风", "土星环", "国际空间站轨道"],
+        answer: 1,
+        hint: "The mission helps scientists understand this solar phenomenon better.",
+        hintZh: "这项任务帮助科学家更好地理解这种太阳现象。",
+        fact: "Parker Solar Probe gathers close-up data about the Sun, including solar activity and how the Sun affects the entire solar system.",
+        factZh: "帕克太阳探测器近距离收集太阳数据，包括太阳活动以及太阳如何影响整个太阳系。"
+      },
+
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "Astronomy is described in the lesson as one of the:",
+        questionZh: "课文把天文学描述为以下哪一种？",
+        choices: ["newest sciences", "oldest sciences", "least useful sciences", "most dangerous sciences"],
+        choicesZh: ["最新的科学之一", "最古老的科学之一", "最没有用的科学之一", "最危险的科学之一"],
+        answer: 1,
+        hint: "Ancient peoples all over the world observed the sky.",
+        hintZh: "世界各地的古代人民都曾观察天空。",
+        fact: "Long before modern telescopes, people watched celestial bodies to understand seasons, weather, and meaning in the world.",
+        factZh: "早在现代望远镜出现之前，人们就通过观察天体来理解季节、天气以及世界的意义。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "Many ancient societies connected celestial bodies with:",
+        questionZh: "许多古代社会把天体与什么联系在一起？",
+        choices: ["engines and machines", "gods and spirits", "chemical formulas", "plate boundaries"],
+        choicesZh: ["发动机和机器", "神灵与精灵", "化学公式", "板块边界"],
+        answer: 1,
+        hint: "They often explained the sky through spiritual stories.",
+        hintZh: "他们常用具有精神意义的故事来解释天空。",
+        fact: "The movements of planets and stars were often interpreted as actions of divine beings or spiritual forces.",
+        factZh: "行星和恒星的运动常常被理解为神灵或超自然力量的行为。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "Farmers, hunters, gatherers, and explorers used the sky to:",
+        questionZh: "农民、猎人、采集者和探险者利用天空来：",
+        choices: ["measure only temperature", "guide travel and predict changes", "avoid gravity", "create satellites"],
+        choicesZh: ["只测量温度", "指引旅行并预测变化", "摆脱重力", "制造卫星"],
+        answer: 1,
+        hint: "The sky helped with navigation and timing.",
+        hintZh: "天空有助于导航和判断时间。",
+        fact: "The lesson says the sky was used to guide travel, predict weather changes, and measure day length.",
+        factZh: "课文指出，人们利用天空来引导旅行、预测天气变化，并测量白昼长短。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "Early cultures observed stars and visible planets mainly to predict:",
+        questionZh: "早期文化观察恒星和可见行星，主要是为了预测：",
+        choices: ["seasonal changes", "earthquakes inside the mantle", "the speed of rockets", "the mass of Saturn"],
+        choicesZh: ["季节变化", "地幔中的地震", "火箭速度", "土星的质量"],
+        answer: 0,
+        hint: "This was especially important for farming.",
+        hintZh: "这对农业尤其重要。",
+        fact: "Knowing seasonal cycles helped societies choose the correct times for planting, harvesting, hunting, and fishing.",
+        factZh: "了解季节循环可以帮助社会确定正确的播种、收获、狩猎和捕鱼时间。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "Why were sky observations especially important for agricultural societies?",
+        questionZh: "为什么观测天空对农业社会特别重要？",
+        choices: ["They needed to plant at the right time", "They needed to avoid oceans", "They wanted to reach Mars", "They needed to measure radio waves"],
+        choicesZh: ["他们需要在正确的时间播种", "他们需要避开海洋", "他们想飞到火星", "他们需要测量无线电波"],
+        answer: 0,
+        hint: "Harvest success depended on timing.",
+        hintZh: "收成是否成功取决于时间把握。",
+        fact: "Seasonal knowledge was directly tied to food supply, which made astronomy practical as well as curious.",
+        factZh: "对季节的了解与粮食供应直接相关，因此天文学既是实用知识，也是出于好奇的探索。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "The lesson says Aboriginal peoples used the skies to guide their:",
+        questionZh: "课文说原住民族利用天空来指导他们的：",
+        choices: ["fishing, hunting, and gathering", "rocket launches", "factory work", "satellite repairs"],
+        choicesZh: ["捕鱼、狩猎和采集", "火箭发射", "工厂工作", "卫星维修"],
+        answer: 0,
+        hint: "These are daily survival and seasonal activities.",
+        hintZh: "这些都是与生存和季节相关的日常活动。",
+        fact: "Sky knowledge supported practical decisions about food, travel, and timing in many Indigenous communities.",
+        factZh: "在许多原住民族社区中，天空知识支撑着有关食物、出行和时间安排的实际决策。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "In ancient Egypt, annual Nile flooding was linked to the rising of:",
+        questionZh: "在古埃及，每年尼罗河泛滥与哪颗星的升起有关？",
+        choices: ["Polaris", "Sirius", "Venus", "Mars"],
+        choicesZh: ["北极星", "天狼星", "金星", "火星"],
+        answer: 1,
+        hint: "It is described as a bright star that rose before the Sun.",
+        hintZh: "课文说它是一颗在太阳升起前出现的明亮恒星。",
+        fact: "Egyptian astronomers noticed the Nile flooded at the same time each year when Sirius rose before the Sun.",
+        factZh: "埃及天文学家发现，尼罗河每年泛滥的时间都与天狼星在日出前升起同步。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "In the lesson, the rising of Sirius before the Sun marked the:",
+        questionZh: "在课文中，天狼星在太阳前升起标志着：",
+        choices: ["winter solstice", "summer solstice", "spring equinox", "autumn equinox"],
+        choicesZh: ["冬至", "夏至", "春分", "秋分"],
+        answer: 1,
+        hint: "It signalled a key seasonal point for Egyptian farmers.",
+        hintZh: "这标志着一个对埃及农民很重要的季节点。",
+        fact: "Recognizing this pattern allowed Egyptian society to predict floods and prepare for farming more effectively.",
+        factZh: "识别出这一规律，使埃及社会能够预测洪水，并更有效地为农业做准备。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "Egyptians were described as the first civilization to develop a calendar based on the Nile cycle with:",
+        questionZh: "课文说埃及人是第一个依据尼罗河周期发展出______日历的文明。",
+        choices: ["12-day", "30-day", "100-day", "365-day"],
+        choicesZh: ["12 天", "30 天", "100 天", "365 天"],
+        answer: 3,
+        hint: "It matches the number of days in a year used in modern calendars.",
+        hintZh: "这个数字与现代历法中的一年天数一致。",
+        fact: "This calendar grew out of practical observations that linked celestial events with yearly environmental cycles.",
+        factZh: "这个历法源自实际观察，把天象与每年的环境循环联系了起来。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "Creationism, as described in the lesson, refers to theories that Earth and life were created by:",
+        questionZh: "根据课文，“神创论”指的是认为地球和生命由______创造的理论。",
+        choices: ["gravity alone", "random collisions", "a God", "satellites"],
+        choicesZh: ["仅靠重力", "随机碰撞", "上帝", "卫星"],
+        answer: 2,
+        hint: "It connects the origin of the universe to a divine creator.",
+        hintZh: "它把宇宙起源与神圣创造者联系起来。",
+        fact: "The lesson contrasts creationist ideas with viewpoints that say the universe had no beginning or 'just is.'",
+        factZh: "课文把神创论与另一类观点进行对比，后者认为宇宙没有开始，或者“本来就是如此”。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "The lesson says different theories about the origin of the universe form the basis for many:",
+        questionZh: "课文说，不同的宇宙起源理论构成了许多______的基础。",
+        choices: ["sports rules", "religious and atheistic viewpoints", "rocket designs only", "mineral classifications"],
+        choicesZh: ["体育规则", "宗教与无神论观点", "仅仅是火箭设计", "矿物分类"],
+        answer: 1,
+        hint: "These theories influence how people understand existence and meaning.",
+        hintZh: "这些理论会影响人们如何理解存在和意义。",
+        fact: "Origin stories are not only scientific questions; they also shape worldviews and belief systems.",
+        factZh: "起源故事不仅是科学问题，也会塑造世界观和信仰体系。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "The Earth Diver story is an oral story from the First Peoples of:",
+        questionZh: "“潜水取土”故事是______原住民族的口述故事。",
+        choices: ["North America", "Europe", "Antarctica", "South Africa"],
+        choicesZh: ["北美洲", "欧洲", "南极洲", "南非"],
+        answer: 0,
+        hint: "The lesson names this region directly.",
+        hintZh: "课文直接指出了这个地区。",
+        fact: "The story appears in traditions from groups such as the Eastern Woodlands and Northern Plains.",
+        factZh: "这个故事出现在一些传统中，例如东部林地地区和北方平原地区的原住民族传统。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "In the Earth Diver story, mud is brought back from primeval water to fashion:",
+        questionZh: "在“潜水取土”故事中，从原始之水中带回泥土是为了塑造：",
+        choices: ["the Moon", "Earth", "the Sun", "the Milky Way"],
+        choicesZh: ["月球", "地球", "太阳", "银河"],
+        answer: 1,
+        hint: "The mud becomes land.",
+        hintZh: "这些泥土变成了陆地。",
+        fact: "The Great Spirit or Transformer dives, or orders animals to dive, to bring back the mud used to form Earth.",
+        factZh: "大灵或变化者会亲自下潜，或命令动物下潜，把用来形成地球的泥土带回来。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "In some versions of the North American oral story, Earth is formed on the back of a:",
+        questionZh: "在北美口述故事的某些版本中，地球形成在一只______的背上。",
+        choices: ["bear", "turtle", "eagle", "whale"],
+        choicesZh: ["熊", "乌龟", "鹰", "鲸"],
+        answer: 1,
+        hint: "This connects to the name Turtle Island.",
+        hintZh: "这与“Turtle Island（龟岛）”这个名称有关。",
+        fact: "Turtle Island is a widely used name for North America among both Aboriginal and non-Aboriginal peoples.",
+        factZh: "“龟岛”是原住民族和非原住民族都常用来称呼北美洲的名字。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "The planet Venus is often called both the Evening Star and the:",
+        questionZh: "金星常被称为“昏星”，同时也被称为：",
+        choices: ["Hunter Star", "North Star", "Morning Star", "River Star"],
+        choicesZh: ["猎人之星", "北极星", "晨星", "河流之星"],
+        answer: 2,
+        hint: "It is also the last one to fade in the morning sunlight.",
+        hintZh: "它也是在晨光中最后消失的一颗“星”。",
+        fact: "Although Venus is a planet, it often appears star-like in the sky and became important in many cultural traditions.",
+        factZh: "虽然金星是一颗行星，但它在天空中常常看起来像一颗星，因此在许多文化传统中都很重要。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "In the Arnhem Land story, the Morning Star is named:",
+        questionZh: "在阿纳姆地的故事中，晨星名叫：",
+        choices: ["Sirius", "Barnumbir", "Gaia", "Columbia"],
+        choicesZh: ["天狼星", "巴努姆比尔", "盖娅", "哥伦比亚"],
+        answer: 1,
+        hint: "She lives on the Island of the Dead in the story.",
+        hintZh: "在故事里，她住在“亡者之岛”上。",
+        fact: "Barnumbir is described as very bright and important for early-morning hunting or fishing.",
+        factZh: "故事中，巴努姆比尔非常明亮，对清晨的狩猎或捕鱼很重要。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "Barnumbir is said to live on Bralgu, which is called:",
+        questionZh: "巴努姆比尔住在布拉尔古，那里被称为：",
+        choices: ["the Land of Ice", "the Island of the Dead", "the Valley of Fire", "the Great Observatory"],
+        choicesZh: ["冰之地", "亡者之岛", "火之谷", "大天文台"],
+        answer: 1,
+        hint: "The lesson gives an English name for Bralgu.",
+        hintZh: "课文给出了布拉尔古的英文含义。",
+        fact: "This detail comes from an oral story of Aboriginal peoples in far northern Australia.",
+        factZh: "这个细节来自澳大利亚北部原住民族的口述故事。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "Why does the story say Barnumbir stays near the horizon?",
+        questionZh: "故事为什么说巴努姆比尔总是靠近地平线？",
+        choices: ["She is tied by a long string", "She is too heavy to rise", "She travels inside the Moon", "She lives under the ocean"],
+        choicesZh: ["她被一根长绳系着", "她太重了升不起来", "她在月球内部移动", "她住在海底"],
+        answer: 0,
+        hint: "Two old women solve the problem by fastening something around her waist.",
+        hintZh: "两位老妇人通过在她腰间系上某样东西来解决问题。",
+        fact: "The story explains Venus's low position in the sky in a cultural and symbolic way rather than a modern scientific one.",
+        factZh: "这个故事用文化和象征性的方式解释了金星为什么总出现在靠近地平线的位置，而不是用现代科学语言。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "According to the lesson, cultural perspectives contribute to our understanding of the universe by:",
+        questionZh: "根据课文，文化视角之所以能丰富我们对宇宙的理解，是因为它们：",
+        choices: ["replace all physical science", "add perspectives beyond Western science's physical focus", "prove every myth literally", "eliminate the need for observation"],
+        choicesZh: ["完全取代物理科学", "在西方科学重视物质领域之外增加其他视角", "证明所有神话都必须照字面理解", "消除观测的必要性"],
+        answer: 1,
+        hint: "The lesson contrasts Western science with other cultural viewpoints.",
+        hintZh: "课文将西方科学与其他文化观点进行了对比。",
+        fact: "Different traditions contribute knowledge, meaning, and ways of relating to the sky, not just measurements.",
+        factZh: "不同传统带来的不仅是测量数据，还有知识、意义以及人类与天空建立关系的方式。"
+      },
+      {
+        section: "Cultural Knowledge of the Universe",
+        sectionZh: "关于宇宙的文化知识",
+        question: "Which statement best matches the lesson's view of stories and traditions about the universe?",
+        questionZh: "下列哪句话最符合课文对宇宙故事与传统的看法？",
+        choices: ["They are irrelevant once telescopes exist", "They can enhance scientific concepts and invite further exploration", "They only matter in Europe", "They are identical in every culture"],
+        choicesZh: ["一旦有了望远镜，它们就毫无意义", "它们可以丰富科学概念并激发进一步探索", "它们只在欧洲重要", "它们在所有文化中都完全一样"],
+        answer: 1,
+        hint: "The lesson says there is rich diversity and room to explore further.",
+        hintZh: "课文指出，这些传统非常丰富多样，而且还有很多可以进一步探究的空间。",
+        fact: "The lesson frames stories, traditions, and historical knowledge as part of learning how humans have understood the sky.",
+        factZh: "课文把故事、传统和历史知识都视为理解人类如何认识天空的重要组成部分。"
+      },
+
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "The lesson says issues in space exploration do not fit neatly into categories labelled:",
+        questionZh: "课文说，太空探索中的问题不能简单地归类为：",
+        choices: ["old or new", "near or far", "good or bad", "fast or slow"],
+        choicesZh: ["古老或现代", "近或远", "好或坏", "快或慢"],
+        answer: 2,
+        hint: "The lesson emphasizes weighing pros and cons.",
+        hintZh: "课文强调要权衡利弊。",
+        fact: "Space exploration raises complicated decisions about benefits, hazards, costs, and values.",
+        factZh: "太空探索会带来关于收益、风险、成本和价值判断的复杂决策。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "Which pair of shuttle disasters is specifically mentioned as evidence of risk in space travel?",
+        questionZh: "课文特别提到哪一对航天飞机灾难来说明太空旅行的风险？",
+        choices: ["Apollo 11 and Voyager 1", "Challenger and Columbia", "Discovery and Atlantis", "Cassini and Curiosity"],
+        choicesZh: ["阿波罗 11 号和旅行者 1 号", "挑战者号和哥伦比亚号", "发现号和亚特兰蒂斯号", "卡西尼和好奇号"],
+        answer: 1,
+        hint: "The lesson includes the years 1986 and 2003.",
+        hintZh: "课文同时给出了 1986 年和 2003 年。",
+        fact: "These accidents show that advanced technology can still fail and that astronauts face major hazards.",
+        factZh: "这些事故说明，即使是先进技术也会失效，而宇航员会面临重大危险。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "Space junk is best described as:",
+        questionZh: "“太空垃圾”最准确的描述是：",
+        choices: ["frozen water on comets", "orbiting debris from human space activity", "clouds on Mars", "dust inside telescopes"],
+        choicesZh: ["彗星上的冻结水", "人类太空活动留下的轨道碎片", "火星上的云层", "望远镜内部的灰尘"],
+        answer: 1,
+        hint: "It includes material that breaks away from shuttles and satellites.",
+        hintZh: "它包括从航天飞机和卫星上脱落的材料。",
+        fact: "Orbiting debris has accumulated since humans first travelled into space and can threaten spacecraft through collisions.",
+        factZh: "自从人类进入太空以来，轨道碎片一直在累积，并可能通过碰撞威胁航天器。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "According to the lesson, even a speck of paint can cause serious damage to a:",
+        questionZh: "根据课文，甚至一小点油漆碎片都可能对______造成严重损害。",
+        choices: ["shuttle or probe", "planetary orbit", "calendar system", "mountain observatory"],
+        choicesZh: ["航天飞机或探测器", "行星轨道", "历法系统", "山顶天文台"],
+        answer: 0,
+        hint: "Objects in orbit move very fast.",
+        hintZh: "在轨道上运动的物体速度非常快。",
+        fact: "This illustrates why even tiny pieces of space junk are taken seriously in spacecraft safety planning.",
+        factZh: "这说明了为什么即使是极小的太空垃圾碎片，也会在航天器安全规划中被严肃对待。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "The lesson describes SpaceX as a private company that manufactures and launches:",
+        questionZh: "课文把 SpaceX 描述为一家制造并发射______的私营公司。",
+        choices: ["mountain telescopes only", "reusable rockets and spacecraft", "ancient calendars", "underwater probes"],
+        choicesZh: ["只制造山顶望远镜", "可重复使用的火箭和航天器", "古代历法", "水下探测器"],
+        answer: 1,
+        hint: "Its spacecraft can ferry cargo to the ISS.",
+        hintZh: "它的航天器能够向国际空间站运送货物。",
+        fact: "The lesson calls these vehicles 'space taxis' because they can transport supplies to orbiting stations.",
+        factZh: "课文把这些飞行器称为“太空出租车”，因为它们能把补给运送到轨道空间站。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "NASA is described as viewing the private ventures of SpaceX and Orbital ATK as:",
+        questionZh: "课文说 NASA 把 SpaceX 和 Orbital ATK 的私人商业项目看作：",
+        choices: ["illegal", "negative developments", "positive developments", "irrelevant to space travel"],
+        choicesZh: ["非法行为", "负面发展", "积极的发展", "与太空旅行无关"],
+        answer: 2,
+        hint: "NASA is said to be supportive of both companies.",
+        hintZh: "课文说 NASA 对这两家公司都表示支持。",
+        fact: "The lesson presents private companies as increasingly important partners in human spaceflight and cargo missions.",
+        factZh: "课文把私营公司呈现为载人航天和货运任务中越来越重要的合作伙伴。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "The SpaceX Dragon craft mentioned in the lesson mainly carried ______ to the ISS.",
+        questionZh: "课文中提到的 SpaceX 龙飞船主要向国际空间站运送______。",
+        choices: ["cargo and supplies", "new planets", "radio telescopes", "Nile flood maps"],
+        choicesZh: ["货物和补给", "新行星", "射电望远镜", "尼罗河洪水地图"],
+        answer: 0,
+        hint: "It was a commercial cargo spacecraft, not a tourism craft in this example.",
+        hintZh: "在这个例子中，它是商业货运飞船，而不是旅游飞船。",
+        fact: "The lesson highlights Dragon as the world's first commercial cargo spacecraft to berth to the station in 2012.",
+        factZh: "课文强调，龙飞船是世界上第一艘在 2012 年与空间站对接的商业货运飞船。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "Orbital ATK is described as a private American company in the aerospace and ______ industry.",
+        questionZh: "课文把 Orbital ATK 描述为一家美国私营______行业公司。",
+        choices: ["fashion", "defence", "agriculture", "tourism only"],
+        choicesZh: ["时尚", "国防", "农业", "仅旅游"],
+        answer: 1,
+        hint: "It builds space, defence, and aviation-related systems.",
+        hintZh: "它设计并制造与太空、国防和航空有关的系统。",
+        fact: "The company is presented as a large manufacturer with engineers, scientists, and operations specialists.",
+        factZh: "课文把这家公司描述为一家大型制造企业，拥有工程师、科学家和运营专业人员。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "BEAM is important because it is an example of:",
+        questionZh: "BEAM 之所以重要，是因为它是以下哪一种技术的例子？",
+        choices: ["an expandable spacecraft habitat", "a lunar telescope", "a weather calendar", "a natural satellite"],
+        choicesZh: ["可扩展的航天器居住舱", "月球望远镜", "天气历法", "天然卫星"],
+        answer: 0,
+        hint: "It inflates in space to create a larger lightweight structure.",
+        hintZh: "它会在太空中充气膨胀，形成更大但较轻的结构。",
+        fact: "The lesson suggests that expandable habitats could change how humans live and work in zero gravity.",
+        factZh: "课文指出，可扩展居住舱可能会改变人类在失重环境中生活和工作的方式。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "Which of the following is listed as a benefit of space tourism?",
+        questionZh: "下列哪一项是课文列出的太空旅游好处？",
+        choices: ["eliminating all risk", "ending all public debate", "increased public interest in space technologies", "making gravity disappear"],
+        choicesZh: ["消除所有风险", "结束所有公共争论", "提升公众对航天技术的兴趣", "让重力消失"],
+        answer: 2,
+        hint: "The lesson lists several possible advantages.",
+        hintZh: "课文列出了若干潜在优势。",
+        fact: "Other benefits listed include increased revenue, pressure to improve efficiency and reduce costs, and opportunities for non-astronauts to experience space.",
+        factZh: "课文还列出了其他好处，例如增加收入、推动效率提升和成本下降，以及让非宇航员也有机会体验太空。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "Virgin Galactic is described as planning rides to about ______ into space.",
+        questionZh: "课文说维珍银河计划把游客送到大约______的高度进入太空。",
+        choices: ["10 km", "100 km", "1,000 km", "10,000 km"],
+        choicesZh: ["10 千米", "100 千米", "1,000 千米", "10,000 千米"],
+        answer: 1,
+        hint: "This is a sub-orbital, not orbital, trip.",
+        hintZh: "这是一种亚轨道飞行，而不是轨道飞行。",
+        fact: "The craft is said to follow a ballistic trajectory and float for a few minutes before returning to Earth.",
+        factZh: "课文说飞行器将沿弹道轨迹飞行，在返回地球前会漂浮几分钟。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "How long does the lesson say tourists might float during a Virgin Galactic-style trip?",
+        questionZh: "课文说，在类似维珍银河的太空旅行中，游客大约会漂浮多久？",
+        choices: ["a few seconds", "four to five minutes", "two hours", "one full day"],
+        choicesZh: ["几秒钟", "四到五分钟", "两小时", "整整一天"],
+        answer: 1,
+        hint: "It is short, but much longer than a few seconds.",
+        hintZh: "这个时间不长，但也比几秒要长得多。",
+        fact: "The lesson uses this example to show how private companies are changing access to sub-orbital human spaceflight.",
+        factZh: "课文用这个例子说明，私营公司正在改变人类进入亚轨道太空飞行的方式。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "Space Adventures is notable in the lesson because it has already sent ______ individuals to space.",
+        questionZh: "课文说 Space Adventures 之所以特别，是因为它已经把______送入了太空。",
+        choices: ["government-selected only", "self-funded", "robotic", "school-aged"],
+        choicesZh: ["仅政府选定人员", "自费个人", "机器人", "学龄儿童"],
+        answer: 1,
+        hint: "These were private customers, not only professional astronauts.",
+        hintZh: "这些是私人客户，而不只是职业宇航员。",
+        fact: "The company is presented as the only one at the time offering actual private space flight and space tourism.",
+        factZh: "课文把这家公司描述为当时唯一提供真正私人太空飞行与太空旅游机会的公司。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "Terraforming means altering an environment so it becomes more like:",
+        questionZh: "“地球化改造”是指改变一个环境，使它更像：",
+        choices: ["the deep ocean", "Earth", "the Sun", "Saturn's rings"],
+        choicesZh: ["深海", "地球", "太阳", "土星环"],
+        answer: 1,
+        hint: "The goal is an Earth-like atmosphere and ecosystem.",
+        hintZh: "目标是形成类似地球的大气和生态系统。",
+        fact: "In the lesson, terraforming is discussed as both a possible opportunity and a major ethical and practical challenge.",
+        factZh: "在课文中，地球化改造既被视为一种潜在机会，也被视为重大的伦理和实践挑战。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "Which of the following is a stated argument in favour of terraforming?",
+        questionZh: "下列哪一项是课文中支持地球化改造的理由？",
+        choices: ["It has already been proven sustainable", "It could help relieve overcrowding on Earth", "It costs almost nothing", "It removes all political problems"],
+        choicesZh: ["它已经被证明是可持续的", "它可能有助于缓解地球人口过密", "它几乎不花钱", "它会消除所有政治问题"],
+        answer: 1,
+        hint: "The lesson also mentions a backup plan if Earth's resources are depleted.",
+        hintZh: "课文还提到，如果地球资源耗尽，它可以作为后备方案。",
+        fact: "The pro argument focuses on future human needs, not on simplicity or low cost.",
+        factZh: "支持方的核心观点在于未来人类需求，而不在于这件事简单或便宜。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "Which of the following is a stated argument against terraforming?",
+        questionZh: "下列哪一项是课文中反对地球化改造的理由？",
+        choices: ["It would be extremely costly and may damage another planet", "It cannot involve any technology", "Mars is underwater", "It would reduce engineering jobs"],
+        choicesZh: ["它会极其昂贵，并可能损害另一颗行星", "它不可能涉及任何技术", "火星在水下", "它会减少工程岗位"],
+        answer: 0,
+        hint: "The lesson emphasizes uncertainty and long-term sustainability.",
+        hintZh: "课文强调了这种做法在长期可持续性上的不确定性。",
+        fact: "Because terraforming has never been done, the long-term results are unknown and could be harmful.",
+        factZh: "由于人类从未真正实施过地球化改造，其长期结果是未知的，而且可能有害。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "Why is public funding for space research often controversial?",
+        questionZh: "为什么用于太空研究的公共资金常常会引发争议？",
+        choices: ["Money cannot be spent in space", "People debate how limited resources should be divided", "No one benefits from research", "The Sun controls budgets"],
+        choicesZh: ["钱无法在太空中使用", "人们会争论有限资源应如何分配", "研究没有任何好处", "太阳决定预算"],
+        answer: 1,
+        hint: "The issue is about priorities and tradeoffs.",
+        hintZh: "这个问题与优先顺序和权衡有关。",
+        fact: "Some people argue funds should solve Earth problems first, while others point to the many benefits of space technology on Earth.",
+        factZh: "有些人认为资金应该优先解决地球上的问题，另一些人则强调太空技术给地球带来的众多好处。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "Which pair of everyday products does the lesson mention as improved because of space research?",
+        questionZh: "课文提到，下列哪一对日常用品因为太空研究而得到改进？",
+        choices: ["running shoes and bicycle helmets", "paper books and pencils", "winter coats and umbrellas", "plates and bowls"],
+        choicesZh: ["跑鞋和自行车头盔", "纸质书和铅笔", "冬衣和雨伞", "盘子和碗"],
+        answer: 0,
+        hint: "The examples are consumer items used in ordinary life.",
+        hintZh: "这些例子是普通生活中的消费品。",
+        fact: "The lesson uses these products to show that space research can produce practical spin-offs for people on Earth.",
+        factZh: "课文用这些产品来说明，太空研究可以产生对地球居民有实际价值的“衍生收益”。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "Research on astronauts in zero gravity may help people on Earth who suffer from conditions such as:",
+        questionZh: "对失重环境中宇航员的研究，可能有助于地球上患有下列哪种疾病的人？",
+        choices: ["osteoporosis", "colour blindness", "sunburn", "tooth decay"],
+        choicesZh: ["骨质疏松", "色盲", "晒伤", "蛀牙"],
+        answer: 0,
+        hint: "The lesson gives this bone-related condition as an example.",
+        hintZh: "课文以这种与骨骼相关的疾病为例。",
+        fact: "Health problems seen in astronauts can motivate research that later benefits medicine and health science on Earth.",
+        factZh: "宇航员身上出现的健康问题，可能推动后来造福地球医学与健康科学的研究。"
+      },
+      {
+        section: "Space Exploration & Travel",
+        sectionZh: "太空探索与旅行",
+        question: "The lesson groups many unresolved issues about space exploration into three connected categories: ethics, environment, and:",
+        questionZh: "课文把太空探索中的许多未解决问题归入三个相互关联的类别：伦理、环境和：",
+        choices: ["agriculture", "politics", "geometry", "mythology"],
+        choicesZh: ["农业", "政治", "几何学", "神话学"],
+        answer: 1,
+        hint: "Questions about ownership, regulation, and sharing fit here.",
+        hintZh: "关于所有权、监管和共享的问题属于这一类。",
+        fact: "The lesson ends with questions rather than fixed answers because these issues overlap and require ongoing debate.",
+        factZh: "课文最后给出的是问题而不是固定答案，因为这些议题彼此重叠，需要持续讨论。"
+      }
+    ];
+
+    const staticReviewItemsEn = [
+      "Optical telescopes, the electromagnetic spectrum, satellites, probes, and space observatories",
+      "Hubble, the ISS, Cassini, Curiosity, and Parker Solar Probe",
+      "Cultural perspectives on the sky and astronomy as one of the oldest sciences",
+      "Sirius, Nile flooding, calendars, creation stories, Turtle Island, and Barnumbir",
+      "Hazards of space travel and the problem of space junk",
+      "Private space companies, cargo craft, and expandable habitats",
+      "Space tourism, terraforming, and the need to weigh pros and cons",
+      "Ethics, environment, politics, and Earth benefits from space research"
+    ];
+
+    const staticReviewItemsZh = [
+      "光学望远镜、电磁波谱、卫星、探测器和太空观测设备",
+      "哈勃、国际空间站、卡西尼、好奇号和帕克太阳探测器",
+      "关于天空的文化视角，以及天文学是最古老科学之一",
+      "天狼星、尼罗河泛滥、历法、创世故事、龟岛和巴努姆比尔",
+      "太空旅行的危险以及太空垃圾问题",
+      "私营航天公司、货运飞船和可扩展居住舱",
+      "太空旅游、地球化改造，以及权衡利弊的重要性",
+      "伦理、环境、政治，以及太空研究给地球带来的益处"
+    ];
+
+    const languageButtons = Array.from(document.querySelectorAll('[data-lang-mode]'));
+    let currentIndex = 0;
+    let selectedAnswers = Array(questions.length).fill(null);
+    let checked = Array(questions.length).fill(false);
+    let languageMode = 'en';
+
+    const questionText = document.getElementById('questionText');
+    const choicesContainer = document.getElementById('choicesContainer');
+    const resultText = document.getElementById('resultText');
+    const hintBox = document.getElementById('hintBox');
+    const questionCounter = document.getElementById('questionCounter');
+    const sectionLabel = document.getElementById('sectionLabel');
+    const progressBar = document.getElementById('progressBar');
+    const quizStatus = document.getElementById('quizStatus');
+    const summaryBox = document.getElementById('summaryBox');
+    const reviewList = document.getElementById('reviewList');
+
+    function escapeHtml(text) {
+      return String(text ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function langHtml(en, zh) {
+      return `<div class="i18n-en">${escapeHtml(en)}</div><div class="i18n-zh">${escapeHtml(zh)}</div>`;
+    }
+
+    function setLangContent(el, en, zh) {
+      if (!el) return;
+      el.innerHTML = langHtml(en, zh);
+    }
+
+    function isBilingual() {
+      return languageMode === 'enzh';
+    }
+
+    function isZhOnly() {
+      return languageMode === 'zh';
+    }
+
+    function uiText(en, zh) {
+      if (isZhOnly()) return zh;
+      if (isBilingual()) return `${en} / ${zh}`;
+      return en;
+    }
+
+    function letter(index) {
+      return String.fromCharCode(65 + index);
+    }
+
+    function getSectionNumber(idx) {
+      if (idx < 20) return 1;
+      if (idx < 40) return 2;
+      return 3;
+    }
+
+    function getCorrectCount() {
+      return selectedAnswers.reduce((sum, answer, index) => sum + (answer === questions[index].answer ? 1 : 0), 0);
+    }
+
+    function getAnsweredCount() {
+      return selectedAnswers.filter((value) => value !== null).length;
+    }
+
+    function updateDashboard() {
+      const answered = getAnsweredCount();
+      const correct = getCorrectCount();
+      const percent = Math.round((correct / questions.length) * 100);
+      document.getElementById('scoreRaw').textContent = `${correct}/${questions.length}`;
+      document.getElementById('scorePct').textContent = `${percent}%`;
+      document.getElementById('scoreAnswered').textContent = `${answered}/${questions.length}`;
+      document.getElementById('scoreSection').textContent = `${getSectionNumber(currentIndex)}/3`;
+      progressBar.style.width = `${(answered / questions.length) * 100}%`;
+      quizStatus.textContent = answered === 0
+        ? uiText('Choose an answer to begin. Your selection saves automatically.', '请选择一个答案开始。你的选择会自动保存。')
+        : uiText(`Progress saved: ${answered} of ${questions.length} answered.`, `进度已保存：已完成 ${questions.length} 题中的 ${answered} 题。`);
+    }
+
+    function applyChoiceState(label, index, userAnswer, correctAnswer, isChecked) {
+      if (userAnswer === index) {
+        label.classList.add('selected');
+      }
+      if (isChecked && index === correctAnswer) {
+        label.classList.add('correct-choice');
+      }
+      if (isChecked && userAnswer === index && userAnswer !== correctAnswer) {
+        label.classList.add('wrong-choice');
+      }
+    }
+
+    function getExplanationText(index) {
+      const q = questions[index];
+      const answerEn = `${letter(q.answer)}. ${q.choices[q.answer]}`;
+      const answerZh = `${letter(q.answer)}. ${q.choicesZh[q.answer]}`;
+      return {
+        en: `Explanation: ${answerEn} is correct because ${q.hint.charAt(0).toLowerCase()}${q.hint.slice(1)}\nRelated knowledge: ${q.fact}`,
+        zh: `解析：${answerZh} 是正确答案，因为${q.hintZh}\n相关知识：${q.factZh}`
+      };
+    }
+
+    function setResultFeedback(statusEn, statusZh, detailEn, detailZh, kind) {
+      resultText.innerHTML = `
+        ${langHtml(statusEn, statusZh)}
+        <div class="result-detail">
+          ${langHtml(detailEn, detailZh)}
+        </div>
+      `;
+      resultText.className = `result ${kind}`;
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+      const isChecked = checked[currentIndex];
+      const userAnswer = selectedAnswers[currentIndex];
+
+      setLangContent(questionText, q.question, q.questionZh);
+      questionCounter.textContent = uiText(`Question ${currentIndex + 1} of ${questions.length}`, `第 ${currentIndex + 1} 题，共 ${questions.length} 题`);
+      sectionLabel.textContent = uiText(`Section ${getSectionNumber(currentIndex)} of 3 • ${q.section}`, `第 ${getSectionNumber(currentIndex)} / 3 部分 • ${q.sectionZh}`);
+      resultText.textContent = '';
+      resultText.className = 'result';
+      hintBox.style.display = 'none';
+      setLangContent(hintBox, q.hint, q.hintZh);
+
+      choicesContainer.innerHTML = '';
+      q.choices.forEach((choice, index) => {
+        const label = document.createElement('label');
+        label.className = 'choice';
+
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = 'choice';
+        input.value = index;
+        input.checked = userAnswer === index;
+        input.addEventListener('change', () => {
+          selectedAnswers[currentIndex] = index;
+          updateDashboard();
+          renderQuestion();
+        });
+
+        const textWrap = document.createElement('div');
+        textWrap.innerHTML = langHtml(`${letter(index)}. ${choice}`, `${letter(index)}. ${q.choicesZh[index]}`);
+
+        label.appendChild(input);
+        label.appendChild(textWrap);
+        applyChoiceState(label, index, userAnswer, q.answer, isChecked);
+        choicesContainer.appendChild(label);
+      });
+
+      if (isChecked) {
+        showCheckedResult();
+      }
+      updateDashboard();
+    }
+
+    function showCheckedResult() {
+      const q = questions[currentIndex];
+      const userAnswer = selectedAnswers[currentIndex];
+      const explanation = getExplanationText(currentIndex);
+
+      if (userAnswer === null) {
+        setResultFeedback(
+          `No answer selected yet. Correct answer: ${letter(q.answer)}. ${q.choices[q.answer]}`,
+          `还没有选择答案。正确答案：${letter(q.answer)}. ${q.choicesZh[q.answer]}`,
+          explanation.en,
+          explanation.zh,
+          'warn'
+        );
+        return;
+      }
+
+      if (userAnswer === q.answer) {
+        setResultFeedback(
+          'Correct!',
+          '答对了！',
+          explanation.en,
+          explanation.zh,
+          'correct'
+        );
+        return;
+      }
+
+      setResultFeedback(
+        `Incorrect. Correct answer: ${letter(q.answer)}. ${q.choices[q.answer]}`,
+        `不正确。正确答案：${letter(q.answer)}. ${q.choicesZh[q.answer]}`,
+        explanation.en,
+        explanation.zh,
+        'wrong'
+      );
+    }
+
+    function updateSummary() {
+      const correct = getCorrectCount();
+      const wrong = questions.length - correct;
+      const percent = Math.round((correct / questions.length) * 100);
+      document.getElementById('finalScore').textContent = `${correct} / ${questions.length}`;
+      document.getElementById('finalPercent').textContent = `${percent}%`;
+      document.getElementById('finalCorrect').textContent = correct;
+      document.getElementById('finalWrong').textContent = wrong;
+      summaryBox.style.display = 'block';
+    }
+
+    function checkCurrent() {
+      checked[currentIndex] = true;
+      renderQuestion();
+    }
+
+    function showReview() {
+      reviewList.innerHTML = questions.map((q, index) => {
+        const answer = selectedAnswers[index];
+        const isCorrect = answer === q.answer;
+        const yourTextEn = answer === null ? 'No answer selected' : `${letter(answer)}. ${q.choices[answer]}`;
+        const yourTextZh = answer === null ? '未选择答案' : `${letter(answer)}. ${q.choicesZh[answer]}`;
+        const rightTextEn = `${letter(q.answer)}. ${q.choices[q.answer]}`;
+        const rightTextZh = `${letter(q.answer)}. ${q.choicesZh[q.answer]}`;
+        return `
+          <div class="review-item">
+            <div>${langHtml(`Q${index + 1}. ${q.question}`, `第 ${index + 1} 题：${q.questionZh}`)}</div>
+            <div class="small">${langHtml(`Section: ${q.section}`, `部分：${q.sectionZh}`)}</div>
+            <div style="margin-top:6px; color:${isCorrect ? '#15803d' : '#b91c1c'};">${langHtml(`Your answer: ${yourTextEn}`, `你的答案：${yourTextZh}`)}</div>
+            <div class="small">${langHtml(`Correct answer: ${rightTextEn}`, `正确答案：${rightTextZh}`)}</div>
+            <div class="small">${langHtml(`Hint: ${q.hint}`, `提示：${q.hintZh}`)}</div>
+          </div>
+        `;
+      }).join('');
+      summaryBox.style.display = 'block';
+      reviewList.classList.remove('hidden');
+    }
+
+    function submitAll() {
+      checked = checked.map(() => true);
+      updateSummary();
+      showReview();
+      renderQuestion();
+      window.scrollTo({ top: summaryBox.offsetTop - 10, behavior: 'smooth' });
+    }
+
+    function hideReview() {
+      reviewList.classList.add('hidden');
+    }
+
+    function revealAllAnswers() {
+      checked = checked.map(() => true);
+      updateSummary();
+      showReview();
+      renderQuestion();
+      window.scrollTo({ top: summaryBox.offsetTop - 10, behavior: 'smooth' });
+    }
+
+    function restartQuiz() {
+      currentIndex = 0;
+      selectedAnswers = Array(questions.length).fill(null);
+      checked = Array(questions.length).fill(false);
+      summaryBox.style.display = 'none';
+      reviewList.classList.add('hidden');
+      reviewList.innerHTML = '';
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function applyLanguageMode(mode) {
+      languageMode = ['en', 'enzh', 'zh'].includes(mode) ? mode : 'en';
+      document.body.classList.toggle('lang-bilingual', languageMode === 'enzh');
+      document.body.classList.toggle('lang-zh', languageMode === 'zh');
+
+      languageButtons.forEach((button) => {
+        button.classList.toggle('active', button.dataset.langMode === languageMode);
+        button.setAttribute('aria-pressed', button.dataset.langMode === languageMode ? 'true' : 'false');
+      });
+
+      document.getElementById('heroTitle').textContent = uiText('Earth Practice 3', '地球练习 3');
+      document.getElementById('heroUnits').innerHTML = `<strong>${uiText('Units:', '单元：')}</strong> ${uiText('4.6 Astronomical Data & Collection Methods + 4.7 Other Ways of Knowing about the Universe + 4.8 Space Exploration & Travel', '4.6 天文数据与收集方法 + 4.7 认识宇宙的其他方式 + 4.8 太空探索与旅行')}`;
+      document.getElementById('heroDesc').textContent = uiText(
+        'This practice page keeps the same independent-study format as Earth Practice 2, but shifts the question bank to space observation tools, cultural knowledge about the sky, and the benefits and risks of space exploration.',
+        '这个练习页延续了 Earth Practice 2 的独立练习模式，但题库改为聚焦太空观测工具、关于天空的文化知识，以及太空探索的利与弊。'
+      );
+      document.getElementById('pill1').textContent = uiText('60 Multiple-Choice Questions', '60 道选择题');
+      document.getElementById('pill2').textContent = uiText('Check by Question', '逐题检查');
+      document.getElementById('pill3').textContent = uiText('Reveal Full Review', '显示完整讲评');
+      document.getElementById('pill4').textContent = uiText('Print-Friendly', '适合打印');
+
+      document.getElementById('studentInfoTitle').textContent = uiText('Student Info', '学生信息');
+      document.getElementById('studentNameLabel').textContent = uiText('Name:', '姓名：');
+      document.getElementById('studentName').placeholder = uiText('Enter student name', '输入学生姓名');
+      document.getElementById('studentTip').textContent = uiText(
+        'Tip: answer each section first, then use the review panel to connect facts, definitions, and real examples from the lesson pages.',
+        '提示：先完成每个部分，再利用讲评区把事实、定义和课文中的真实例子联系起来。'
+      );
+      document.getElementById('langBarLabel').textContent = uiText('Language / 语言', '语言 / Language');
+
+      document.getElementById('btnGradeQuiz').textContent = uiText('Submit & Grade Quiz', '提交并评分');
+      document.getElementById('btnRevealAll').textContent = uiText('Reveal All Answers', '显示全部答案');
+      document.getElementById('btnHideReview').textContent = uiText('Hide Review', '隐藏讲评');
+      document.getElementById('btnResetQuiz').textContent = uiText('Reset Quiz', '重置测验');
+      document.getElementById('btnPrintPage').textContent = uiText('Print Page', '打印页面');
+
+      document.getElementById('scoreRawLabel').textContent = uiText('Raw Score', '原始得分');
+      document.getElementById('scorePctLabel').textContent = uiText('Percent', '百分比');
+      document.getElementById('scoreAnsweredLabel').textContent = uiText('Answered', '已作答');
+      document.getElementById('scoreSectionLabelBox').textContent = uiText('Current Section', '当前部分');
+
+      document.getElementById('reviewTitle').textContent = uiText('What to Review', '复习重点');
+      document.getElementById('reviewListStatic').innerHTML = staticReviewItemsEn.map((item, index) => `<li>${langHtml(item, staticReviewItemsZh[index])}</li>`).join('');
+      document.getElementById('reviewTip').textContent = uiText(
+        'Study strategy: learn the vocabulary first, then connect each device, story, or issue to what it helps humans understand or decide.',
+        '复习策略：先掌握关键词，再把每种工具、故事或议题与它帮助人类理解或决定的内容联系起来。'
+      );
+
+      document.getElementById('partATitle').textContent = uiText('Part A — Multiple Choice Practice', 'A 部分：选择题练习');
+      document.getElementById('summaryTitle').textContent = uiText('Quiz Review', '测验讲评');
+      document.getElementById('finalScoreLabel').textContent = uiText('Total Score', '总分');
+      document.getElementById('finalPercentLabel').textContent = uiText('Percentage', '百分比');
+      document.getElementById('finalCorrectLabel').textContent = uiText('Correct Answers', '答对题数');
+      document.getElementById('finalWrongLabel').textContent = uiText('Incorrect Answers', '答错题数');
+      document.getElementById('restartBottom').textContent = uiText('Restart Quiz', '重新开始');
+      document.getElementById('reviewBtn').textContent = uiText('Show Review', '显示讲评');
+      document.getElementById('checkBtn').textContent = uiText('Check This Question', '检查本题');
+      document.getElementById('hintBtn').textContent = uiText('Show Hint', '显示提示');
+      document.getElementById('prevBtn').textContent = uiText('Previous', '上一题');
+      document.getElementById('nextBtn').textContent = uiText('Next', '下一题');
+      document.getElementById('footerText').textContent = uiText(
+        'Built as a single self-contained HTML study page for Earth Science practice.',
+        '这是一个单文件、自包含的 HTML 地球科学练习页面。'
+      );
+
+      if (!reviewList.classList.contains('hidden')) {
+        showReview();
+      }
+      if (summaryBox.style.display === 'block') {
+        updateSummary();
+      }
+      renderQuestion();
+    }
+
+    function initLanguageMode() {
+      const key = 'earthPractice3LangMode';
+      const saved = (() => {
+        try { return localStorage.getItem(key); } catch { return null; }
+      })();
+      applyLanguageMode(saved || 'en');
+      languageButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          applyLanguageMode(button.dataset.langMode);
+          try { localStorage.setItem(key, button.dataset.langMode); } catch {}
+        });
+      });
+    }
+
+    document.getElementById('checkBtn').addEventListener('click', checkCurrent);
+    document.getElementById('hintBtn').addEventListener('click', () => {
+      hintBox.style.display = hintBox.style.display === 'block' ? 'none' : 'block';
+    });
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex -= 1;
+        renderQuestion();
+      }
+    });
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (currentIndex < questions.length - 1) {
+        currentIndex += 1;
+        renderQuestion();
+      }
+    });
+    document.getElementById('btnGradeQuiz').addEventListener('click', submitAll);
+    document.getElementById('btnRevealAll').addEventListener('click', revealAllAnswers);
+    document.getElementById('btnHideReview').addEventListener('click', hideReview);
+    document.getElementById('btnResetQuiz').addEventListener('click', restartQuiz);
+    document.getElementById('btnPrintPage').addEventListener('click', () => window.print());
+    document.getElementById('restartBottom').addEventListener('click', restartQuiz);
+    document.getElementById('reviewBtn').addEventListener('click', () => {
+      updateSummary();
+      showReview();
+      window.scrollTo({ top: summaryBox.offsetTop - 10, behavior: 'smooth' });
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight' && currentIndex < questions.length - 1) {
+        currentIndex += 1;
+        renderQuestion();
+      }
+      if (event.key === 'ArrowLeft' && currentIndex > 0) {
+        currentIndex -= 1;
+        renderQuestion();
+      }
+    });
+
+    initLanguageMode();
+  </script>
+</body>
+</html>
