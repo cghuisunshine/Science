@@ -75,6 +75,29 @@
       font-size:13px;
       margin-bottom:10px;
     }
+    .filter-box{
+      background:rgba(255,255,255,.72);
+      border:2px solid #222;
+      border-radius:16px;
+      padding:16px;
+    }
+    .filter-label{
+      display:block;
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:8px;
+      color:#444;
+    }
+    .filter-select{
+      width:100%;
+      padding:12px 14px;
+      border:2px solid #222;
+      border-radius:12px;
+      background:#fff;
+      font-size:16px;
+      font-weight:700;
+      color:#1f1f1f;
+    }
     .next-title{
       font-size:28px;
       font-weight:800;
@@ -231,7 +254,7 @@
   <div class="wrap">
     <div class="hero">
       <h1>课程安排</h1>
-      <p class="sub">上方只显示从当前时间起到未来 7 天内的课程，其余课程放到下方日历视图中。</p>
+      <p class="sub">上方显示从当前时间起到未来 7 天内的课程，下方日历显示全部课程；可按 Bruce 或 Eva 筛选。</p>
       <div class="hero-grid">
         <div class="next-box">
           <div class="next-label">下一节课程</div>
@@ -239,6 +262,14 @@
           <div id="nextMeta" class="next-meta"></div>
           <div id="countdown" class="hint"></div>
           <div class="hint">会根据你设备当前时间自动更新。</div>
+        </div>
+        <div class="filter-box">
+          <label class="filter-label" for="personFilter">筛选课程</label>
+          <select id="personFilter" class="filter-select">
+            <option value="all">全部</option>
+            <option value="Bruce">Bruce</option>
+            <option value="Eva">Eva</option>
+          </select>
         </div>
       </div>
     </div>
@@ -312,6 +343,7 @@
     ];
     events.sort((a,b)=> new Date(a.start) - new Date(b.start));
 
+    const personFilter = document.getElementById("personFilter");
     const timeline = document.getElementById("timeline");
     const monthsWrap = document.getElementById("months");
 
@@ -346,26 +378,29 @@
       return `距离开始还有 ${parts.join("")}`;
     }
 
+    function eventOwner(ev){
+      if(ev.title.startsWith("Bruce")) return "Bruce";
+      if(ev.title.startsWith("Eva")) return "Eva";
+      return "other";
+    }
+
     function render(){
       const now = new Date();
       const weekAhead = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-      let nextIndex = events.findIndex(ev => new Date(ev.start) >= now);
+      const filterValue = personFilter.value;
+      const filteredEvents = events.filter(ev => filterValue === "all" || eventOwner(ev) === filterValue);
+      let nextIndex = filteredEvents.findIndex(ev => new Date(ev.start) >= now);
       if(nextIndex === -1) nextIndex = null;
 
-      const nextEv = nextIndex !== null ? events[nextIndex] : null;
-      const weekEvents = events
+      const nextEv = nextIndex !== null ? filteredEvents[nextIndex] : null;
+      const weekEvents = filteredEvents
         .map((ev, idx) => ({ ev, idx }))
         .filter(({ ev }) => {
           const s = new Date(ev.start);
           return s >= now && s <= weekAhead;
         })
         .sort((a, b) => new Date(a.ev.start) - new Date(b.ev.start));
-      const calendarEvents = events
-        .map((ev, idx) => ({ ev, idx }))
-        .filter(({ ev }) => {
-          const s = new Date(ev.start);
-          return s < now || s > weekAhead;
-        });
+      const calendarEvents = filteredEvents.map((ev, idx) => ({ ev, idx }));
 
       if(nextEv){
         const s = new Date(nextEv.start), e = new Date(nextEv.end);
@@ -380,7 +415,7 @@
 
       timeline.innerHTML = "";
       if(weekEvents.length === 0){
-        timeline.innerHTML = `<div class="empty">未来 7 天内没有课程，其他课程已放到下方日历。</div>`;
+        timeline.innerHTML = `<div class="empty">未来 7 天内没有符合筛选条件的课程，下方日历显示全部符合条件的课程。</div>`;
       }
 
       weekEvents.forEach(({ ev, idx }) => {
@@ -416,7 +451,7 @@
 
       monthsWrap.innerHTML = "";
       if(calendarEvents.length === 0){
-        monthsWrap.innerHTML = `<div class="empty">其余课程为空。</div>`;
+        monthsWrap.innerHTML = `<div class="empty">当前筛选条件下没有课程。</div>`;
         return;
       }
 
@@ -440,6 +475,7 @@
       });
     }
 
+    personFilter.addEventListener("change", render);
     render();
     setInterval(render, 60000);
   </script>
