@@ -458,10 +458,11 @@
       Object.keys(grouped).forEach(key => {
         const monthBox = document.createElement("section");
         monthBox.className = "month";
-        const firstDate = new Date(grouped[key][0].ev.start);
-        monthBox.innerHTML = `<h2>${monthFmt.format(firstDate)}</h2><ul></ul>`;
+        const monthEvents = grouped[key];
+        const firstDate = new Date(monthEvents[0].ev.start);
+        monthBox.innerHTML = `<h2>${monthFmt.format(firstDate)}（${monthEvents.length}节课）</h2><ul></ul>`;
         const ul = monthBox.querySelector("ul");
-        grouped[key].forEach(({ev, idx}) => {
+        monthEvents.forEach(({ev, idx}) => {
           const s = new Date(ev.start), e = new Date(ev.end);
           const li = document.createElement("li");
           if(idx === nextIndex) li.classList.add("next-row");
