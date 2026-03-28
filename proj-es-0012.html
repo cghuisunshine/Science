@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PROJ-ES-0012 Space</title>
+<style>
+  :root{
+    --page-w: 816px;
+    --page-h: 1056px;
+    --ink:#111;
+    --line:#777;
+    --light:#dfeaf4;
+    --header:#aac5de;
+    --paper:#fff;
+    --bg:#ececec;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--bg);
+    font-family: Arial, Helvetica, sans-serif;
+    color:var(--ink);
+  }
+  .doc{padding:24px 0 60px}
+  .page{
+    width:var(--page-w);
+    min-height:var(--page-h);
+    margin:0 auto 18px;
+    background:var(--paper);
+    position:relative;
+    padding:78px 86px 74px 86px;
+  }
+  .topline{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    margin-bottom:14px;
+  }
+  .smalltitle{font-size:28px; line-height:1.1;}
+  .logo{width:122px}
+  .centerbar{
+    border:1px solid #7f8c97;
+    margin:4px 0 14px;
+  }
+  .centerbar .h1{
+    background:var(--header);
+    font-weight:700; text-align:center; font-size:20px;
+    padding:4px 8px;
+    border-bottom:1px solid #7f8c97;
+  }
+  .centerbar .sub{
+    background:var(--light);
+    text-align:center; font-style:italic; font-size:18px; line-height:1.35;
+    padding:6px 16px 2px;
+  }
+  .name-row{display:flex; justify-content:space-between; align-items:center; gap:24px; margin:12px 6px 16px;}
+  .label-line{display:flex; align-items:center; gap:8px; font-weight:700; font-size:18px;}
+  .line{display:inline-block; border-bottom:1px solid #7a7a7a; min-width:312px; height:20px;}
+  .line.short{min-width:188px;}
+  .hero{display:block; width:270px; margin:6px auto 18px;}
+  p{font-size:18px; line-height:1.42; margin:0 0 8px;}
+  .section-title{font-weight:700; font-size:18px; margin:22px 0 10px;}
+  a{color:#1a64c7; text-decoration:underline;}
+  table{border-collapse:collapse; width:100%;}
+  th,td{border:1px solid var(--line); vertical-align:top; padding:4px 7px; font-size:16px; line-height:1.25;}
+  th{font-weight:700}
+  .vocab th:first-child,.vocab td:first-child{width:128px; font-weight:700; text-align:right;}
+  ul{margin:6px 0 12px 28px; font-size:18px; line-height:1.42;}
+  li{margin:2px 0;}
+  .obs-title{font-weight:700; font-size:17px; margin:10px 0 14px;}
+  .blank-photo{height:180px;}
+  .parthead{font-weight:700; font-size:18px; margin:12px 0 8px;}
+  .mt-xl{margin-top:260px;}
+  .grid th{font-size:15px; text-align:center; vertical-align:middle;}
+  .grid td:first-child,.grid th:first-child{font-weight:700;}
+  .damage-row td{height:470px; vertical-align:middle;}
+  .damage-row td:first-child{width:105px;}
+  .distance-damage td{height:128px;}
+  .p5-grid{margin-top:22px;}
+  .p5-grid td{height:422px;}
+  .p5-grid td:first-child{width:240px; font-weight:700; vertical-align:middle;}
+  .footer{
+    position:absolute; left:86px; right:86px; bottom:26px;
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:14px;
+  }
+  .footer .mid{margin-left:-40px;}
+  .numbered{font-size:18px; line-height:1.42; margin:0 0 8px 20px; padding:0;}
+  .numbered li{margin:0 0 2px 0; padding-left:6px;}
+  .inner-bullets{margin-top:2px}
+  .event-table td{height:86px;}
+  .impact-table td{height:68px;}
+  .impact-table td:first-child{width:126px; font-weight:700; text-align:right; vertical-align:middle;}
+  .impact-table tr:last-child td{height:170px;}
+  .lang-toolbar{
+    position:sticky;
+    top:0;
+    z-index:20;
+    width:min(var(--page-w), calc(100vw - 24px));
+    margin:0 auto;
+    padding:12px 0 6px;
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:10px;
+    font-size:14px;
+    color:#29455f;
+  }
+  .lang-toolbar label{font-weight:700}
+  .lang-toolbar select{
+    border:1px solid #9fb3c7;
+    background:#fff;
+    color:#14314a;
+    border-radius:8px;
+    padding:6px 10px;
+    font:inherit;
+  }
+  .i18n-pair .i18n-zh{display:none; color:#29455f;}
+  body.lang-enzh .i18n-pair.block{display:block;}
+  body.lang-enzh .i18n-pair.block .i18n-en{display:block;}
+  body.lang-enzh .i18n-pair.block .i18n-zh{
+    display:block;
+    margin-top:4px;
+    padding-top:3px;
+    border-top:1px dashed #c6d3df;
+  }
+  body.lang-enzh .i18n-pair.inline .i18n-zh{display:inline;}
+  body.lang-enzh .i18n-pair.inline .i18n-zh::before{content:" / ";}
+  body.lang-zh .i18n-pair .i18n-en{display:none;}
+  body.lang-zh .i18n-pair.block{display:block;}
+  body.lang-zh .i18n-pair .i18n-zh{display:inline;}
+  body.lang-zh .i18n-pair.block .i18n-zh{display:block;}
+  @media print{
+    body{background:#fff}
+    .lang-toolbar{display:none}
+    .doc{padding:0}
+    .page{margin:0; box-shadow:none; page-break-after:always;}
+  }
+</style>
+</head>
+<body class="lang-en">
+<div class="lang-toolbar" aria-label="Language controls">
+  <label for="langMode">Language / 语言</label>
+  <select id="langMode">
+    <option value="en">English</option>
+    <option value="enzh">En + Zh</option>
+    <option value="zh">中文</option>
+  </select>
+</div>
+<div class="doc">
+
+  <section class="page">
+    <div class="topline">
+      <div class="smalltitle">PROJ-ES-0012: Space</div>
+      <img class="logo" src="extract_p1_11.png" alt="WCLN logo">
+    </div>
+
+    <div class="centerbar">
+      <div class="h1">Inquiry Question</div>
+      <div class="sub">Aliens? What happens when they arrive? How much damage will an<br>extra-terrestrial cause?</div>
+    </div>
+
+    <div class="name-row">
+      <div class="label-line">Name: <span class="line"></span></div>
+      <div class="label-line">Date: <span class="line short"></span></div>
+    </div>
+
+    <img class="hero" src="assets/asteroid.png" alt="Asteroid heading toward Earth">
+
+    <p>Surprised! We are not alone in space!!! Tons of debris from microscopic pieces of material to HUGE asteroids are all over the Solar System. Some of these are small enough to burn up in space. Some enter the atmosphere and burn up—which we know as shooting stars. Some will partly burn but impacts the Earth’s surface.</p>
+    <p>But which ones will simply burn up, which ones will impact with minimal impact, and which ones will cause damage? It depends on factors such as impact angle, entry speed, density of the material, where it impacts etc.</p>
+
+    <div class="section-title">Instructions</div>
+    <p>This inquiry project uses this website:</p>
+    <p><a href="http://down2earth.eu/impact_calculator/planet.html?lang=en-US">http://down2earth.eu/impact_calculator/planet.html?lang=en-US</a></p>
+    <p>To understand the information presented in this project you will need to understand some vocabulary.</p>
+
+    <table class="vocab">
+      <tr><th>Impactor</th><td>Sometimes call a projectile. It is the object that will hit the earth’s surface</td></tr>
+      <tr><th>Richter Magnitude</th><td>The Richter scale is used to measure the strength of an earthquake.</td></tr>
+      <tr><th>Sedimentary Rock</th><td>Rock formed from layers of bits and pieces of rock fragments, bones etc.,</td></tr>
+      <tr><th>Igneous Rocks</th><td>Rock formed from when lava or magma cools and solidifies.</td></tr>
+      <tr><th>Ejecta</th><td>The materials that is ejected from Earth’s surface due to the impact</td></tr>
+    </table>
+
+    <div class="footer"><span>2024-09-12</span><span class="mid">Page 1 of 8</span><span></span></div>
+  </section>
+
+  <section class="page">
+    <div class="topline">
+      <div class="smalltitle">PROJ-ES-0012: Space</div>
+      <img class="logo" src="extract_p1_11.png" alt="WCLN logo">
+    </div>
+
+    <p>Throughout this inquiry the impactor has been set at 100m. Insert a picture of an object that is roughly 100m in size. This will give you an appreciation of the damage relative to the size of the impactor. Insert the image on the observation page.</p>
+    <p>On the simulation page select Earth and click Start. The simulation will take you to the page where you can set various parameters by using the slider attached to each parameter.</p>
+
+    <div class="section-title">Part A: Effects of different types of impactor</div>
+    <ul>
+      <li>Projectile diameter = 100m</li>
+      <li>Trajectory angle = 45 deg.</li>
+      <li>Speed = 50 km/s</li>
+      <li>Target density = Water, and set water level to 10m</li>
+      <li>Distance from Crash site: 10 km</li>
+      <li>Projectile density = ice</li>
+      <li>Click submit. Record the necessary information in the table in the observation table</li>
+      <li>Click on “Data View”; summarize the damage in the observation table.</li>
+      <li>Click “Go Back”</li>
+      <li>Repeat the procedure with Porous Rocks, Dense Rocks, Iron</li>
+    </ul>
+
+    <div class="section-title">Part B: Effects of types of impactor by distance</div>
+    <ul>
+      <li>Projectile diameter = 100m</li>
+      <li>Trajectory angle = 45 deg.</li>
+      <li>Speed = 50 km/s</li>
+      <li>Projectile density =dense rocks</li>
+      <li>Target density = Water, and set water level to 10m</li>
+      <li>Distance from Crash site: 10 km</li>
+      <li>Click submit. Record the necessary information in the table in the observation table</li>
+      <li>Click on “Data View”; summarize the damage in the observation table.</li>
+      <li>Click “Go Back”</li>
+      <li>Repeat the procedure with distance set 20, 30, and 40 km</li>
+    </ul>
+
+    <div class="section-title">Part C: Effects of types of impactor by impact density</div>
+    <ul>
+      <li>Projectile diameter = 100m</li>
+      <li>Trajectory angle = 45 deg.</li>
+      <li>Speed = 50 km/s</li>
+      <li>Projectile density = dense rock</li>
+      <li>Distance from Crash site: 10 km</li>
+      <li>Target density = water</li>
+      <li>Water level = 10 m</li>
+    </ul>
+
+    <div class="footer"><span>2024-09-12</span><span class="mid">Page 2 of 8</span><span></span></div>
+  </section>
+
+  <section class="page">
+    <div class="topline">
+      <div class="smalltitle">PROJ-ES-0012: Space</div>
+      <img class="logo" src="extract_p1_11.png" alt="WCLN logo">
+    </div>
+
+    <ul style="margin-top:6px;">
+      <li>Click submit to take you to a data page. Click on “Data View”</li>
+      <li>Complete the table in the Observation section.</li>
+      <li>Click “Go Back”</li>
+      <li>Repeat the procedure with sedimentary rock and igneous rocks.</li>
+    </ul>
+
+    <div class="section-title">Observations</div>
+    <div class="obs-title">Image of 100m object</div>
+    <div class="blank-photo"></div>
+
+    <div class="parthead mt-xl">Part A: Effects of types of impactor</div>
+
+    <div class="footer"><span>2024-09-12</span><span class="mid">Page 3 of 8</span><span></span></div>
+  </section>
+
+  <section class="page">
+    <div class="topline">
+      <div class="smalltitle">PROJ-ES-0012: Space</div>
+      <img class="logo" src="extract_p1_11.png" alt="WCLN logo">
+    </div>
+
+    <table class="grid">
+      <tr>
+        <th>Impactor<br>type</th>
+        <th>Ice</th>
+        <th>Porous<br>Rock</th>
+        <th>Dense<br>Rock</th>
+        <th>Iron</th>
+      </tr>
+      <tr><td>Crater<br>Depth</td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Crater<br>Width</td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Richter<br>magnitude</td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Fireball<br>Radius</td><td></td><td></td><td></td><td></td></tr>
+      <tr class="damage-row"><td>Damage</td><td></td><td></td><td></td><td></td></tr>
+    </table>
+
+    <div class="parthead" style="margin-top:34px;">Part B: Damage by Distance</div>
+
+    <table class="grid">
+      <tr>
+        <th>Impactor type</th>
+        <th>10 km</th>
+        <th>20 km</th>
+        <th>30 km</th>
+        <th>40 km</th>
+      </tr>
+      <tr><td>Crater<br>Depth</td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Crater<br>Width</td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Richter<br>magnitude</td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Fireball<br>Radius</td><td></td><td></td><td></td><td></td></tr>
+    </table>
+
+    <div class="footer"><span>2024-09-12</span><span class="mid">Page 4 of 8</span><span></span></div>
+  </section>
+
+  <section class="page">
+    <div class="topline">
+      <div class="smalltitle">PROJ-ES-0012: Space</div>
+      <img class="logo" src="extract_p1_11.png" alt="WCLN logo">
+    </div>
+
+    <table class="grid p5-grid">
+      <tr><td>Damage</td><td></td><td></td><td></td><td></td></tr>
+    </table>
+
+    <div class="footer"><span>2024-09-12</span><span class="mid">Page 5 of 8</span><span></span></div>
+  </section>
+
+  <section class="page">
+    <div class="topline">
+      <div class="smalltitle">PROJ-ES-0012: Space</div>
+      <img class="logo" src="extract_p1_11.png" alt="WCLN logo">
+    </div>
+
+    <div class="parthead">Part C Effects of Target Density</div>
+
+    <table class="grid">
+      <tr>
+        <th>Impactor<br>type</th>
+        <th>Water<br>(10m)</th>
+        <th>Sedimentary Rocks</th>
+        <th>Igneous<br>Rocks</th>
+      </tr>
+      <tr><td>Crater<br>Depth</td><td></td><td></td><td></td></tr>
+      <tr><td>Crater<br>Width</td><td></td><td></td><td></td></tr>
+      <tr><td>Richter<br>magnitude</td><td></td><td></td><td></td></tr>
+      <tr><td>Fireball<br>Radius</td><td></td><td></td><td></td></tr>
+      <tr class="damage-row"><td>Damage</td><td></td><td></td><td></td></tr>
+    </table>
+
+    <div class="footer"><span>2024-09-12</span><span class="mid">Page 6 of 8</span><span></span></div>
+  </section>
+
+  <section class="page">
+    <div class="topline">
+      <div class="smalltitle">PROJ-ES-0012: Space</div>
+      <img class="logo" src="extract_p1_11.png" alt="WCLN logo">
+    </div>
+
+    <div class="section-title">Analysis Questions:</div>
+    <ol class="numbered">
+      <li>Which of the 4 types of impactor types causes the most damage? Cite data from the table to support your answer.</li>
+      <li>What factors influence the size of craters formed from the impact?</li>
+      <li>Determine how your community will be affected by an impact:
+        <ul class="inner-bullets">
+          <li>Search and download a map of your community.</li>
+          <li>Mark the “center” of you community...maybe its city hall, or your local high school. This is where the impactor will hit</li>
+          <li>Use the scale on your map, the center of your community, draw circles centered on the impact site to represent 10km, 20km, 30km, and 40km from the center.</li>
+          <li>Use the information from table 2, identify damages that would occur in your community. Be as specific as possible. Use a table like this to record the damages:</li>
+        </ul>
+      </li>
+    </ol>
+
+    <table class="grid distance-damage">
+      <tr><td style="font-weight:400;">Distance</td><td style="font-weight:400;">Damages</td></tr>
+      <tr><td>10km</td><td></td></tr>
+      <tr><td>20km</td><td></td></tr>
+      <tr><td>30km</td><td></td></tr>
+      <tr><td>40km</td><td></td></tr>
+    </table>
+
+    <div class="footer"><span>2024-09-12</span><span class="mid">Page 7 of 8</span><span></span></div>
+  </section>
+
+  <section class="page">
+    <div class="topline">
+      <div class="smalltitle">PROJ-ES-0012: Space</div>
+      <img class="logo" src="extract_p1_11.png" alt="WCLN logo">
+    </div>
+
+    <ol class="numbered" start="4">
+      <li>Asteroid have been theorized to hit Earth and other members of the Solar System in the past. Research the following events and complete the table.</li>
+    </ol>
+
+    <table class="grid event-table" style="margin-top:8px;">
+      <tr>
+        <th>Event</th>
+        <th>When it happen</th>
+        <th>Size of impactor</th>
+        <th>Result of impact</th>
+      </tr>
+      <tr><td>Alvarez Hypothesis</td><td></td><td></td><td></td></tr>
+      <tr><td>Giant-impact<br>hypothesis</td><td></td><td></td><td></td></tr>
+    </table>
+
+    <ol class="numbered" start="5" style="margin-top:18px;">
+      <li>Research an object in space that is on its way to the Earth.</li>
+    </ol>
+
+    <table class="grid impact-table" style="margin-top:8px;">
+      <tr><td>Name:</td><td></td></tr>
+      <tr><td>Size:</td><td></td></tr>
+      <tr><td>Speed:</td><td></td></tr>
+      <tr><td>When does it<br>impact Earth?</td><td></td></tr>
+      <tr><td>Hypothesized<br>effects/result of<br>impact:</td><td></td></tr>
+    </table>
+
+    <div class="section-title" style="margin-top:28px;">Submission Requirements</div>
+    <ul style="margin-top:4px;">
+      <li>Data tables</li>
+      <li>Answers to analysis questions</li>
+      <li>Map of your community and impact description</li>
+    </ul>
+
+    <div class="footer"><span>2024-09-12</span><span class="mid">Page 8 of 8</span><span></span></div>
+  </section>
+
+</div>
+<script>
+  (() => {
+    const STORAGE_KEY = 'proj-es-0012-lang-mode';
+    const MODES = ['lang-en', 'lang-enzh', 'lang-zh'];
+    const modeSelect = document.getElementById('langMode');
+    const body = document.body;
+    const titleMap = {
+      en: 'PROJ-ES-0012 Space',
+      zh: 'PROJ-ES-0012 太空'
+    };
+    const textMap = new Map(Object.entries({
+      'PROJ-ES-0012: Space': 'PROJ-ES-0012：太空',
+      'Inquiry Question': '探究问题',
+      'Aliens? What happens when they arrive? How much damage will an': '外星来客会怎样？一个',
+      'extra-terrestrial cause?': '地外天体会造成多大破坏？',
+      'Name:': '姓名：',
+      'Date:': '日期：',
+      'Surprised! We are not alone in space!!! Tons of debris from microscopic pieces of material to HUGE asteroids are all over the Solar System. Some of these are small enough to burn up in space. Some enter the atmosphere and burn up—which we know as shooting stars. Some will partly burn but impacts the Earth’s surface.': '惊讶吧！我们在太空中并不孤单！从微小碎屑到巨大小行星，大量碎片遍布整个太阳系。其中一些小到会在太空中烧尽；一些进入大气层后燃烧，我们把它们叫作流星；还有一些会部分燃烧，但仍然撞击地球表面。',
+      'But which ones will simply burn up, which ones will impact with minimal impact, and which ones will cause damage? It depends on factors such as impact angle, entry speed, density of the material, where it impacts etc.': '但哪些会直接烧尽，哪些只会造成很小的影响，哪些又会造成严重破坏呢？这取决于撞击角度、进入速度、物质密度、撞击地点等因素。',
+      'Instructions': '说明',
+      'This inquiry project uses this website:': '本探究项目使用以下网站：',
+      'To understand the information presented in this project you will need to understand some vocabulary.': '要理解本项目中呈现的信息，你需要先理解一些词汇。',
+      'Impactor': '撞击体',
+      'Sometimes call a projectile. It is the object that will hit the earth’s surface': '有时也称为抛射体。它是将会撞击地球表面的物体。',
+      'Richter Magnitude': '里氏震级',
+      'The Richter scale is used to measure the strength of an earthquake.': '里氏震级用于测量地震的强度。',
+      'Sedimentary Rock': '沉积岩',
+      'Rock formed from layers of bits and pieces of rock fragments, bones etc.,': '由岩石碎屑、骨骼等层层堆积形成的岩石。',
+      'Igneous Rocks': '火成岩',
+      'Rock formed from when lava or magma cools and solidifies.': '由熔岩或岩浆冷却凝固形成的岩石。',
+      'Ejecta': '喷出物',
+      'The materials that is ejected from Earth’s surface due to the impact': '由于撞击而从地球表面喷射出去的物质。',
+      'Page 1 of 8': '第 1 页，共 8 页',
+      'Throughout this inquiry the impactor has been set at 100m. Insert a picture of an object that is roughly 100m in size. This will give you an appreciation of the damage relative to the size of the impactor. Insert the image on the observation page.': '在整个探究中，撞击体都设为 100 米。请插入一张大约 100 米大小物体的图片，这能帮助你理解撞击体大小与破坏程度之间的关系。请把图片放在观察页面上。',
+      'On the simulation page select Earth and click Start. The simulation will take you to the page where you can set various parameters by using the slider attached to each parameter.': '在模拟页面选择 Earth 并点击 Start。系统会带你进入一个可以通过滑块设置各种参数的页面。',
+      'Part A: Effects of different types of impactor': 'A 部分：不同类型撞击体的影响',
+      'Projectile diameter = 100m': '撞击体直径 = 100 米',
+      'Trajectory angle = 45 deg.': '轨迹角度 = 45°',
+      'Speed = 50 km/s': '速度 = 50 km/s',
+      'Target density = Water, and set water level to 10m': '目标密度 = 水，水深设为 10 米',
+      'Distance from Crash site: 10 km': '距离撞击点：10 km',
+      'Projectile density = ice': '撞击体密度 = 冰',
+      'Click submit. Record the necessary information in the table in the observation table': '点击 submit。把所需信息记录在观察表中的表格里。',
+      'Click on “Data View”; summarize the damage in the observation table.': '点击 “Data View”；在观察表中概括损害情况。',
+      'Click “Go Back”': '点击 “Go Back”',
+      'Repeat the procedure with Porous Rocks, Dense Rocks, Iron': '用多孔岩石、致密岩石和铁重复上述步骤。',
+      'Part B: Effects of types of impactor by distance': 'B 部分：不同距离下撞击体造成的影响',
+      'Projectile density =dense rocks': '撞击体密度 = 致密岩石',
+      'Repeat the procedure with distance set 20, 30, and 40 km': '把距离改为 20、30 和 40 km，重复上述步骤。',
+      'Part C: Effects of types of impactor by impact density': 'C 部分：不同目标密度对撞击效果的影响',
+      'Projectile density = dense rock': '撞击体密度 = 致密岩石',
+      'Target density = water': '目标密度 = 水',
+      'Water level = 10 m': '水深 = 10 米',
+      'Page 2 of 8': '第 2 页，共 8 页',
+      'Click submit to take you to a data page. Click on “Data View”': '点击 submit 进入数据页面。点击 “Data View”',
+      'Complete the table in the Observation section.': '完成观察部分中的表格。',
+      'Repeat the procedure with sedimentary rock and igneous rocks.': '用沉积岩和火成岩重复上述步骤。',
+      'Observations': '观察',
+      'Image of 100m object': '100 米物体的图片',
+      'Part A: Effects of types of impactor': 'A 部分：不同类型撞击体的影响',
+      'Page 3 of 8': '第 3 页，共 8 页',
+      'Impactor type': '撞击体类型',
+      'Ice': '冰',
+      'Porous': '多孔',
+      'Rock': '岩石',
+      'Dense': '致密',
+      'Iron': '铁',
+      'Crater': '陨坑',
+      'Depth': '深度',
+      'Width': '宽度',
+      'Richter': '里氏',
+      'magnitude': '震级',
+      'Fireball': '火球',
+      'Radius': '半径',
+      'Damage': '损害',
+      'type': '类型',
+      'Rocks': '岩石',
+      'Part B: Damage by Distance': 'B 部分：按距离分析损害',
+      '10 km': '10 km',
+      '20 km': '20 km',
+      '30 km': '30 km',
+      '40 km': '40 km',
+      'Page 4 of 8': '第 4 页，共 8 页',
+      'Page 5 of 8': '第 5 页，共 8 页',
+      'Part C Effects of Target Density': 'C 部分：目标密度的影响',
+      'Water': '水',
+      '(10m)': '（10 米）',
+      'Sedimentary Rocks': '沉积岩',
+      'Igneous': '火成',
+      'Page 6 of 8': '第 6 页，共 8 页',
+      'Analysis Questions:': '分析问题：',
+      'Which of the 4 types of impactor types causes the most damage? Cite data from the table to support your answer.': '四种撞击体类型中，哪一种造成的破坏最大？请引用表格中的数据支持你的答案。',
+      'What factors influence the size of craters formed from the impact?': '哪些因素会影响撞击后形成陨坑的大小？',
+      'Determine how your community will be affected by an impact:': '确定撞击将如何影响你的社区：',
+      'Search and download a map of your community.': '搜索并下载你所在社区的地图。',
+      'Mark the “center” of you community...maybe its city hall, or your local high school. This is where the impactor will hit': '标出你社区的“中心”……可能是市政厅，或你当地的高中。这就是撞击体将会击中的地点。',
+      'Use the scale on your map, the center of your community, draw circles centered on the impact site to represent 10km, 20km, 30km, and 40km from the center.': '使用地图上的比例尺，以你社区的中心为基准，围绕撞击点画出 10 km、20 km、30 km 和 40 km 的同心圆。',
+      'Use the information from table 2, identify damages that would occur in your community. Be as specific as possible. Use a table like this to record the damages:': '利用表 2 中的信息，指出你的社区可能会发生哪些损害。尽量具体，并使用类似下表的表格记录这些损害：',
+      'Distance': '距离',
+      'Damages': '损害',
+      '10km': '10 km',
+      '20km': '20 km',
+      '30km': '30 km',
+      '40km': '40 km',
+      'Page 7 of 8': '第 7 页，共 8 页',
+      'Asteroid have been theorized to hit Earth and other members of the Solar System in the past. Research the following events and complete the table.': '人们推测，小行星在过去曾撞击过地球和太阳系中的其他天体。请研究以下事件并完成表格。',
+      'Event': '事件',
+      'When it happen': '发生时间',
+      'Size of impactor': '撞击体大小',
+      'Result of impact': '撞击结果',
+      'Alvarez Hypothesis': '阿尔瓦雷斯假说',
+      'Giant-impact': '巨撞击',
+      'hypothesis': '假说',
+      'Research an object in space that is on its way to the Earth.': '研究一个正在朝地球接近的太空天体。',
+      'Name:': '名称：',
+      'Size:': '大小：',
+      'Speed:': '速度：',
+      'When does it': '它何时',
+      'impact Earth?': '撞击地球？',
+      'Hypothesized': '推测的',
+      'effects/result of': '影响／结果',
+      'impact:': '撞击：',
+      'Submission Requirements': '提交要求',
+      'Data tables': '数据表格',
+      'Answers to analysis questions': '分析问题的答案',
+      'Map of your community and impact description': '你所在社区的地图和撞击影响说明',
+      'Page 8 of 8': '第 8 页，共 8 页'
+    }));
+    const altMap = new Map([
+      ['WCLN logo', 'WCLN 标志'],
+      ['Asteroid heading toward Earth', '朝向地球飞来的小行星']
+    ]);
+
+    function makePair(enText, zhText, mode) {
+      const pair = document.createElement('span');
+      pair.className = `i18n-pair ${mode}`;
+      const en = document.createElement('span');
+      en.className = 'i18n-en';
+      en.textContent = enText;
+      const zh = document.createElement('span');
+      zh.className = 'i18n-zh';
+      zh.textContent = zhText;
+      pair.append(en, zh);
+      return pair;
+    }
+
+    function getPairMode(parent) {
+      if (!parent) return 'inline';
+      if (parent.closest('.label-line, .footer')) return 'inline';
+      if (parent.tagName === 'SPAN' || parent.tagName === 'A' || parent.tagName === 'STRONG') return 'inline';
+      if (
+        parent.tagName === 'P' ||
+        parent.tagName === 'LI' ||
+        parent.tagName === 'TH' ||
+        parent.tagName === 'TD' ||
+        parent.classList.contains('smalltitle') ||
+        parent.classList.contains('section-title') ||
+        parent.classList.contains('parthead') ||
+        parent.classList.contains('obs-title') ||
+        parent.classList.contains('h1') ||
+        parent.classList.contains('sub')
+      ) {
+        return 'block';
+      }
+      return 'inline';
+    }
+
+    function translateTextNodes() {
+      const walker = document.createTreeWalker(document.querySelector('.doc'), NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          if (!node.parentElement) return NodeFilter.FILTER_REJECT;
+          if (node.parentElement.closest('.i18n-pair, script, style')) return NodeFilter.FILTER_REJECT;
+          const trimmed = node.textContent.trim();
+          if (!trimmed) return NodeFilter.FILTER_REJECT;
+          return textMap.has(trimmed) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+      });
+
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+
+      nodes.forEach(node => {
+        const raw = node.textContent;
+        const trimmed = raw.trim();
+        const zh = textMap.get(trimmed);
+        if (!zh) return;
+        const leading = raw.match(/^\s*/)?.[0] || '';
+        const trailing = raw.match(/\s*$/)?.[0] || '';
+        const fragment = document.createDocumentFragment();
+        if (leading) fragment.appendChild(document.createTextNode(leading));
+        fragment.appendChild(makePair(trimmed, zh, getPairMode(node.parentElement)));
+        if (trailing) fragment.appendChild(document.createTextNode(trailing));
+        node.parentNode.replaceChild(fragment, node);
+      });
+    }
+
+    function translateAttributes() {
+      document.querySelectorAll('img[alt]').forEach(img => {
+        const en = img.getAttribute('alt');
+        const zh = altMap.get(en);
+        if (!zh) return;
+        img.dataset.altEn = en;
+        img.dataset.altZh = zh;
+      });
+    }
+
+    function setMode(mode) {
+      if (!['en', 'enzh', 'zh'].includes(mode)) mode = 'en';
+      body.classList.remove(...MODES);
+      body.classList.add(`lang-${mode}`);
+      document.documentElement.lang = mode === 'zh' ? 'zh-CN' : 'en';
+      document.title = mode === 'zh' ? titleMap.zh : titleMap.en;
+      if (modeSelect) modeSelect.value = mode;
+      document.querySelectorAll('img[data-alt-en]').forEach(img => {
+        const en = img.dataset.altEn;
+        const zh = img.dataset.altZh;
+        img.setAttribute('alt', mode === 'zh' ? zh : mode === 'enzh' ? `${en} / ${zh}` : en);
+      });
+      try {
+        localStorage.setItem(STORAGE_KEY, mode);
+      } catch {}
+    }
+
+    translateTextNodes();
+    translateAttributes();
+    const topNameZh = document.querySelector('.name-row .label-line .i18n-pair .i18n-zh');
+    if (topNameZh) topNameZh.textContent = '姓名：';
+
+    let initialMode = 'en';
+    try {
+      initialMode = localStorage.getItem(STORAGE_KEY) || 'en';
+    } catch {
+      initialMode = 'en';
+    }
+
+    if (modeSelect) {
+      modeSelect.addEventListener('change', event => setMode(event.target.value));
+    }
+
+    setMode(initialMode);
+  })();
+</script>
+</body>
+</html>
