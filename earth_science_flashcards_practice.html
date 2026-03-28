@@ -1,0 +1,1475 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Earth Science Final Exam Flash Cards Practice</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #dbe3ee;
+      --accent: #2563eb;
+      --good-bg: #ecfdf5;
+      --good-line: #10b981;
+      --bad-bg: #fff7ed;
+      --bad-line: #f59e0b;
+      --answer-bg: #f8fafc;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .lang-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .lang-label {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    #langMode {
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #ffffff;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .i18n-en,
+    .i18n-zh {
+      display: block;
+    }
+
+    .i18n-zh {
+      margin-top: 4px;
+      color: #475569;
+    }
+
+    .intro {
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      gap: 10px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .toolbar input,
+    .toolbar select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 15px;
+      background: white;
+      color: var(--text);
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      background: var(--accent);
+      color: white;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    button.secondary {
+      background: #475569;
+    }
+
+    button.light {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .stats {
+      margin: 12px 0 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .ai-tools {
+      margin-bottom: 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .ai-tools summary {
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .ai-tools .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .ai-tools label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .ai-tools input {
+      flex: 1 1 360px;
+      min-width: 220px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 15px;
+      background: white;
+      color: var(--text);
+    }
+
+    .ai-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .ai-status {
+      min-height: 20px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .ai-status.ok {
+      color: #166534;
+    }
+
+    .ai-status.bad {
+      color: #b45309;
+    }
+
+    .section-title {
+      margin: 28px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--line);
+      font-size: 22px;
+    }
+
+    .cards {
+      display: grid;
+      gap: 14px;
+    }
+
+    .empty-state {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+      color: var(--muted);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
+    }
+
+    .card.good {
+      border-color: var(--good-line);
+      background: var(--good-bg);
+    }
+
+    .card.warn {
+      border-color: var(--bad-line);
+      background: var(--bad-bg);
+    }
+
+    .qnum {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .question {
+      font-weight: 700;
+      margin-bottom: 10px;
+      font-size: 17px;
+    }
+
+    textarea {
+      min-height: 88px;
+      resize: vertical;
+      margin-bottom: 10px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 8px;
+      padding: 10px 12px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      white-space: pre-wrap;
+    }
+
+    .feedback.has-text {
+      display: block;
+    }
+
+    .feedback.info {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      color: #334155;
+    }
+
+    .feedback.good {
+      background: #ecfdf5;
+      border-color: #86efac;
+      color: #166534;
+    }
+
+    .feedback.warn,
+    .feedback.bad {
+      background: #fff7ed;
+      border-color: #fdba74;
+      color: #9a3412;
+    }
+
+    .answer {
+      display: none;
+      background: var(--answer-bg);
+      border: 1px dashed #94a3b8;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 8px;
+    }
+
+    .answer.show {
+      display: block;
+    }
+
+    .keyword-line {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .footer-note {
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .card.checking {
+      border-color: #93c5fd;
+    }
+
+    @media (max-width: 800px) {
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .ai-tools .row {
+        align-items: stretch;
+      }
+
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <h1 id="pageTitle">Earth Science Final Exam Practice</h1>
+      <div class="lang-controls">
+        <label class="lang-label" for="langMode" id="langLabel">Language</label>
+        <select id="langMode" aria-label="Language mode">
+          <option value="en">English</option>
+          <option value="enzh">En + Zh</option>
+          <option value="zh">中文</option>
+        </select>
+      </div>
+    </div>
+    <div class="intro" id="pageIntro">
+      Type your answer in the box, then click <strong>Check</strong> to send it to the AI grader. Use <strong>Show Answer</strong> when you want the model answer for comparison.
+    </div>
+
+    <details class="ai-tools" open>
+      <summary id="aiSummary">AI answer check</summary>
+      <div class="row">
+        <label for="grade-api-url" id="gradeApiLabel">Grade API URL</label>
+        <input id="grade-api-url" type="text" placeholder="https://example.com/grade" />
+        <button id="btn-test-api" type="button">Test</button>
+        <span class="ai-status" id="api-status"></span>
+      </div>
+      <div class="ai-note" id="aiNote">
+        Each <strong>Check</strong> request sends the question, your answer, and the model answer to the grader service.
+      </div>
+    </details>
+
+    <div class="toolbar">
+      <input id="searchBox" type="text" placeholder="Search questions or answers..." />
+      <select id="sectionFilter">
+        <option value="all">All sections</option>
+      </select>
+      <button id="checkAllBtn">Check Visible</button>
+      <button id="resetBtn" class="secondary">Reset All</button>
+    </div>
+
+    <div class="stats" id="stats">0 / 0 checked</div>
+
+    <div id="app"></div>
+
+    <div class="footer-note" id="footerNote">
+      Tip: For science exams, try answering from memory in 1–2 sentences. Focus on keywords like <em>red-shift</em>, <em>CMBR</em>, <em>nebular theory</em>, <em>fusion</em>, <em>spectroscope</em>, and <em>solar wind</em>.
+    </div>
+  </div>
+
+  <script>
+    const cards = [
+      {
+        section: '4.1 Dissecting the Universe',
+        q: 'What is the universe?',
+        a: 'The universe includes all matter, energy, and space. It contains galaxies, stars, planets, gases, dust, and vast amounts of empty space.',
+        keywords: ['matter', 'energy', 'space']
+      },
+      {
+        section: '4.1 Dissecting the Universe',
+        q: 'What is a galaxy?',
+        a: 'A galaxy is a huge collection of stars, gas, and dust held together by gravity.',
+        keywords: ['stars', 'gas', 'dust', 'gravity']
+      },
+      {
+        section: '4.1 Dissecting the Universe',
+        q: 'What are the three main galaxy shapes?',
+        a: 'Elliptical, spiral, and irregular.',
+        keywords: ['elliptical', 'spiral', 'irregular']
+      },
+      {
+        section: '4.1 Dissecting the Universe',
+        q: 'What is the Milky Way?',
+        a: 'The Milky Way is our home galaxy, and what we see in the night sky is part of one of its spiral arms.',
+        keywords: ['home galaxy', 'spiral arm']
+      },
+      {
+        section: '4.1 Dissecting the Universe',
+        q: 'What is a star?',
+        a: 'A star is a huge ball of gas held together by gravity that produces energy in the form of light.',
+        keywords: ['gas', 'gravity', 'light']
+      },
+      {
+        section: '4.1 Dissecting the Universe',
+        q: 'What is a constellation?',
+        a: 'A constellation is a pattern of stars noticed and named by observers.',
+        keywords: ['pattern', 'stars']
+      },
+      {
+        section: '4.1 Dissecting the Universe',
+        q: 'What are the three requirements for a planet in this lesson?',
+        a: 'It must orbit the Sun, be massive enough to be round, and dominate its neighbourhood.',
+        keywords: ['orbit the sun', 'round', 'dominate']
+      },
+      {
+        section: '4.1 Dissecting the Universe',
+        q: 'What is the order of the planets from the Sun?',
+        a: 'Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune.',
+        keywords: ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune']
+      },
+      {
+        section: '4.1 Dissecting the Universe',
+        q: 'Why is Pluto no longer classified as a major planet?',
+        a: 'It was reclassified as a dwarf planet because it did not meet the full planet definition used by astronomers.',
+        keywords: ['dwarf planet', 'definition']
+      },
+      {
+        section: '4.1 Dissecting the Universe',
+        q: 'What is a light-year?',
+        a: 'A light-year is a distance, not a time. It is how far light travels in one year.',
+        keywords: ['distance', 'light travels in one year']
+      },
+      {
+        section: '4.1 Dissecting the Universe',
+        q: 'What is 1 AU?',
+        a: 'One astronomical unit is the distance from Earth to the Sun, about 150,000,000 km.',
+        keywords: ['astronomical unit', 'earth to the sun']
+      },
+      {
+        section: '4.2 Formation of the Universe',
+        q: 'What does the Big Bang Theory say?',
+        a: 'It says the universe began with a massive expansion of matter and radiation, and that space and time began with that event.',
+        keywords: ['expansion', 'matter', 'radiation', 'space', 'time']
+      },
+      {
+        section: '4.2 Formation of the Universe',
+        q: 'What is the Doppler Effect?',
+        a: 'It is the change in wavelength and frequency of a source caused by motion relative to an observer.',
+        keywords: ['wavelength', 'frequency', 'motion']
+      },
+      {
+        section: '4.2 Formation of the Universe',
+        q: 'What is red-shift?',
+        a: 'Red-shift is when light from distant galaxies is shifted toward lower frequencies, showing that the galaxies are moving away.',
+        keywords: ['lower frequencies', 'moving away', 'galaxies']
+      },
+      {
+        section: '4.2 Formation of the Universe',
+        q: 'Why is red-shift evidence for an expanding universe?',
+        a: 'Because distant galaxies are observed moving away, and the farther they are, the faster they appear to recede.',
+        keywords: ['moving away', 'expanding universe']
+      },
+      {
+        section: '4.2 Formation of the Universe',
+        q: 'What is CMBR?',
+        a: 'Cosmic Microwave Background Radiation is the leftover afterglow of the Big Bang, now observed as microwave radiation throughout the universe.',
+        keywords: ['cosmic microwave background radiation', 'afterglow', 'big bang']
+      },
+      {
+        section: '4.2 Formation of the Universe',
+        q: 'Name two major pieces of evidence for the Big Bang.',
+        a: 'Red-shift of distant galaxies and Cosmic Microwave Background Radiation.',
+        keywords: ['red-shift', 'cosmic microwave background radiation']
+      },
+      {
+        section: '4.3 Stars',
+        q: 'What tool splits light into its colours for study?',
+        a: 'A spectroscope.',
+        keywords: ['spectroscope']
+      },
+      {
+        section: '4.3 Stars',
+        q: 'What is a spectrum?',
+        a: 'A spectrum is the series of colours produced when light is separated.',
+        keywords: ['series of colours', 'light']
+      },
+      {
+        section: '4.3 Stars',
+        q: 'Why do scientists say elements have fingerprints?',
+        a: 'Because each element produces its own unique spectrum when heated.',
+        keywords: ['unique spectrum', 'element']
+      },
+      {
+        section: '4.3 Stars',
+        q: 'How can astronomers tell what a star is made of?',
+        a: 'By analyzing the star’s light spectrum with a spectroscope.',
+        keywords: ['spectrum', 'spectroscope']
+      },
+      {
+        section: '4.3 Stars',
+        q: 'What star colour means cooler temperature?',
+        a: 'Red or reddish.',
+        keywords: ['red']
+      },
+      {
+        section: '4.3 Stars',
+        q: 'What star colour means very high temperature?',
+        a: 'Bluish-violet.',
+        keywords: ['blue', 'violet', 'bluish-violet']
+      },
+      {
+        section: '4.3 Stars',
+        q: 'How is a star born?',
+        a: 'Gravity compresses gas so strongly that pressure rises enough for nuclear fusion to begin.',
+        keywords: ['gravity', 'gas', 'pressure', 'fusion']
+      },
+      {
+        section: '4.4 Formation of the Solar System',
+        q: 'What is the nebular theory?',
+        a: 'It is the explanation that the solar system formed from the gravitational collapse of a cloud of gas and dust.',
+        keywords: ['gravitational collapse', 'gas', 'dust']
+      },
+      {
+        section: '4.4 Formation of the Solar System',
+        q: 'What is a protosun?',
+        a: 'A protosun is the still-condensing future Sun forming at the centre of the nebula.',
+        keywords: ['future sun', 'centre', 'nebula']
+      },
+      {
+        section: '4.4 Formation of the Solar System',
+        q: 'What is a protoplanet?',
+        a: 'A protoplanet is a still-condensing future planet forming from clumps of matter in the solar disk.',
+        keywords: ['future planet', 'clumps', 'solar disk']
+      },
+      {
+        section: '4.4 Formation of the Solar System',
+        q: 'Why are the inner planets rocky?',
+        a: 'They formed close to the Sun where it was too hot for gases and ices to condense, so mainly rock and metal remained.',
+        keywords: ['close to the sun', 'too hot', 'rock', 'metal']
+      },
+      {
+        section: '4.4 Formation of the Solar System',
+        q: 'Why are the outer planets large and gas-rich?',
+        a: 'They formed farther from the Sun where temperatures were lower, so gases and ices could condense.',
+        keywords: ['farther from the sun', 'lower temperatures', 'gases', 'ices']
+      },
+      {
+        section: '4.4 Formation of the Solar System',
+        q: 'Which are the terrestrial planets?',
+        a: 'Mercury, Venus, Earth, and Mars.',
+        keywords: ['mercury', 'venus', 'earth', 'mars']
+      },
+      {
+        section: '4.4 Formation of the Solar System',
+        q: 'Which are the Jovian planets?',
+        a: 'Jupiter, Saturn, Uranus, and Neptune.',
+        keywords: ['jupiter', 'saturn', 'uranus', 'neptune']
+      },
+      {
+        section: '4.5 The Sun’s Energy',
+        q: 'What kind of star is the Sun?',
+        a: 'An ordinary yellow dwarf star.',
+        keywords: ['yellow dwarf']
+      },
+      {
+        section: '4.5 The Sun’s Energy',
+        q: 'What are the three layers of the Sun’s atmosphere?',
+        a: 'Photosphere, chromosphere, and corona.',
+        keywords: ['photosphere', 'chromosphere', 'corona']
+      },
+      {
+        section: '4.5 The Sun’s Energy',
+        q: 'Which layer of the Sun is the visible surface?',
+        a: 'The photosphere.',
+        keywords: ['photosphere']
+      },
+      {
+        section: '4.5 The Sun’s Energy',
+        q: 'Where does the Sun’s energy come from?',
+        a: 'From the solar core, where nuclear fusion changes hydrogen into helium.',
+        keywords: ['core', 'fusion', 'hydrogen', 'helium']
+      },
+      {
+        section: '4.5 The Sun’s Energy',
+        q: 'What is a sunspot?',
+        a: 'A cooler, darker region on the photosphere.',
+        keywords: ['cooler', 'darker', 'photosphere']
+      },
+      {
+        section: '4.5 The Sun’s Energy',
+        q: 'How often does the sunspot cycle repeat?',
+        a: 'About every 11 years.',
+        keywords: ['11 years']
+      },
+      {
+        section: '4.5 The Sun’s Energy',
+        q: 'What causes solar flares?',
+        a: 'The discharge of magnetic energy from the Sun’s corona.',
+        keywords: ['magnetic energy', 'corona']
+      },
+      {
+        section: '4.5 The Sun’s Energy',
+        q: 'What is solar wind?',
+        a: 'A stream of charged particles, mainly electrons and protons, escaping from the Sun through the solar system.',
+        keywords: ['charged particles', 'electrons', 'protons']
+      },
+      {
+        section: '4.5 The Sun’s Energy',
+        q: 'What visible effect can solar wind produce near Earth’s poles?',
+        a: 'Auroras.',
+        keywords: ['auroras', 'aurora']
+      },
+      {
+        section: '4.6 Astronomical Data & Collection Methods',
+        q: 'What do optical telescopes collect?',
+        a: 'Visible light.',
+        keywords: ['visible light']
+      },
+      {
+        section: '4.6 Astronomical Data & Collection Methods',
+        q: 'Why do astronomers use more than optical telescopes?',
+        a: 'Because visible light is only a small part of the electromagnetic spectrum.',
+        keywords: ['visible light', 'small part', 'electromagnetic spectrum']
+      },
+      {
+        section: '4.6 Astronomical Data & Collection Methods',
+        q: 'Why observe from space instead of only from Earth?',
+        a: 'Earth’s atmosphere, weather, heat distortion, and light pollution can block or distort observations.',
+        keywords: ['atmosphere', 'weather', 'light pollution', 'distort']
+      },
+      {
+        section: '4.6 Astronomical Data & Collection Methods',
+        q: 'What is a satellite?',
+        a: 'Anything that orbits something else; satellites can be natural or artificial.',
+        keywords: ['orbits', 'natural', 'artificial']
+      },
+      {
+        section: '4.6 Astronomical Data & Collection Methods',
+        q: 'What is a probe?',
+        a: 'An unmanned device sent to another celestial body to gather information.',
+        keywords: ['unmanned', 'gather information']
+      },
+      {
+        section: '4.6 Astronomical Data & Collection Methods',
+        q: 'Why are probes often used instead of humans?',
+        a: 'They are less costly and less dangerous.',
+        keywords: ['less costly', 'less dangerous']
+      },
+      {
+        section: '4.7 Other Ways of Knowing',
+        q: 'Besides modern science, how have people learned about the universe?',
+        a: 'Through stories, traditions, observation, navigation, farming knowledge, and cultural teachings.',
+        keywords: ['stories', 'traditions', 'observation', 'navigation', 'cultural']
+      },
+      {
+        section: '4.7 Other Ways of Knowing',
+        q: 'How did sky knowledge help people in daily life?',
+        a: 'It helped guide travel, predict weather changes, and track seasons and day length.',
+        keywords: ['travel', 'weather', 'seasons', 'day length']
+      },
+      {
+        section: '4.8 Space Exploration & Travel',
+        q: 'What is terraforming?',
+        a: 'Transforming another planet or place so it could support human settlement.',
+        keywords: ['transforming', 'planet', 'support human settlement']
+      },
+      {
+        section: '4.8 Space Exploration & Travel',
+        q: 'What are two major risks of space travel?',
+        a: 'Equipment failure and exposure to hazards.',
+        keywords: ['equipment failure', 'hazards']
+      },
+      {
+        section: '4.8 Space Exploration & Travel',
+        q: 'What is space junk?',
+        a: 'Human-made debris orbiting Earth, such as broken-off material from spacecraft and satellites.',
+        keywords: ['debris', 'orbiting earth', 'spacecraft', 'satellites']
+      },
+      {
+        section: '4.8 Space Exploration & Travel',
+        q: 'Why is space junk dangerous?',
+        a: 'Even tiny pieces can damage spacecraft in collisions.',
+        keywords: ['damage spacecraft', 'collisions']
+      },
+      {
+        section: '4.8 Space Exploration & Travel',
+        q: 'What role does SpaceX play in this lesson?',
+        a: 'It is presented as a private company that launches reusable rockets and ferries cargo to the ISS.',
+        keywords: ['private company', 'reusable rockets', 'cargo', 'iss']
+      }
+    ];
+
+    const SECTION_ZH = {
+      '4.1 Dissecting the Universe': '4.1 剖析宇宙',
+      '4.2 Formation of the Universe': '4.2 宇宙的形成',
+      '4.3 Stars': '4.3 恒星',
+      '4.4 Formation of the Solar System': '4.4 太阳系的形成',
+      '4.5 The Sun’s Energy': '4.5 太阳的能量',
+      '4.6 Astronomical Data & Collection Methods': '4.6 天文数据与收集方法',
+      '4.7 Other Ways of Knowing': '4.7 其他认识方式',
+      '4.8 Space Exploration & Travel': '4.8 太空探索与航行'
+    };
+
+    const CARD_TRANSLATIONS = {
+      'What is the universe?': { q: '什么是宇宙？', a: '宇宙包括所有物质、能量和空间。它包含星系、恒星、行星、气体、尘埃以及大量空旷空间。' },
+      'What is a galaxy?': { q: '什么是星系？', a: '星系是在引力作用下聚集在一起的大量恒星、气体和尘埃。' },
+      'What are the three main galaxy shapes?': { q: '三种主要的星系形状是什么？', a: '椭圆形、螺旋形和不规则形。' },
+      'What is the Milky Way?': { q: '什么是银河系？', a: '银河系是我们的家园星系，我们在夜空中看到的银河是它其中一条旋臂的一部分。' },
+      'What is a star?': { q: '什么是恒星？', a: '恒星是在引力作用下聚集成的巨大气体球，并以光的形式产生能量。' },
+      'What is a constellation?': { q: '什么是星座？', a: '星座是观察者注意到并命名的一组恒星图案。' },
+      'What are the three requirements for a planet in this lesson?': { q: '在本课中，行星需要满足哪三个条件？', a: '它必须绕太阳运行，质量足够大而呈近球形，并且能主导其邻近区域。' },
+      'What is the order of the planets from the Sun?': { q: '从太阳向外，行星的顺序是什么？', a: '水星、金星、地球、火星、木星、土星、天王星、海王星。' },
+      'Why is Pluto no longer classified as a major planet?': { q: '为什么冥王星不再被归类为主要行星？', a: '它被重新分类为矮行星，因为它没有满足天文学家使用的完整行星定义。' },
+      'What is a light-year?': { q: '什么是光年？', a: '光年是距离单位，不是时间单位。它表示光在一年中传播的距离。' },
+      'What is 1 AU?': { q: '什么是 1 AU？', a: '1 个天文单位是地球到太阳的距离，大约为 1.5 亿千米。' },
+      'What does the Big Bang Theory say?': { q: '大爆炸理论说明了什么？', a: '它认为宇宙起源于物质和辐射的一次巨大膨胀，空间和时间也由那次事件开始。' },
+      'What is the Doppler Effect?': { q: '什么是多普勒效应？', a: '它是指由于光源相对于观察者运动而导致波长和频率发生变化的现象。' },
+      'What is red-shift?': { q: '什么是红移？', a: '红移是指来自遥远星系的光向较低频率方向偏移，说明这些星系正在远离我们。' },
+      'Why is red-shift evidence for an expanding universe?': { q: '为什么红移是宇宙膨胀的证据？', a: '因为我们观察到遥远星系正在远离，而且距离越远，看起来退行得越快。' },
+      'What is CMBR?': { q: '什么是 CMBR？', a: '宇宙微波背景辐射是大爆炸留下的余辉，现在表现为遍布整个宇宙的微波辐射。' },
+      'Name two major pieces of evidence for the Big Bang.': { q: '说出支持大爆炸理论的两项主要证据。', a: '遥远星系的红移，以及宇宙微波背景辐射。' },
+      'What tool splits light into its colours for study?': { q: '什么工具能把光分成各种颜色来研究？', a: '分光镜。' },
+      'What is a spectrum?': { q: '什么是光谱？', a: '光谱是光被分开后形成的一系列颜色。' },
+      'Why do scientists say elements have fingerprints?': { q: '为什么科学家说元素有“指纹”？', a: '因为每种元素在受热时都会产生自己独特的光谱。' },
+      'How can astronomers tell what a star is made of?': { q: '天文学家如何判断恒星由什么组成？', a: '通过分光镜分析恒星的光谱。' },
+      'What star colour means cooler temperature?': { q: '哪种恒星颜色表示温度较低？', a: '红色或偏红色。' },
+      'What star colour means very high temperature?': { q: '哪种恒星颜色表示温度非常高？', a: '蓝紫色。' },
+      'How is a star born?': { q: '恒星是如何诞生的？', a: '引力把气体强烈压缩，使压力上升到足以开始核聚变。' },
+      'What is the nebular theory?': { q: '什么是星云理论？', a: '它认为太阳系形成于一团气体和尘埃云在引力作用下的坍缩。' },
+      'What is a protosun?': { q: '什么是原太阳？', a: '原太阳是在星云中心仍在凝聚、将来会成为太阳的天体。' },
+      'What is a protoplanet?': { q: '什么是原行星？', a: '原行星是在太阳盘中由物质团块形成、仍在凝聚的未来行星。' },
+      'Why are the inner planets rocky?': { q: '为什么内侧行星是岩石质的？', a: '因为它们在靠近太阳的高温区域形成，气体和冰无法凝结，所以主要留下了岩石和金属。' },
+      'Why are the outer planets large and gas-rich?': { q: '为什么外侧行星体积大且富含气体？', a: '因为它们在离太阳更远、温度更低的区域形成，所以气体和冰能够凝结。' },
+      'Which are the terrestrial planets?': { q: '哪些是类地行星？', a: '水星、金星、地球和火星。' },
+      'Which are the Jovian planets?': { q: '哪些是类木行星？', a: '木星、土星、天王星和海王星。' },
+      'What kind of star is the Sun?': { q: '太阳属于哪一类恒星？', a: '一颗普通的黄色矮星。' },
+      'What are the three layers of the Sun’s atmosphere?': { q: '太阳大气层的三层是什么？', a: '光球层、色球层和日冕。' },
+      'Which layer of the Sun is the visible surface?': { q: '太阳的哪一层是可见表面？', a: '光球层。' },
+      'Where does the Sun’s energy come from?': { q: '太阳的能量来自哪里？', a: '来自太阳核心，在那里核聚变把氢转变成氦。' },
+      'What is a sunspot?': { q: '什么是太阳黑子？', a: '光球层上较冷、较暗的区域。' },
+      'How often does the sunspot cycle repeat?': { q: '太阳黑子周期大约多久重复一次？', a: '大约每 11 年一次。' },
+      'What causes solar flares?': { q: '什么导致太阳耀斑？', a: '太阳日冕中磁能的释放。' },
+      'What is solar wind?': { q: '什么是太阳风？', a: '太阳释放到太阳系中的带电粒子流，主要由电子和质子组成。' },
+      'What visible effect can solar wind produce near Earth’s poles?': { q: '太阳风在地球两极附近会产生什么可见现象？', a: '极光。' },
+      'What do optical telescopes collect?': { q: '光学望远镜收集什么？', a: '可见光。' },
+      'Why do astronomers use more than optical telescopes?': { q: '为什么天文学家不只使用光学望远镜？', a: '因为可见光只是电磁波谱中的一小部分。' },
+      'Why observe from space instead of only from Earth?': { q: '为什么要从太空观测，而不只是从地球上观测？', a: '因为地球的大气、天气、热扰动和光污染会阻挡或扭曲观测结果。' },
+      'What is a satellite?': { q: '什么是卫星？', a: '凡是绕着其他天体运行的都可以叫卫星，卫星可以是天然的，也可以是人造的。' },
+      'What is a probe?': { q: '什么是探测器？', a: '探测器是被送往其他天体以收集信息的无人装置。' },
+      'Why are probes often used instead of humans?': { q: '为什么常常使用探测器而不是人类？', a: '因为它们成本更低，也更安全。' },
+      'Besides modern science, how have people learned about the universe?': { q: '除了现代科学，人们还通过什么方式了解宇宙？', a: '通过故事、传统、观察、导航、农事知识和文化教导。' },
+      'How did sky knowledge help people in daily life?': { q: '天空知识如何帮助人们的日常生活？', a: '它帮助人们判断方向、预测天气变化，并追踪季节和白昼长短。' },
+      'What is terraforming?': { q: '什么是地球化改造？', a: '把另一颗行星或其他地方改造成可以支持人类定居的环境。' },
+      'What are two major risks of space travel?': { q: '太空旅行的两大主要风险是什么？', a: '设备故障和暴露于各种危险。' },
+      'What is space junk?': { q: '什么是太空垃圾？', a: '绕地球运行的人造碎片，例如航天器和卫星脱落的残片。' },
+      'Why is space junk dangerous?': { q: '为什么太空垃圾很危险？', a: '即使很小的碎片也可能在碰撞中损坏航天器。' },
+      'What role does SpaceX play in this lesson?': { q: '在本课中，SpaceX 扮演什么角色？', a: '它被介绍为一家发射可重复使用火箭并向国际空间站运送货物的私人公司。' }
+    };
+
+    const UI_TEXT = {
+      title: { en: 'Earth Science Final Exam Practice', zh: '地球科学期末考试练习' },
+      language: { en: 'Language', zh: '语言' },
+      intro: {
+        en: 'Type your answer in the box, then click <strong>Check</strong> to send it to the AI grader. Use <strong>Show Answer</strong> when you want the model answer for comparison.',
+        zh: '在框中输入答案，然后点击 <strong>检查</strong> 把答案发送给 AI 评分器。需要对照范例答案时，点击 <strong>显示答案</strong>。'
+      },
+      aiSummary: { en: 'AI answer check', zh: 'AI 答案检查' },
+      gradeApiLabel: { en: 'Grade API URL', zh: '评分接口 URL' },
+      test: { en: 'Test', zh: '测试' },
+      aiNote: {
+        en: 'Each <strong>Check</strong> request sends the question, your answer, and the model answer to the grader service.',
+        zh: '每次点击 <strong>检查</strong>，都会把题目、你的答案和范例答案发送到评分服务。'
+      },
+      searchPlaceholder: { en: 'Search questions or answers...', zh: '搜索题目或答案……' },
+      allSections: { en: 'All sections', zh: '全部单元' },
+      checkVisible: { en: 'Check Visible', zh: '检查可见题目' },
+      resetAll: { en: 'Reset All', zh: '全部重置' },
+      prev: { en: 'Prev', zh: '上一题' },
+      next: { en: 'Next', zh: '下一题' },
+      noQuestions: { en: 'No questions match the current filter.', zh: '当前筛选条件下没有题目。' },
+      footer: {
+        en: 'Tip: For science exams, try answering from memory in 1–2 sentences. Focus on keywords like <em>red-shift</em>, <em>CMBR</em>, <em>nebular theory</em>, <em>fusion</em>, <em>spectroscope</em>, and <em>solar wind</em>.',
+        zh: '提示：准备科学考试时，尽量用 1 到 2 句话凭记忆作答。可重点复习 <em>红移</em>、<em>CMBR</em>、<em>星云理论</em>、<em>聚变</em>、<em>分光镜</em> 和 <em>太阳风</em> 等关键词。'
+      },
+      questionLabel: { en: 'Question {n}', zh: '第 {n} 题' },
+      answerPlaceholder: { en: 'Type your answer here...', zh: '在这里输入你的答案……' },
+      check: { en: 'Check', zh: '检查' },
+      showAnswer: { en: 'Show Answer', zh: '显示答案' },
+      clear: { en: 'Clear', zh: '清除' },
+      modelAnswer: { en: 'Model answer:', zh: '范例答案：' },
+      keyIdeas: { en: 'Key ideas:', zh: '关键概念：' },
+      stats: { en: '{checked} / {total} checked · {good} strong answers', zh: '已检查 {checked} / {total} · 较强答案 {good}' },
+      emptyAnswer: { en: 'Please type an answer first.', zh: '请先输入答案。' },
+      addGradeUrl: { en: 'Add a Grade API URL first.', zh: '请先填写评分接口 URL。' },
+      addGradeUrlLower: { en: 'Add a grade URL first.', zh: '请先填写评分 URL。' },
+      invalidGradeUrl: { en: 'Invalid grade URL.', zh: '评分 URL 无效。' },
+      testing: { en: 'Testing...', zh: '正在测试……' },
+      healthTimeout: { en: 'Health check timed out.', zh: '健康检查超时。' },
+      healthFailedWithStatus: { en: 'Health check failed ({status}).', zh: '健康检查失败（{status}）。' },
+      healthFailed: { en: 'Health check failed.', zh: '健康检查失败。' },
+      ok: { en: 'OK', zh: '正常' },
+      okNonstandard: { en: 'OK (nonstandard response)', zh: '正常（返回格式非标准）' },
+      checking: { en: 'Checking answer...', zh: '正在检查答案……' },
+      looksCorrect: { en: 'Looks correct.', zh: '看起来正确。' },
+      needsRevision: { en: 'Needs revision.', zh: '还需要修改。' },
+      graderAccepted: { en: 'The grader accepted this answer.', zh: '评分器接受了这个答案。' },
+      graderRejected: { en: 'The grader did not accept this answer yet.', zh: '评分器目前还没有接受这个答案。' },
+      aiUnavailable: { en: 'AI grading unavailable.', zh: 'AI 评分当前不可用。' }
+    };
+
+    const app = document.getElementById('app');
+    const stats = document.getElementById('stats');
+    const pageTitleEl = document.getElementById('pageTitle');
+    const pageIntroEl = document.getElementById('pageIntro');
+    const langModeEl = document.getElementById('langMode');
+    const langLabelEl = document.getElementById('langLabel');
+    const aiSummaryEl = document.getElementById('aiSummary');
+    const gradeApiLabelEl = document.getElementById('gradeApiLabel');
+    const aiNoteEl = document.getElementById('aiNote');
+    const footerNoteEl = document.getElementById('footerNote');
+    const searchBox = document.getElementById('searchBox');
+    const sectionFilter = document.getElementById('sectionFilter');
+    const checkAllBtn = document.getElementById('checkAllBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const DEFAULT_GRADE_API_URL = 'https://lakesideart.gochatus.org/grade-service/grade';
+    const gradeApiUrlEl = document.getElementById('grade-api-url');
+    const btnTestApi = document.getElementById('btn-test-api');
+    const apiStatusEl = document.getElementById('api-status');
+    const sections = [...new Set(cards.map(c => c.section))];
+    const cardState = new Map();
+    const LANG_STORAGE_KEY = 'earth-science-flashcards-lang-mode';
+    const LANG_CLASSES = ['lang-en', 'lang-enzh', 'lang-zh'];
+    let currentLangMode = 'en';
+    let currentCardKey = '';
+
+    function normalize(text) {
+      return text
+        .toLowerCase()
+        .replace(/[’']/g, '')
+        .replace(/[^\p{L}\p{N}\s-]/gu, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function interpolate(template, vars = {}) {
+      return String(template).replace(/\{(\w+)\}/g, (_, key) => String(vars[key] ?? ''));
+    }
+
+    function getUiPair(key, vars = {}) {
+      const entry = UI_TEXT[key] || { en: key, zh: key };
+      return {
+        en: interpolate(entry.en, vars),
+        zh: interpolate(entry.zh, vars)
+      };
+    }
+
+    function getUiText(key, vars = {}) {
+      const pair = getUiPair(key, vars);
+      if (currentLangMode === 'zh') return pair.zh;
+      if (currentLangMode === 'enzh') return `${pair.en} / ${pair.zh}`;
+      return pair.en;
+    }
+
+    function renderLocalizedHtml(enHtml, zhHtml) {
+      if (currentLangMode === 'zh') return `<span class="i18n-zh">${zhHtml}</span>`;
+      if (currentLangMode === 'enzh') return `<span class="i18n-en">${enHtml}</span><span class="i18n-zh">${zhHtml}</span>`;
+      return `<span class="i18n-en">${enHtml}</span>`;
+    }
+
+    function renderLocalizedText(enText, zhText) {
+      return renderLocalizedHtml(escapeHtml(enText), escapeHtml(zhText));
+    }
+
+    function getCardState(cardKey) {
+      if (!cardState.has(cardKey)) {
+        cardState.set(cardKey, {
+          answerText: '',
+          feedbackText: '',
+          feedbackKind: '',
+          feedbackKey: '',
+          feedbackDetail: '',
+          gradeVerdict: '',
+          gradeExplanation: '',
+          answerShown: false,
+          statusClass: '',
+          isChecking: false
+        });
+      }
+      return cardState.get(cardKey);
+    }
+
+    function getCardTranslation(card) {
+      return CARD_TRANSLATIONS[card.q] || {};
+    }
+
+    function getCardView(card) {
+      const translation = getCardTranslation(card);
+      return {
+        sectionZh: SECTION_ZH[card.section] || card.section,
+        qZh: translation.q || card.q,
+        aZh: translation.a || card.a
+      };
+    }
+
+    function formatSectionLabel(section) {
+      const zh = SECTION_ZH[section] || section;
+      if (currentLangMode === 'zh') return zh;
+      if (currentLangMode === 'enzh') return `${section} / ${zh}`;
+      return section;
+    }
+
+    function populateSectionFilter() {
+      const currentValue = sectionFilter.value || 'all';
+      sectionFilter.innerHTML = '';
+
+      const allOption = document.createElement('option');
+      allOption.value = 'all';
+      allOption.textContent = getUiText('allSections');
+      sectionFilter.appendChild(allOption);
+
+      sections.forEach(section => {
+        const opt = document.createElement('option');
+        opt.value = section;
+        opt.textContent = formatSectionLabel(section);
+        sectionFilter.appendChild(opt);
+      });
+
+      sectionFilter.value = sections.includes(currentValue) || currentValue === 'all' ? currentValue : 'all';
+    }
+
+    function setShellText() {
+      const titlePair = getUiPair('title');
+      const introPair = getUiPair('intro');
+      const summaryPair = getUiPair('aiSummary');
+      const apiLabelPair = getUiPair('gradeApiLabel');
+      const notePair = getUiPair('aiNote');
+      const footerPair = getUiPair('footer');
+
+      document.body.classList.remove(...LANG_CLASSES);
+      document.body.classList.add(`lang-${currentLangMode}`);
+      document.documentElement.lang = currentLangMode === 'zh' ? 'zh-CN' : 'en';
+      document.title = currentLangMode === 'zh' ? titlePair.zh : titlePair.en;
+
+      pageTitleEl.innerHTML = renderLocalizedHtml(titlePair.en, titlePair.zh);
+      pageIntroEl.innerHTML = renderLocalizedHtml(introPair.en, introPair.zh);
+      aiSummaryEl.innerHTML = renderLocalizedHtml(summaryPair.en, summaryPair.zh);
+      gradeApiLabelEl.innerHTML = renderLocalizedHtml(apiLabelPair.en, apiLabelPair.zh);
+      aiNoteEl.innerHTML = renderLocalizedHtml(notePair.en, notePair.zh);
+      footerNoteEl.innerHTML = renderLocalizedHtml(footerPair.en, footerPair.zh);
+      langLabelEl.textContent = getUiText('language');
+      searchBox.placeholder = getUiText('searchPlaceholder');
+      btnTestApi.textContent = getUiText('test');
+      checkAllBtn.textContent = getUiText('checkVisible');
+      resetBtn.textContent = getUiText('resetAll');
+    }
+
+    function setLanguageMode(mode) {
+      if (!['en', 'enzh', 'zh'].includes(mode)) mode = 'en';
+      currentLangMode = mode;
+      langModeEl.value = mode;
+      try {
+        localStorage.setItem(LANG_STORAGE_KEY, mode);
+      } catch {}
+      setShellText();
+      populateSectionFilter();
+      render();
+      setApiStatus('', '');
+    }
+
+    function setApiStatus(text, kind) {
+      apiStatusEl.textContent = text || '';
+      apiStatusEl.className = 'ai-status' + (kind ? ' ' + kind : '');
+    }
+
+    function getGradeApiUrl() {
+      return (gradeApiUrlEl.value || '').trim();
+    }
+
+    function saveGradeApiUrl() {
+      try {
+        localStorage.setItem('gradeApiUrl', (gradeApiUrlEl.value || '').trim());
+      } catch {}
+    }
+
+    async function fetchJsonWithTimeout(url, options, timeoutMs) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(url, { ...options, signal: controller.signal });
+        const text = await response.text().catch(() => '');
+        let data = null;
+        try {
+          data = text ? JSON.parse(text) : null;
+        } catch {
+          data = null;
+        }
+        return { ok: response.ok, status: response.status, data, text };
+      } catch (error) {
+        if (error && error.name === 'AbortError') {
+          return { ok: false, status: 0, data: null, text: '', aborted: true };
+        }
+        throw error;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function extractFirstGradeResult(data) {
+      if (!data) return null;
+      if (Array.isArray(data.results) && data.results[0]) return data.results[0];
+      if (data.result && Array.isArray(data.result.results) && data.result.results[0]) return data.result.results[0];
+      if (data.model_result && Array.isArray(data.model_result.results) && data.model_result.results[0]) return data.model_result.results[0];
+      return null;
+    }
+
+    function deriveHealthUrl(gradeUrl) {
+      try {
+        const url = new URL(gradeUrl);
+        url.search = '';
+        url.hash = '';
+        if (url.pathname.endsWith('/grade')) {
+          url.pathname = url.pathname.replace(/\/grade$/, '/health');
+        } else {
+          url.pathname = url.pathname.replace(/\/+$/, '') + '/health';
+        }
+        return url.toString();
+      } catch {
+        return null;
+      }
+    }
+
+    async function testApi() {
+      const gradeUrl = getGradeApiUrl();
+      if (!gradeUrl) {
+        setApiStatus(getUiText('addGradeUrlLower'), 'bad');
+        return;
+      }
+      const healthUrl = deriveHealthUrl(gradeUrl);
+      if (!healthUrl) {
+        setApiStatus(getUiText('invalidGradeUrl'), 'bad');
+        return;
+      }
+
+      setApiStatus(getUiText('testing'), '');
+      try {
+        const { ok, status, data, aborted } = await fetchJsonWithTimeout(healthUrl, { method: 'GET' }, 4000);
+        if (aborted) {
+          setApiStatus(getUiText('healthTimeout'), 'bad');
+          return;
+        }
+        if (!ok) {
+          setApiStatus(getUiText('healthFailedWithStatus', { status }), 'bad');
+          return;
+        }
+        const looksHealthy = !!(data && (data.status === 'ok' || data.ok === true));
+        setApiStatus(looksHealthy ? getUiText('ok') : getUiText('okNonstandard'), looksHealthy ? 'ok' : '');
+      } catch {
+        setApiStatus(getUiText('healthFailed'), 'bad');
+      }
+    }
+
+    function initAiUi() {
+      let saved = null;
+      try {
+        saved = localStorage.getItem('gradeApiUrl');
+      } catch {
+        saved = null;
+      }
+
+      gradeApiUrlEl.value = saved === null ? DEFAULT_GRADE_API_URL : saved;
+      gradeApiUrlEl.addEventListener('change', () => {
+        saveGradeApiUrl();
+        setApiStatus('', '');
+      });
+      gradeApiUrlEl.addEventListener('input', () => {
+        setApiStatus('', '');
+      });
+      btnTestApi.addEventListener('click', testApi);
+    }
+
+    function initLangUi() {
+      let saved = 'en';
+      try {
+        saved = localStorage.getItem(LANG_STORAGE_KEY) || 'en';
+      } catch {
+        saved = 'en';
+      }
+      langModeEl.addEventListener('change', event => setLanguageMode(event.target.value));
+      setLanguageMode(saved);
+    }
+
+    function setCardFeedback(cardEl, text, kind) {
+      const feedback = cardEl.querySelector('.feedback');
+      feedback.textContent = text || '';
+      feedback.className = 'feedback' + (text ? ' has-text' : '') + (kind ? ' ' + kind : '');
+      const state = getCardState(cardEl.dataset.cardKey);
+      state.feedbackText = text || '';
+      state.feedbackKind = kind || '';
+    }
+
+    function setCardUiFeedback(cardEl, key, kind, detail = '') {
+      const state = getCardState(cardEl.dataset.cardKey);
+      state.feedbackKey = key || '';
+      state.feedbackDetail = detail || '';
+      state.gradeVerdict = '';
+      state.gradeExplanation = '';
+      setCardFeedback(cardEl, [getUiText(key), detail].filter(Boolean).join(' '), kind);
+    }
+
+    function setCardGradeFeedback(cardEl, verdict, explanation) {
+      const state = getCardState(cardEl.dataset.cardKey);
+      const looksCorrect = verdict === 'correct';
+      const prefix = looksCorrect ? getUiText('looksCorrect') : getUiText('needsRevision');
+      const body = explanation || (looksCorrect ? getUiText('graderAccepted') : getUiText('graderRejected'));
+      state.feedbackKey = '';
+      state.feedbackDetail = '';
+      state.gradeVerdict = looksCorrect ? 'correct' : 'incorrect';
+      state.gradeExplanation = explanation || '';
+      setCardFeedback(cardEl, `${prefix} ${body}`, looksCorrect ? 'good' : 'warn');
+    }
+
+    function applyStoredFeedback(cardEl, state) {
+      if (state.isChecking) {
+        setCardFeedback(cardEl, getUiText('checking'), 'info');
+        return;
+      }
+
+      if (state.gradeVerdict) {
+        const looksCorrect = state.gradeVerdict === 'correct';
+        const prefix = looksCorrect ? getUiText('looksCorrect') : getUiText('needsRevision');
+        const body = state.gradeExplanation || (looksCorrect ? getUiText('graderAccepted') : getUiText('graderRejected'));
+        setCardFeedback(cardEl, `${prefix} ${body}`, looksCorrect ? 'good' : 'warn');
+        return;
+      }
+
+      if (state.feedbackKey) {
+        setCardFeedback(cardEl, [getUiText(state.feedbackKey), state.feedbackDetail].filter(Boolean).join(' '), state.feedbackKind);
+        return;
+      }
+
+      if (state.feedbackText) {
+        setCardFeedback(cardEl, state.feedbackText, state.feedbackKind);
+      }
+    }
+
+    function getVisibleCardElements() {
+      return [...document.querySelectorAll('.card')];
+    }
+
+    function moveBetweenCardsFrom(cardKey, direction) {
+      const list = filteredCards();
+      if (!list.length) return;
+
+      const index = list.findIndex(card => card.q === cardKey);
+      if (index === -1) return;
+      const targetIndex = Math.min(list.length - 1, Math.max(0, index + direction));
+      const target = list[targetIndex];
+      if (!target || target.q === cardKey) return;
+
+      currentCardKey = target.q;
+      render();
+
+      const textarea = document.querySelector('.card textarea');
+      if (textarea) {
+        textarea.focus({ preventScroll: true });
+      }
+    }
+
+    function buildPrompt(card) {
+      return `Section: ${card.section}\nQuestion: ${card.q}`;
+    }
+
+    async function requestCardGrade(card, studentAnswer) {
+      const gradeUrl = getGradeApiUrl();
+      const payload = {
+        pairs: [
+          {
+            question: buildPrompt(card),
+            answer: studentAnswer,
+            reference_answer: card.a
+          }
+        ]
+      };
+
+      const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+        gradeUrl,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        },
+        30000
+      );
+
+      if (aborted) {
+        throw new Error('Request timed out.');
+      }
+
+      const first = extractFirstGradeResult(data);
+      if (!ok || !first) {
+        const detail = text ? ` ${text.slice(0, 160)}` : '';
+        throw new Error(`Bad response (${status}).${detail}`.trim());
+      }
+
+      const verdict = String(first.verdict || '').toLowerCase();
+      const explanation = String(first.explanation || '').trim();
+      return { verdict, explanation };
+    }
+
+    async function checkCardAnswer(cardEl, card, buttonEl) {
+      const textarea = cardEl.querySelector('textarea');
+      const answerText = (textarea.value || '').trim();
+      const state = getCardState(card.q);
+
+      cardEl.classList.remove('good', 'warn', 'checking');
+      state.statusClass = '';
+      state.isChecking = false;
+      state.feedbackKey = '';
+      state.feedbackDetail = '';
+      state.gradeVerdict = '';
+      state.gradeExplanation = '';
+
+      if (!answerText) {
+        setCardUiFeedback(cardEl, 'emptyAnswer', 'warn');
+        updateStats();
+        return;
+      }
+
+      if (!getGradeApiUrl()) {
+        setCardUiFeedback(cardEl, 'addGradeUrl', 'bad');
+        updateStats();
+        return;
+      }
+
+      buttonEl.disabled = true;
+      cardEl.classList.add('checking');
+      state.isChecking = true;
+      setCardUiFeedback(cardEl, 'checking', 'info');
+      updateStats();
+
+      try {
+        const result = await requestCardGrade(card, answerText);
+        const looksCorrect = result.verdict === 'correct';
+        cardEl.classList.remove('checking');
+        cardEl.classList.add(looksCorrect ? 'good' : 'warn');
+        state.statusClass = looksCorrect ? 'good' : 'warn';
+        state.isChecking = false;
+        setCardGradeFeedback(cardEl, result.verdict, result.explanation || '');
+      } catch (error) {
+        cardEl.classList.remove('checking');
+        cardEl.classList.add('warn');
+        state.statusClass = 'warn';
+        state.isChecking = false;
+        const message = error && error.message ? error.message : '';
+        setCardUiFeedback(cardEl, 'aiUnavailable', 'bad', message && message !== getUiText('aiUnavailable') ? message : '');
+      } finally {
+        buttonEl.disabled = false;
+        if (!cardEl.isConnected) {
+          render();
+        } else {
+          updateStats();
+        }
+      }
+    }
+
+    function filteredCards() {
+      const search = normalize(searchBox.value);
+      const sec = sectionFilter.value;
+      return cards.filter(card => {
+        const view = getCardView(card);
+        const matchesSection = sec === 'all' || card.section === sec;
+        const hay = normalize([
+          card.q,
+          card.a,
+          view.qZh,
+          view.aZh,
+          card.section,
+          view.sectionZh,
+          card.keywords.join(' ')
+        ].join(' '));
+        const matchesSearch = !search || hay.includes(search);
+        return matchesSection && matchesSearch;
+      });
+    }
+
+    function render() {
+      const list = filteredCards();
+      app.innerHTML = '';
+      if (!list.length) {
+        currentCardKey = '';
+        const empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.innerHTML = renderLocalizedText(UI_TEXT.noQuestions.en, UI_TEXT.noQuestions.zh);
+        app.appendChild(empty);
+        updateStats(list);
+        return;
+      }
+
+      let currentIndex = list.findIndex(card => card.q === currentCardKey);
+      if (currentIndex === -1) {
+        currentIndex = 0;
+        currentCardKey = list[0].q;
+      }
+
+      const card = list[currentIndex];
+      const originalIndex = cards.findIndex(item => item.q === card.q);
+      const view = getCardView(card);
+      const state = getCardState(card.q);
+
+      const h2 = document.createElement('div');
+      h2.className = 'section-title';
+      h2.innerHTML = renderLocalizedText(card.section, SECTION_ZH[card.section] || card.section);
+      app.appendChild(h2);
+
+      const cardsWrap = document.createElement('div');
+      cardsWrap.className = 'cards';
+
+      const el = document.createElement('div');
+      el.className = 'card'
+        + (state.statusClass ? ` ${state.statusClass}` : '')
+        + (state.isChecking ? ' checking' : '');
+      el.dataset.section = card.section;
+      el.dataset.cardKey = card.q;
+      el.innerHTML = `
+        <div class="qnum">${renderLocalizedText(interpolate(UI_TEXT.questionLabel.en, { n: currentIndex + 1 }), interpolate(UI_TEXT.questionLabel.zh, { n: currentIndex + 1 }))}</div>
+        <div class="question">${renderLocalizedText(card.q, view.qZh)}</div>
+        <textarea id="answer-${originalIndex}" name="answer-${originalIndex}" placeholder="${escapeHtml(getUiText('answerPlaceholder'))}"></textarea>
+        <div class="actions">
+          <button class="check-btn" type="button">${escapeHtml(getUiText('check'))}</button>
+          <button class="light show-btn" type="button">${escapeHtml(getUiText('showAnswer'))}</button>
+          <button class="secondary clear-btn" type="button">${escapeHtml(getUiText('clear'))}</button>
+          <button class="light prev-btn" type="button"${currentIndex <= 0 ? ' disabled' : ''}>${escapeHtml(getUiText('prev'))}</button>
+          <button class="next-btn" type="button"${currentIndex >= list.length - 1 ? ' disabled' : ''}>${escapeHtml(getUiText('next'))}</button>
+        </div>
+        <div class="feedback"></div>
+        <div class="answer${state.answerShown ? ' show' : ''}">
+          <strong>${renderLocalizedText(UI_TEXT.modelAnswer.en, UI_TEXT.modelAnswer.zh)}</strong>
+          <div>${renderLocalizedText(card.a, view.aZh)}</div>
+          ${currentLangMode === 'en' ? `<div class="keyword-line"><strong>${escapeHtml(UI_TEXT.keyIdeas.en)}</strong> ${escapeHtml(card.keywords.join(', '))}</div>` : ''}
+        </div>
+      `;
+
+      const textarea = el.querySelector('textarea');
+      const answer = el.querySelector('.answer');
+      const checkBtn = el.querySelector('.check-btn');
+      const prevBtn = el.querySelector('.prev-btn');
+      const nextBtn = el.querySelector('.next-btn');
+      textarea.value = state.answerText;
+      checkBtn.disabled = state.isChecking;
+      applyStoredFeedback(el, state);
+
+      textarea.addEventListener('input', () => {
+        getCardState(card.q).answerText = textarea.value;
+      });
+
+      checkBtn.addEventListener('click', () => {
+        answer.classList.add('show');
+        getCardState(card.q).answerShown = true;
+        checkCardAnswer(el, card, checkBtn);
+      });
+
+      el.querySelector('.show-btn').addEventListener('click', () => {
+        answer.classList.toggle('show');
+        getCardState(card.q).answerShown = answer.classList.contains('show');
+      });
+
+      el.querySelector('.clear-btn').addEventListener('click', () => {
+        textarea.value = '';
+        setCardFeedback(el, '', '');
+        el.classList.remove('good', 'warn', 'checking');
+        answer.classList.remove('show');
+        const cardStateEntry = getCardState(card.q);
+        cardStateEntry.answerText = '';
+        cardStateEntry.feedbackText = '';
+        cardStateEntry.feedbackKind = '';
+        cardStateEntry.feedbackKey = '';
+        cardStateEntry.feedbackDetail = '';
+        cardStateEntry.gradeVerdict = '';
+        cardStateEntry.gradeExplanation = '';
+        cardStateEntry.answerShown = false;
+        cardStateEntry.statusClass = '';
+        cardStateEntry.isChecking = false;
+        checkBtn.disabled = false;
+        updateStats(list);
+      });
+
+      prevBtn.addEventListener('click', () => {
+        moveBetweenCardsFrom(card.q, -1);
+      });
+
+      nextBtn.addEventListener('click', () => {
+        moveBetweenCardsFrom(card.q, 1);
+      });
+
+      cardsWrap.appendChild(el);
+      app.appendChild(cardsWrap);
+
+      updateStats(list);
+    }
+
+    function updateStats(list = filteredCards()) {
+      const checked = list.filter(card => {
+        const state = getCardState(card.q);
+        return Boolean(state.feedbackText);
+      }).length;
+      const good = list.filter(card => getCardState(card.q).statusClass === 'good').length;
+      const pair = getUiPair('stats', { checked, total: list.length, good });
+      stats.innerHTML = renderLocalizedHtml(pair.en, pair.zh);
+    }
+
+    checkAllBtn.addEventListener('click', async () => {
+      const cardsToCheck = [...document.querySelectorAll('.card')];
+      checkAllBtn.disabled = true;
+      try {
+        for (const cardEl of cardsToCheck) {
+          const buttonEl = cardEl.querySelector('.check-btn');
+          const card = cards.find(item => item.q === cardEl.dataset.cardKey);
+          if (!buttonEl || !card) continue;
+          await checkCardAnswer(cardEl, card, buttonEl);
+        }
+      } finally {
+        checkAllBtn.disabled = false;
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      document.querySelectorAll('.card').forEach(card => {
+        const key = card.dataset.cardKey;
+        const state = getCardState(key);
+        state.answerText = '';
+        state.feedbackText = '';
+        state.feedbackKind = '';
+        state.feedbackKey = '';
+        state.feedbackDetail = '';
+        state.gradeVerdict = '';
+        state.gradeExplanation = '';
+        state.answerShown = false;
+        state.statusClass = '';
+        state.isChecking = false;
+        card.querySelector('textarea').value = '';
+        setCardFeedback(card, '', '');
+        card.querySelector('.answer').classList.remove('show');
+        card.querySelector('.check-btn').disabled = false;
+        card.classList.remove('good', 'warn', 'checking');
+      });
+      updateStats();
+    });
+
+    searchBox.addEventListener('input', render);
+    sectionFilter.addEventListener('change', render);
+
+    initLangUi();
+    initAiUi();
+  </script>
+</body>
+</html>
