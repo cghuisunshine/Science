@@ -1,0 +1,886 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Earth Science Multiple Choice Practice</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #dbe3ee;
+      --accent: #2563eb;
+      --good-bg: #ecfdf5;
+      --good-line: #10b981;
+      --bad-bg: #fff7ed;
+      --bad-line: #f59e0b;
+      --answer-bg: #f8fafc;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .lang-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .lang-label {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    #langMode {
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #ffffff;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .i18n-en,
+    .i18n-zh {
+      display: block;
+    }
+
+    .i18n-zh {
+      margin-top: 4px;
+      color: #475569;
+    }
+
+    .intro {
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) repeat(4, auto);
+      gap: 10px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .toolbar input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 15px;
+      background: white;
+      color: var(--text);
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      background: var(--accent);
+      color: white;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    button.secondary {
+      background: #475569;
+    }
+
+    button.light {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .stats {
+      margin: 12px 0 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .cards {
+      display: grid;
+      gap: 14px;
+    }
+
+    .empty-state {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+      color: var(--muted);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
+    }
+
+    .card.good {
+      border-color: var(--good-line);
+      background: var(--good-bg);
+    }
+
+    .card.warn {
+      border-color: var(--bad-line);
+      background: var(--bad-bg);
+    }
+
+    .qnum {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .question {
+      font-weight: 700;
+      margin-bottom: 12px;
+      font-size: 17px;
+    }
+
+    .options {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    label.option {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: white;
+      cursor: pointer;
+    }
+
+    label.option input {
+      margin-top: 3px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 8px;
+      padding: 10px 12px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      white-space: pre-wrap;
+    }
+
+    .feedback.has-text {
+      display: block;
+    }
+
+    .feedback.good {
+      background: #ecfdf5;
+      border-color: #86efac;
+      color: #166534;
+    }
+
+    .feedback.warn {
+      background: #fff7ed;
+      border-color: #fdba74;
+      color: #9a3412;
+    }
+
+    .answer {
+      display: none;
+      background: var(--answer-bg);
+      border: 1px dashed #94a3b8;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 8px;
+    }
+
+    .answer.show {
+      display: block;
+    }
+
+    .footer-note {
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <h1 id="pageTitle">Earth Science Multiple Choice Practice</h1>
+      <div class="lang-controls">
+        <label class="lang-label" for="langMode" id="langLabel">Language</label>
+        <select id="langMode" aria-label="Language mode">
+          <option value="en">English</option>
+          <option value="enzh">En + Zh</option>
+          <option value="zh">中文</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="intro" id="pageIntro">
+      Choose one answer for each question, then click <strong>Check</strong>. Use <strong>Show Answer</strong> if you want to reveal the correct choice.
+    </div>
+
+    <div class="toolbar">
+      <input id="searchBox" type="text" placeholder="Search questions or options..." />
+      <button id="checkAllBtn">Check All</button>
+      <button id="showAllBtn" class="light">Show All Answers</button>
+      <button id="hideAllBtn" class="light">Hide All Answers</button>
+      <button id="resetBtn" class="secondary">Reset All</button>
+    </div>
+
+    <div class="stats" id="stats">0 / 0 checked</div>
+
+    <div class="cards" id="app"></div>
+
+    <div class="footer-note" id="footerNote">
+      Tip: Multiple-choice questions often test exact terms, evidence, and compare/contrast ideas. Watch for distractors that are almost correct but use the wrong term.
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: 'Which best describes a light-year?',
+        qZh: '以下哪项最能描述光年？',
+        options: [
+          'A unit of time used in astronomy',
+          'The distance light travels in one year',
+          'The distance from Earth to the Sun',
+          'The time Earth takes to orbit the Sun'
+        ],
+        optionsZh: [
+          '天文学中使用的时间单位',
+          '光在一年中传播的距离',
+          '地球到太阳的距离',
+          '地球绕太阳一周所需的时间'
+        ],
+        answer: 1,
+        explain: 'A light-year is a distance, not a time.',
+        explainZh: '光年是距离单位，不是时间单位。'
+      },
+      {
+        q: 'Which of the following is not one of the three main galaxy shapes in this unit?',
+        qZh: '以下哪项不是本单元中的三种主要星系形状之一？',
+        options: ['Elliptical', 'Spiral', 'Irregular', 'Rectangular'],
+        optionsZh: ['椭圆形', '螺旋形', '不规则形', '长方形'],
+        answer: 3,
+        explain: 'The three main shapes are elliptical, spiral, and irregular.',
+        explainZh: '三种主要形状是椭圆形、螺旋形和不规则形。'
+      },
+      {
+        q: 'What does red-shift suggest about distant galaxies?',
+        qZh: '红移说明遥远星系怎么样？',
+        options: ['They are cooling down', 'They are moving away from us', 'They are moving toward us', 'They have stopped moving'],
+        optionsZh: ['它们正在冷却', '它们正在远离我们', '它们正在靠近我们', '它们已经停止移动'],
+        answer: 1,
+        explain: 'Red-shift is evidence that galaxies are moving away.',
+        explainZh: '红移是星系正在远离的证据。'
+      },
+      {
+        q: 'What does CMBR stand for?',
+        qZh: 'CMBR 代表什么？',
+        options: ['Cosmic Matter Balance Ratio', 'Central Microwave Beam Reflection', 'Cosmic Microwave Background Radiation', 'Cold Matter Band Radiation'],
+        optionsZh: ['宇宙物质平衡比', '中央微波束反射', '宇宙微波背景辐射', '冷物质带辐射'],
+        answer: 2,
+        explain: 'CMBR is Cosmic Microwave Background Radiation.',
+        explainZh: 'CMBR 指的是宇宙微波背景辐射。'
+      },
+      {
+        q: 'Which tool splits light into its colours for study?',
+        qZh: '哪种工具能把光分成不同颜色来研究？',
+        options: ['Microscope', 'Spectroscope', 'Barometer', 'Thermometer'],
+        optionsZh: ['显微镜', '分光镜', '气压计', '温度计'],
+        answer: 1,
+        explain: 'A spectroscope separates light into a spectrum.',
+        explainZh: '分光镜能把光分解成光谱。'
+      },
+      {
+        q: 'Why do scientists say elements have unique fingerprints?',
+        qZh: '为什么科学家说元素有独特的“指纹”？',
+        options: ['Each element has a different gravity', 'Each element produces a unique spectrum', 'Each element has a different colour in solid form', 'Each element moves at a different speed'],
+        optionsZh: ['每种元素有不同的引力', '每种元素会产生独特的光谱', '每种元素在固态时颜色不同', '每种元素移动速度不同'],
+        answer: 1,
+        explain: 'Each element gives off a unique spectrum when heated.',
+        explainZh: '每种元素受热时都会发出独特的光谱。'
+      },
+      {
+        q: 'Which star colour usually means the star is cooler?',
+        qZh: '哪种恒星颜色通常表示恒星更冷？',
+        options: ['Blue-violet', 'White', 'Red', 'Purple'],
+        optionsZh: ['蓝紫色', '白色', '红色', '紫色'],
+        answer: 2,
+        explain: 'Red stars are cooler than blue-violet stars.',
+        explainZh: '红色恒星比蓝紫色恒星更冷。'
+      },
+      {
+        q: 'According to nebular theory, the solar system formed from:',
+        qZh: '根据星云理论，太阳系形成于：',
+        options: ['A giant ice comet', 'A collapsing cloud of gas and dust', 'A black hole explosion', 'A collision between two stars'],
+        optionsZh: ['一颗巨大的冰彗星', '一团正在坍缩的气体和尘埃云', '一次黑洞爆炸', '两颗恒星的碰撞'],
+        answer: 1,
+        explain: 'Nebular theory explains solar system formation from a cloud of gas and dust.',
+        explainZh: '星云理论认为太阳系由一团气体和尘埃云形成。'
+      },
+      {
+        q: 'What is a protosun?',
+        qZh: '什么是原太阳？',
+        options: ['A small moon forming around a planet', 'A future Sun forming at the centre of the nebula', 'A dead star', 'A comet heading toward the Sun'],
+        optionsZh: ['围绕行星形成的小卫星', '在星云中心形成、未来会成为太阳的天体', '一颗死亡恒星', '飞向太阳的彗星'],
+        answer: 1,
+        explain: 'A protosun is the still-forming future Sun.',
+        explainZh: '原太阳是仍在形成中的未来太阳。'
+      },
+      {
+        q: 'Why are the inner planets mostly rocky?',
+        qZh: '为什么内侧行星大多是岩石质的？',
+        options: ['They formed far from the Sun', 'They are older than the outer planets', 'It was too hot for gases and ices to condense near the Sun', 'They lost all atmosphere because of collisions'],
+        optionsZh: ['它们形成于远离太阳的地方', '它们比外侧行星更古老', '靠近太阳的地方太热，气体和冰无法凝结', '它们因碰撞失去了全部大气'],
+        answer: 2,
+        explain: 'Near the Sun, only rock and metal could remain solid.',
+        explainZh: '在太阳附近，只有岩石和金属能保持固态。'
+      },
+      {
+        q: 'Which set lists the terrestrial planets?',
+        qZh: '以下哪组列出了类地行星？',
+        options: ['Mercury, Venus, Earth, Mars', 'Jupiter, Saturn, Uranus, Neptune', 'Earth, Mars, Jupiter, Saturn', 'Venus, Earth, Uranus, Neptune'],
+        optionsZh: ['水星、金星、地球、火星', '木星、土星、天王星、海王星', '地球、火星、木星、土星', '金星、地球、天王星、海王星'],
+        answer: 0,
+        explain: 'The terrestrial planets are Mercury, Venus, Earth, and Mars.',
+        explainZh: '类地行星是水星、金星、地球和火星。'
+      },
+      {
+        q: 'Where does the Sun’s energy come from?',
+        qZh: '太阳的能量来自哪里？',
+        options: ['Its outer atmosphere', 'Its core, where fusion occurs', 'Its magnetic field', 'Its sunspots'],
+        optionsZh: ['它的外层大气', '它的核心，聚变发生的地方', '它的磁场', '它的太阳黑子'],
+        answer: 1,
+        explain: 'The Sun’s energy comes from fusion in the core.',
+        explainZh: '太阳的能量来自核心中的聚变。'
+      },
+      {
+        q: 'Which layer is the visible surface of the Sun?',
+        qZh: '太阳哪一层是可见表面？',
+        options: ['Corona', 'Core', 'Photosphere', 'Chromosphere'],
+        optionsZh: ['日冕', '核心', '光球层', '色球层'],
+        answer: 2,
+        explain: 'The photosphere is the visible surface.',
+        explainZh: '光球层就是可见表面。'
+      },
+      {
+        q: 'A sunspot is best described as:',
+        qZh: '太阳黑子最准确的描述是：',
+        options: ['A bright explosion on the Sun', 'A cooler, darker region on the photosphere', 'A hole in the Sun’s surface', 'A cloud of gas in the corona'],
+        optionsZh: ['太阳上的明亮爆发', '光球层上较冷、较暗的区域', '太阳表面的一个洞', '日冕中的一团气体'],
+        answer: 1,
+        explain: 'Sunspots are cooler and darker than nearby areas.',
+        explainZh: '太阳黑子比周围区域更冷、更暗。'
+      },
+      {
+        q: 'How long is the sunspot cycle approximately?',
+        qZh: '太阳黑子周期大约有多长？',
+        options: ['1 year', '5 years', '11 years', '100 years'],
+        optionsZh: ['1 年', '5 年', '11 年', '100 年'],
+        answer: 2,
+        explain: 'The cycle repeats about every 11 years.',
+        explainZh: '这个周期大约每 11 年重复一次。'
+      },
+      {
+        q: 'What is solar wind?',
+        qZh: '什么是太阳风？',
+        options: ['Heat trapped in Earth’s atmosphere', 'A stream of charged particles from the Sun', 'A type of cloud around the Sun', 'A wave pattern in the Sun’s core'],
+        optionsZh: ['被困在地球大气中的热量', '来自太阳的带电粒子流', '太阳周围的一种云', '太阳核心中的波动模式'],
+        answer: 1,
+        explain: 'Solar wind is made of charged particles escaping the Sun.',
+        explainZh: '太阳风由从太阳逃逸出来的带电粒子组成。'
+      },
+      {
+        q: 'What can solar wind help produce near Earth’s poles?',
+        qZh: '太阳风可以在地球两极附近产生什么现象？',
+        options: ['Tsunamis', 'Auroras', 'Earthquakes', 'Eclipses'],
+        optionsZh: ['海啸', '极光', '地震', '日食或月食'],
+        answer: 1,
+        explain: 'Solar wind interacting near the poles can create auroras.',
+        explainZh: '太阳风在两极附近发生作用时会形成极光。'
+      },
+      {
+        q: 'What do optical telescopes collect?',
+        qZh: '光学望远镜收集什么？',
+        options: ['Radio waves only', 'Visible light', 'Sound waves', 'Magnetic fields'],
+        optionsZh: ['只有无线电波', '可见光', '声波', '磁场'],
+        answer: 1,
+        explain: 'Optical telescopes collect visible light.',
+        explainZh: '光学望远镜收集的是可见光。'
+      },
+      {
+        q: 'Why are space-based observations useful?',
+        qZh: '为什么太空观测很有用？',
+        options: ['Space is warmer than Earth', 'Earth’s atmosphere and light pollution can distort observations', 'Telescopes cannot work on Earth', 'Stars can only be seen from orbit'],
+        optionsZh: ['太空比地球更温暖', '地球大气和光污染会扭曲观测结果', '望远镜无法在地球上工作', '恒星只能从轨道上看到'],
+        answer: 1,
+        explain: 'Earth’s atmosphere and light pollution can reduce observation quality.',
+        explainZh: '地球大气和光污染会降低观测质量。'
+      },
+      {
+        q: 'What is a probe?',
+        qZh: '什么是探测器？',
+        options: ['A manned station in orbit', 'An unmanned device sent to gather information', 'A type of telescope lens', 'A natural satellite'],
+        optionsZh: ['轨道上的载人空间站', '被送去收集信息的无人装置', '一种望远镜镜片', '天然卫星'],
+        answer: 1,
+        explain: 'A probe is an unmanned exploration device.',
+        explainZh: '探测器是一种无人探索装置。'
+      },
+      {
+        q: 'Why are probes often used instead of humans?',
+        qZh: '为什么常常使用探测器而不是人类？',
+        options: ['They are always faster', 'They are less costly and less dangerous', 'They never need power', 'They can think like humans'],
+        optionsZh: ['它们总是更快', '它们成本更低，也更不危险', '它们永远不需要能源', '它们可以像人类一样思考'],
+        answer: 1,
+        explain: 'Probes reduce cost and risk.',
+        explainZh: '探测器可以降低成本和风险。'
+      },
+      {
+        q: 'Besides modern science, people have learned about the sky through:',
+        qZh: '除了现代科学，人们还通过什么方式了解天空？',
+        options: ['Only telescopes', 'Stories, traditions, and cultural teachings', 'Only satellites', 'Only mathematics'],
+        optionsZh: ['只有望远镜', '故事、传统和文化教导', '只有卫星', '只有数学'],
+        answer: 1,
+        explain: 'The unit includes cultural and traditional ways of knowing.',
+        explainZh: '本单元也包括文化和传统的认识方式。'
+      },
+      {
+        q: 'What is terraforming?',
+        qZh: '什么是地球化改造？',
+        options: ['Destroying a planet’s atmosphere', 'Mapping stars with satellites', 'Changing another place to support human settlement', 'Building a telescope on Earth'],
+        optionsZh: ['破坏一颗行星的大气', '用卫星绘制恒星图', '把另一个地方改造成适合人类居住', '在地球上建造望远镜'],
+        answer: 2,
+        explain: 'Terraforming means changing an environment to support human life.',
+        explainZh: '地球化改造是把环境改变得适合人类生存。'
+      },
+      {
+        q: 'What is space junk?',
+        qZh: '什么是太空垃圾？',
+        options: ['Natural dust between stars', 'Human-made debris orbiting Earth', 'Broken rocks on the Moon', 'Gas left over from the Big Bang'],
+        optionsZh: ['恒星之间的天然尘埃', '绕地球运行的人造碎片', '月球上的碎石', '大爆炸残留下来的气体'],
+        answer: 1,
+        explain: 'Space junk is debris from human space activity.',
+        explainZh: '太空垃圾是人类太空活动留下的碎片。'
+      },
+      {
+        q: 'Why is space junk dangerous?',
+        qZh: '为什么太空垃圾很危险？',
+        options: ['It blocks sunlight to Earth', 'It changes gravity', 'Even tiny pieces can damage spacecraft in collisions', 'It causes auroras'],
+        optionsZh: ['它会阻挡到达地球的阳光', '它会改变引力', '即使很小的碎片也会在碰撞中损坏航天器', '它会产生极光'],
+        answer: 2,
+        explain: 'Small debris can still cause major damage because of high-speed collisions.',
+        explainZh: '由于高速碰撞，即使很小的碎片也会造成严重破坏。'
+      }
+    ];
+
+    const UI_TEXT = {
+      title: { en: 'Earth Science Multiple Choice Practice', zh: '地球科学选择题练习' },
+      language: { en: 'Language', zh: '语言' },
+      intro: {
+        en: 'Choose one answer for each question, then click <strong>Check</strong>. Use <strong>Show Answer</strong> if you want to reveal the correct choice.',
+        zh: '为每道题选择一个答案，然后点击 <strong>检查</strong>。如果想直接看到正确答案，可以点击 <strong>显示答案</strong>。'
+      },
+      searchPlaceholder: { en: 'Search questions or options...', zh: '搜索题目或选项……' },
+      checkAll: { en: 'Check All', zh: '全部检查' },
+      showAll: { en: 'Show All Answers', zh: '显示全部答案' },
+      hideAll: { en: 'Hide All Answers', zh: '隐藏全部答案' },
+      resetAll: { en: 'Reset All', zh: '全部重置' },
+      footer: {
+        en: 'Tip: Multiple-choice questions often test exact terms, evidence, and compare/contrast ideas. Watch for distractors that are almost correct but use the wrong term.',
+        zh: '提示：选择题常考查准确术语、证据，以及比较与对比的概念。要特别注意那些看起来几乎正确、但术语用错的干扰项。'
+      },
+      questionLabel: { en: 'Question {n}', zh: '第 {n} 题' },
+      check: { en: 'Check', zh: '检查' },
+      showAnswer: { en: 'Show Answer', zh: '显示答案' },
+      clear: { en: 'Clear', zh: '清除' },
+      prev: { en: 'Prev', zh: '上一题' },
+      next: { en: 'Next', zh: '下一题' },
+      correctAnswer: { en: 'Correct answer:', zh: '正确答案：' },
+      why: { en: 'Why:', zh: '原因：' },
+      stats: { en: '{checked} / {total} checked · {good} correct', zh: '已检查 {checked} / {total} · 正确 {good}' },
+      noQuestions: { en: 'No questions match the current filter.', zh: '当前筛选条件下没有题目。' },
+      chooseFirst: { en: 'Please choose an answer first.', zh: '请先选择一个答案。' },
+      correct: { en: 'Correct.', zh: '正确。' },
+      incorrect: { en: 'Not correct yet. Review the choices or show the answer.', zh: '还不正确。请重新查看选项，或直接显示答案。' }
+    };
+
+    const app = document.getElementById('app');
+    const stats = document.getElementById('stats');
+    const pageTitleEl = document.getElementById('pageTitle');
+    const pageIntroEl = document.getElementById('pageIntro');
+    const langModeEl = document.getElementById('langMode');
+    const langLabelEl = document.getElementById('langLabel');
+    const searchBox = document.getElementById('searchBox');
+    const checkAllBtn = document.getElementById('checkAllBtn');
+    const showAllBtn = document.getElementById('showAllBtn');
+    const hideAllBtn = document.getElementById('hideAllBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const footerNoteEl = document.getElementById('footerNote');
+
+    const LANG_STORAGE_KEY = 'earth-science-mcq-lang-mode';
+    const LANG_CLASSES = ['lang-en', 'lang-enzh', 'lang-zh'];
+    const questionState = new Map();
+    let currentLangMode = 'en';
+    let currentQuestionKey = '';
+
+    function normalize(text) {
+      return String(text)
+        .toLowerCase()
+        .trim()
+        .replace(/[’']/g, '')
+        .replace(/[^\p{L}\p{N}\s-]/gu, ' ')
+        .replace(/\s+/g, ' ');
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function interpolate(template, vars = {}) {
+      return String(template).replace(/\{(\w+)\}/g, (_, key) => String(vars[key] ?? ''));
+    }
+
+    function getUiPair(key, vars = {}) {
+      const entry = UI_TEXT[key] || { en: key, zh: key };
+      return {
+        en: interpolate(entry.en, vars),
+        zh: interpolate(entry.zh, vars)
+      };
+    }
+
+    function getUiText(key, vars = {}) {
+      const pair = getUiPair(key, vars);
+      if (currentLangMode === 'zh') return pair.zh;
+      if (currentLangMode === 'enzh') return `${pair.en} / ${pair.zh}`;
+      return pair.en;
+    }
+
+    function renderLocalizedHtml(enHtml, zhHtml) {
+      if (currentLangMode === 'zh') return `<span class="i18n-zh">${zhHtml}</span>`;
+      if (currentLangMode === 'enzh') return `<span class="i18n-en">${enHtml}</span><span class="i18n-zh">${zhHtml}</span>`;
+      return `<span class="i18n-en">${enHtml}</span>`;
+    }
+
+    function renderLocalizedText(enText, zhText) {
+      return renderLocalizedHtml(escapeHtml(enText), escapeHtml(zhText));
+    }
+
+    function getQuestionState(questionKey) {
+      if (!questionState.has(questionKey)) {
+        questionState.set(questionKey, {
+          selectedIndex: null,
+          feedbackKey: '',
+          answerShown: false,
+          statusClass: ''
+        });
+      }
+      return questionState.get(questionKey);
+    }
+
+    function setShellText() {
+      const titlePair = getUiPair('title');
+      const introPair = getUiPair('intro');
+      const footerPair = getUiPair('footer');
+
+      document.body.classList.remove(...LANG_CLASSES);
+      document.body.classList.add(`lang-${currentLangMode}`);
+      document.documentElement.lang = currentLangMode === 'zh' ? 'zh-CN' : 'en';
+      document.title = currentLangMode === 'zh' ? titlePair.zh : titlePair.en;
+
+      pageTitleEl.innerHTML = renderLocalizedHtml(titlePair.en, titlePair.zh);
+      pageIntroEl.innerHTML = renderLocalizedHtml(introPair.en, introPair.zh);
+      footerNoteEl.innerHTML = renderLocalizedHtml(footerPair.en, footerPair.zh);
+      langLabelEl.textContent = getUiText('language');
+      searchBox.placeholder = getUiText('searchPlaceholder');
+      checkAllBtn.textContent = getUiText('checkAll');
+      showAllBtn.textContent = getUiText('showAll');
+      hideAllBtn.textContent = getUiText('hideAll');
+      resetBtn.textContent = getUiText('resetAll');
+    }
+
+    function setLanguageMode(mode) {
+      if (!['en', 'enzh', 'zh'].includes(mode)) mode = 'en';
+      currentLangMode = mode;
+      langModeEl.value = mode;
+      try {
+        localStorage.setItem(LANG_STORAGE_KEY, mode);
+      } catch {}
+      setShellText();
+      render();
+    }
+
+    function setQuestionFeedback(cardEl, key) {
+      const feedback = cardEl.querySelector('.feedback');
+      const state = getQuestionState(cardEl.dataset.questionKey);
+      state.feedbackKey = key || '';
+      feedback.textContent = key ? getUiText(key) : '';
+      feedback.className = 'feedback' + (key ? ' has-text ' + (key === 'correct' ? 'good' : 'warn') : '');
+    }
+
+    function applyStoredFeedback(cardEl, state) {
+      if (!state.feedbackKey) return;
+      const feedback = cardEl.querySelector('.feedback');
+      feedback.textContent = getUiText(state.feedbackKey);
+      feedback.className = 'feedback has-text ' + (state.feedbackKey === 'correct' ? 'good' : 'warn');
+    }
+
+    function filteredQuestions() {
+      const search = normalize(searchBox.value);
+      return questions.filter(item => {
+        const hay = normalize([
+          item.q,
+          item.qZh,
+          item.explain,
+          item.explainZh,
+          item.options.join(' '),
+          item.optionsZh.join(' ')
+        ].join(' '));
+        return !search || hay.includes(search);
+      });
+    }
+
+    function renderOptions(item, originalIndex, selectedIndex) {
+      return item.options.map((option, index) => {
+        const optionText = renderLocalizedText(option, item.optionsZh[index]);
+        return `
+          <label class="option">
+            <input type="radio" name="q${originalIndex}" value="${index}"${selectedIndex === index ? ' checked' : ''}>
+            <span>${optionText}</span>
+          </label>
+        `;
+      }).join('');
+    }
+
+    function render() {
+      const list = filteredQuestions();
+      app.innerHTML = '';
+
+      if (!list.length) {
+        currentQuestionKey = '';
+        const empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.innerHTML = renderLocalizedText(UI_TEXT.noQuestions.en, UI_TEXT.noQuestions.zh);
+        app.appendChild(empty);
+        updateStats(list);
+        return;
+      }
+
+      let currentIndex = list.findIndex(item => item.q === currentQuestionKey);
+      if (currentIndex === -1) {
+        currentIndex = 0;
+        currentQuestionKey = list[0].q;
+      }
+
+      const item = list[currentIndex];
+      const originalIndex = questions.findIndex(question => question.q === item.q);
+      const state = getQuestionState(item.q);
+
+      const card = document.createElement('div');
+      card.className = 'card' + (state.statusClass ? ` ${state.statusClass}` : '');
+      card.dataset.questionKey = item.q;
+      card.innerHTML = `
+        <div class="qnum">${renderLocalizedText(interpolate(UI_TEXT.questionLabel.en, { n: currentIndex + 1 }), interpolate(UI_TEXT.questionLabel.zh, { n: currentIndex + 1 }))}</div>
+        <div class="question">${renderLocalizedText(item.q, item.qZh)}</div>
+        <div class="options">${renderOptions(item, originalIndex, state.selectedIndex)}</div>
+        <div class="actions">
+          <button class="check-btn" type="button">${escapeHtml(getUiText('check'))}</button>
+          <button class="light show-btn" type="button">${escapeHtml(getUiText('showAnswer'))}</button>
+          <button class="secondary clear-btn" type="button">${escapeHtml(getUiText('clear'))}</button>
+          <button class="light prev-btn" type="button"${currentIndex <= 0 ? ' disabled' : ''}>${escapeHtml(getUiText('prev'))}</button>
+          <button class="next-btn" type="button"${currentIndex >= list.length - 1 ? ' disabled' : ''}>${escapeHtml(getUiText('next'))}</button>
+        </div>
+        <div class="feedback"></div>
+        <div class="answer${state.answerShown ? ' show' : ''}">
+          <strong>${renderLocalizedText(UI_TEXT.correctAnswer.en, UI_TEXT.correctAnswer.zh)}</strong>
+          <div>${renderLocalizedText(item.options[item.answer], item.optionsZh[item.answer])}</div>
+          <strong style="display:block; margin-top:8px;">${renderLocalizedText(UI_TEXT.why.en, UI_TEXT.why.zh)}</strong>
+          <div>${renderLocalizedText(item.explain, item.explainZh)}</div>
+        </div>
+      `;
+
+      const answer = card.querySelector('.answer');
+      card.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+          getQuestionState(item.q).selectedIndex = Number(radio.value);
+        });
+      });
+
+      applyStoredFeedback(card, state);
+
+      card.querySelector('.check-btn').addEventListener('click', () => {
+        const selected = card.querySelector('input[type="radio"]:checked');
+        state.answerShown = true;
+        answer.classList.add('show');
+        card.classList.remove('good', 'warn');
+
+        if (!selected) {
+          state.statusClass = '';
+          setQuestionFeedback(card, 'chooseFirst');
+        } else if (Number(selected.value) === item.answer) {
+          state.statusClass = 'good';
+          card.classList.add('good');
+          setQuestionFeedback(card, 'correct');
+        } else {
+          state.statusClass = 'warn';
+          card.classList.add('warn');
+          setQuestionFeedback(card, 'incorrect');
+        }
+
+        updateStats(list);
+      });
+
+      card.querySelector('.show-btn').addEventListener('click', () => {
+        answer.classList.toggle('show');
+        getQuestionState(item.q).answerShown = answer.classList.contains('show');
+      });
+
+      card.querySelector('.clear-btn').addEventListener('click', () => {
+        state.selectedIndex = null;
+        state.feedbackKey = '';
+        state.answerShown = false;
+        state.statusClass = '';
+        render();
+      });
+
+      card.querySelector('.prev-btn').addEventListener('click', () => {
+        currentQuestionKey = list[currentIndex - 1].q;
+        render();
+      });
+
+      card.querySelector('.next-btn').addEventListener('click', () => {
+        currentQuestionKey = list[currentIndex + 1].q;
+        render();
+      });
+
+      app.appendChild(card);
+      updateStats(list);
+    }
+
+    function updateStats(list = filteredQuestions()) {
+      const checked = list.filter(item => Boolean(getQuestionState(item.q).feedbackKey)).length;
+      const good = list.filter(item => getQuestionState(item.q).statusClass === 'good').length;
+      const pair = getUiPair('stats', { checked, total: list.length, good });
+      stats.innerHTML = renderLocalizedHtml(pair.en, pair.zh);
+    }
+
+    checkAllBtn.addEventListener('click', () => {
+      const list = filteredQuestions();
+      list.forEach(item => {
+        const state = getQuestionState(item.q);
+        state.answerShown = true;
+        if (state.selectedIndex === null || state.selectedIndex === undefined) {
+          state.statusClass = '';
+          state.feedbackKey = 'chooseFirst';
+        } else if (state.selectedIndex === item.answer) {
+          state.statusClass = 'good';
+          state.feedbackKey = 'correct';
+        } else {
+          state.statusClass = 'warn';
+          state.feedbackKey = 'incorrect';
+        }
+      });
+      render();
+    });
+
+    showAllBtn.addEventListener('click', () => {
+      filteredQuestions().forEach(item => {
+        getQuestionState(item.q).answerShown = true;
+      });
+      render();
+    });
+
+    hideAllBtn.addEventListener('click', () => {
+      filteredQuestions().forEach(item => {
+        getQuestionState(item.q).answerShown = false;
+      });
+      render();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      questions.forEach(item => {
+        const state = getQuestionState(item.q);
+        state.selectedIndex = null;
+        state.feedbackKey = '';
+        state.answerShown = false;
+        state.statusClass = '';
+      });
+      render();
+    });
+
+    searchBox.addEventListener('input', render);
+
+    (function init() {
+      let saved = 'en';
+      try {
+        saved = localStorage.getItem(LANG_STORAGE_KEY) || 'en';
+      } catch {
+        saved = 'en';
+      }
+      langModeEl.addEventListener('change', event => setLanguageMode(event.target.value));
+      setLanguageMode(saved);
+    }());
+  </script>
+</body>
+</html>
