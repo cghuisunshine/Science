@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Earth Science Fill-in-the-Blank Practice</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #dbe3ee;
+      --accent: #2563eb;
+      --good-bg: #ecfdf5;
+      --good-line: #10b981;
+      --bad-bg: #fff7ed;
+      --bad-line: #f59e0b;
+      --answer-bg: #f8fafc;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .lang-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .lang-label {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    #langMode {
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #ffffff;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .i18n-en,
+    .i18n-zh {
+      display: block;
+    }
+
+    .i18n-zh {
+      margin-top: 4px;
+      color: #475569;
+    }
+
+    .intro {
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) repeat(4, auto);
+      gap: 10px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .toolbar input,
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 15px;
+      background: white;
+      color: var(--text);
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      background: var(--accent);
+      color: white;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    button.secondary {
+      background: #475569;
+    }
+
+    button.light {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .stats {
+      margin: 12px 0 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .cards {
+      display: grid;
+      gap: 14px;
+    }
+
+    .empty-state {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+      color: var(--muted);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
+    }
+
+    .card.good {
+      border-color: var(--good-line);
+      background: var(--good-bg);
+    }
+
+    .card.warn {
+      border-color: var(--bad-line);
+      background: var(--bad-bg);
+    }
+
+    .qnum {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .question {
+      font-weight: 700;
+      margin-bottom: 10px;
+      font-size: 17px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 8px;
+      padding: 10px 12px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      white-space: pre-wrap;
+    }
+
+    .feedback.has-text {
+      display: block;
+    }
+
+    .feedback.good {
+      background: #ecfdf5;
+      border-color: #86efac;
+      color: #166534;
+    }
+
+    .feedback.warn {
+      background: #fff7ed;
+      border-color: #fdba74;
+      color: #9a3412;
+    }
+
+    .answer {
+      display: none;
+      background: var(--answer-bg);
+      border: 1px dashed #94a3b8;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 8px;
+    }
+
+    .answer.show {
+      display: block;
+    }
+
+    .footer-note {
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <h1 id="pageTitle">Earth Science Fill-in-the-Blank Practice</h1>
+      <div class="lang-controls">
+        <label class="lang-label" for="langMode" id="langLabel">Language</label>
+        <select id="langMode" aria-label="Language mode">
+          <option value="en">English</option>
+          <option value="enzh">En + Zh</option>
+          <option value="zh">中文</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="intro" id="pageIntro">
+      Type the missing word or short phrase, then click <strong>Check</strong>. Use <strong>Show Answer</strong> if you want to reveal it.
+    </div>
+
+    <div class="toolbar">
+      <input id="searchBox" type="text" placeholder="Search blanks or answers..." />
+      <button id="checkAllBtn">Check All</button>
+      <button id="showAllBtn" class="light">Show All Answers</button>
+      <button id="hideAllBtn" class="light">Hide All Answers</button>
+      <button id="resetBtn" class="secondary">Reset All</button>
+    </div>
+
+    <div class="stats" id="stats">0 / 0 checked</div>
+
+    <div class="cards" id="app"></div>
+
+    <div class="footer-note" id="footerNote">
+      Tip: These are best for exact terms like <em>red-shift</em>, <em>CMBR</em>, <em>spectroscope</em>, <em>nebular</em>, <em>photosphere</em>, and <em>auroras</em>.
+    </div>
+  </div>
+
+  <script>
+    const blanks = [
+      { q: 'The universe includes all matter, energy, and ______.', qZh: '宇宙包括所有物质、能量和______。', a: 'space', aZh: '空间' },
+      { q: 'A galaxy is held together by ______.', qZh: '星系靠______维系在一起。', a: 'gravity', aZh: '引力' },
+      { q: 'The Milky Way is our home ______.', qZh: '银河系是我们的家园______。', a: 'galaxy', aZh: '星系' },
+      { q: 'A light-year is a unit of ______, not time.', qZh: '光年是______单位，不是时间单位。', a: 'distance', aZh: '距离' },
+      { q: 'One AU is the distance from Earth to the ______.', qZh: '1 AU 是地球到______的距离。', a: 'Sun', aZh: '太阳' },
+      { q: 'The three main galaxy shapes are elliptical, spiral, and ______.', qZh: '三种主要的星系形状是椭圆形、螺旋形和______。', a: 'irregular', aZh: '不规则' },
+      { q: 'The Big Bang Theory says the universe began with a massive ______.', qZh: '大爆炸理论认为宇宙开始于一次巨大的______。', a: 'expansion', aZh: '膨胀' },
+      { q: 'Red-shift shows distant galaxies are moving ______ from us.', qZh: '红移表明遥远星系正______我们。', a: 'away', aZh: '远离' },
+      { q: 'CMBR stands for Cosmic Microwave Background ______.', qZh: 'CMBR 代表宇宙微波背景______。', a: 'Radiation', aZh: '辐射' },
+      { q: 'The Doppler Effect is a change in wavelength and ______.', qZh: '多普勒效应是波长和______的变化。', a: 'frequency', aZh: '频率' },
+      { q: 'A ______ splits light into its colours for study.', qZh: '______可以把光分成不同颜色来研究。', a: 'spectroscope', aZh: '分光镜' },
+      { q: 'Each element has its own unique ______.', qZh: '每种元素都有自己独特的______。', a: 'spectrum', aZh: '光谱' },
+      { q: 'A red star is generally ______ than a blue star.', qZh: '红色恒星通常比蓝色恒星更______。', a: 'cooler', aZh: '冷' },
+      { q: 'A star begins when gravity compresses gas and ______ starts.', qZh: '当引力压缩气体并开始______时，恒星便诞生了。', a: 'fusion', aZh: '聚变' },
+      { q: 'The most accepted model for solar system formation is the ______ theory.', qZh: '最被接受的太阳系形成模型是______理论。', a: 'nebular', aZh: '星云' },
+      { q: 'The future Sun forming at the centre of the nebula is called the ______.', qZh: '在星云中心形成、未来会成为太阳的天体叫作______。', a: 'protosun', aZh: '原太阳' },
+      { q: 'A future planet forming from clumps in the solar disk is a ______.', qZh: '由太阳盘中物质团块形成的未来行星叫作______。', a: 'protoplanet', aZh: '原行星' },
+      { q: 'The inner planets are rocky because it was too ______ for gases and ices to condense.', qZh: '内侧行星是岩石质的，因为那里太______，气体和冰无法凝结。', a: 'hot', aZh: '热' },
+      { q: 'The outer planets formed where temperatures were ______.', qZh: '外侧行星形成于温度更______的区域。', a: 'lower', aZh: '低' },
+      { q: 'Mercury, Venus, Earth, and Mars are the ______ planets.', qZh: '水星、金星、地球和火星是______行星。', a: 'terrestrial', aZh: '类地' },
+      { q: 'Jupiter, Saturn, Uranus, and Neptune are the ______ planets.', qZh: '木星、土星、天王星和海王星是______行星。', a: 'Jovian', aZh: '类木' },
+      { q: 'The Sun is an ordinary yellow ______ star.', qZh: '太阳是一颗普通的黄色______星。', a: 'dwarf', aZh: '矮' },
+      { q: 'The visible surface of the Sun is the ______.', qZh: '太阳可见的表面是______。', a: 'photosphere', aZh: '光球层' },
+      { q: 'The Sun’s energy comes from nuclear fusion in its ______.', qZh: '太阳的能量来自其______中的核聚变。', a: 'core', aZh: '核心' },
+      { q: 'Fusion in the Sun changes hydrogen into ______.', qZh: '太阳中的聚变把氢变成______。', a: 'helium', aZh: '氦' },
+      { q: 'A cooler, darker area on the Sun’s photosphere is a ______.', qZh: '太阳光球层上较冷、较暗的区域叫______。', a: 'sunspot', aZh: '太阳黑子' },
+      { q: 'The sunspot cycle repeats about every ______ years.', qZh: '太阳黑子周期大约每______年重复一次。', a: '11', aZh: '11' },
+      { q: 'Solar flares are caused by magnetic energy released from the Sun’s ______.', qZh: '太阳耀斑由太阳______释放的磁能引起。', a: 'corona', aZh: '日冕' },
+      { q: 'Solar wind is a stream of charged ______.', qZh: '太阳风是带电______流。', a: 'particles', aZh: '粒子' },
+      { q: 'Solar wind can create ______ near Earth’s poles.', qZh: '太阳风可以在地球两极附近形成______。', a: 'auroras', aZh: '极光' },
+      { q: 'Optical telescopes collect visible ______.', qZh: '光学望远镜收集可见______。', a: 'light', aZh: '光' },
+      { q: 'Visible light is only a small part of the electromagnetic ______.', qZh: '可见光只是电磁______中的一小部分。', a: 'spectrum', aZh: '光谱' },
+      { q: 'Earth’s atmosphere and light pollution can ______ observations.', qZh: '地球的大气和光污染会______观测结果。', a: 'distort', aZh: '扭曲' },
+      { q: 'A satellite is anything that ______ something else.', qZh: '凡是______其他天体运行的都可以叫卫星。', a: 'orbits', aZh: '绕着' },
+      { q: 'A probe is an ______ device sent to gather information.', qZh: '探测器是被送去收集信息的______装置。', a: 'unmanned', aZh: '无人' },
+      { q: 'Probes are often used because they are less costly and less ______.', qZh: '探测器常被使用，因为它们成本更低，也没那么______。', a: 'dangerous', aZh: '危险' },
+      { q: 'People also learned about the sky through stories, traditions, and cultural ______.', qZh: '人们也通过故事、传统和文化______来了解天空。', a: 'teachings', aZh: '教导' },
+      { q: 'Sky knowledge helped people track seasons and predict ______ changes.', qZh: '天空知识帮助人们追踪季节并预测______变化。', a: 'weather', aZh: '天气' },
+      { q: 'Transforming another planet to support human settlement is called ______.', qZh: '把另一颗行星改造成适合人类居住叫作______。', a: 'terraforming', aZh: '地球化改造' },
+      { q: 'Human-made debris orbiting Earth is called space ______.', qZh: '环绕地球运行的人造碎片叫作太空______。', a: 'junk', aZh: '垃圾' }
+    ];
+
+    const UI_TEXT = {
+      title: { en: 'Earth Science Fill-in-the-Blank Practice', zh: '地球科学填空练习' },
+      language: { en: 'Language', zh: '语言' },
+      intro: {
+        en: 'Type the missing word or short phrase, then click <strong>Check</strong>. Use <strong>Show Answer</strong> if you want to reveal it.',
+        zh: '输入缺少的单词或短语，然后点击 <strong>检查</strong>。如果想直接看到答案，可以点击 <strong>显示答案</strong>。'
+      },
+      searchPlaceholder: { en: 'Search blanks or answers...', zh: '搜索题目或答案……' },
+      checkAll: { en: 'Check All', zh: '全部检查' },
+      showAll: { en: 'Show All Answers', zh: '显示全部答案' },
+      hideAll: { en: 'Hide All Answers', zh: '隐藏全部答案' },
+      resetAll: { en: 'Reset All', zh: '全部重置' },
+      footer: {
+        en: 'Tip: These are best for exact terms like <em>red-shift</em>, <em>CMBR</em>, <em>spectroscope</em>, <em>nebular</em>, <em>photosphere</em>, and <em>auroras</em>.',
+        zh: '提示：这类练习最适合记忆像 <em>红移</em>、<em>CMBR</em>、<em>分光镜</em>、<em>星云</em>、<em>光球层</em> 和 <em>极光</em> 这样的准确术语。'
+      },
+      blankLabel: { en: 'Blank {n}', zh: '第 {n} 题' },
+      answerPlaceholder: { en: 'Type your answer here...', zh: '在这里输入你的答案……' },
+      check: { en: 'Check', zh: '检查' },
+      showAnswer: { en: 'Show Answer', zh: '显示答案' },
+      clear: { en: 'Clear', zh: '清除' },
+      prev: { en: 'Prev', zh: '上一题' },
+      next: { en: 'Next', zh: '下一题' },
+      correctAnswer: { en: 'Correct answer:', zh: '正确答案：' },
+      stats: { en: '{checked} / {total} checked · {good} correct', zh: '已检查 {checked} / {total} · 正确 {good}' },
+      noQuestions: { en: 'No blanks match the current filter.', zh: '当前筛选条件下没有题目。' },
+      emptyAnswer: { en: 'Please type an answer first.', zh: '请先输入答案。' },
+      correct: { en: 'Correct.', zh: '正确。' },
+      almost: { en: 'Almost correct. Your answer is close.', zh: '接近正确。你的答案已经很接近了。' },
+      incorrect: { en: 'Not correct yet. Try again or show the answer.', zh: '还不正确。请再试一次，或直接显示答案。' }
+    };
+
+    const app = document.getElementById('app');
+    const stats = document.getElementById('stats');
+    const pageTitleEl = document.getElementById('pageTitle');
+    const pageIntroEl = document.getElementById('pageIntro');
+    const langModeEl = document.getElementById('langMode');
+    const langLabelEl = document.getElementById('langLabel');
+    const searchBox = document.getElementById('searchBox');
+    const checkAllBtn = document.getElementById('checkAllBtn');
+    const showAllBtn = document.getElementById('showAllBtn');
+    const hideAllBtn = document.getElementById('hideAllBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const footerNoteEl = document.getElementById('footerNote');
+
+    const LANG_STORAGE_KEY = 'earth-science-fill-blanks-lang-mode';
+    const LANG_CLASSES = ['lang-en', 'lang-enzh', 'lang-zh'];
+    const blankState = new Map();
+    let currentLangMode = 'en';
+    let currentCardKey = '';
+
+    function normalize(text) {
+      return String(text)
+        .toLowerCase()
+        .trim()
+        .replace(/[’']/g, '')
+        .replace(/[^\p{L}\p{N}\s-]/gu, ' ')
+        .replace(/\s+/g, ' ');
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function interpolate(template, vars = {}) {
+      return String(template).replace(/\{(\w+)\}/g, (_, key) => String(vars[key] ?? ''));
+    }
+
+    function getUiPair(key, vars = {}) {
+      const entry = UI_TEXT[key] || { en: key, zh: key };
+      return {
+        en: interpolate(entry.en, vars),
+        zh: interpolate(entry.zh, vars)
+      };
+    }
+
+    function getUiText(key, vars = {}) {
+      const pair = getUiPair(key, vars);
+      if (currentLangMode === 'zh') return pair.zh;
+      if (currentLangMode === 'enzh') return `${pair.en} / ${pair.zh}`;
+      return pair.en;
+    }
+
+    function renderLocalizedHtml(enHtml, zhHtml) {
+      if (currentLangMode === 'zh') return `<span class="i18n-zh">${zhHtml}</span>`;
+      if (currentLangMode === 'enzh') return `<span class="i18n-en">${enHtml}</span><span class="i18n-zh">${zhHtml}</span>`;
+      return `<span class="i18n-en">${enHtml}</span>`;
+    }
+
+    function renderLocalizedText(enText, zhText) {
+      return renderLocalizedHtml(escapeHtml(enText), escapeHtml(zhText));
+    }
+
+    function getBlankState(blankKey) {
+      if (!blankState.has(blankKey)) {
+        blankState.set(blankKey, {
+          answerText: '',
+          feedbackKey: '',
+          answerShown: false,
+          statusClass: ''
+        });
+      }
+      return blankState.get(blankKey);
+    }
+
+    function setShellText() {
+      const titlePair = getUiPair('title');
+      const introPair = getUiPair('intro');
+      const footerPair = getUiPair('footer');
+
+      document.body.classList.remove(...LANG_CLASSES);
+      document.body.classList.add(`lang-${currentLangMode}`);
+      document.documentElement.lang = currentLangMode === 'zh' ? 'zh-CN' : 'en';
+      document.title = currentLangMode === 'zh' ? titlePair.zh : titlePair.en;
+
+      pageTitleEl.innerHTML = renderLocalizedHtml(titlePair.en, titlePair.zh);
+      pageIntroEl.innerHTML = renderLocalizedHtml(introPair.en, introPair.zh);
+      footerNoteEl.innerHTML = renderLocalizedHtml(footerPair.en, footerPair.zh);
+      langLabelEl.textContent = getUiText('language');
+      searchBox.placeholder = getUiText('searchPlaceholder');
+      checkAllBtn.textContent = getUiText('checkAll');
+      showAllBtn.textContent = getUiText('showAll');
+      hideAllBtn.textContent = getUiText('hideAll');
+      resetBtn.textContent = getUiText('resetAll');
+    }
+
+    function setLanguageMode(mode) {
+      if (!['en', 'enzh', 'zh'].includes(mode)) mode = 'en';
+      currentLangMode = mode;
+      langModeEl.value = mode;
+      try {
+        localStorage.setItem(LANG_STORAGE_KEY, mode);
+      } catch {}
+      setShellText();
+      render();
+    }
+
+    function acceptedAnswers(item) {
+      const answers = [item.a];
+      if (item.aZh && item.aZh !== item.a) answers.push(item.aZh);
+      return answers.map(normalize).filter(Boolean);
+    }
+
+    function evaluateBlank(item, answerText) {
+      const user = normalize(answerText);
+      const accepted = acceptedAnswers(item);
+
+      if (!user) return { statusClass: '', feedbackKey: 'emptyAnswer' };
+      if (accepted.includes(user)) return { statusClass: 'good', feedbackKey: 'correct' };
+      if (accepted.some(ans => ans.includes(user) || user.includes(ans))) {
+        return { statusClass: 'warn', feedbackKey: 'almost' };
+      }
+      return { statusClass: 'warn', feedbackKey: 'incorrect' };
+    }
+
+    function setBlankFeedback(cardEl, key) {
+      const feedback = cardEl.querySelector('.feedback');
+      const state = getBlankState(cardEl.dataset.blankKey);
+      state.feedbackKey = key || '';
+      feedback.textContent = key ? getUiText(key) : '';
+      feedback.className = 'feedback' + (key ? ' has-text ' + (key === 'correct' ? 'good' : 'warn') : '');
+    }
+
+    function applyStoredFeedback(cardEl, state) {
+      if (!state.feedbackKey) return;
+      const feedback = cardEl.querySelector('.feedback');
+      feedback.textContent = getUiText(state.feedbackKey);
+      feedback.className = 'feedback has-text ' + (state.feedbackKey === 'correct' ? 'good' : 'warn');
+    }
+
+    function filteredBlanks() {
+      const search = normalize(searchBox.value);
+      return blanks.filter(item => {
+        const hay = normalize([item.q, item.qZh, item.a, item.aZh].join(' '));
+        return !search || hay.includes(search);
+      });
+    }
+
+    function render() {
+      const list = filteredBlanks();
+      app.innerHTML = '';
+
+      if (!list.length) {
+        currentCardKey = '';
+        const empty = document.createElement('div');
+        empty.className = 'empty-state';
+        empty.innerHTML = renderLocalizedText(UI_TEXT.noQuestions.en, UI_TEXT.noQuestions.zh);
+        app.appendChild(empty);
+        updateStats(list);
+        return;
+      }
+
+      let currentIndex = list.findIndex(item => item.q === currentCardKey);
+      if (currentIndex === -1) {
+        currentIndex = 0;
+        currentCardKey = list[0].q;
+      }
+
+      const item = list[currentIndex];
+      const originalIndex = blanks.findIndex(blank => blank.q === item.q);
+      const state = getBlankState(item.q);
+
+      const card = document.createElement('div');
+      card.className = 'card' + (state.statusClass ? ` ${state.statusClass}` : '');
+      card.dataset.blankKey = item.q;
+      card.innerHTML = `
+        <div class="qnum">${renderLocalizedText(interpolate(UI_TEXT.blankLabel.en, { n: currentIndex + 1 }), interpolate(UI_TEXT.blankLabel.zh, { n: currentIndex + 1 }))}</div>
+        <div class="question">${renderLocalizedText(item.q, item.qZh)}</div>
+        <input type="text" id="blank-${originalIndex}" name="blank-${originalIndex}" placeholder="${escapeHtml(getUiText('answerPlaceholder'))}" />
+        <div class="actions">
+          <button class="check-btn" type="button">${escapeHtml(getUiText('check'))}</button>
+          <button class="light show-btn" type="button">${escapeHtml(getUiText('showAnswer'))}</button>
+          <button class="secondary clear-btn" type="button">${escapeHtml(getUiText('clear'))}</button>
+          <button class="light prev-btn" type="button"${currentIndex <= 0 ? ' disabled' : ''}>${escapeHtml(getUiText('prev'))}</button>
+          <button class="next-btn" type="button"${currentIndex >= list.length - 1 ? ' disabled' : ''}>${escapeHtml(getUiText('next'))}</button>
+        </div>
+        <div class="feedback"></div>
+        <div class="answer${state.answerShown ? ' show' : ''}">
+          <strong>${renderLocalizedText(UI_TEXT.correctAnswer.en, UI_TEXT.correctAnswer.zh)}</strong>
+          <div>${renderLocalizedText(item.a, item.aZh)}</div>
+        </div>
+      `;
+
+      const input = card.querySelector('input');
+      const answer = card.querySelector('.answer');
+      input.value = state.answerText;
+      applyStoredFeedback(card, state);
+
+      input.addEventListener('input', () => {
+        getBlankState(item.q).answerText = input.value;
+      });
+
+      card.querySelector('.check-btn').addEventListener('click', () => {
+        const result = evaluateBlank(item, input.value);
+        state.statusClass = result.statusClass;
+        state.answerShown = true;
+        card.classList.remove('good', 'warn');
+        if (result.statusClass) card.classList.add(result.statusClass);
+        answer.classList.add('show');
+        setBlankFeedback(card, result.feedbackKey);
+        updateStats(list);
+      });
+
+      card.querySelector('.show-btn').addEventListener('click', () => {
+        answer.classList.toggle('show');
+        getBlankState(item.q).answerShown = answer.classList.contains('show');
+      });
+
+      card.querySelector('.clear-btn').addEventListener('click', () => {
+        input.value = '';
+        state.answerText = '';
+        state.feedbackKey = '';
+        state.answerShown = false;
+        state.statusClass = '';
+        card.classList.remove('good', 'warn');
+        answer.classList.remove('show');
+        setBlankFeedback(card, '');
+        updateStats(list);
+      });
+
+      card.querySelector('.prev-btn').addEventListener('click', () => {
+        currentCardKey = list[currentIndex - 1].q;
+        render();
+        const nextInput = document.querySelector('.card input');
+        if (nextInput) nextInput.focus({ preventScroll: true });
+      });
+
+      card.querySelector('.next-btn').addEventListener('click', () => {
+        currentCardKey = list[currentIndex + 1].q;
+        render();
+        const nextInput = document.querySelector('.card input');
+        if (nextInput) nextInput.focus({ preventScroll: true });
+      });
+
+      app.appendChild(card);
+      updateStats(list);
+    }
+
+    function updateStats(list = filteredBlanks()) {
+      const checked = list.filter(item => Boolean(getBlankState(item.q).feedbackKey)).length;
+      const good = list.filter(item => getBlankState(item.q).statusClass === 'good').length;
+      const pair = getUiPair('stats', { checked, total: list.length, good });
+      stats.innerHTML = renderLocalizedHtml(pair.en, pair.zh);
+    }
+
+    checkAllBtn.addEventListener('click', () => {
+      const list = filteredBlanks();
+      list.forEach(item => {
+        const state = getBlankState(item.q);
+        const result = evaluateBlank(item, state.answerText);
+        state.feedbackKey = result.feedbackKey;
+        state.statusClass = result.statusClass;
+        state.answerShown = true;
+      });
+      render();
+    });
+
+    showAllBtn.addEventListener('click', () => {
+      filteredBlanks().forEach(item => {
+        getBlankState(item.q).answerShown = true;
+      });
+      render();
+    });
+
+    hideAllBtn.addEventListener('click', () => {
+      filteredBlanks().forEach(item => {
+        getBlankState(item.q).answerShown = false;
+      });
+      render();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      blanks.forEach(item => {
+        const state = getBlankState(item.q);
+        state.answerText = '';
+        state.feedbackKey = '';
+        state.answerShown = false;
+        state.statusClass = '';
+      });
+      render();
+    });
+
+    searchBox.addEventListener('input', render);
+
+    (function init() {
+      let saved = 'en';
+      try {
+        saved = localStorage.getItem(LANG_STORAGE_KEY) || 'en';
+      } catch {
+        saved = 'en';
+      }
+      langModeEl.addEventListener('change', event => setLanguageMode(event.target.value));
+      setLanguageMode(saved);
+    }());
+  </script>
+</body>
+</html>
