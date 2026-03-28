@@ -839,9 +839,25 @@
     const sections = [...new Set(cards.map(c => c.section))];
     const cardState = new Map();
     const LANG_STORAGE_KEY = 'earth-science-flashcards-lang-mode';
+    const POSITION_STORAGE_KEY = 'earth-science-flashcards-current-card';
     const LANG_CLASSES = ['lang-en', 'lang-enzh', 'lang-zh'];
     let currentLangMode = 'en';
     let currentCardKey = '';
+
+    function saveCurrentCardKey() {
+      try {
+        if (currentCardKey) {
+          localStorage.setItem(POSITION_STORAGE_KEY, currentCardKey);
+        } else {
+          localStorage.removeItem(POSITION_STORAGE_KEY);
+        }
+      } catch {}
+    }
+
+    function clearCurrentCardKey() {
+      currentCardKey = '';
+      saveCurrentCardKey();
+    }
 
     function normalize(text) {
       return text
@@ -1099,11 +1115,15 @@
 
     function initLangUi() {
       let saved = 'en';
+      let savedCardKey = '';
       try {
         saved = localStorage.getItem(LANG_STORAGE_KEY) || 'en';
+        savedCardKey = localStorage.getItem(POSITION_STORAGE_KEY) || '';
       } catch {
         saved = 'en';
+        savedCardKey = '';
       }
+      currentCardKey = savedCardKey;
       langModeEl.addEventListener('change', event => setLanguageMode(event.target.value));
       setLanguageMode(saved);
     }
@@ -1177,6 +1197,7 @@
       if (!target || target.q === cardKey) return;
 
       currentCardKey = target.q;
+      saveCurrentCardKey();
       render();
 
       const textarea = document.querySelector('.card textarea');
@@ -1306,7 +1327,6 @@
       const list = filteredCards();
       app.innerHTML = '';
       if (!list.length) {
-        currentCardKey = '';
         const empty = document.createElement('div');
         empty.className = 'empty-state';
         empty.innerHTML = renderLocalizedText(UI_TEXT.noQuestions.en, UI_TEXT.noQuestions.zh);
@@ -1320,6 +1340,7 @@
         currentIndex = 0;
         currentCardKey = list[0].q;
       }
+      saveCurrentCardKey();
 
       const card = list[currentIndex];
       const originalIndex = cards.findIndex(item => item.q === card.q);
@@ -1443,9 +1464,8 @@
     });
 
     resetBtn.addEventListener('click', () => {
-      document.querySelectorAll('.card').forEach(card => {
-        const key = card.dataset.cardKey;
-        const state = getCardState(key);
+      cards.forEach(item => {
+        const state = getCardState(item.q);
         state.answerText = '';
         state.feedbackText = '';
         state.feedbackKind = '';
@@ -1456,13 +1476,9 @@
         state.answerShown = false;
         state.statusClass = '';
         state.isChecking = false;
-        card.querySelector('textarea').value = '';
-        setCardFeedback(card, '', '');
-        card.querySelector('.answer').classList.remove('show');
-        card.querySelector('.check-btn').disabled = false;
-        card.classList.remove('good', 'warn', 'checking');
       });
-      updateStats();
+      clearCurrentCardKey();
+      render();
     });
 
     searchBox.addEventListener('input', render);

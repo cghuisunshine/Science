@@ -362,10 +362,26 @@
     const footerNoteEl = document.getElementById('footerNote');
 
     const LANG_STORAGE_KEY = 'earth-science-fill-blanks-lang-mode';
+    const POSITION_STORAGE_KEY = 'earth-science-fill-blanks-current-card';
     const LANG_CLASSES = ['lang-en', 'lang-enzh', 'lang-zh'];
     const blankState = new Map();
     let currentLangMode = 'en';
     let currentCardKey = '';
+
+    function saveCurrentCardKey() {
+      try {
+        if (currentCardKey) {
+          localStorage.setItem(POSITION_STORAGE_KEY, currentCardKey);
+        } else {
+          localStorage.removeItem(POSITION_STORAGE_KEY);
+        }
+      } catch {}
+    }
+
+    function clearCurrentCardKey() {
+      currentCardKey = '';
+      saveCurrentCardKey();
+    }
 
     function normalize(text) {
       return String(text)
@@ -504,7 +520,6 @@
       app.innerHTML = '';
 
       if (!list.length) {
-        currentCardKey = '';
         const empty = document.createElement('div');
         empty.className = 'empty-state';
         empty.innerHTML = renderLocalizedText(UI_TEXT.noQuestions.en, UI_TEXT.noQuestions.zh);
@@ -518,6 +533,7 @@
         currentIndex = 0;
         currentCardKey = list[0].q;
       }
+      saveCurrentCardKey();
 
       const item = list[currentIndex];
       const originalIndex = blanks.findIndex(blank => blank.q === item.q);
@@ -583,6 +599,7 @@
 
       card.querySelector('.prev-btn').addEventListener('click', () => {
         currentCardKey = list[currentIndex - 1].q;
+        saveCurrentCardKey();
         render();
         const nextInput = document.querySelector('.card input');
         if (nextInput) nextInput.focus({ preventScroll: true });
@@ -590,6 +607,7 @@
 
       card.querySelector('.next-btn').addEventListener('click', () => {
         currentCardKey = list[currentIndex + 1].q;
+        saveCurrentCardKey();
         render();
         const nextInput = document.querySelector('.card input');
         if (nextInput) nextInput.focus({ preventScroll: true });
@@ -640,6 +658,7 @@
         state.answerShown = false;
         state.statusClass = '';
       });
+      clearCurrentCardKey();
       render();
     });
 
@@ -647,11 +666,15 @@
 
     (function init() {
       let saved = 'en';
+      let savedCardKey = '';
       try {
         saved = localStorage.getItem(LANG_STORAGE_KEY) || 'en';
+        savedCardKey = localStorage.getItem(POSITION_STORAGE_KEY) || '';
       } catch {
         saved = 'en';
+        savedCardKey = '';
       }
+      currentCardKey = savedCardKey;
       langModeEl.addEventListener('change', event => setLanguageMode(event.target.value));
       setLanguageMode(saved);
     }());

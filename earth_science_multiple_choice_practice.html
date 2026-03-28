@@ -294,239 +294,544 @@
   <script>
     const questions = [
       {
-        q: 'Which best describes a light-year?',
-        qZh: '以下哪项最能描述光年？',
-        options: [
-          'A unit of time used in astronomy',
-          'The distance light travels in one year',
-          'The distance from Earth to the Sun',
-          'The time Earth takes to orbit the Sun'
-        ],
-        optionsZh: [
-          '天文学中使用的时间单位',
-          '光在一年中传播的距离',
-          '地球到太阳的距离',
-          '地球绕太阳一周所需的时间'
-        ],
-        answer: 1,
-        explain: 'A light-year is a distance, not a time.',
-        explainZh: '光年是距离单位，不是时间单位。'
-      },
-      {
-        q: 'Which of the following is not one of the three main galaxy shapes in this unit?',
-        qZh: '以下哪项不是本单元中的三种主要星系形状之一？',
-        options: ['Elliptical', 'Spiral', 'Irregular', 'Rectangular'],
-        optionsZh: ['椭圆形', '螺旋形', '不规则形', '长方形'],
-        answer: 3,
-        explain: 'The three main shapes are elliptical, spiral, and irregular.',
-        explainZh: '三种主要形状是椭圆形、螺旋形和不规则形。'
-      },
-      {
-        q: 'What does red-shift suggest about distant galaxies?',
-        qZh: '红移说明遥远星系怎么样？',
-        options: ['They are cooling down', 'They are moving away from us', 'They are moving toward us', 'They have stopped moving'],
-        optionsZh: ['它们正在冷却', '它们正在远离我们', '它们正在靠近我们', '它们已经停止移动'],
-        answer: 1,
-        explain: 'Red-shift is evidence that galaxies are moving away.',
-        explainZh: '红移是星系正在远离的证据。'
-      },
-      {
-        q: 'What does CMBR stand for?',
-        qZh: 'CMBR 代表什么？',
-        options: ['Cosmic Matter Balance Ratio', 'Central Microwave Beam Reflection', 'Cosmic Microwave Background Radiation', 'Cold Matter Band Radiation'],
-        optionsZh: ['宇宙物质平衡比', '中央微波束反射', '宇宙微波背景辐射', '冷物质带辐射'],
-        answer: 2,
-        explain: 'CMBR is Cosmic Microwave Background Radiation.',
-        explainZh: 'CMBR 指的是宇宙微波背景辐射。'
-      },
-      {
-        q: 'Which tool splits light into its colours for study?',
-        qZh: '哪种工具能把光分成不同颜色来研究？',
-        options: ['Microscope', 'Spectroscope', 'Barometer', 'Thermometer'],
-        optionsZh: ['显微镜', '分光镜', '气压计', '温度计'],
-        answer: 1,
-        explain: 'A spectroscope separates light into a spectrum.',
-        explainZh: '分光镜能把光分解成光谱。'
-      },
-      {
-        q: 'Why do scientists say elements have unique fingerprints?',
-        qZh: '为什么科学家说元素有独特的“指纹”？',
-        options: ['Each element has a different gravity', 'Each element produces a unique spectrum', 'Each element has a different colour in solid form', 'Each element moves at a different speed'],
-        optionsZh: ['每种元素有不同的引力', '每种元素会产生独特的光谱', '每种元素在固态时颜色不同', '每种元素移动速度不同'],
-        answer: 1,
-        explain: 'Each element gives off a unique spectrum when heated.',
-        explainZh: '每种元素受热时都会发出独特的光谱。'
-      },
-      {
-        q: 'Which star colour usually means the star is cooler?',
-        qZh: '哪种恒星颜色通常表示恒星更冷？',
-        options: ['Blue-violet', 'White', 'Red', 'Purple'],
-        optionsZh: ['蓝紫色', '白色', '红色', '紫色'],
-        answer: 2,
-        explain: 'Red stars are cooler than blue-violet stars.',
-        explainZh: '红色恒星比蓝紫色恒星更冷。'
-      },
-      {
-        q: 'According to nebular theory, the solar system formed from:',
-        qZh: '根据星云理论，太阳系形成于：',
-        options: ['A giant ice comet', 'A collapsing cloud of gas and dust', 'A black hole explosion', 'A collision between two stars'],
-        optionsZh: ['一颗巨大的冰彗星', '一团正在坍缩的气体和尘埃云', '一次黑洞爆炸', '两颗恒星的碰撞'],
-        answer: 1,
-        explain: 'Nebular theory explains solar system formation from a cloud of gas and dust.',
-        explainZh: '星云理论认为太阳系由一团气体和尘埃云形成。'
-      },
-      {
-        q: 'What is a protosun?',
-        qZh: '什么是原太阳？',
-        options: ['A small moon forming around a planet', 'A future Sun forming at the centre of the nebula', 'A dead star', 'A comet heading toward the Sun'],
-        optionsZh: ['围绕行星形成的小卫星', '在星云中心形成、未来会成为太阳的天体', '一颗死亡恒星', '飞向太阳的彗星'],
-        answer: 1,
-        explain: 'A protosun is the still-forming future Sun.',
-        explainZh: '原太阳是仍在形成中的未来太阳。'
-      },
-      {
-        q: 'Why are the inner planets mostly rocky?',
-        qZh: '为什么内侧行星大多是岩石质的？',
-        options: ['They formed far from the Sun', 'They are older than the outer planets', 'It was too hot for gases and ices to condense near the Sun', 'They lost all atmosphere because of collisions'],
-        optionsZh: ['它们形成于远离太阳的地方', '它们比外侧行星更古老', '靠近太阳的地方太热，气体和冰无法凝结', '它们因碰撞失去了全部大气'],
-        answer: 2,
-        explain: 'Near the Sun, only rock and metal could remain solid.',
-        explainZh: '在太阳附近，只有岩石和金属能保持固态。'
-      },
-      {
-        q: 'Which set lists the terrestrial planets?',
-        qZh: '以下哪组列出了类地行星？',
-        options: ['Mercury, Venus, Earth, Mars', 'Jupiter, Saturn, Uranus, Neptune', 'Earth, Mars, Jupiter, Saturn', 'Venus, Earth, Uranus, Neptune'],
-        optionsZh: ['水星、金星、地球、火星', '木星、土星、天王星、海王星', '地球、火星、木星、土星', '金星、地球、天王星、海王星'],
+        q: 'What is the universe?',
+        qZh: '什么是宇宙？',
+        options: ['All matter, energy, and space', 'Only the Milky Way galaxy', 'Only stars and planets', 'Only what can be seen from Earth'],
+        optionsZh: ['所有物质、能量和空间', '只有银河系', '只有恒星和行星', '只有从地球上能看到的东西'],
         answer: 0,
-        explain: 'The terrestrial planets are Mercury, Venus, Earth, and Mars.',
-        explainZh: '类地行星是水星、金星、地球和火星。'
+        explain: 'The universe includes everything: matter, energy, and the space that contains them.',
+        explainZh: '宇宙包括一切：物质、能量，以及容纳它们的空间。'
+      },
+      {
+        q: 'What is the difference between a galaxy and a solar system?',
+        qZh: '星系和太阳系有什么区别？',
+        options: ['A galaxy is smaller than a solar system', 'A solar system contains many galaxies', 'A galaxy contains many stars and solar systems, while a solar system is one star and the objects orbiting it', 'They are two words for the same thing'],
+        optionsZh: ['星系比太阳系更小', '一个太阳系包含许多星系', '星系包含许多恒星和太阳系，而太阳系是由一颗恒星及其周围绕行的天体组成的', '它们只是同一事物的两个不同说法'],
+        answer: 2,
+        explain: 'A galaxy is a vast collection of stars, gas, and dust. A solar system is one star with planets and other objects around it.',
+        explainZh: '星系是由大量恒星、气体和尘埃组成的巨大系统。太阳系则是一颗恒星以及围绕它运行的行星和其他天体。'
+      },
+      {
+        q: 'Why is the Milky Way important to us?',
+        qZh: '为什么银河系对我们很重要？',
+        options: ['It is the closest galaxy to the Sun', 'It is our home galaxy', 'It contains every galaxy in the universe', 'It causes the seasons on Earth'],
+        optionsZh: ['它是离太阳最近的星系', '它是我们的家园星系', '它包含宇宙中的所有星系', '它造成了地球上的季节变化'],
+        answer: 1,
+        explain: 'The Milky Way matters to us because our solar system is located inside it.',
+        explainZh: '银河系对我们很重要，因为我们的太阳系位于其中。'
+      },
+      {
+        q: 'What is a light-year?',
+        qZh: '什么是光年？',
+        options: ['A unit of time used by astronomers', 'The brightness of a star over one year', 'The distance light travels in one year', 'The distance from Earth to the Sun'],
+        optionsZh: ['天文学家使用的时间单位', '恒星在一年内的亮度', '光在一年中传播的距离', '地球到太阳的距离'],
+        answer: 2,
+        explain: 'A light-year measures distance, not time.',
+        explainZh: '光年测量的是距离，不是时间。'
+      },
+      {
+        q: 'What is an astronomical unit (AU)?',
+        qZh: '什么是天文单位（AU）？',
+        options: ['The distance from Earth to the Moon', 'The average distance from Earth to the Sun', 'The distance light travels in one day', 'The size of the Milky Way'],
+        optionsZh: ['地球到月球的距离', '地球到太阳的平均距离', '光在一天内传播的距离', '银河系的大小'],
+        answer: 1,
+        explain: 'One AU is the average distance between Earth and the Sun.',
+        explainZh: '1 个天文单位是地球与太阳之间的平均距离。'
+      },
+      {
+        q: 'Compare interplanetary, interstellar, and intergalactic distances.',
+        qZh: '比较行星际、恒星际和星系际距离。',
+        options: ['Intergalactic is smallest, interstellar is largest', 'Interplanetary is within a solar system, interstellar is between stars, and intergalactic is between galaxies', 'They all describe the same kind of distance', 'Interstellar is only used for planets and moons'],
+        optionsZh: ['星系际最小，恒星际最大', '行星际是太阳系内的距离，恒星际是恒星之间的距离，星系际是星系之间的距离', '它们描述的都是同一种距离', '恒星际只用于行星和卫星之间'],
+        answer: 1,
+        explain: 'Interplanetary distances are within a solar system, interstellar distances are between stars, and intergalactic distances are between galaxies.',
+        explainZh: '行星际距离是在一个太阳系内部，恒星际距离是在恒星之间，星系际距离是在星系之间。'
+      },
+      {
+        q: 'What are the three main galaxy shapes?',
+        qZh: '星系的三种主要形状是什么？',
+        options: ['Round, square, triangular', 'Spiral, elliptical, irregular', 'Rocky, gaseous, icy', 'Bright, dim, medium'],
+        optionsZh: ['圆形、方形、三角形', '螺旋形、椭圆形、不规则形', '岩石状、气体状、冰状', '明亮、暗淡、中等'],
+        answer: 1,
+        explain: 'The three main galaxy shapes studied are spiral, elliptical, and irregular.',
+        explainZh: '本单元学习的三种主要星系形状是螺旋形、椭圆形和不规则形。'
+      },
+      {
+        q: 'What is a star?',
+        qZh: '什么是恒星？',
+        options: ['A planet that gives off reflected light', 'A large ball of gas that produces energy and light', 'A group of constellations', 'A moon orbiting a giant planet'],
+        optionsZh: ['发出反射光的行星', '能产生能量和光的大气体球', '一组星座', '绕巨行星运行的卫星'],
+        answer: 1,
+        explain: 'A star is a huge ball of gas that emits light and energy.',
+        explainZh: '恒星是一个会发出光和能量的巨大气体球。'
+      },
+      {
+        q: 'What is a constellation?',
+        qZh: '什么是星座？',
+        options: ['A pattern of stars recognized from Earth', 'A group of planets orbiting a star', 'A bright meteor shower', 'A type of galaxy'],
+        optionsZh: ['从地球上辨认出的恒星图案', '围绕一颗恒星运行的一组行星', '明亮的流星雨', '一种星系类型'],
+        answer: 0,
+        explain: 'A constellation is a pattern of stars seen from Earth.',
+        explainZh: '星座是从地球上看到的一组恒星图案。'
+      },
+      {
+        q: 'What are the requirements for an object to be called a planet?',
+        qZh: '一个天体要被称为行星，需要满足哪些条件？',
+        options: ['It must orbit the Sun, be nearly round, and clear its neighbourhood', 'It must have an atmosphere, moons, and water', 'It must be larger than Earth and rocky', 'It must shine with its own light'],
+        optionsZh: ['它必须绕太阳公转、接近球形，并清除其轨道附近区域', '它必须有大气层、卫星和水', '它必须比地球大且由岩石组成', '它必须自己发光'],
+        answer: 0,
+        explain: 'In this unit, a planet must orbit the Sun, be massive enough to be round, and dominate or clear its neighbourhood.',
+        explainZh: '在本单元中，行星必须绕太阳公转，质量足够大而接近球形，并且主导或清除其轨道附近区域。'
+      },
+      {
+        q: 'Why is Pluto classified as a dwarf planet?',
+        qZh: '为什么冥王星被归类为矮行星？',
+        options: ['It is too cold to be a planet', 'It does not orbit the Sun', 'It has no moons', 'It has not cleared its neighbourhood'],
+        optionsZh: ['它太冷，不能算行星', '它不绕太阳公转', '它没有卫星', '它没有清除其轨道附近区域'],
+        answer: 3,
+        explain: 'Pluto is classified as a dwarf planet because it does not clear or dominate its orbital neighbourhood.',
+        explainZh: '冥王星被归类为矮行星，因为它没有清除或主导其轨道附近区域。'
+      },
+      {
+        q: 'What does the Big Bang theory say?',
+        qZh: '大爆炸理论说明了什么？',
+        options: ['The universe has always stayed the same size', 'The universe began very hot and dense, then expanded', 'All stars formed before galaxies', 'The Sun created the universe'],
+        optionsZh: ['宇宙一直保持相同大小', '宇宙起初非常炽热而稠密，随后开始膨胀', '所有恒星都在星系之前形成', '太阳创造了宇宙'],
+        answer: 1,
+        explain: 'The Big Bang theory says the universe began in a very hot, dense state and has been expanding.',
+        explainZh: '大爆炸理论认为，宇宙起初处于非常炽热、稠密的状态，此后一直在膨胀。'
+      },
+      {
+        q: 'What is the Doppler effect?',
+        qZh: '什么是多普勒效应？',
+        options: ['A change in wave frequency caused by relative motion', 'The bending of light by gravity', 'The splitting of light into colours', 'The heating of matter by sunlight'],
+        optionsZh: ['由相对运动引起的波频率变化', '光被引力弯曲', '光分解成各种颜色', '阳光使物质升温'],
+        answer: 0,
+        explain: 'The Doppler effect is the apparent change in frequency or wavelength caused by motion between source and observer.',
+        explainZh: '多普勒效应是由于波源与观察者之间的运动而产生的表观频率或波长变化。'
+      },
+      {
+        q: 'Explain the Doppler effect using a siren example.',
+        qZh: '用警笛的例子解释多普勒效应。',
+        options: ['A siren sounds lower as it approaches and higher as it moves away', 'A siren sounds higher as it approaches and lower as it moves away', 'A siren always sounds the same because sound speed never changes', 'A siren can only be heard when it is stopped'],
+        optionsZh: ['警笛靠近时听起来音调更低，远离时更高', '警笛靠近时听起来音调更高，远离时更低', '警笛听起来总是一样，因为声速不会变化', '警笛只有在停止时才能听见'],
+        answer: 1,
+        explain: 'A moving siren sounds higher-pitched as it approaches and lower-pitched as it moves away.',
+        explainZh: '移动中的警笛在靠近时听起来音调更高，在远离时听起来音调更低。'
+      },
+      {
+        q: 'What is red-shift?',
+        qZh: '什么是红移？',
+        options: ['A shift toward shorter wavelengths', 'A shift toward longer wavelengths', 'A method of measuring magnetic fields', 'A type of solar flare'],
+        optionsZh: ['向更短波长方向偏移', '向更长波长方向偏移', '一种测量磁场的方法', '一种太阳耀斑'],
+        answer: 1,
+        explain: 'Red-shift means light is shifted toward longer wavelengths.',
+        explainZh: '红移表示光向更长的波长方向偏移。'
+      },
+      {
+        q: 'What is blue-shift?',
+        qZh: '什么是蓝移？',
+        options: ['A shift toward longer wavelengths', 'A shift toward shorter wavelengths', 'A colour change caused by temperature only', 'A special kind of telescope image'],
+        optionsZh: ['向更长波长方向偏移', '向更短波长方向偏移', '只由温度引起的颜色变化', '一种特殊的望远镜图像'],
+        answer: 1,
+        explain: 'Blue-shift means light is shifted toward shorter wavelengths.',
+        explainZh: '蓝移表示光向更短的波长方向偏移。'
+      },
+      {
+        q: 'Why does red-shift support the idea of an expanding universe?',
+        qZh: '为什么红移支持宇宙正在膨胀的观点？',
+        options: ['Because it shows galaxies are getting cooler', 'Because it shows many galaxies are moving away from us', 'Because it proves stars are made of hydrogen', 'Because it only happens inside the Milky Way'],
+        optionsZh: ['因为它显示星系正在变冷', '因为它显示许多星系正远离我们', '因为它证明恒星是由氢构成的', '因为它只发生在银河系内部'],
+        answer: 1,
+        explain: 'If many galaxies are moving away, that supports the idea that space is expanding.',
+        explainZh: '如果许多星系都在远离我们，这就支持了空间正在膨胀的观点。'
+      },
+      {
+        q: 'What is CMBR?',
+        qZh: '什么是 CMBR？',
+        options: ['A type of star cluster', 'The leftover microwave radiation from the early universe', 'A chemical reaction in the Sun', 'A unit of astronomical distance'],
+        optionsZh: ['一种星团', '来自早期宇宙残留的微波辐射', '太阳中的一种化学反应', '一种天文距离单位'],
+        answer: 1,
+        explain: 'CMBR is cosmic microwave background radiation, a leftover signal from the early universe.',
+        explainZh: 'CMBR 指宇宙微波背景辐射，是早期宇宙留下来的信号。'
+      },
+      {
+        q: 'Give two main pieces of evidence for the Big Bang theory.',
+        qZh: '说出支持大爆炸理论的两个主要证据。',
+        options: ['Sunspots and solar wind', 'Red-shift and CMBR', 'Earthquakes and volcanoes', 'Gravity and magnetism'],
+        optionsZh: ['太阳黑子和太阳风', '红移和 CMBR', '地震和火山', '重力和磁性'],
+        answer: 1,
+        explain: 'Two major pieces of evidence are red-shift and cosmic microwave background radiation.',
+        explainZh: '两个主要证据是红移和宇宙微波背景辐射。'
+      },
+      {
+        q: 'Why is the phrase “Big Bang” a little misleading?',
+        qZh: '为什么“Big Bang（大爆炸）”这个说法有点容易误导？',
+        options: ['Because it was actually a small event on one planet', 'Because it suggests an explosion into empty space instead of the expansion of space itself', 'Because no sound was involved', 'Because it only describes the Sun’s formation'],
+        optionsZh: ['因为它实际上只是某个行星上的小事件', '因为它让人以为是向空旷空间中的爆炸，而不是空间本身的膨胀', '因为其中没有声音', '因为它只描述了太阳的形成'],
+        answer: 1,
+        explain: '“Big Bang” can be misleading because it sounds like an explosion in space, but the theory describes space itself expanding.',
+        explainZh: '“大爆炸”这个说法可能会让人误解，因为它听起来像是在空间中的一次爆炸，但该理论描述的是空间本身在膨胀。'
+      },
+      {
+        q: 'What are the four main layers of Earth?',
+        qZh: '地球的四个主要圈层是什么？',
+        options: ['Crust, mantle, outer core, inner core', 'Crust, magma, rock, metal', 'Lithosphere, hydrosphere, biosphere, atmosphere', 'Oceanic crust, continental crust, mantle, asthenosphere'],
+        optionsZh: ['地壳、地幔、外核、内核', '地壳、岩浆、岩石、金属', '岩石圈、水圈、生物圈、大气圈', '洋壳、大陆壳、地幔、软流层'],
+        answer: 0,
+        explain: 'Earth’s four main layers are the crust, mantle, outer core, and inner core.',
+        explainZh: '地球的四个主要圈层是地壳、地幔、外核和内核。'
+      },
+      {
+        q: 'What is the crust?',
+        qZh: '什么是地壳？',
+        options: ['Earth’s liquid metal centre', 'Earth’s thin outer rocky layer', 'The hottest part of the mantle', 'The boundary between two tectonic plates'],
+        optionsZh: ['地球中心的液态金属层', '地球最外侧薄薄的岩石层', '地幔中最热的部分', '两个板块之间的边界'],
+        answer: 1,
+        explain: 'The crust is the thin, rocky outer layer of Earth.',
+        explainZh: '地壳是地球外部薄薄的岩石层。'
+      },
+      {
+        q: 'What is the mantle?',
+        qZh: '什么是地幔？',
+        options: ['A thin gas layer around Earth', 'A thick layer of hot rock beneath the crust', 'Earth’s solid metal centre', 'A trench on the seafloor'],
+        optionsZh: ['围绕地球的一层薄气体', '位于地壳下方的厚热岩石层', '地球固态金属中心', '海底的一条海沟'],
+        answer: 1,
+        explain: 'The mantle is the thick layer of hot rock below Earth’s crust.',
+        explainZh: '地幔是位于地壳之下的厚热岩石层。'
+      },
+      {
+        q: 'What is the outer core?',
+        qZh: '什么是外核？',
+        options: ['A liquid layer of mostly iron and nickel', 'A rigid rock layer near the surface', 'A region where mountains form', 'A thin layer of gas around Earth'],
+        optionsZh: ['主要由铁和镍组成的液态层', '靠近地表的坚硬岩石层', '山脉形成的区域', '围绕地球的一层薄气体'],
+        answer: 0,
+        explain: 'The outer core is a liquid layer made mostly of iron and nickel.',
+        explainZh: '外核是主要由铁和镍组成的液态层。'
+      },
+      {
+        q: 'What is the inner core?',
+        qZh: '什么是内核？',
+        options: ['A molten rock chamber under volcanoes', 'A solid metal centre made mostly of iron and nickel', 'A layer of ocean crust', 'A layer where convection stops'],
+        optionsZh: ['火山下方的熔融岩石室', '主要由铁和镍组成的固态金属中心', '一层洋壳', '对流停止的层'],
+        answer: 1,
+        explain: 'The inner core is Earth’s solid metal centre.',
+        explainZh: '内核是地球固态的金属中心。'
+      },
+      {
+        q: 'How do seismic waves provide evidence about Earth’s interior?',
+        qZh: '地震波如何为地球内部结构提供证据？',
+        options: ['They create the continents', 'They change speed and direction in different layers', 'They only travel through the atmosphere', 'They remove heat from the core'],
+        optionsZh: ['它们形成大陆', '它们在不同层中会改变速度和方向', '它们只在大气中传播', '它们把热量从地核带走'],
+        answer: 1,
+        explain: 'Seismic waves behave differently in different materials, revealing the structure inside Earth.',
+        explainZh: '地震波在不同材料中的传播方式不同，因此能够揭示地球内部的结构。'
+      },
+      {
+        q: 'What are convection currents?',
+        qZh: '什么是对流？',
+        options: ['Circular movements caused by heating and cooling in a fluid or soft material', 'The vibration of earthquakes through rock', 'The movement of clouds in the atmosphere', 'The spinning of Earth on its axis'],
+        optionsZh: ['流体或较软物质因受热和冷却而产生的循环运动', '地震通过岩石传播的振动', '大气中云的运动', '地球绕其自转轴旋转'],
+        answer: 0,
+        explain: 'Convection currents are circular motions caused by heating and cooling.',
+        explainZh: '对流是由受热和冷却引起的循环运动。'
+      },
+      {
+        q: 'How do convection currents move tectonic plates?',
+        qZh: '对流如何移动构造板块？',
+        options: ['They freeze the plates in place', 'They pull and push the plates as mantle material moves', 'They only move plates during storms', 'They break plates into dust'],
+        optionsZh: ['它们把板块冻结在原地', '当地幔物质移动时，它们会拉动和推动板块', '它们只在暴风雨期间移动板块', '它们把板块弄碎成尘土'],
+        answer: 1,
+        explain: 'Movement in the mantle helps drag and push tectonic plates above it.',
+        explainZh: '地幔中的运动会拖动并推动其上方的构造板块。'
+      },
+      {
+        q: 'What is a divergent plate boundary?',
+        qZh: '什么是发散型板块边界？',
+        options: ['A boundary where plates move apart', 'A boundary where plates move together', 'A boundary where one plate melts instantly', 'A boundary where plates stop moving'],
+        optionsZh: ['板块彼此分开的边界', '板块彼此靠近的边界', '一块板块会立刻熔化的边界', '板块停止移动的边界'],
+        answer: 0,
+        explain: 'At divergent boundaries, tectonic plates move apart.',
+        explainZh: '在发散型边界处，构造板块彼此远离。'
+      },
+      {
+        q: 'What is a convergent plate boundary?',
+        qZh: '什么是汇聚型板块边界？',
+        options: ['A boundary where plates move apart', 'A boundary where plates slide past each other', 'A boundary where plates move together', 'A boundary where no stress builds up'],
+        optionsZh: ['板块彼此分开的边界', '板块彼此滑过的边界', '板块彼此靠近的边界', '不会积累应力的边界'],
+        answer: 2,
+        explain: 'At convergent boundaries, tectonic plates move toward each other.',
+        explainZh: '在汇聚型边界处，构造板块彼此靠近。'
+      },
+      {
+        q: 'What is a transform plate boundary?',
+        qZh: '什么是转换型板块边界？',
+        options: ['A boundary where plates slide past one another', 'A boundary where one plate rises into the air', 'A boundary where plates move directly apart', 'A boundary where new crust forms in the mantle'],
+        optionsZh: ['板块彼此擦过滑动的边界', '一块板块上升到空中的边界', '板块直接分开的边界', '新地壳在地幔中形成的边界'],
+        answer: 0,
+        explain: 'At transform boundaries, plates slide past each other sideways.',
+        explainZh: '在转换型边界处，板块彼此侧向滑动。'
+      },
+      {
+        q: 'What is subduction?',
+        qZh: '什么是俯冲？',
+        options: ['The building of a mountain by uplift only', 'The sinking of one tectonic plate beneath another', 'The splitting of a continent into two', 'The cooling of magma at a ridge'],
+        optionsZh: ['仅通过抬升形成山脉', '一块构造板块下沉到另一块板块之下', '大陆裂成两半', '岩浆在洋脊处冷却'],
+        answer: 1,
+        explain: 'Subduction happens when one plate is forced beneath another plate.',
+        explainZh: '俯冲是指一块板块被迫下沉到另一块板块之下。'
+      },
+      {
+        q: 'How do trenches form?',
+        qZh: '海沟是如何形成的？',
+        options: ['At divergent boundaries where magma rises', 'At transform boundaries where plates grind past each other', 'At convergent boundaries where one plate subducts beneath another', 'At the centre of continents where erosion is strongest'],
+        optionsZh: ['在岩浆上升的发散型边界', '在板块彼此摩擦滑过的转换型边界', '在一块板块俯冲到另一块板块下方的汇聚型边界', '在侵蚀最强烈的大陆中心'],
+        answer: 2,
+        explain: 'Ocean trenches form where one plate bends and sinks into the mantle at a subduction zone.',
+        explainZh: '海洋海沟形成于俯冲带，在那里一块板块弯曲并沉入地幔。'
+      },
+      {
+        q: 'How do mid-ocean ridges form?',
+        qZh: '大洋中脊是如何形成的？',
+        options: ['At divergent boundaries where magma rises and new crust forms', 'At convergent boundaries when plates collide', 'When meteorites hit the seafloor', 'When rivers erode the ocean floor'],
+        optionsZh: ['在岩浆上升并形成新地壳的发散型边界', '在板块碰撞的汇聚型边界', '当陨石撞击海底时', '当河流侵蚀洋底时'],
+        answer: 0,
+        explain: 'Mid-ocean ridges form where plates move apart and magma rises to create new seafloor.',
+        explainZh: '大洋中脊形成于板块彼此分开的地方，岩浆上升并形成新的海底地壳。'
+      },
+      {
+        q: 'Why do earthquakes often happen near plate boundaries?',
+        qZh: '为什么地震常常发生在板块边界附近？',
+        options: ['Because sunlight is strongest there', 'Because stress builds up where plates interact and is then released', 'Because the core is closest to the surface there', 'Because water always causes rocks to melt'],
+        optionsZh: ['因为那里阳光最强', '因为板块相互作用的地方会积累应力，随后释放出来', '因为那里地核离地表最近', '因为水总会使岩石熔化'],
+        answer: 1,
+        explain: 'Plate boundaries are places where stress builds up as plates move and interact.',
+        explainZh: '板块边界是板块运动和相互作用时会积累应力的地方。'
+      },
+      {
+        q: 'How are mountains formed at plate boundaries?',
+        qZh: '板块边界处的山脉是如何形成的？',
+        options: ['By compression and uplift, especially at convergent boundaries', 'By rivers depositing sand', 'By winds carving rock into peaks', 'By asteroids heating the crust'],
+        optionsZh: ['通过挤压和抬升形成，尤其是在汇聚型边界', '通过河流沉积沙子形成', '通过风把岩石雕刻成山峰形成', '通过小行星加热地壳形成'],
+        answer: 0,
+        explain: 'Many mountains form where plates push together and rock is uplifted.',
+        explainZh: '许多山脉形成于板块相互挤压、岩石被抬升的地方。'
+      },
+      {
+        q: 'What kind of star is the Sun?',
+        qZh: '太阳属于哪一种恒星？',
+        options: ['A red giant', 'A white dwarf', 'A yellow dwarf', 'A neutron star'],
+        optionsZh: ['红巨星', '白矮星', '黄矮星', '中子星'],
+        answer: 2,
+        explain: 'The Sun is commonly described in this course as an ordinary yellow dwarf star.',
+        explainZh: '在本课程中，太阳通常被描述为一颗普通的黄矮星。'
       },
       {
         q: 'Where does the Sun’s energy come from?',
         qZh: '太阳的能量来自哪里？',
-        options: ['Its outer atmosphere', 'Its core, where fusion occurs', 'Its magnetic field', 'Its sunspots'],
-        optionsZh: ['它的外层大气', '它的核心，聚变发生的地方', '它的磁场', '它的太阳黑子'],
+        options: ['Its atmosphere', 'Its core, where fusion occurs', 'Its magnetic field only', 'Its planets reflecting light back'],
+        optionsZh: ['它的大气层', '它的核心，那里发生核聚变', '只有它的磁场', '它的行星把光反射回来'],
         answer: 1,
-        explain: 'The Sun’s energy comes from fusion in the core.',
-        explainZh: '太阳的能量来自核心中的聚变。'
+        explain: 'The Sun’s energy comes from fusion in its core.',
+        explainZh: '太阳的能量来自其核心中的核聚变。'
       },
       {
-        q: 'Which layer is the visible surface of the Sun?',
-        qZh: '太阳哪一层是可见表面？',
-        options: ['Corona', 'Core', 'Photosphere', 'Chromosphere'],
-        optionsZh: ['日冕', '核心', '光球层', '色球层'],
-        answer: 2,
-        explain: 'The photosphere is the visible surface.',
-        explainZh: '光球层就是可见表面。'
-      },
-      {
-        q: 'A sunspot is best described as:',
-        qZh: '太阳黑子最准确的描述是：',
-        options: ['A bright explosion on the Sun', 'A cooler, darker region on the photosphere', 'A hole in the Sun’s surface', 'A cloud of gas in the corona'],
-        optionsZh: ['太阳上的明亮爆发', '光球层上较冷、较暗的区域', '太阳表面的一个洞', '日冕中的一团气体'],
+        q: 'What is nuclear fusion?',
+        qZh: '什么是核聚变？',
+        options: ['The splitting of heavy nuclei into smaller ones', 'The joining of small nuclei to form larger ones and release energy', 'The cooling of the Sun’s surface', 'The bending of light by gravity'],
+        optionsZh: ['把重原子核分裂成更小的原子核', '把较小的原子核结合成更大的原子核并释放能量', '太阳表面的冷却', '光被引力弯曲'],
         answer: 1,
-        explain: 'Sunspots are cooler and darker than nearby areas.',
-        explainZh: '太阳黑子比周围区域更冷、更暗。'
+        explain: 'Nuclear fusion joins smaller nuclei, such as hydrogen, into larger ones and releases energy.',
+        explainZh: '核聚变是把较小的原子核（例如氢）结合成更大的原子核，并释放能量。'
       },
       {
-        q: 'How long is the sunspot cycle approximately?',
-        qZh: '太阳黑子周期大约有多长？',
-        options: ['1 year', '5 years', '11 years', '100 years'],
-        optionsZh: ['1 年', '5 年', '11 年', '100 年'],
-        answer: 2,
-        explain: 'The cycle repeats about every 11 years.',
-        explainZh: '这个周期大约每 11 年重复一次。'
+        q: 'What are the Sun’s main layers: core, radiative zone, convective zone, photosphere, corona?',
+        qZh: '太阳的主要层次有哪些：核心、辐射层、对流层、光球层、日冕？',
+        options: ['Core, radiative zone, convective zone, photosphere, corona', 'Core, mantle, crust, photosphere, chromosphere', 'Photosphere, lithosphere, radiative zone, corona, mantle', 'Core, corona, asthenosphere, troposphere, photosphere'],
+        optionsZh: ['核心、辐射层、对流层、光球层、日冕', '核心、地幔、地壳、光球层、色球层', '光球层、岩石圈、辐射层、日冕、地幔', '核心、日冕、软流层、对流层、光球层'],
+        answer: 0,
+        explain: 'The main layers listed in this unit are the core, radiative zone, convective zone, photosphere, and corona.',
+        explainZh: '本单元列出的太阳主要层次是核心、辐射层、对流层、光球层和日冕。'
       },
       {
-        q: 'What is solar wind?',
-        qZh: '什么是太阳风？',
-        options: ['Heat trapped in Earth’s atmosphere', 'A stream of charged particles from the Sun', 'A type of cloud around the Sun', 'A wave pattern in the Sun’s core'],
-        optionsZh: ['被困在地球大气中的热量', '来自太阳的带电粒子流', '太阳周围的一种云', '太阳核心中的波动模式'],
+        q: 'What is the photosphere?',
+        qZh: '什么是光球层？',
+        options: ['The visible surface of the Sun', 'The centre of the Sun where fusion occurs', 'A cold cloud above the Sun', 'A layer inside Earth'],
+        optionsZh: ['太阳可见的表面', '太阳中发生核聚变的中心', '太阳上方的一层冷云', '地球内部的一层'],
+        answer: 0,
+        explain: 'The photosphere is the visible surface of the Sun.',
+        explainZh: '光球层是太阳可见的表面。'
+      },
+      {
+        q: 'What is the corona?',
+        qZh: '什么是日冕？',
+        options: ['The coolest layer of Earth', 'The Sun’s hot outer atmosphere', 'A type of solar eclipse', 'The layer below the photosphere'],
+        optionsZh: ['地球最冷的一层', '太阳炽热的外层大气', '一种日食类型', '位于光球层下方的一层'],
         answer: 1,
-        explain: 'Solar wind is made of charged particles escaping the Sun.',
-        explainZh: '太阳风由从太阳逃逸出来的带电粒子组成。'
+        explain: 'The corona is the Sun’s hot outer atmosphere.',
+        explainZh: '日冕是太阳炽热的外层大气。'
       },
       {
-        q: 'What can solar wind help produce near Earth’s poles?',
-        qZh: '太阳风可以在地球两极附近产生什么现象？',
-        options: ['Tsunamis', 'Auroras', 'Earthquakes', 'Eclipses'],
-        optionsZh: ['海啸', '极光', '地震', '日食或月食'],
-        answer: 1,
-        explain: 'Solar wind interacting near the poles can create auroras.',
-        explainZh: '太阳风在两极附近发生作用时会形成极光。'
+        q: 'How does solar energy affect weather, climate, and life on Earth?',
+        qZh: '太阳能如何影响地球上的天气、气候和生命？',
+        options: ['It drives weather and climate and provides energy for life', 'It only affects tides', 'It has no effect because Earth makes its own energy', 'It only affects the Moon'],
+        optionsZh: ['它驱动天气和气候，并为生命提供能量', '它只影响潮汐', '它没有影响，因为地球自己产生能量', '它只影响月球'],
+        answer: 0,
+        explain: 'Solar energy drives weather and climate systems and makes life on Earth possible.',
+        explainZh: '太阳能驱动天气和气候系统，并使地球上的生命成为可能。'
       },
       {
         q: 'What do optical telescopes collect?',
         qZh: '光学望远镜收集什么？',
-        options: ['Radio waves only', 'Visible light', 'Sound waves', 'Magnetic fields'],
-        optionsZh: ['只有无线电波', '可见光', '声波', '磁场'],
-        answer: 1,
+        options: ['Visible light', 'Sound waves', 'Only X-rays', 'Only radio signals'],
+        optionsZh: ['可见光', '声波', '只有 X 射线', '只有无线电信号'],
+        answer: 0,
         explain: 'Optical telescopes collect visible light.',
         explainZh: '光学望远镜收集的是可见光。'
       },
       {
-        q: 'Why are space-based observations useful?',
-        qZh: '为什么太空观测很有用？',
-        options: ['Space is warmer than Earth', 'Earth’s atmosphere and light pollution can distort observations', 'Telescopes cannot work on Earth', 'Stars can only be seen from orbit'],
-        optionsZh: ['太空比地球更温暖', '地球大气和光污染会扭曲观测结果', '望远镜无法在地球上工作', '恒星只能从轨道上看到'],
-        answer: 1,
-        explain: 'Earth’s atmosphere and light pollution can reduce observation quality.',
-        explainZh: '地球大气和光污染会降低观测质量。'
+        q: 'Why do astronomers use more than optical telescopes?',
+        qZh: '为什么天文学家使用的不只是光学望远镜？',
+        options: ['Because visible light is only one part of the electromagnetic spectrum', 'Because optical telescopes cannot see stars', 'Because radio waves are the only useful data', 'Because all telescopes must be used together by law'],
+        optionsZh: ['因为可见光只是电磁波谱的一部分', '因为光学望远镜看不到恒星', '因为无线电波是唯一有用的数据', '因为法律规定所有望远镜都必须一起使用'],
+        answer: 0,
+        explain: 'Astronomers use many kinds of telescopes because different wavelengths reveal different information.',
+        explainZh: '天文学家使用多种望远镜，因为不同波长能够揭示不同的信息。'
       },
       {
-        q: 'What is a probe?',
-        qZh: '什么是探测器？',
-        options: ['A manned station in orbit', 'An unmanned device sent to gather information', 'A type of telescope lens', 'A natural satellite'],
-        optionsZh: ['轨道上的载人空间站', '被送去收集信息的无人装置', '一种望远镜镜片', '天然卫星'],
-        answer: 1,
-        explain: 'A probe is an unmanned exploration device.',
-        explainZh: '探测器是一种无人探索装置。'
+        q: 'Why are satellites useful in astronomy?',
+        qZh: '为什么卫星在天文学中很有用？',
+        options: ['They can orbit above much of Earth’s atmosphere and collect clearer data', 'They make stars brighter', 'They create new constellations', 'They replace all ground-based telescopes completely'],
+        optionsZh: ['它们可以在地球大气层的大部分之上运行，从而收集更清晰的数据', '它们让恒星变得更亮', '它们创造新的星座', '它们完全取代所有地面望远镜'],
+        answer: 0,
+        explain: 'Satellites are useful because they can observe from above atmospheric interference.',
+        explainZh: '卫星之所以有用，是因为它们可以在大气干扰之上进行观测。'
+      },
+      {
+        q: 'What is a space probe?',
+        qZh: '什么是太空探测器？',
+        options: ['An unmanned spacecraft sent to gather information', 'A natural moon orbiting a planet', 'A station where astronauts live permanently', 'A type of microscope used in astronomy'],
+        optionsZh: ['用于收集信息的无人航天器', '绕行星运行的天然卫星', '宇航员长期居住的空间站', '天文学中使用的一种显微镜'],
+        answer: 0,
+        explain: 'A space probe is an unmanned vehicle sent to explore and collect data.',
+        explainZh: '太空探测器是一种被派去探索并收集数据的无人航天器。'
       },
       {
         q: 'Why are probes often used instead of humans?',
-        qZh: '为什么常常使用探测器而不是人类？',
-        options: ['They are always faster', 'They are less costly and less dangerous', 'They never need power', 'They can think like humans'],
-        optionsZh: ['它们总是更快', '它们成本更低，也更不危险', '它们永远不需要能源', '它们可以像人类一样思考'],
-        answer: 1,
-        explain: 'Probes reduce cost and risk.',
-        explainZh: '探测器可以降低成本和风险。'
+        qZh: '为什么常常使用探测器而不是派人去？',
+        options: ['They are less costly and less dangerous', 'They do not need any power', 'They always travel faster than light', 'They can repair themselves forever'],
+        optionsZh: ['它们成本更低、危险更小', '它们不需要任何能量', '它们总是比光速更快', '它们可以永远自我修复'],
+        answer: 0,
+        explain: 'Probes reduce cost and risk compared with sending humans.',
+        explainZh: '与派人前往相比，探测器可以降低成本和风险。'
       },
       {
-        q: 'Besides modern science, people have learned about the sky through:',
-        qZh: '除了现代科学，人们还通过什么方式了解天空？',
-        options: ['Only telescopes', 'Stories, traditions, and cultural teachings', 'Only satellites', 'Only mathematics'],
-        optionsZh: ['只有望远镜', '故事、传统和文化教导', '只有卫星', '只有数学'],
-        answer: 1,
-        explain: 'The unit includes cultural and traditional ways of knowing.',
-        explainZh: '本单元也包括文化和传统的认识方式。'
+        q: 'What does Hubble help scientists study?',
+        qZh: '哈勃望远镜帮助科学家研究什么？',
+        options: ['Deep space objects such as galaxies, nebulae, and the expanding universe', 'Only Earth’s weather', 'Only the inside of the Sun', 'Only asteroids near Earth'],
+        optionsZh: ['深空天体，例如星系、星云以及膨胀中的宇宙', '只有地球天气', '只有太阳内部', '只有近地小行星'],
+        answer: 0,
+        explain: 'Hubble has helped scientists study distant galaxies, nebulae, stars, and the structure of the universe.',
+        explainZh: '哈勃帮助科学家研究遥远的星系、星云、恒星以及宇宙的结构。'
       },
       {
-        q: 'What is terraforming?',
-        qZh: '什么是地球化改造？',
-        options: ['Destroying a planet’s atmosphere', 'Mapping stars with satellites', 'Changing another place to support human settlement', 'Building a telescope on Earth'],
-        optionsZh: ['破坏一颗行星的大气', '用卫星绘制恒星图', '把另一个地方改造成适合人类居住', '在地球上建造望远镜'],
-        answer: 2,
-        explain: 'Terraforming means changing an environment to support human life.',
-        explainZh: '地球化改造是把环境改变得适合人类生存。'
+        q: 'Why is the ISS important?',
+        qZh: '为什么国际空间站（ISS）很重要？',
+        options: ['It provides a place for international cooperation and microgravity research', 'It is the only telescope in space', 'It controls all satellites around Earth', 'It is where all probes are built'],
+        optionsZh: ['它提供了一个进行国际合作和微重力研究的场所', '它是太空中唯一的望远镜', '它控制地球周围所有卫星', '所有探测器都在那里制造'],
+        answer: 0,
+        explain: 'The International Space Station is important for research and international collaboration in space.',
+        explainZh: '国际空间站对于太空研究和国际合作都非常重要。'
+      },
+      {
+        q: 'What did Cassini study?',
+        qZh: '卡西尼号研究了什么？',
+        options: ['Mars and its polar caps', 'Saturn, its rings, and its moons', 'The interior of the Sun', 'The formation of Earth’s core'],
+        optionsZh: ['火星及其极冠', '土星、它的光环和它的卫星', '太阳内部', '地球内核的形成'],
+        answer: 1,
+        explain: 'Cassini was a mission that studied Saturn, its rings, and several of its moons.',
+        explainZh: '卡西尼号是一项研究土星、其光环以及若干卫星的任务。'
+      },
+      {
+        q: 'What does the Curiosity rover do on Mars?',
+        qZh: '好奇号火星车在火星上做什么？',
+        options: ['It studies rocks, soil, and evidence about Mars’s past habitability', 'It orbits Mars and studies its moons only', 'It mines minerals for transport to Earth', 'It measures Earth’s atmosphere from Mars'],
+        optionsZh: ['它研究岩石、土壤以及火星过去是否适合居住的证据', '它绕火星运行，只研究它的卫星', '它开采矿物并运回地球', '它从火星测量地球大气'],
+        answer: 0,
+        explain: 'Curiosity explores Mars’s surface and studies whether the planet could once have supported life.',
+        explainZh: '好奇号探索火星表面，并研究这颗行星过去是否可能支持生命存在。'
+      },
+      {
+        q: 'What does the Parker Solar Probe study?',
+        qZh: '帕克太阳探测器研究什么？',
+        options: ['The Sun’s corona and solar wind', 'The oceans of Earth', 'The rings of Saturn', 'The interior of Mars'],
+        optionsZh: ['太阳的日冕和太阳风', '地球海洋', '土星光环', '火星内部'],
+        answer: 0,
+        explain: 'The Parker Solar Probe studies the Sun, especially the corona and solar wind.',
+        explainZh: '帕克太阳探测器研究太阳，尤其是日冕和太阳风。'
+      },
+      {
+        q: 'Why is astronomy considered one of the oldest sciences?',
+        qZh: '为什么天文学被认为是最古老的科学之一？',
+        options: ['Because people have observed the sky for thousands of years', 'Because it was invented after satellites were launched', 'Because telescopes were the first machines humans built', 'Because it only studies ancient stars'],
+        optionsZh: ['因为人类已经观察天空数千年', '因为它是在发射卫星之后才被发明出来的', '因为望远镜是人类制造的第一种机器', '因为它只研究古老恒星'],
+        answer: 0,
+        explain: 'Astronomy is one of the oldest sciences because humans have studied the sky since ancient times.',
+        explainZh: '天文学是最古老的科学之一，因为人类自古以来就一直在研究天空。'
+      },
+      {
+        q: 'How did sky knowledge help people with calendars or seasons?',
+        qZh: '关于天空的知识如何帮助人们制定历法或判断季节？',
+        options: ['By tracking regular patterns in the Sun, Moon, and stars', 'By changing Earth’s orbit directly', 'By preventing winter from happening', 'By making clocks unnecessary'],
+        optionsZh: ['通过追踪太阳、月亮和恒星的规律变化', '通过直接改变地球轨道', '通过阻止冬天到来', '通过让时钟变得不必要'],
+        answer: 0,
+        explain: 'People used regular sky patterns to mark seasons and build calendars.',
+        explainZh: '人们利用天空中有规律的变化来判断季节并制定历法。'
+      },
+      {
+        q: 'What is one cultural story or perspective about the sky, such as Turtle Island or Barnumbir?',
+        qZh: '像 Turtle Island 或 Barnumbir 这样的天空文化故事或观点是什么？',
+        options: ['A cultural way of understanding the sky and human relationships with it', 'A modern telescope design', 'A type of galaxy shape', 'A law of planetary motion'],
+        optionsZh: ['一种理解天空及人与天空关系的文化方式', '一种现代望远镜设计', '一种星系形状', '一条行星运动定律'],
+        answer: 0,
+        explain: 'Stories such as Turtle Island or Barnumbir show cultural perspectives and knowledge about the sky.',
+        explainZh: '像 Turtle Island 或 Barnumbir 这样的故事展示了关于天空的文化观点和知识。'
       },
       {
         q: 'What is space junk?',
         qZh: '什么是太空垃圾？',
-        options: ['Natural dust between stars', 'Human-made debris orbiting Earth', 'Broken rocks on the Moon', 'Gas left over from the Big Bang'],
-        optionsZh: ['恒星之间的天然尘埃', '绕地球运行的人造碎片', '月球上的碎石', '大爆炸残留下来的气体'],
-        answer: 1,
-        explain: 'Space junk is debris from human space activity.',
-        explainZh: '太空垃圾是人类太空活动留下的碎片。'
+        options: ['Human-made debris orbiting Earth', 'Natural gas between stars', 'A kind of meteor shower', 'Broken rock inside Earth’s mantle'],
+        optionsZh: ['绕地球运行的人造碎片', '恒星之间的天然气体', '一种流星雨', '地幔内部破碎的岩石'],
+        answer: 0,
+        explain: 'Space junk is debris left by human activity in space.',
+        explainZh: '太空垃圾是人类在太空活动后留下的碎片。'
       },
       {
         q: 'Why is space junk dangerous?',
         qZh: '为什么太空垃圾很危险？',
-        options: ['It blocks sunlight to Earth', 'It changes gravity', 'Even tiny pieces can damage spacecraft in collisions', 'It causes auroras'],
-        optionsZh: ['它会阻挡到达地球的阳光', '它会改变引力', '即使很小的碎片也会在碰撞中损坏航天器', '它会产生极光'],
-        answer: 2,
-        explain: 'Small debris can still cause major damage because of high-speed collisions.',
-        explainZh: '由于高速碰撞，即使很小的碎片也会造成严重破坏。'
+        options: ['It can damage spacecraft even when pieces are very small', 'It makes the Sun dimmer', 'It changes Earth’s gravity', 'It stops satellites from using electricity'],
+        optionsZh: ['即使碎片很小，它也可能损坏航天器', '它会让太阳变暗', '它会改变地球重力', '它会让卫星无法用电'],
+        answer: 0,
+        explain: 'Even small pieces of high-speed debris can seriously damage spacecraft.',
+        explainZh: '即使是很小的高速碎片，也可能对航天器造成严重破坏。'
+      },
+      {
+        q: 'What is terraforming?',
+        qZh: '什么是地球化改造（terraforming）？',
+        options: ['Changing an environment to better support human settlement', 'Destroying the atmosphere of another planet', 'Making a telescope larger', 'Building a space station in orbit'],
+        optionsZh: ['改变环境，使其更适合人类居住', '破坏另一颗行星的大气层', '把望远镜做得更大', '在轨道上建造空间站'],
+        answer: 0,
+        explain: 'Terraforming means altering an environment so it could better support human life.',
+        explainZh: '地球化改造是指改变某个环境，使它更适合人类生存。'
+      },
+      {
+        q: 'What are the main benefits and risks of space exploration?',
+        qZh: '太空探索的主要好处和风险是什么？',
+        options: ['Benefits include new knowledge and technology; risks include cost, danger, debris, and environmental or political problems', 'Benefits are only tourism and risks are only weather', 'Benefits are only for astronauts and there are no real risks', 'Benefits and risks are exactly the same thing'],
+        optionsZh: ['好处包括新知识和新技术；风险包括成本、危险、碎片，以及环境或政治问题', '好处只有旅游，风险只有天气', '好处只属于宇航员，而且没有真正的风险', '好处和风险完全是一回事'],
+        answer: 0,
+        explain: 'Space exploration can bring scientific and technological benefits, but it also brings cost, safety, environmental, and political risks.',
+        explainZh: '太空探索可以带来科学和技术上的好处，但也会带来成本、安全、环境和政治方面的风险。'
       }
     ];
 
@@ -575,10 +880,26 @@
     const footerNoteEl = document.getElementById('footerNote');
 
     const LANG_STORAGE_KEY = 'earth-science-mcq-lang-mode';
+    const POSITION_STORAGE_KEY = 'earth-science-mcq-current-question';
     const LANG_CLASSES = ['lang-en', 'lang-enzh', 'lang-zh'];
     const questionState = new Map();
     let currentLangMode = 'en';
     let currentQuestionKey = '';
+
+    function saveCurrentQuestionKey() {
+      try {
+        if (currentQuestionKey) {
+          localStorage.setItem(POSITION_STORAGE_KEY, currentQuestionKey);
+        } else {
+          localStorage.removeItem(POSITION_STORAGE_KEY);
+        }
+      } catch {}
+    }
+
+    function clearCurrentQuestionKey() {
+      currentQuestionKey = '';
+      saveCurrentQuestionKey();
+    }
 
     function normalize(text) {
       return String(text)
@@ -689,21 +1010,23 @@
     function filteredQuestions() {
       const search = normalize(searchBox.value);
       return questions.filter(item => {
+        const optionsZh = item.optionsZh || item.options;
         const hay = normalize([
           item.q,
-          item.qZh,
+          item.qZh || item.q,
           item.explain,
-          item.explainZh,
+          item.explainZh || item.explain,
           item.options.join(' '),
-          item.optionsZh.join(' ')
+          optionsZh.join(' ')
         ].join(' '));
         return !search || hay.includes(search);
       });
     }
 
     function renderOptions(item, originalIndex, selectedIndex) {
+      const optionsZh = item.optionsZh || item.options;
       return item.options.map((option, index) => {
-        const optionText = renderLocalizedText(option, item.optionsZh[index]);
+        const optionText = renderLocalizedText(option, optionsZh[index] || option);
         return `
           <label class="option">
             <input type="radio" name="q${originalIndex}" value="${index}"${selectedIndex === index ? ' checked' : ''}>
@@ -718,7 +1041,6 @@
       app.innerHTML = '';
 
       if (!list.length) {
-        currentQuestionKey = '';
         const empty = document.createElement('div');
         empty.className = 'empty-state';
         empty.innerHTML = renderLocalizedText(UI_TEXT.noQuestions.en, UI_TEXT.noQuestions.zh);
@@ -732,6 +1054,7 @@
         currentIndex = 0;
         currentQuestionKey = list[0].q;
       }
+      saveCurrentQuestionKey();
 
       const item = list[currentIndex];
       const originalIndex = questions.findIndex(question => question.q === item.q);
@@ -742,7 +1065,7 @@
       card.dataset.questionKey = item.q;
       card.innerHTML = `
         <div class="qnum">${renderLocalizedText(interpolate(UI_TEXT.questionLabel.en, { n: currentIndex + 1 }), interpolate(UI_TEXT.questionLabel.zh, { n: currentIndex + 1 }))}</div>
-        <div class="question">${renderLocalizedText(item.q, item.qZh)}</div>
+        <div class="question">${renderLocalizedText(item.q, item.qZh || item.q)}</div>
         <div class="options">${renderOptions(item, originalIndex, state.selectedIndex)}</div>
         <div class="actions">
           <button class="check-btn" type="button">${escapeHtml(getUiText('check'))}</button>
@@ -754,9 +1077,9 @@
         <div class="feedback"></div>
         <div class="answer${state.answerShown ? ' show' : ''}">
           <strong>${renderLocalizedText(UI_TEXT.correctAnswer.en, UI_TEXT.correctAnswer.zh)}</strong>
-          <div>${renderLocalizedText(item.options[item.answer], item.optionsZh[item.answer])}</div>
+          <div>${renderLocalizedText(item.options[item.answer], (item.optionsZh || item.options)[item.answer] || item.options[item.answer])}</div>
           <strong style="display:block; margin-top:8px;">${renderLocalizedText(UI_TEXT.why.en, UI_TEXT.why.zh)}</strong>
-          <div>${renderLocalizedText(item.explain, item.explainZh)}</div>
+          <div>${renderLocalizedText(item.explain, item.explainZh || item.explain)}</div>
         </div>
       `;
 
@@ -806,11 +1129,13 @@
 
       card.querySelector('.prev-btn').addEventListener('click', () => {
         currentQuestionKey = list[currentIndex - 1].q;
+        saveCurrentQuestionKey();
         render();
       });
 
       card.querySelector('.next-btn').addEventListener('click', () => {
         currentQuestionKey = list[currentIndex + 1].q;
+        saveCurrentQuestionKey();
         render();
       });
 
@@ -866,6 +1191,7 @@
         state.answerShown = false;
         state.statusClass = '';
       });
+      clearCurrentQuestionKey();
       render();
     });
 
@@ -873,11 +1199,15 @@
 
     (function init() {
       let saved = 'en';
+      let savedQuestionKey = '';
       try {
         saved = localStorage.getItem(LANG_STORAGE_KEY) || 'en';
+        savedQuestionKey = localStorage.getItem(POSITION_STORAGE_KEY) || '';
       } catch {
         saved = 'en';
+        savedQuestionKey = '';
       }
+      currentQuestionKey = savedQuestionKey;
       langModeEl.addEventListener('change', event => setLanguageMode(event.target.value));
       setLanguageMode(saved);
     }());

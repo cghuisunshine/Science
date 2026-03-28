@@ -1,0 +1,1319 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PROJ-ES-0012 — Asteroid Impact Inquiry Project</title>
+  <meta name="description" content="Science 10 Earth Science Inquiry Project page: Aliens? What happens when they arrive? How much damage will an extra-terrestrial cause?" />
+  <style>
+    :root{
+      --bg:#f7f9fc;
+      --card:#ffffff;
+      --ink:#16324f;
+      --muted:#5d7186;
+      --line:#d7e1ea;
+      --accent:#1f5fbf;
+      --accent-2:#eaf2ff;
+      --good:#e9f7ef;
+      --warn:#fff7e6;
+      --danger:#ffe8e8;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:linear-gradient(180deg,#f6f8fb 0%,#eef4fb 100%);
+      color:var(--ink);
+      line-height:1.6;
+    }
+    .lang-toolbar{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin:0 auto 18px;
+      padding:12px 14px;
+      max-width:1120px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#f8fbff;
+      position:sticky;
+      top:8px;
+      z-index:10;
+      box-shadow:0 8px 18px rgba(22,50,79,.08);
+    }
+    .lang-toolbar label{
+      font-weight:700;
+      color:#214d86;
+    }
+    .lang-toolbar select{
+      font:inherit;
+      color:var(--ink);
+      background:#fff;
+      border:1px solid #9fb2c8;
+      border-radius:10px;
+      padding:6px 10px;
+    }
+    a{color:var(--accent)}
+    .wrap{max-width:1120px; margin:0 auto; padding:24px 16px 72px;}
+    .hero, .section{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:0 10px 28px rgba(22,50,79,.05);
+    }
+    .hero{padding:26px; margin-bottom:18px;}
+    .hero h1{
+      margin:0 0 10px;
+      color:var(--accent);
+      font-size:clamp(30px,4vw,44px);
+      line-height:1.15;
+    }
+    .subtitle{font-size:18px; color:var(--muted); margin:0 0 14px;}
+    .meta{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:10px;
+      margin-top:14px;
+    }
+    .meta div{
+      background:#f9fbff;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px 12px;
+      min-height:52px;
+    }
+    .section{padding:22px; margin-top:18px;}
+    h2{margin:0 0 10px; font-size:28px; color:var(--accent);}
+    h3{margin:18px 0 8px; font-size:20px; color:#214d86;}
+    h4{margin:14px 0 6px; font-size:16px; color:#214d86;}
+    p{margin:8px 0}
+    .note, .sample, .danger{
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      margin:10px 0 14px;
+    }
+    .note{background:var(--warn)}
+    .sample{background:var(--good)}
+    .danger{background:var(--danger)}
+    .grid-2{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+      gap:16px;
+    }
+    .pill{
+      display:inline-block;
+      background:var(--accent-2);
+      color:var(--accent);
+      border:1px solid #cfe0ff;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:700;
+      margin-right:6px;
+      margin-bottom:6px;
+    }
+    figure{
+      margin:14px 0;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      background:#fbfdff;
+    }
+    figcaption{color:var(--muted); font-size:14px; margin-top:8px;}
+    .img{
+      width:100%;
+      height:auto;
+      border-radius:12px;
+      display:block;
+      background:#e9eef6;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:10px;
+      font-size:15px;
+    }
+    th, td{
+      border:1px solid #9fb2c8;
+      padding:10px 8px;
+      vertical-align:top;
+    }
+    th{background:#edf4ff; text-align:left;}
+    .tight td,.tight th{padding:8px 6px;}
+    code, pre{font-family:var(--mono)}
+    pre{
+      background:#0f1d2f;
+      color:#e7f0ff;
+      border-radius:12px;
+      padding:12px 14px;
+      overflow:auto;
+      font-size:13px;
+      line-height:1.45;
+    }
+    pre.mermaid{
+      background:#fbfdff;
+      color:var(--ink);
+      border:1px solid var(--line);
+      padding:14px;
+    }
+    pre.mermaid svg{
+      display:block;
+      max-width:100%;
+      height:auto;
+    }
+    pre.mermaid .edgePath path,
+    pre.mermaid .flowchart-link{
+      stroke:var(--accent) !important;
+      stroke-width:2.5px !important;
+    }
+    pre.mermaid marker path{
+      fill:var(--accent) !important;
+      stroke:var(--accent) !important;
+    }
+    .equations{
+      background:#fbfdff;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:12px 14px;
+      margin:10px 0 0;
+    }
+    .equation-label{
+      margin:12px 0 4px;
+      color:var(--muted);
+      font-size:14px;
+    }
+    .equations math[display="block"]{
+      margin:10px 0;
+      font-size:1.08rem;
+    }
+    .toc a{display:inline-block; margin:4px 10px 4px 0; text-decoration:none}
+    .toc a:hover{text-decoration:underline}
+    .checklist li{margin:6px 0}
+    .kbd{
+      font-family:var(--mono);
+      background:#f1f5fb;
+      border:1px solid var(--line);
+      padding:2px 6px;
+      border-radius:8px;
+    }
+    /* Map */
+    #map{
+      width:100%;
+      height:420px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      overflow:hidden;
+    }
+    .small{font-size:14px; color:var(--muted)}
+    .i18n-block{display:block}
+    .i18n-zh{color:#28425f}
+    body.lang-en .i18n-zh{display:none}
+    body.lang-enzh .i18n-zh{
+      display:block;
+      margin-top:6px;
+      padding-top:4px;
+      border-top:1px dashed #c8d6e5;
+    }
+    body.lang-zh .i18n-en{display:none}
+    body.lang-zh .i18n-zh{
+      display:block;
+      margin-top:0;
+      padding-top:0;
+      border-top:0;
+    }
+    label .i18n-en,
+    label .i18n-zh{
+      display:inline-block;
+      vertical-align:middle;
+    }
+    body.lang-enzh label .i18n-zh{
+      display:block;
+      margin-left:22px;
+    }
+  </style>
+
+  <!-- Mermaid (methods flowchart) -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <!-- Leaflet (community impact map) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
+<body>
+  <div class="lang-toolbar" aria-label="Language controls">
+    <label for="langMode">Language / 语言</label>
+    <select id="langMode">
+      <option value="en">English</option>
+      <option value="enzh">En + Zh</option>
+      <option value="zh">中文</option>
+    </select>
+  </div>
+  <div class="wrap">
+    <header class="hero" id="top">
+      <h1>Aliens? What happens when they arrive?<br>How much damage will an extra-terrestrial cause?</h1>
+      <p class="subtitle">Science 10 — Earth Science Inquiry Project (Asteroid/Comet Impact Modelling) • Project Code: <strong>PROJ-ES-0012</strong></p>
+
+      <div class="meta">
+        <div><strong>Student name:</strong> ___________________________</div>
+        <div><strong>Teacher:</strong> ___________________________</div>
+        <div><strong>School / class:</strong> Science 10 ___________________________</div>
+        <div><strong>Date:</strong> ___________________________</div>
+      </div>
+
+      <nav class="toc" aria-label="Table of contents" style="margin-top:14px;">
+        <span class="pill">Jump to:</span>
+        <a href="#learning-goals">Learning goals</a>
+        <a href="#methods">Materials & methods</a>
+        <a href="#observations">Observations A–C</a>
+        <a href="#analysis">Analysis questions</a>
+        <a href="#map">Community map</a>
+        <a href="#conclusion">Conclusion</a>
+        <a href="#rubric">Rubric alignment</a>
+        <a href="#references">References</a>
+      </nav>
+    </header>
+
+    <section class="section" id="learning-goals">
+      <h2>Learning goals</h2>
+      <p>By completing this inquiry, I will be able to:</p>
+      <ul>
+        <li>Explain how <strong>impactor size, speed, density, and entry angle</strong> affect impact energy and damage.</li>
+        <li>Collect and present impact data in organised tables (Parts A–C).</li>
+        <li>Use a calculator or published formulas to perform <strong>sample calculations</strong> (mass, kinetic energy, comparisons).</li>
+        <li>Interpret results to answer analysis questions using evidence from my tables.</li>
+        <li>Apply results to a local context by mapping likely impact zones in my community.</li>
+      </ul>
+    </section>
+
+    <section class="section" id="methods">
+      <h2>Materials and methods</h2>
+
+      <div class="grid-2">
+        <div>
+          <h3>Materials</h3>
+          <ul>
+            <li>Access to an online impact calculator (required by handout): <span class="kbd">Down2Earth Impact Calculator</span></li>
+            <li>Calculator or spreadsheet for kinetic energy computations</li>
+            <li>Map of my community (OpenStreetMap / Google Maps / printed map)</li>
+            <li>Notebook for observations and evidence-based interpretations</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Fixed scenario settings (from handout)</h3>
+          <ul>
+            <li>Projectile diameter: <strong>100 m</strong></li>
+            <li>Trajectory angle: <strong>45°</strong></li>
+            <li>Speed: <strong>50 km/s</strong></li>
+            <li>Target: <strong>water</strong> with <strong>10 m</strong> water depth (Part A & B baseline)</li>
+            <li>Distance from crash site: <strong>10 km</strong> (Part A & C baseline)</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Method flowchart</h3>
+      <pre class="mermaid" id="methodMermaid">
+flowchart TD
+  A[Read handout and required settings] --> B[Open impact simulator and choose Earth]
+  B --> C[Set baseline parameters: 100m, 45°, 50 km/s, water 10m]
+  C --> D["Part A: change projectile density (ice, porous rock, dense rock, iron)"]
+  D --> E["Record: crater depth/width, quake magnitude, fireball radius, damage description"]
+  C --> F["Part B: keep dense rock, change distance (10, 20, 30, 40 km)"]
+  F --> G[Record distance-dependent damage and key values]
+  C --> H["Part C: keep dense rock and distance 10 km, change target (water, sedimentary, igneous)"]
+  H --> I[Record differences in crater and effects]
+  E --> J["Do sample calculations (KE, TNT equivalence)"]
+  G --> J
+  I --> J
+  J --> K[Answer analysis questions using evidence]
+  K --> L[Create community map with impact circles]
+  L --> M[Write conclusion + references + self-evaluation]
+      </pre>
+    </section>
+
+    <section class="section" id="observations">
+      <h2>Observations and data</h2>
+
+      <h3>Figure: what does 100 m look like?</h3>
+      <figure>
+        <!-- Simple embedded SVG so the page has a guaranteed image even if external links fail. -->
+        <svg id="scaleSvg" role="img" aria-label="Scale diagram showing a 100 metre length compared with a school bus and a football pitch" viewBox="0 0 900 240" class="img">
+          <rect x="0" y="0" width="900" height="240" fill="#eaf2ff"></rect>
+          <text id="scaleSvgTitle" x="22" y="34" font-size="18" fill="#16324f" font-family="Arial">100 m scale reference (not to exact building scale)</text>
+
+          <!-- 100 m bar -->
+          <rect x="40" y="60" width="820" height="26" fill="#1f5fbf"></rect>
+          <text x="40" y="105" font-size="14" fill="#16324f" font-family="Arial">0 m</text>
+          <text x="820" y="105" font-size="14" fill="#16324f" font-family="Arial">100 m</text>
+
+          <!-- Bus (~12 m) -->
+          <rect x="40" y="140" width="98" height="36" fill="#16324f"></rect>
+          <circle cx="60" cy="180" r="8" fill="#0f1d2f"></circle>
+          <circle cx="118" cy="180" r="8" fill="#0f1d2f"></circle>
+          <text id="scaleSvgBus" x="40" y="132" font-size="13" fill="#16324f" font-family="Arial">Typical bus ~12 m</text>
+
+          <!-- Football pitch (~100 m) -->
+          <rect x="210" y="140" width="480" height="70" fill="#cfe0ff" stroke="#16324f" stroke-width="2"></rect>
+          <line x1="450" y1="140" x2="450" y2="210" stroke="#16324f" stroke-width="2"></line>
+          <text id="scaleSvgPitch" x="210" y="132" font-size="13" fill="#16324f" font-family="Arial">Football pitch length ~100 m</text>
+        </svg>
+        <figcaption>
+          Figure 1. A simple scale reference so the 100 m impactor size is easier to imagine. (Created for this project page.)
+        </figcaption>
+      </figure>
+
+      <h3>Sample calculation: kinetic energy</h3>
+      <div class="sample">
+        <p><strong>Formula:</strong> mass of a sphere <span class="kbd">m = (π/6) ρ d³</span>; kinetic energy <span class="kbd">E = ½ m v²</span>.</p>
+        <p><strong>Example</strong> (dense rock, ρ = 3000 kg/m³, diameter d = 100 m, velocity v = 50 km/s):</p>
+        <div class="equations" aria-label="Sample kinetic energy calculation">
+          <math display="block">
+            <mrow>
+              <mi>m</mi>
+              <mo>=</mo>
+              <mrow><mo>(</mo><mfrac><mi>π</mi><mn>6</mn></mfrac><mo>)</mo></mrow>
+              <mrow><mo>(</mo><mn>3000</mn><mo>)</mo></mrow>
+              <mrow><mo>(</mo><msup><mn>100</mn><mn>3</mn></msup><mo>)</mo></mrow>
+              <mo>=</mo>
+              <mn>1.57</mn>
+              <mo>×</mo>
+              <msup><mn>10</mn><mn>9</mn></msup>
+              <mtext>kg</mtext>
+            </mrow>
+          </math>
+
+          <math display="block">
+            <mrow>
+              <mi>E</mi>
+              <mo>=</mo>
+              <mn>0.5</mn>
+              <mo>×</mo>
+              <mrow><mo>(</mo><mn>1.57</mn><mo>×</mo><msup><mn>10</mn><mn>9</mn></msup><mo>)</mo></mrow>
+              <mo>×</mo>
+              <mrow><mo>(</mo><msup><mn>50,000</mn><mn>2</mn></msup><mo>)</mo></mrow>
+              <mo>=</mo>
+              <mn>1.96</mn>
+              <mo>×</mo>
+              <msup><mn>10</mn><mn>18</mn></msup>
+              <mtext>J</mtext>
+            </mrow>
+          </math>
+
+          <p class="equation-label"><strong>TNT equivalent</strong> (1 Mt TNT = 4.184 × 10<sup>15</sup> J):</p>
+
+          <math display="block">
+            <mrow>
+              <mi>E</mi>
+              <mo>≈</mo>
+              <mfrac>
+                <mrow><mn>1.96</mn><mo>×</mo><msup><mn>10</mn><mn>18</mn></msup></mrow>
+                <mrow><mn>4.184</mn><mo>×</mo><msup><mn>10</mn><mn>15</mn></msup></mrow>
+              </mfrac>
+              <mo>≈</mo>
+              <mn>4.69</mn>
+              <mo>×</mo>
+              <msup><mn>10</mn><mn>2</mn></msup>
+              <mtext>Mt TNT</mtext>
+            </mrow>
+          </math>
+        </div>
+        <p class="small">Note: real impacts lose some energy to atmospheric breakup; calculators estimate “impact energy” and “airburst energy” separately.</p>
+      </div>
+
+      <h3>Part A: effects of different projectile densities (fixed distance baseline)</h3>
+      <p>
+        In Part A, all settings are fixed except the projectile density (ice, porous rock, dense rock, iron).
+        The handout asks for crater depth/width, Richter magnitude, fireball radius, and a short damage summary.
+      </p>
+
+      <div class="note">
+        <strong>How Part A values are generated:</strong>
+        The rows below use the Down2Earth Impact Calculator for the handout baseline:
+        Earth, projectile diameter 100 m, trajectory angle 45°, velocity 50 km/s, target water, water depth 10 m, and observer distance 10 km.
+        These numbers should match the required calculator outputs for Part A.
+      </div>
+
+      <table class="tight" aria-label="Part A table of impacts by projectile type">
+        <thead>
+          <tr>
+            <th>Measurement</th>
+            <th>Ice (1000 kg/m³)</th>
+            <th>Porous rock (1500 kg/m³)</th>
+            <th>Dense rock (3000 kg/m³)</th>
+            <th>Iron (8000 kg/m³)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Mass (×10⁹ kg) — calculated</td>
+            <td>0.524</td>
+            <td>0.785</td>
+            <td>1.571</td>
+            <td>4.189</td>
+          </tr>
+          <tr>
+            <td>Energy before entry (Mt TNT) — calculated</td>
+            <td>156</td>
+            <td>235</td>
+            <td>469</td>
+            <td>1251</td>
+          </tr>
+          <tr>
+            <td>Crater width (final diameter, km)</td>
+            <td>1.068</td>
+            <td>1.254</td>
+            <td><strong>2.530</strong></td>
+            <td>5.097</td>
+          </tr>
+          <tr>
+            <td>Crater depth (km)</td>
+            <td>0.227</td>
+            <td>0.267</td>
+            <td><strong>0.538</strong></td>
+            <td>0.483</td>
+          </tr>
+          <tr>
+            <td>Richter magnitude (estimated)</td>
+            <td>0</td>
+            <td>0</td>
+            <td><strong>6</strong></td>
+            <td>7</td>
+          </tr>
+          <tr>
+            <td>Visible fireball radius (km)</td>
+            <td>Not applicable</td>
+            <td>Not applicable</td>
+            <td><strong>1.29</strong></td>
+            <td>3.22</td>
+          </tr>
+          <tr>
+            <td>Damage summary (qualitative)</td>
+            <td>Atmospheric breakup dominates. Smaller crater, no visible fireball at this distance, but severe local blast and very strong winds are still possible.</td>
+            <td>Atmospheric breakup still dominates. Crater is larger than ice, no visible fireball is reported, and local blast damage remains severe.</td>
+            <td><strong>Severe regional hazard</strong>: large crater, Richter 6 shaking, and a visible fireball with strong local blast effects.</td>
+            <td><strong>Most damaging</strong>: largest crater, Richter 7 shaking, strongest blast winds, and the largest visible fireball.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Part B: effects by distance (10–40 km)</h3>
+      <p>
+        In Part B, the impact event stays the same (dense rock), but the distance from the crash site changes.
+        Crater size and earthquake magnitude describe the event, so they are constant; the difference is the intensity of effects experienced at different distances.
+      </p>
+
+      <table class="tight" aria-label="Part B table of impacts by distance">
+        <thead>
+          <tr>
+            <th>Distance from crash site</th>
+            <th>10 km</th>
+            <th>20 km</th>
+            <th>30 km</th>
+            <th>40 km</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Crater width (km)</td>
+            <td colspan="4">~2.53 km (same event)</td>
+          </tr>
+          <tr>
+            <td>Crater depth (km)</td>
+            <td colspan="4">~0.538 km (same event)</td>
+          </tr>
+          <tr>
+            <td>Richter magnitude</td>
+            <td colspan="4">~6 (same event)</td>
+          </tr>
+          <tr>
+            <td>Fireball radius (km)</td>
+            <td colspan="4">~1.29 km (same event)</td>
+          </tr>
+          <tr>
+            <td>Expected damage (evidence-based summary)</td>
+            <td>Extreme blast + flying debris danger; severe injuries; buildings likely unsafe.</td>
+            <td>Major structural damage; widespread injuries; critical infrastructure disruption.</td>
+            <td>Glass damage and weaker-structure damage; injuries from debris.</td>
+            <td>Loud blast and shaking; mostly indirect damage (windows, minor structural impacts).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Part C: effects of target density (impact surface type)</h3>
+      <p>
+        In Part C, the projectile is fixed (dense rock) and the distance is fixed (10 km), but the ground type changes.
+        In general, softer targets allow larger craters; stronger targets reduce crater size but still transmit destructive energy.
+      </p>
+
+      <table class="tight" aria-label="Part C table of impacts by target type">
+        <thead>
+          <tr>
+            <th>Measurement</th>
+            <th>Water (10 m)</th>
+            <th>Sedimentary rock</th>
+            <th>Igneous (crystalline) rock</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Crater width (km)</td>
+            <td>2.530</td>
+            <td><strong>1.111</strong></td>
+            <td>2.199</td>
+          </tr>
+          <tr>
+            <td>Crater depth (km)</td>
+            <td>0.538</td>
+            <td><strong>0.237</strong></td>
+            <td>0.468</td>
+          </tr>
+          <tr>
+            <td>Richter magnitude</td>
+            <td>6</td>
+            <td><strong>6</strong></td>
+            <td>6</td>
+          </tr>
+          <tr>
+            <td>Fireball radius (km)</td>
+            <td>1.29</td>
+            <td><strong>1.29</strong></td>
+            <td>1.29</td>
+          </tr>
+          <tr>
+            <td>Damage summary</td>
+            <td>Largest crater in this Part C comparison. Water impact also adds wave/splash hazards, while blast and shaking remain severe.</td>
+            <td>Smallest crater of the three target types here, with less ejecta, but the blast and shaking effects are still strong.</td>
+            <td>Crater is larger than the sedimentary-rock case and only slightly smaller than water, so blast and shaking remain severe.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Embedded chart: “damage” (impact energy) vs impactor size</h3>
+      <figure>
+        <svg id="energyChartSvg" role="img" aria-label="Chart of impact energy in megatons TNT versus impactor diameter for dense rock at 50 kilometres per second" viewBox="0 0 900 420" class="img">
+          <rect x="0" y="0" width="900" height="420" fill="#ffffff"/>
+          <text id="energyChartTitle" x="40" y="34" font-size="18" fill="#16324f" font-family="Arial">Impact energy vs diameter (dense rock, ρ = 3000 kg/m³, v = 50 km/s)</text>
+
+          <!-- axes -->
+          <line x1="70" y1="360" x2="860" y2="360" stroke="#16324f" stroke-width="2"/>
+          <line x1="70" y1="60" x2="70" y2="360" stroke="#16324f" stroke-width="2"/>
+
+          <text id="energyChartXAxis" x="420" y="404" font-size="14" fill="#16324f" font-family="Arial">Diameter (m)</text>
+          <text id="energyChartYAxis" x="16" y="220" font-size="14" fill="#16324f" font-family="Arial" transform="rotate(-90 16 220)">Energy (Mt TNT, log scale)</text>
+
+          <!-- x ticks -->
+          <g font-family="Arial" font-size="12" fill="#16324f">
+            <text x="70" y="380">10</text>
+            <text x="170" y="380">25</text>
+            <text x="270" y="380">50</text>
+            <text x="370" y="380">75</text>
+            <text x="470" y="380">100</text>
+            <text x="620" y="380">150</text>
+            <text x="780" y="380">200</text>
+          </g>
+
+          <!-- y ticks (log10 Mt): 0,1,2,3,4 -->
+          <g font-family="Arial" font-size="12" fill="#16324f">
+            <text x="44" y="360">10⁰</text>
+            <text x="44" y="300">10¹</text>
+            <text x="44" y="240">10²</text>
+            <text x="44" y="180">10³</text>
+            <text x="44" y="120">10⁴</text>
+          </g>
+          <g stroke="#d7e1ea" stroke-width="1">
+            <line x1="70" y1="300" x2="860" y2="300"/>
+            <line x1="70" y1="240" x2="860" y2="240"/>
+            <line x1="70" y1="180" x2="860" y2="180"/>
+            <line x1="70" y1="120" x2="860" y2="120"/>
+          </g>
+
+          <!-- Data points (precomputed): diameter -> log10(Mt) mapped to y
+               Mapping: y = 360 - (log10(Mt) * 60), so each decade is 60px.
+               Mt: 0.469(10m), 7.33(25m), 58.7(50m), 198(75m), 469(100m), 1584(150m), 3754(200m)
+               log10: -0.329, 0.865, 1.768, 2.297, 2.671, 3.200, 3.574
+          -->
+          <polyline fill="none" stroke="#1f5fbf" stroke-width="3"
+            points="
+              85,379.7
+              185,308.1
+              285,253.9
+              385,222.2
+              485,199.7
+              635,167.0
+              795,145.6
+            "/>
+
+          <!-- points -->
+          <g fill="#1f5fbf">
+            <circle cx="85" cy="379.7" r="5"/><circle cx="185" cy="308.1" r="5"/><circle cx="285" cy="253.9" r="5"/>
+            <circle cx="385" cy="222.2" r="5"/><circle cx="485" cy="199.7" r="5"/><circle cx="635" cy="167.0" r="5"/><circle cx="795" cy="145.6" r="5"/>
+          </g>
+
+          <text id="energyChartNote" x="520" y="96" font-size="12" fill="#16324f" font-family="Arial">Log scale: energy increases ~ with diameter³</text>
+        </svg>
+        <figcaption>
+          Figure 2. Kinetic energy (a proxy for damage potential) increases extremely rapidly with diameter because mass scales with diameter³.
+          The calculation assumes a spherical dense-rock impactor (ρ = 3000 kg/m³) at 50 km/s.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="section" id="analysis">
+      <h2>Analysis questions</h2>
+
+      <h3>Which impactor type causes the most damage?</h3>
+      <p>
+        The <strong>iron</strong> impactor causes the most damage. In Part A it produces the <strong>largest crater width</strong> at <strong>5.097 km</strong>, the
+        <strong>highest Richter magnitude</strong> at <strong>7</strong>, and the <strong>largest visible fireball radius</strong> at <strong>3.22 km</strong>.
+        By comparison, the dense-rock impactor produces a <strong>2.530 km</strong> crater and Richter <strong>6</strong>, while ice and porous rock produce
+        even smaller craters and no visible fireball. Those table values show that iron creates the strongest overall impact effects in this scenario.
+      </p>
+
+      <h3>What factors influence crater size?</h3>
+      <p>
+        Crater size depends on projectile diameter, density, and velocity (through kinetic energy), the impact angle, and the target material.
+        Atmospheric breakup can reduce the effective impact energy at the ground compared with the energy before atmospheric entry.
+      </p>
+
+      <h3>Community impact assessment (10 km, 20 km, 30 km, 40 km)</h3>
+      <p>
+        Using the Part B distance results and the chosen impact point, the following community-specific damages would likely occur:
+      </p>
+      <table aria-label="Community damage table by distance">
+        <thead>
+          <tr><th>Distance</th><th>Damages</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>10 km</td><td>Severe destruction in the Oakridge, South Cambie, and Richmond-side corridor. Langara College, BC Children’s Hospital, Vancouver General Hospital support networks, Marine Gateway, and nearby Canada Line stations would likely face catastrophic building damage, debris hazards, and shutdown of emergency services and transit.</td></tr>
+          <tr><td>20 km</td><td>Major damage extending into Downtown Vancouver, UBC/Point Grey approaches, North Vancouver waterfront areas, and New Westminster. Broken infrastructure, unsafe buildings, bridge and port disruption, and mass injuries would be expected across dense urban zones.</td></tr>
+          <tr><td>30 km</td><td>Widespread glass breakage, fallen debris, and weaker-structure damage across Surrey, Coquitlam, Port Moody, Delta, and outer Vancouver suburbs. Transit delays, blocked roads, and damage to schools, shopping areas, and municipal buildings would likely occur.</td></tr>
+          <tr><td>40 km</td><td>Outer suburban communities such as Langley and South Surrey would still feel a strong shockwave and shaking. Damage would be less extreme but could still include shattered windows, localized structural damage, service interruptions, and region-wide transportation and communication disruption.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Research: two famous impact hypotheses</h3>
+      <table aria-label="Research table of past impact events">
+        <thead>
+          <tr>
+            <th>Hypothesis / event</th>
+            <th>When</th>
+            <th>Approx. impactor size</th>
+            <th>Result / evidence</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Alvarez hypothesis (K–Pg impact)</td>
+            <td>~66 million years ago</td>
+            <td>~10 km asteroid (order-of-magnitude)</td>
+            <td>Linked to the Chicxulub crater and the mass extinction at the K–Pg boundary.</td>
+          </tr>
+          <tr>
+            <td>Giant-impact hypothesis (Moon formation)</td>
+            <td>Early Earth, ~4.5 billion years ago</td>
+            <td>Mars-sized body (“Theia”, hypothesis)</td>
+            <td>A giant collision may have ejected material that later accreted into the Moon.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Research an object “on its way” toward Earth</h3>
+      <div class="note">
+        Near-Earth-object risk tables change over time. The example below was updated from the official NASA/JPL Sentry system on 2026-03-27.
+      </div>
+      <table aria-label="Near-Earth object research table">
+        <tbody>
+          <tr><th style="width:220px;">Object name</th><td><strong>2026 CQ4</strong> (listed in NASA/JPL Sentry)</td></tr>
+          <tr><th>Estimated size</th><td>About <strong>0.01 km</strong>, or roughly <strong>10 m</strong> across.</td></tr>
+          <tr><th>Speed / orbit notes</th><td>Sentry gives <strong>v∞ ≈ 5.64 km/s</strong> and estimated impact-entry speed <strong>v<sub>imp</sub> ≈ 12.49 km/s</strong>. Current listed potential-impact dates span <strong>2072–2125</strong>.</td></tr>
+          <tr><th>Does it impact Earth? (date/probability)</th><td><strong>No confirmed impact is predicted.</strong> NASA Sentry currently lists multiple low-probability virtual impacts. The <strong>highest single listed case</strong> is <strong>2072-03-21.38 UTC</strong> with impact probability <strong>3.860 × 10<sup>-3</sup></strong> (about <strong>0.386%</strong>). The <strong>cumulative</strong> listed probability is <strong>0.005030413448</strong> (about <strong>0.503%</strong>).</td></tr>
+          <tr><th>If it impacted… likely effects</th><td>Sentry’s mean impact energy is about <strong>2.770 × 10<sup>-2</sup> Mt TNT</strong> (about <strong>27.7 kilotons</strong>). For an object this size, the most likely hazard would be a <strong>local airburst or small impact event</strong> causing serious local blast damage, broken windows, and injuries near the impact area, not a global extinction-scale disaster.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section" id="map">
+      <h2>Community map and impact location</h2>
+
+      <p>
+        The handout asks for a map of your community with a marked impact centre, plus circles showing 10 km, 20 km, 30 km and 40 km zones.
+        The interactive map below is provided as a convenient way to create those circles. Replace the centre coordinate with your chosen impact point.
+      </p>
+
+      <div class="note">
+        <strong>How to customise:</strong> In the page source, search for <span class="kbd">IMPACT_CENTRE</span> and replace the latitude/longitude.
+        You can also export/print a screenshot for submission if required.
+      </div>
+
+      <div id="map" aria-label="Interactive community map with damage circles"></div>
+      <p class="small">
+        Map data © OpenStreetMap contributors • Tile layer © OpenStreetMap (standard). If your school requires a static map image, take a screenshot and insert it as an image with a caption.
+      </p>
+
+      <script>
+        // IMPACT_CENTRE: 126 W 44th Ave, Vancouver, BC V5Y 2V4
+        const centre = [49.2302561, -123.1089577];
+
+        const map = L.map('map').setView(centre, 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 18,
+          attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        L.marker(centre).addTo(map);
+
+        const radiiKm = [10, 20, 30, 40];
+        const zoneLayers = radiiKm.map((rk) => {
+          return L.circle(centre, {
+            radius: rk * 1000
+          }).addTo(map).bindPopup(rk + ' km zone');
+        });
+      </script>
+
+      <h3>Impact-zone notes (write for your community)</h3>
+      <table aria-label="Impact zone damage notes table">
+        <thead>
+          <tr><th>Zone radius</th><th>What is located in this zone?</th><th>Likely consequences</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0–10 km</td><td>Oakridge Centre, Queen Elizabeth Park, Langara College, BC Children’s and Women’s Hospital, Vancouver General Hospital, Marine Gateway, YVR airport area, Richmond City Centre, and major sections of the Cambie/Canada Line corridor.</td><td>Extreme blast and debris damage across the core South Cambie/Oakridge area; probable collapse or severe failure of many buildings; major casualties; hospitals, rapid transit, and airport operations would likely be overwhelmed or shut down.</td></tr>
+          <tr><td>10–20 km</td><td>Downtown Vancouver, Stanley Park, UBC/Point Grey, Lower Lonsdale in North Vancouver, the Port of Vancouver waterfront, and New Westminster waterfront districts.</td><td>Major structural damage and widespread injuries across dense urban neighbourhoods; likely outages affecting bridges, port operations, downtown towers, and university facilities; emergency services stretched across multiple municipalities.</td></tr>
+          <tr><td>20–30 km</td><td>Surrey City Centre, Port Moody, Coquitlam Town Centre area, Delta communities, and outer Metro Vancouver industrial/transport corridors.</td><td>Broken windows, falling debris, and weaker-structure damage over a broad regional area; significant road and transit disruption; scattered damage to commercial buildings, schools, and municipal service centres.</td></tr>
+          <tr><td>30–40 km</td><td>White Rock / South Surrey, Langley City, Pitt Meadows / Maple Ridge fringe areas, and farther suburban commuter corridors.</td><td>Noticeable shockwave and shaking across outer suburbs; some window breakage and minor structural impacts; indirect effects such as transportation delays, school closures, and region-wide pressure on power, communications, and emergency response.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section" id="conclusion">
+      <h2>Conclusion</h2>
+      <p>
+        This inquiry shows that even a 100 m object can produce severe regional effects, and that <strong>density</strong> is a key variable:
+        denser projectiles carry more mass (and therefore more kinetic energy) at the same diameter and speed.
+        Crater size, shockwave damage, earthquake shaking, and thermal effects all scale with the energy delivered to the atmosphere and ground.
+        Finally, mapping impact zones makes the hazard concrete by connecting physics to real community infrastructure.
+      </p>
+
+      <h3>Limitations and improvements</h3>
+      <ul>
+        <li>Calculator outputs vary by model assumptions (atmospheric breakup, target type, etc.). I should capture screenshots of my exact simulator runs.</li>
+        <li>I should verify any “incoming object” information using official, current trackers.</li>
+        <li>I should refine the community map using local landmarks (schools, hospitals, bridges) and add labels.</li>
+      </ul>
+    </section>
+
+    <section class="section" id="rubric">
+      <h2>Rubric alignment and checklist</h2>
+
+      <h3>Rubric alignment (what is met where)</h3>
+      <table aria-label="Rubric alignment table">
+        <thead>
+          <tr><th>Requirement</th><th>Where in this page</th><th>Evidence</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Clear title and inquiry question</td><td>Header (#top)</td><td>Project question is the main page title.</td></tr>
+          <tr><td>Student info block</td><td>Header (#top)</td><td>Name/teacher/class/date fields provided.</td></tr>
+          <tr><td>Learning goals</td><td>Learning goals section</td><td>Bullet list of measurable goals.</td></tr>
+          <tr><td>Methods</td><td>Materials and methods</td><td>Parameters listed + mermaid flowchart.</td></tr>
+          <tr><td>Observations parts A–C</td><td>Observations and data</td><td>Three tables + notes + sample calculations.</td></tr>
+          <tr><td>Data tables + calculations</td><td>Observations (sample calculation + tables)</td><td>Mass, energy, crater and effect estimates.</td></tr>
+          <tr><td>Analysis answers</td><td>Analysis section</td><td>Answers supported by table evidence.</td></tr>
+          <tr><td>Figures with captions and alt text</td><td>Figure 1 & Figure 2</td><td>SVG figures include aria-label + captions.</td></tr>
+          <tr><td>Community map with 10/20/30/40 km circles</td><td>Community map</td><td>Leaflet map draws circles; editable centre.</td></tr>
+          <tr><td>Conclusion + limitations</td><td>Conclusion</td><td>Summarises findings and improvements.</td></tr>
+          <tr><td>References</td><td>References</td><td>Primary/official sources listed for verification.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Self-evaluation checklist</h3>
+      <ul class="checklist">
+        <li><label><input type="checkbox" /> I replaced sample numbers with my own simulator outputs.</label></li>
+        <li><label><input type="checkbox" /> I included all three observation parts (A–C) in complete tables.</label></li>
+        <li><label><input type="checkbox" /> I used at least one calculation and showed my working.</label></li>
+        <li><label><input type="checkbox" /> I answered all analysis questions in complete sentences.</label></li>
+        <li><label><input type="checkbox" /> My community map includes the impact centre and 10/20/30/40 km circles.</label></li>
+        <li><label><input type="checkbox" /> All figures have captions and accessible alternative text.</label></li>
+        <li><label><input type="checkbox" /> I cited sources and avoided copying text without attribution.</label></li>
+      </ul>
+    </section>
+
+    <section class="section" id="references">
+      <h2>References</h2>
+      <p class="small">APA 7th edition style used. URLs are included for verification.</p>
+
+      <ul>
+        <li>Alvarez, L. W., Alvarez, W., Asaro, F., &amp; Michel, H. V. (1980). Extraterrestrial cause for the Cretaceous-Tertiary extinction. <em>Science</em>, 208(4448), 1095–1108. <a href="https://doi.org/10.1126/science.208.4448.1095" target="_blank" rel="noopener noreferrer">https://doi.org/10.1126/science.208.4448.1095</a></li>
+        <li>Canup, R. M., &amp; Asphaug, E. (2001). Origin of the Moon in a giant impact near the end of the Earth's formation. <em>Nature</em>, 412(6848), 708–712. <a href="https://doi.org/10.1038/35089010" target="_blank" rel="noopener noreferrer">https://doi.org/10.1038/35089010</a></li>
+        <li>Collins, G. S., Melosh, H. J., &amp; Marcus, R. A. (2005). Earth impact effects program: A web-based computer program for calculating the regional environmental consequences of a meteoroid impact on Earth. <em>Meteoritics &amp; Planetary Science</em>, 40(6), 817–840. <a href="https://doi.org/10.1111/j.1945-5100.2005.tb00157.x" target="_blank" rel="noopener noreferrer">https://doi.org/10.1111/j.1945-5100.2005.tb00157.x</a></li>
+        <li>Marcus, R., Melosh, H. J., &amp; Collins, G. (n.d.). <em>Earth impact effects program</em>. Retrieved March 27, 2026, from <a href="https://impact.ese.ic.ac.uk/ImpactEarth/ImpactEffects/" target="_blank" rel="noopener noreferrer">https://impact.ese.ic.ac.uk/ImpactEarth/ImpactEffects/</a></li>
+        <li>National Aeronautics and Space Administration. (n.d.). <em>Planetary defense at NASA</em>. <a href="https://science.nasa.gov/planetary-defense/" target="_blank" rel="noopener noreferrer">https://science.nasa.gov/planetary-defense/</a></li>
+        <li>Center for Near Earth Object Studies. (n.d.). <em>Sentry: Earth impact monitoring</em>. Retrieved March 27, 2026, from <a href="https://cneos.jpl.nasa.gov/sentry/" target="_blank" rel="noopener noreferrer">https://cneos.jpl.nasa.gov/sentry/</a></li>
+        <li>Jet Propulsion Laboratory. (2021, July). <em>Sentry API</em>. <a href="https://ssd-api.jpl.nasa.gov/doc/sentry.html" target="_blank" rel="noopener noreferrer">https://ssd-api.jpl.nasa.gov/doc/sentry.html</a></li>
+        <li>Jet Propulsion Laboratory. (n.d.). <em>Sentry API query results for 2026 CQ4</em> [Data set]. Retrieved March 27, 2026, from <a href="https://ssd-api.jpl.nasa.gov/sentry.api?des=2026%20CQ4" target="_blank" rel="noopener noreferrer">https://ssd-api.jpl.nasa.gov/sentry.api?des=2026%20CQ4</a></li>
+        <li>OpenStreetMap contributors. (n.d.). <em>Copyright and license</em>. Retrieved March 27, 2026, from <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">https://www.openstreetmap.org/copyright</a></li>
+      </ul>
+    </section>
+  </div>
+  <script>
+    (() => {
+      const STORAGE_KEY = 'proj-es-0012-lang-mode';
+      const modes = ['lang-en', 'lang-enzh', 'lang-zh'];
+      const modeSelect = document.getElementById('langMode');
+      const body = document.body;
+      const mermaidNode = document.getElementById('methodMermaid');
+      const translations = new Map([
+        [`Aliens? What happens when they arrive?<br>How much damage will an extra-terrestrial cause?`, `外来天体来袭时会发生什么？<br>它会造成多大破坏？`],
+        [`Science 10 — Earth Science Inquiry Project (Asteroid/Comet Impact Modelling) • Project Code: <strong>PROJ-ES-0012</strong>`, `科学 10 —— 地球科学探究项目（小行星／彗星撞击模拟）• 项目代码：<strong>PROJ-ES-0012</strong>`],
+        [`<strong>Student name:</strong> ___________________________`, `<strong>学生姓名：</strong> ___________________________`],
+        [`<strong>Teacher:</strong> ___________________________`, `<strong>教师：</strong> ___________________________`],
+        [`<strong>School / class:</strong> Science 10 ___________________________`, `<strong>学校／班级：</strong> Science 10 ___________________________`],
+        [`<strong>Date:</strong> ___________________________`, `<strong>日期：</strong> ___________________________`],
+        [`Jump to:`, `快速跳转：`],
+        [`Learning goals`, `学习目标`],
+        [`Materials &amp; methods`, `材料与方法`],
+        [`Observations A–C`, `观察 A–C`],
+        [`Analysis questions`, `分析问题`],
+        [`Community map`, `社区地图`],
+        [`Conclusion`, `结论`],
+        [`Rubric alignment`, `评分要求对照`],
+        [`References`, `参考文献`],
+        [`By completing this inquiry, I will be able to:`, `完成这项探究后，我将能够：`],
+        [`Explain how <strong>impactor size, speed, density, and entry angle</strong> affect impact energy and damage.`, `解释<strong>撞击体大小、速度、密度和入射角</strong>如何影响撞击能量和破坏程度。`],
+        [`Collect and present impact data in organised tables (Parts A–C).`, `把撞击数据整理成有条理的表格并呈现出来（A–C 部分）。`],
+        [`Use a calculator or published formulas to perform <strong>sample calculations</strong> (mass, kinetic energy, comparisons).`, `使用计算器或公开公式完成<strong>示例计算</strong>（质量、动能、比较）。`],
+        [`Interpret results to answer analysis questions using evidence from my tables.`, `利用表格中的证据解释结果，并回答分析问题。`],
+        [`Apply results to a local context by mapping likely impact zones in my community.`, `把结果应用到本地情境，在社区地图上标示可能的撞击影响范围。`],
+        [`Materials and methods`, `材料与方法`],
+        [`Materials`, `材料`],
+        [`Access to an online impact calculator (required by handout): <span class="kbd">Down2Earth Impact Calculator</span>`, `可使用在线撞击计算器（讲义要求）：<span class="kbd">Down2Earth Impact Calculator</span>`],
+        [`Calculator or spreadsheet for kinetic energy computations`, `用于动能计算的计算器或电子表格`],
+        [`Map of my community (OpenStreetMap / Google Maps / printed map)`, `我的社区地图（OpenStreetMap／Google Maps／纸本地图）`],
+        [`Notebook for observations and evidence-based interpretations`, `用于记录观察和基于证据解释的笔记本`],
+        [`Fixed scenario settings (from handout)`, `固定情境参数（来自讲义）`],
+        [`Projectile diameter: <strong>100 m</strong>`, `撞击体直径：<strong>100 m</strong>`],
+        [`Trajectory angle: <strong>45°</strong>`, `入射角：<strong>45°</strong>`],
+        [`Speed: <strong>50 km/s</strong>`, `速度：<strong>50 km/s</strong>`],
+        [`Target: <strong>water</strong> with <strong>10 m</strong> water depth (Part A &amp; B baseline)`, `目标表面：<strong>水面</strong>，水深 <strong>10 m</strong>（A、B 部分基准）`],
+        [`Distance from crash site: <strong>10 km</strong> (Part A &amp; C baseline)`, `距撞击点距离：<strong>10 km</strong>（A、C 部分基准）`],
+        [`Method flowchart`, `方法流程图`],
+        [`Observations and data`, `观察与数据`],
+        [`Figure: what does 100 m look like?`, `图示：100 m 大概有多大？`],
+        [`Figure 1. A simple scale reference so the 100 m impactor size is easier to imagine. (Created for this project page.)`, `图 1。一个简单的尺度参照，帮助理解 100 m 撞击体的大致大小。（为本项目页面制作。）`],
+        [`Sample calculation: kinetic energy`, `示例计算：动能`],
+        [`<strong>Formula:</strong> mass of a sphere <span class="kbd">m = (π/6) ρ d³</span>; kinetic energy <span class="kbd">E = ½ m v²</span>.`, `<strong>公式：</strong>球体质量 <span class="kbd">m = (π/6) ρ d³</span>；动能 <span class="kbd">E = ½ m v²</span>。`],
+        [`<strong>Example</strong> (dense rock, ρ = 3000 kg/m³, diameter d = 100 m, velocity v = 50 km/s):`, `<strong>示例</strong>（致密岩石，ρ = 3000 kg/m³，直径 d = 100 m，速度 v = 50 km/s）：`],
+        [`<strong>TNT equivalent</strong> (1 Mt TNT = 4.184 × 10<sup>15</sup> J):`, `<strong>TNT 当量</strong>（1 兆吨 TNT = 4.184 × 10<sup>15</sup> J）：`],
+        [`Note: real impacts lose some energy to atmospheric breakup; calculators estimate “impact energy” and “airburst energy” separately.`, `注意：真实撞击会因大气层破裂损失部分能量；计算器通常会分别估算“撞击能量”和“空爆能量”。`],
+        [`Part A: effects of different projectile densities (fixed distance baseline)`, `A 部分：不同撞击体密度的影响（固定距离基准）`],
+        [`In Part A, all settings are fixed except the projectile density (ice, porous rock, dense rock, iron). The handout asks for crater depth/width, Richter magnitude, fireball radius, and a short damage summary.`, `在 A 部分中，除撞击体密度外，其余参数都保持不变（冰、多孔岩石、致密岩石、铁）。讲义要求记录陨石坑深度／宽度、里氏震级、火球半径，以及简短的破坏摘要。`],
+        [`<strong>How Part A values are generated:</strong> The rows below use the Down2Earth Impact Calculator for the handout baseline: Earth, projectile diameter 100 m, trajectory angle 45°, velocity 50 km/s, target water, water depth 10 m, and observer distance 10 km. These numbers should match the required calculator outputs for Part A.`, `<strong>A 部分数值的生成方式：</strong> 下表采用讲义规定基准参数下的 Down2Earth Impact Calculator 结果：地球、撞击体直径 100 m、入射角 45°、速度 50 km/s、目标为水面、水深 10 m、观测距离 10 km。这些数值应与 A 部分要求的计算器输出一致。`],
+        [`Measurement`, `测量项目`],
+        [`Ice (1000 kg/m³)`, `冰（1000 kg/m³）`],
+        [`Porous rock (1500 kg/m³)`, `多孔岩石（1500 kg/m³）`],
+        [`Dense rock (3000 kg/m³)`, `致密岩石（3000 kg/m³）`],
+        [`Iron (8000 kg/m³)`, `铁（8000 kg/m³）`],
+        [`Mass (×10⁹ kg) — calculated`, `质量（×10⁹ kg）— 计算值`],
+        [`Energy before entry (Mt TNT) — calculated`, `进入大气前能量（Mt TNT）— 计算值`],
+        [`Crater width (final diameter, km)`, `陨石坑宽度（最终直径，km）`],
+        [`Crater width (km)`, `陨石坑宽度（km）`],
+        [`Crater depth (km)`, `陨石坑深度（km）`],
+        [`Richter magnitude (estimated)`, `里氏震级（估计）`],
+        [`Visible fireball radius (km)`, `可见火球半径（km）`],
+        [`Not applicable`, `不适用`],
+        [`Damage summary (qualitative)`, `破坏摘要（定性）`],
+        [`Atmospheric breakup dominates. Smaller crater, no visible fireball at this distance, but severe local blast and very strong winds are still possible.`, `以大气层破碎效应为主。陨石坑较小，在这个距离看不到明显火球，但仍可能出现严重局部爆炸和非常强的风。`],
+        [`Atmospheric breakup still dominates. Crater is larger than ice, no visible fireball is reported, and local blast damage remains severe.`, `仍以大气层破碎效应为主。陨石坑比冰撞击体更大，未报告可见火球，但局部爆炸破坏仍然严重。`],
+        [`<strong>Severe regional hazard</strong>: large crater, Richter 6 shaking, and a visible fireball with strong local blast effects.`, `<strong>区域性严重危险</strong>：陨石坑很大，震动约为里氏 6 级，并伴随可见火球和强烈局部爆炸效应。`],
+        [`<strong>Most damaging</strong>: largest crater, Richter 7 shaking, strongest blast winds, and the largest visible fireball.`, `<strong>破坏最大</strong>：形成最大的陨石坑、约里氏 7 级震动、最强爆风，以及最大的可见火球。`],
+        [`Part B: effects by distance (10–40 km)`, `B 部分：不同距离的影响（10–40 km）`],
+        [`In Part B, the impact event stays the same (dense rock), but the distance from the crash site changes. Crater size and earthquake magnitude describe the event, so they are constant; the difference is the intensity of effects experienced at different distances.`, `在 B 部分中，撞击事件本身保持不变（致密岩石），改变的是与撞击点的距离。陨石坑大小和地震震级描述的是同一个事件，因此保持不变；不同之处在于各距离所感受到的影响强度。`],
+        [`Distance from crash site`, `距撞击点距离`],
+        [`~2.53 km (same event)`, `~2.53 km（同一次事件）`],
+        [`~0.538 km (same event)`, `~0.538 km（同一次事件）`],
+        [`Richter magnitude`, `里氏震级`],
+        [`~6 (same event)`, `~6（同一次事件）`],
+        [`Fireball radius (km)`, `火球半径（km）`],
+        [`~1.29 km (same event)`, `~1.29 km（同一次事件）`],
+        [`Expected damage (evidence-based summary)`, `预期破坏（基于证据的摘要）`],
+        [`Extreme blast + flying debris danger; severe injuries; buildings likely unsafe.`, `极强爆炸和飞散碎片危险；可能造成重伤；建筑物大概率不安全。`],
+        [`Major structural damage; widespread injuries; critical infrastructure disruption.`, `严重结构破坏；大范围人员受伤；关键基础设施中断。`],
+        [`Glass damage and weaker-structure damage; injuries from debris.`, `玻璃破裂和较弱结构受损；人员可能被碎片击伤。`],
+        [`Loud blast and shaking; mostly indirect damage (windows, minor structural impacts).`, `明显爆响与震动；以间接损害为主（窗户、轻微结构损伤）。`],
+        [`Part C: effects of target density (impact surface type)`, `C 部分：目标表面密度的影响（撞击表面类型）`],
+        [`In Part C, the projectile is fixed (dense rock) and the distance is fixed (10 km), but the ground type changes. In general, softer targets allow larger craters; stronger targets reduce crater size but still transmit destructive energy.`, `在 C 部分中，撞击体固定为致密岩石，距离固定为 10 km，但地表类型改变。一般来说，较软的目标会形成更大的陨石坑；较坚硬的目标会减小陨石坑尺寸，但仍会传递强烈破坏能量。`],
+        [`Water (10 m)`, `水面（10 m）`],
+        [`Sedimentary rock`, `沉积岩`],
+        [`Igneous (crystalline) rock`, `火成岩（结晶岩）`],
+        [`Damage summary`, `破坏摘要`],
+        [`Largest crater in this Part C comparison. Water impact also adds wave/splash hazards, while blast and shaking remain severe.`, `在 C 部分比较中形成最大的陨石坑。撞击水面还会增加波浪／飞溅危险，同时爆炸和震动仍然很强。`],
+        [`Smallest crater of the three target types here, with less ejecta, but the blast and shaking effects are still strong.`, `在这里的三种目标类型中形成最小的陨石坑，喷出物较少，但爆炸和震动效应仍然很强。`],
+        [`Crater is larger than the sedimentary-rock case and only slightly smaller than water, so blast and shaking remain severe.`, `陨石坑比沉积岩情形更大，只比水面情形略小，因此爆炸和震动仍然严重。`],
+        [`Embedded chart: “damage” (impact energy) vs impactor size`, `嵌入图表：“破坏程度”（撞击能量）与撞击体大小的关系`],
+        [`Figure 2. Kinetic energy (a proxy for damage potential) increases extremely rapidly with diameter because mass scales with diameter³. The calculation assumes a spherical dense-rock impactor (ρ = 3000 kg/m³) at 50 km/s.`, `图 2。动能（可作为破坏潜力的代理指标）会随着直径迅速增加，因为质量与直径³成正比。该计算假设撞击体为球形致密岩石（ρ = 3000 kg/m³），速度为 50 km/s。`],
+        [`Analysis questions`, `分析问题`],
+        [`Which impactor type causes the most damage?`, `哪一种撞击体造成的破坏最大？`],
+        [`The <strong>iron</strong> impactor causes the most damage. In Part A it produces the <strong>largest crater width</strong> at <strong>5.097 km</strong>, the <strong>highest Richter magnitude</strong> at <strong>7</strong>, and the <strong>largest visible fireball radius</strong> at <strong>3.22 km</strong>. By comparison, the dense-rock impactor produces a <strong>2.530 km</strong> crater and Richter <strong>6</strong>, while ice and porous rock produce even smaller craters and no visible fireball. Those table values show that iron creates the strongest overall impact effects in this scenario.`, `造成破坏最大的是<strong>铁质</strong>撞击体。在 A 部分表格中，它形成了<strong>最大的陨石坑宽度</strong>，达到 <strong>5.097 km</strong>；<strong>最高的里氏震级</strong>为 <strong>7</strong>；以及<strong>最大的可见火球半径</strong>，达到 <strong>3.22 km</strong>。相比之下，致密岩石撞击体形成的陨石坑为 <strong>2.530 km</strong>，里氏震级为 <strong>6</strong>，而冰和多孔岩石形成的陨石坑更小，且没有可见火球。这些表格数据说明，在这个情境下铁质撞击体会造成最强的整体撞击效应。`],
+        [`What factors influence crater size?`, `哪些因素会影响陨石坑大小？`],
+        [`Crater size depends on projectile diameter, density, and velocity (through kinetic energy), the impact angle, and the target material. Atmospheric breakup can reduce the effective impact energy at the ground compared with the energy before atmospheric entry.`, `陨石坑大小取决于撞击体直径、密度和速度（通过动能体现）、撞击角度，以及目标材料。与进入大气前的能量相比，大气层破裂会降低最终传递到地面的有效撞击能量。`],
+        [`Community impact assessment (10 km, 20 km, 30 km, 40 km)`, `社区影响评估（10 km、20 km、30 km、40 km）`],
+        [`Using the Part B distance results and the chosen impact point, the following community-specific damages would likely occur:`, `根据 B 部分的距离结果，以及所选撞击点，社区中可能出现的具体破坏如下：`],
+        [`Distance`, `距离`],
+        [`Damages`, `破坏情况`],
+        [`Severe destruction in the Oakridge, South Cambie, and Richmond-side corridor. Langara College, BC Children’s Hospital, Vancouver General Hospital support networks, Marine Gateway, and nearby Canada Line stations would likely face catastrophic building damage, debris hazards, and shutdown of emergency services and transit.`, `Oakridge、South Cambie 以及通往 Richmond 一侧的走廊地带会遭受严重破坏。Langara College、BC Children’s Hospital、Vancouver General Hospital 的相关支援网络、Marine Gateway 以及附近 Canada Line 车站，很可能会出现灾难性建筑损坏、碎片危险，以及紧急服务和公共交通停摆。`],
+        [`Major damage extending into Downtown Vancouver, UBC/Point Grey approaches, North Vancouver waterfront areas, and New Westminster. Broken infrastructure, unsafe buildings, bridge and port disruption, and mass injuries would be expected across dense urban zones.`, `严重破坏会延伸到温哥华市中心、UBC/Point Grey 一带、北温海滨区域以及 New Westminster。人口密集城区内可能出现基础设施损坏、建筑不安全、桥梁和港口运作中断，以及大量人员受伤。`],
+        [`Widespread glass breakage, fallen debris, and weaker-structure damage across Surrey, Coquitlam, Port Moody, Delta, and outer Vancouver suburbs. Transit delays, blocked roads, and damage to schools, shopping areas, and municipal buildings would likely occur.`, `Surrey、Coquitlam、Port Moody、Delta 以及温哥华外围郊区会出现大范围玻璃破裂、碎片坠落和较弱建筑受损。公共交通延误、道路受阻，以及学校、商业区和市政建筑受损都很可能发生。`],
+        [`Outer suburban communities such as Langley and South Surrey would still feel a strong shockwave and shaking. Damage would be less extreme but could still include shattered windows, localized structural damage, service interruptions, and region-wide transportation and communication disruption.`, `Langley 和 South Surrey 等外围郊区社区仍会感受到强烈冲击波和震动。破坏程度会较低一些，但仍可能包括窗户破碎、局部结构损伤、服务中断，以及区域范围内的交通和通讯干扰。`],
+        [`Research: two famous impact hypotheses`, `研究：两个著名的撞击假说`],
+        [`Hypothesis / event`, `假说／事件`],
+        [`When`, `时间`],
+        [`Approx. impactor size`, `大致撞击体大小`],
+        [`Result / evidence`, `结果／证据`],
+        [`Alvarez hypothesis (K–Pg impact)`, `阿尔瓦雷斯假说（K–Pg 撞击）`],
+        [`~66 million years ago`, `约 6600 万年前`],
+        [`~10 km asteroid (order-of-magnitude)`, `约 10 km 小行星（数量级估计）`],
+        [`Linked to the Chicxulub crater and the mass extinction at the K–Pg boundary.`, `与希克苏鲁伯陨石坑以及 K–Pg 边界的大灭绝有关。`],
+        [`Giant-impact hypothesis (Moon formation)`, `巨撞假说（月球形成）`],
+        [`Early Earth, ~4.5 billion years ago`, `地球早期，约 45 亿年前`],
+        [`Mars-sized body (“Theia”, hypothesis)`, `火星大小的天体（“忒伊亚”，假说）`],
+        [`A giant collision may have ejected material that later accreted into the Moon.`, `一次巨大碰撞可能抛射出物质，后来这些物质聚集形成了月球。`],
+        [`Research an object “on its way” toward Earth`, `研究一个“正朝地球而来”的天体`],
+        [`Near-Earth-object risk tables change over time. The example below was updated from the official NASA/JPL Sentry system on 2026-03-27.`, `近地天体风险表会随时间变化。下面的示例已在 2026-03-27 根据 NASA/JPL 官方 Sentry 系统更新。`],
+        [`Object name`, `天体名称`],
+        [`<strong>2026 CQ4</strong> (listed in NASA/JPL Sentry)`, `<strong>2026 CQ4</strong>（列于 NASA/JPL Sentry）`],
+        [`Estimated size`, `估计大小`],
+        [`About <strong>0.01 km</strong>, or roughly <strong>10 m</strong> across.`, `约 <strong>0.01 km</strong>，也就是大约 <strong>10 m</strong> 宽。`],
+        [`Speed / orbit notes`, `速度／轨道说明`],
+        [`Sentry gives <strong>v∞ ≈ 5.64 km/s</strong> and estimated impact-entry speed <strong>v<sub>imp</sub> ≈ 12.49 km/s</strong>. Current listed potential-impact dates span <strong>2072–2125</strong>.`, `Sentry 给出的 <strong>v∞ ≈ 5.64 km/s</strong>，估计撞击入射速度为 <strong>v<sub>imp</sub> ≈ 12.49 km/s</strong>。目前列出的潜在撞击日期范围为 <strong>2072–2125</strong>。`],
+        [`Does it impact Earth? (date/probability)`, `它会撞上地球吗？（日期／概率）`],
+        [`<strong>No confirmed impact is predicted.</strong> NASA Sentry currently lists multiple low-probability virtual impacts. The <strong>highest single listed case</strong> is <strong>2072-03-21.38 UTC</strong> with impact probability <strong>3.860 × 10<sup>-3</sup></strong> (about <strong>0.386%</strong>). The <strong>cumulative</strong> listed probability is <strong>0.005030413448</strong> (about <strong>0.503%</strong>).`, `<strong>目前没有确认会发生的撞击。</strong> NASA Sentry 现阶段列出多个低概率的虚拟撞击情形。<strong>单一情形中最高</strong>的是 <strong>2072-03-21.38 UTC</strong>，撞击概率为 <strong>3.860 × 10<sup>-3</sup></strong>（约 <strong>0.386%</strong>）。<strong>累计</strong>列出概率为 <strong>0.005030413448</strong>（约 <strong>0.503%</strong>）。`],
+        [`If it impacted… likely effects`, `如果真的撞击……可能产生的影响`],
+        [`Sentry’s mean impact energy is about <strong>2.770 × 10<sup>-2</sup> Mt TNT</strong> (about <strong>27.7 kilotons</strong>). For an object this size, the most likely hazard would be a <strong>local airburst or small impact event</strong> causing serious local blast damage, broken windows, and injuries near the impact area, not a global extinction-scale disaster.`, `Sentry 给出的平均撞击能量约为 <strong>2.770 × 10<sup>-2</sup> Mt TNT</strong>（约 <strong>27.7 千吨</strong>）。对于这种大小的天体，最可能的危险是<strong>局部空爆或小型撞击事件</strong>，会在撞击区域附近造成严重的局部爆炸破坏、玻璃破裂和人员受伤，而不是全球灭绝级灾难。`],
+        [`Community map and impact location`, `社区地图与撞击位置`],
+        [`The handout asks for a map of your community with a marked impact centre, plus circles showing 10 km, 20 km, 30 km and 40 km zones. The interactive map below is provided as a convenient way to create those circles. Replace the centre coordinate with your chosen impact point.`, `讲义要求提供一张社区地图，标出撞击中心，并画出 10 km、20 km、30 km 和 40 km 的范围圈。下面的互动地图提供了一个方便的方式来生成这些圆圈。请把中心坐标替换成你选定的撞击点。`],
+        [`<strong>How to customise:</strong> In the page source, search for <span class="kbd">IMPACT_CENTRE</span> and replace the latitude/longitude. You can also export/print a screenshot for submission if required.`, `<strong>如何自定义：</strong> 在页面源代码中搜索 <span class="kbd">IMPACT_CENTRE</span>，然后替换经纬度。若有需要，你也可以导出／打印截图用于提交。`],
+        [`Map data © OpenStreetMap contributors • Tile layer © OpenStreetMap (standard). If your school requires a static map image, take a screenshot and insert it as an image with a caption.`, `地图数据 © OpenStreetMap 贡献者 • 底图图层 © OpenStreetMap（标准版）。如果学校要求提交静态地图图片，可截图后作为带图注的图片插入。`],
+        [`Impact-zone notes (write for your community)`, `撞击范围说明（请按你的社区填写）`],
+        [`Zone radius`, `范围半径`],
+        [`What is located in this zone?`, `这个范围内有什么设施？`],
+        [`Likely consequences`, `可能后果`],
+        [`Extreme blast + debris; likely collapse of many structures; immediate life-threatening conditions.`, `极强爆炸与碎片冲击；许多建筑可能倒塌；立刻危及生命。`],
+        [`Major structural damage; widespread injuries; power/water/communication outages.`, `严重结构破坏；大量人员受伤；电力／供水／通讯中断。`],
+        [`Broken windows, fallen debris, minor-to-moderate structural damage; roads partially blocked.`, `窗户破裂、碎片坠落、轻到中度结构损伤；道路部分受阻。`],
+        [`Noticeable shockwave and shaking; some window damage; indirect impacts on services.`, `可明显感受到冲击波和震动；部分窗户损坏；对服务设施造成间接影响。`],
+        [`Conclusion`, `结论`],
+        [`This inquiry shows that even a 100 m object can produce severe regional effects, and that <strong>density</strong> is a key variable: denser projectiles carry more mass (and therefore more kinetic energy) at the same diameter and speed. Crater size, shockwave damage, earthquake shaking, and thermal effects all scale with the energy delivered to the atmosphere and ground. Finally, mapping impact zones makes the hazard concrete by connecting physics to real community infrastructure.`, `这项探究表明，即使只有 100 m 的天体也可能造成严重的区域性影响，而<strong>密度</strong>是关键变量：在直径和速度相同的情况下，密度越大，质量越大（因此动能也越高）。陨石坑大小、冲击波破坏、地震震动和热效应都与传递到大气和地面的能量有关。最后，把撞击范围画到地图上，可以把抽象的物理概念与真实社区基础设施联系起来，使危险更具体。`],
+        [`Limitations and improvements`, `局限与改进`],
+        [`Calculator outputs vary by model assumptions (atmospheric breakup, target type, etc.). I should capture screenshots of my exact simulator runs.`, `计算器输出会受到模型假设影响（如大气层破裂、目标类型等）。我应截取自己实际模拟结果的截图。`],
+        [`I should verify any “incoming object” information using official, current trackers.`, `我应使用官方且最新的追踪器核实任何“来袭天体”信息。`],
+        [`I should refine the community map using local landmarks (schools, hospitals, bridges) and add labels.`, `我应结合本地地标（学校、医院、桥梁等）进一步完善社区地图，并补上标签。`],
+        [`Rubric alignment and checklist`, `评分要求对照与检查清单`],
+        [`Rubric alignment (what is met where)`, `评分要求对照（各项要求对应位置）`],
+        [`Requirement`, `要求`],
+        [`Where in this page`, `本页对应位置`],
+        [`Evidence`, `证据`],
+        [`Clear title and inquiry question`, `清晰的标题与探究问题`],
+        [`Header (#top)`, `页首（#top）`],
+        [`Project question is the main page title.`, `项目问题即为页面主标题。`],
+        [`Student info block`, `学生信息区块`],
+        [`Name/teacher/class/date fields provided.`, `提供了姓名／教师／班级／日期栏位。`],
+        [`Learning goals section`, `学习目标部分`],
+        [`Bullet list of measurable goals.`, `以项目符号列出可衡量的目标。`],
+        [`Methods`, `方法`],
+        [`Parameters listed + mermaid flowchart.`, `列出参数并附有 Mermaid 流程图。`],
+        [`Observations parts A–C`, `观察 A–C 部分`],
+        [`Three tables + notes + sample calculations.`, `三个表格 + 说明文字 + 示例计算。`],
+        [`Data tables + calculations`, `数据表格 + 计算`],
+        [`Observations (sample calculation + tables)`, `观察部分（示例计算 + 表格）`],
+        [`Mass, energy, crater and effect estimates.`, `质量、能量、陨石坑和影响估计。`],
+        [`Analysis answers`, `分析答案`],
+        [`Analysis section`, `分析部分`],
+        [`Answers supported by table evidence.`, `答案有表格证据支持。`],
+        [`Figures with captions and alt text`, `带图注和替代文字的图表`],
+        [`Figure 1 &amp; Figure 2`, `图 1 与图 2`],
+        [`SVG figures include aria-label + captions.`, `SVG 图包含 aria-label 和图注。`],
+        [`Community map with 10/20/30/40 km circles`, `带 10／20／30／40 km 圆圈的社区地图`],
+        [`Leaflet map draws circles; editable centre.`, `Leaflet 地图会绘制圆圈；中心点可编辑。`],
+        [`Conclusion + limitations`, `结论 + 局限`],
+        [`Summarises findings and improvements.`, `总结发现与改进方向。`],
+        [`Primary/official sources listed for verification.`, `列出主要／官方来源供核查。`],
+        [`Self-evaluation checklist`, `自我检查清单`],
+        [`<input type="checkbox"> I replaced sample numbers with my own simulator outputs.`, `我已经把示例数字替换成自己的模拟器输出。`],
+        [`<input type="checkbox"> I included all three observation parts (A–C) in complete tables.`, `我已经把三个观察部分（A–C）完整填写成表格。`],
+        [`<input type="checkbox"> I used at least one calculation and showed my working.`, `我至少使用了一项计算，并展示了计算过程。`],
+        [`<input type="checkbox"> I answered all analysis questions in complete sentences.`, `我已经用完整句子回答了所有分析问题。`],
+        [`<input type="checkbox"> My community map includes the impact centre and 10/20/30/40 km circles.`, `我的社区地图包含撞击中心以及 10／20／30／40 km 范围圈。`],
+        [`<input type="checkbox"> All figures have captions and accessible alternative text.`, `所有图表都包含图注和可访问的替代文字。`],
+        [`<input type="checkbox"> I cited sources and avoided copying text without attribution.`, `我已经标注资料来源，并避免在未注明出处时直接复制文字。`],
+        [`APA 7th edition style used. URLs are included for verification.`, `采用 APA 第 7 版格式。保留网址以便核查。`],
+        [`Alvarez, L. W., Alvarez, W., Asaro, F., &amp; Michel, H. V. (1980). Extraterrestrial cause for the Cretaceous-Tertiary extinction. <em>Science</em>, 208(4448), 1095–1108. <a href="https://doi.org/10.1126/science.208.4448.1095" target="_blank" rel="noopener noreferrer">https://doi.org/10.1126/science.208.4448.1095</a>`, `Alvarez, L. W., Alvarez, W., Asaro, F., &amp; Michel, H. V.（1980）。白垩纪—第三纪灭绝的地外成因。<em>Science</em>, 208(4448), 1095–1108。<a href="https://doi.org/10.1126/science.208.4448.1095" target="_blank" rel="noopener noreferrer">https://doi.org/10.1126/science.208.4448.1095</a>`],
+        [`Canup, R. M., &amp; Asphaug, E. (2001). Origin of the Moon in a giant impact near the end of the Earth's formation. <em>Nature</em>, 412(6848), 708–712. <a href="https://doi.org/10.1038/35089010" target="_blank" rel="noopener noreferrer">https://doi.org/10.1038/35089010</a>`, `Canup, R. M., &amp; Asphaug, E.（2001）。月球起源于地球形成末期的一次巨大撞击。<em>Nature</em>, 412(6848), 708–712。<a href="https://doi.org/10.1038/35089010" target="_blank" rel="noopener noreferrer">https://doi.org/10.1038/35089010</a>`],
+        [`Collins, G. S., Melosh, H. J., &amp; Marcus, R. A. (2005). Earth impact effects program: A web-based computer program for calculating the regional environmental consequences of a meteoroid impact on Earth. <em>Meteoritics &amp; Planetary Science</em>, 40(6), 817–840. <a href="https://doi.org/10.1111/j.1945-5100.2005.tb00157.x" target="_blank" rel="noopener noreferrer">https://doi.org/10.1111/j.1945-5100.2005.tb00157.x</a>`, `Collins, G. S., Melosh, H. J., &amp; Marcus, R. A.（2005）。Earth impact effects program：用于计算流星体撞击地球区域环境后果的网络程序。<em>Meteoritics &amp; Planetary Science</em>, 40(6), 817–840。<a href="https://doi.org/10.1111/j.1945-5100.2005.tb00157.x" target="_blank" rel="noopener noreferrer">https://doi.org/10.1111/j.1945-5100.2005.tb00157.x</a>`],
+        [`Marcus, R., Melosh, H. J., &amp; Collins, G. (n.d.). <em>Earth impact effects program</em>. Retrieved March 27, 2026, from <a href="https://impact.ese.ic.ac.uk/ImpactEarth/ImpactEffects/" target="_blank" rel="noopener noreferrer">https://impact.ese.ic.ac.uk/ImpactEarth/ImpactEffects/</a>`, `Marcus, R., Melosh, H. J., &amp; Collins, G.（无日期）。<em>Earth impact effects program</em>。检索日期：2026 年 3 月 27 日，取自 <a href="https://impact.ese.ic.ac.uk/ImpactEarth/ImpactEffects/" target="_blank" rel="noopener noreferrer">https://impact.ese.ic.ac.uk/ImpactEarth/ImpactEffects/</a>`],
+        [`National Aeronautics and Space Administration. (n.d.). <em>Planetary defense at NASA</em>. <a href="https://science.nasa.gov/planetary-defense/" target="_blank" rel="noopener noreferrer">https://science.nasa.gov/planetary-defense/</a>`, `National Aeronautics and Space Administration.（无日期）。<em>Planetary defense at NASA</em>。<a href="https://science.nasa.gov/planetary-defense/" target="_blank" rel="noopener noreferrer">https://science.nasa.gov/planetary-defense/</a>`],
+        [`Center for Near Earth Object Studies. (n.d.). <em>Sentry: Earth impact monitoring</em>. Retrieved March 27, 2026, from <a href="https://cneos.jpl.nasa.gov/sentry/" target="_blank" rel="noopener noreferrer">https://cneos.jpl.nasa.gov/sentry/</a>`, `Center for Near Earth Object Studies.（无日期）。<em>Sentry: Earth impact monitoring</em>。检索日期：2026 年 3 月 27 日，取自 <a href="https://cneos.jpl.nasa.gov/sentry/" target="_blank" rel="noopener noreferrer">https://cneos.jpl.nasa.gov/sentry/</a>`],
+        [`Jet Propulsion Laboratory. (2021, July). <em>Sentry API</em>. <a href="https://ssd-api.jpl.nasa.gov/doc/sentry.html" target="_blank" rel="noopener noreferrer">https://ssd-api.jpl.nasa.gov/doc/sentry.html</a>`, `Jet Propulsion Laboratory.（2021 年 7 月）。<em>Sentry API</em>。<a href="https://ssd-api.jpl.nasa.gov/doc/sentry.html" target="_blank" rel="noopener noreferrer">https://ssd-api.jpl.nasa.gov/doc/sentry.html</a>`],
+        [`Jet Propulsion Laboratory. (n.d.). <em>Sentry API query results for 2026 CQ4</em> [Data set]. Retrieved March 27, 2026, from <a href="https://ssd-api.jpl.nasa.gov/sentry.api?des=2026%20CQ4" target="_blank" rel="noopener noreferrer">https://ssd-api.jpl.nasa.gov/sentry.api?des=2026%20CQ4</a>`, `Jet Propulsion Laboratory.（无日期）。<em>Sentry API query results for 2026 CQ4</em>［数据集］。检索日期：2026 年 3 月 27 日，取自 <a href="https://ssd-api.jpl.nasa.gov/sentry.api?des=2026%20CQ4" target="_blank" rel="noopener noreferrer">https://ssd-api.jpl.nasa.gov/sentry.api?des=2026%20CQ4</a>`],
+        [`OpenStreetMap contributors. (n.d.). <em>Copyright and license</em>. Retrieved March 27, 2026, from <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">https://www.openstreetmap.org/copyright</a>`, `OpenStreetMap contributors.（无日期）。<em>Copyright and license</em>。检索日期：2026 年 3 月 27 日，取自 <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">https://www.openstreetmap.org/copyright</a>`]
+      ]);
+
+      const mermaidSources = {
+        en: `flowchart TD
+  A["Read handout and required settings"] --> B["Open impact simulator and choose Earth"]
+  B --> C["Set baseline parameters: 100 m, 45°, 50 km/s, water 10 m"]
+  C --> D["Part A: change projectile density (ice, porous rock, dense rock, iron)"]
+  D --> E["Record crater depth/width, quake magnitude, fireball radius, and damage description"]
+  C --> F["Part B: keep dense rock, change distance (10, 20, 30, 40 km)"]
+  F --> G["Record distance-dependent damage and key values"]
+  C --> H["Part C: keep dense rock and distance 10 km, change target (water, sedimentary, igneous)"]
+  H --> I["Record differences in crater and effects"]
+  E --> J["Do sample calculations (KE, TNT equivalence)"]
+  G --> J
+  I --> J
+  J --> K["Answer analysis questions using evidence"]
+  K --> L["Create community map with impact circles"]
+  L --> M["Write conclusion, references, and self-evaluation"]`,
+        enzh: `flowchart TD
+  A["Read handout and required settings<br/>阅读讲义和要求参数"] --> B["Open impact simulator and choose Earth<br/>打开撞击模拟器并选择地球"]
+  B --> C["Set baseline parameters: 100 m, 45°, 50 km/s, water 10 m<br/>设定基准参数：100 m、45°、50 km/s、水深 10 m"]
+  C --> D["Part A: change projectile density (ice, porous rock, dense rock, iron)<br/>A 部分：改变撞击体密度（冰、多孔岩石、致密岩石、铁）"]
+  D --> E["Record crater depth/width, quake magnitude, fireball radius, and damage description<br/>记录陨石坑深度／宽度、地震震级、火球半径和破坏描述"]
+  C --> F["Part B: keep dense rock, change distance (10, 20, 30, 40 km)<br/>B 部分：保持致密岩石不变，改变距离（10、20、30、40 km）"]
+  F --> G["Record distance-dependent damage and key values<br/>记录随距离变化的破坏情况和关键数值"]
+  C --> H["Part C: keep dense rock and distance 10 km, change target (water, sedimentary, igneous)<br/>C 部分：保持致密岩石和 10 km 距离不变，改变目标类型（水面、沉积岩、火成岩）"]
+  H --> I["Record differences in crater and effects<br/>记录陨石坑和影响的差异"]
+  E --> J["Do sample calculations (KE, TNT equivalence)<br/>完成示例计算（动能、TNT 当量）"]
+  G --> J
+  I --> J
+  J --> K["Answer analysis questions using evidence<br/>根据证据回答分析问题"]
+  K --> L["Create community map with impact circles<br/>绘制带撞击范围圈的社区地图"]
+  L --> M["Write conclusion, references, and self-evaluation<br/>撰写结论、参考文献和自我评价"]`,
+        zh: `flowchart TD
+  A["阅读讲义和要求参数"] --> B["打开撞击模拟器并选择地球"]
+  B --> C["设定基准参数：100 m、45°、50 km/s、水深 10 m"]
+  C --> D["A 部分：改变撞击体密度（冰、多孔岩石、致密岩石、铁）"]
+  D --> E["记录陨石坑深度／宽度、地震震级、火球半径和破坏描述"]
+  C --> F["B 部分：保持致密岩石不变，改变距离（10、20、30、40 km）"]
+  F --> G["记录随距离变化的破坏情况和关键数值"]
+  C --> H["C 部分：保持致密岩石和 10 km 距离不变，改变目标类型（水面、沉积岩、火成岩）"]
+  H --> I["记录陨石坑和影响的差异"]
+  E --> J["完成示例计算（动能、TNT 当量）"]
+  G --> J
+  I --> J
+  J --> K["根据证据回答分析问题"]
+  K --> L["绘制带撞击范围圈的社区地图"]
+  L --> M["撰写结论、参考文献和自我评价"]`
+      };
+
+      const svgTextByMode = {
+        en: {
+          title: 'PROJ-ES-0012 — Asteroid Impact Inquiry Project',
+          scaleAria: 'Scale diagram showing a 100 metre length compared with a school bus and a football pitch',
+          scaleTitle: '100 m scale reference (not to exact building scale)',
+          scaleBus: 'Typical bus ~12 m',
+          scalePitch: 'Football pitch length ~100 m',
+          chartAria: 'Chart of impact energy in megatons TNT versus impactor diameter for dense rock at 50 kilometres per second',
+          chartTitle: 'Impact energy vs diameter (dense rock, ρ = 3000 kg/m³, v = 50 km/s)',
+          chartXAxis: 'Diameter (m)',
+          chartYAxis: 'Energy (Mt TNT, log scale)',
+          chartNote: 'Log scale: energy increases ~ with diameter³'
+        },
+        enzh: {
+          title: 'PROJ-ES-0012 — Asteroid Impact Inquiry Project / 小行星撞击探究项目',
+          scaleAria: 'Scale diagram showing a 100 metre length compared with a school bus and a football pitch / 100 米长度与校车和足球场对比的比例图',
+          scaleTitle: '100 m scale reference / 100 米尺度参照',
+          scaleBus: 'Typical bus ~12 m / 典型校车约 12 m',
+          scalePitch: 'Football pitch length ~100 m / 足球场长度约 100 m',
+          chartAria: 'Chart of impact energy versus impactor diameter for dense rock / 致密岩石撞击体直径与撞击能量关系图',
+          chartTitle: 'Impact energy vs diameter / 撞击能量与直径（致密岩石，ρ = 3000 kg/m³，v = 50 km/s）',
+          chartXAxis: 'Diameter (m) / 直径（m）',
+          chartYAxis: 'Energy (Mt TNT, log scale) / 能量（Mt TNT，对数坐标）',
+          chartNote: 'Log scale: energy increases ~ with diameter³ / 对数坐标：能量大致随直径³增加'
+        },
+        zh: {
+          title: 'PROJ-ES-0012 —— 小行星撞击探究项目',
+          scaleAria: '100 米长度与校车和足球场对比的比例图',
+          scaleTitle: '100 米尺度参照（并非按真实建筑比例绘制）',
+          scaleBus: '典型校车约 12 m',
+          scalePitch: '足球场长度约 100 m',
+          chartAria: '致密岩石撞击体直径与撞击能量关系图',
+          chartTitle: '撞击能量与直径（致密岩石，ρ = 3000 kg/m³，v = 50 km/s）',
+          chartXAxis: '直径（m）',
+          chartYAxis: '能量（Mt TNT，对数坐标）',
+          chartNote: '对数坐标：能量大致随直径³增加'
+        }
+      };
+
+      const mapCopy = {
+        en: {
+          zone: (rk) => `${rk} km zone`,
+          aria: 'Interactive community map with damage circles'
+        },
+        enzh: {
+          zone: (rk) => `${rk} km zone<br><span lang="zh-CN">${rk} 公里范围</span>`,
+          aria: 'Interactive community map with damage circles / 带撞击范围圈的互动社区地图'
+        },
+        zh: {
+          zone: (rk) => `${rk} 公里范围`,
+          aria: '带撞击范围圈的互动社区地图'
+        }
+      };
+
+      function normalize(value) {
+        return value.replace(/\s+/g, ' ').trim();
+      }
+
+      function applyBilingual(node, translation) {
+        if (node.dataset.i18nApplied === 'true') return;
+
+        const originalHtml = node.innerHTML;
+        const zhWrap = document.createElement('span');
+        zhWrap.className = 'i18n-zh i18n-block';
+        zhWrap.innerHTML = translation;
+
+        if (node.tagName === 'LABEL' && node.querySelector('input[type="checkbox"]')) {
+          const temp = document.createElement('div');
+          temp.innerHTML = originalHtml;
+          const tempCheckbox = temp.querySelector('input[type="checkbox"]');
+          if (tempCheckbox) tempCheckbox.remove();
+          const englishHtml = temp.innerHTML.replace(/^\s+/, '');
+          const liveCheckbox = node.querySelector('input[type="checkbox"]');
+          const checked = liveCheckbox ? liveCheckbox.checked : false;
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.checked = checked;
+
+          const enWrap = document.createElement('span');
+          enWrap.className = 'i18n-en i18n-block';
+          enWrap.innerHTML = englishHtml;
+
+          node.innerHTML = '';
+          node.appendChild(checkbox);
+          node.appendChild(document.createTextNode(' '));
+          node.appendChild(enWrap);
+          node.appendChild(zhWrap);
+          node.dataset.i18nApplied = 'true';
+          return;
+        }
+
+        const enWrap = document.createElement('span');
+        enWrap.className = 'i18n-en i18n-block';
+        enWrap.innerHTML = originalHtml;
+
+        node.innerHTML = '';
+        node.appendChild(enWrap);
+        node.appendChild(zhWrap);
+        node.dataset.i18nApplied = 'true';
+      }
+
+      const targets = Array.from(document.querySelectorAll([
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'p',
+        'th',
+        'td',
+        'li',
+        'figcaption',
+        '.meta div',
+        '.toc .pill',
+        '.toc a',
+        '.danger',
+        '.note',
+        'label'
+      ].join(',')));
+
+      targets.forEach((node) => {
+        if (node.tagName === 'LI' && node.querySelector('label')) return;
+        const key = normalize(node.innerHTML);
+        const translation = translations.get(key);
+        if (!translation) return;
+        applyBilingual(node, translation);
+      });
+
+      mermaid.initialize({ startOnLoad: false, theme: 'default' });
+      let mermaidRender = Promise.resolve();
+
+      function updateSvgLanguage(mode) {
+        const copy = svgTextByMode[mode] || svgTextByMode.en;
+        document.title = copy.title;
+        const scaleSvg = document.getElementById('scaleSvg');
+        const chartSvg = document.getElementById('energyChartSvg');
+        if (scaleSvg) scaleSvg.setAttribute('aria-label', copy.scaleAria);
+        if (chartSvg) chartSvg.setAttribute('aria-label', copy.chartAria);
+        const mappings = [
+          ['scaleSvgTitle', copy.scaleTitle],
+          ['scaleSvgBus', copy.scaleBus],
+          ['scaleSvgPitch', copy.scalePitch],
+          ['energyChartTitle', copy.chartTitle],
+          ['energyChartXAxis', copy.chartXAxis],
+          ['energyChartYAxis', copy.chartYAxis],
+          ['energyChartNote', copy.chartNote]
+        ];
+        mappings.forEach(([id, text]) => {
+          const node = document.getElementById(id);
+          if (node) node.textContent = text;
+        });
+      }
+
+      function updateMapLanguage(mode) {
+        const copy = mapCopy[mode] || mapCopy.en;
+        const mapNode = document.getElementById('map');
+        if (mapNode) mapNode.setAttribute('aria-label', copy.aria);
+        if (Array.isArray(window.zoneLayers)) {
+          zoneLayers.forEach((layer, index) => {
+            const rk = radiiKm[index];
+            layer.setPopupContent(copy.zone(rk));
+          });
+        }
+      }
+
+      function renderMermaid(mode) {
+        if (!mermaidNode) return Promise.resolve();
+        const source = mermaidSources[mode] || mermaidSources.en;
+        mermaidRender = mermaidRender.then(async () => {
+          mermaidNode.removeAttribute('data-processed');
+          mermaidNode.textContent = source;
+          await mermaid.run({ nodes: [mermaidNode] });
+        }).catch(() => {
+          mermaidNode.textContent = source;
+        });
+        return mermaidRender;
+      }
+
+      function setMode(mode) {
+        if (!['en', 'enzh', 'zh'].includes(mode)) mode = 'en';
+        body.classList.remove(...modes);
+        body.classList.add(`lang-${mode}`);
+        document.documentElement.lang = mode === 'zh' ? 'zh-CN' : 'en';
+        if (modeSelect) modeSelect.value = mode;
+        updateSvgLanguage(mode);
+        updateMapLanguage(mode);
+        renderMermaid(mode);
+        try {
+          localStorage.setItem(STORAGE_KEY, mode);
+        } catch (err) {
+          // Ignore storage failures.
+        }
+      }
+
+      let initialMode = 'en';
+      try {
+        initialMode = localStorage.getItem(STORAGE_KEY) || 'en';
+      } catch (err) {
+        initialMode = 'en';
+      }
+
+      if (modeSelect) {
+        modeSelect.addEventListener('change', (event) => setMode(event.target.value));
+      }
+
+      window.zoneLayers = zoneLayers;
+      window.radiiKm = radiiKm;
+
+      setMode(initialMode);
+    })();
+  </script>
+</body>
+</html>
