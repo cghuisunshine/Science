@@ -518,6 +518,31 @@
         }));
     }
 
+    async function filterValidRepoBanks(banks, loadText = async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to load ${url} (${response.status}).`);
+      }
+      return response.text();
+    }) {
+      const results = await Promise.all(
+        banks.map(async bank => {
+          try {
+            const text = await loadText(bank.path);
+            const questions = parseImportedQuestionBankText(text);
+            if (questions.length < CHOICE_COUNT) {
+              return null;
+            }
+            return bank;
+          } catch {
+            return null;
+          }
+        })
+      );
+
+      return results.filter(Boolean);
+    }
+
     function escapeHtml(value) {
       return String(value)
         .replaceAll('&', '&amp;')
@@ -590,7 +615,8 @@
           ...bank,
           path: `${repoInfo.pagesBaseUrl}${bank.path.replace(/^\.\//, '')}`
         }));
-        populateRepoBankSelect(banks);
+        const validBanks = await filterValidRepoBanks(banks);
+        populateRepoBankSelect(validBanks);
       } catch {
         populateRepoBankSelect([]);
       }
@@ -1120,6 +1146,7 @@
 
     Object.assign(globalThis, {
       deriveGitHubPagesRepoInfo,
+      filterValidRepoBanks,
       getChoiceRect,
       parseImportedQuestionBankText,
       parseRepoJsonFileList,
