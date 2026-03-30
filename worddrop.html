@@ -847,7 +847,7 @@
     }
 
     function moveColumn(nextColumn) {
-      if (!state.running || state.feedback || !state.activeRound) return;
+      if (state.feedback || !state.activeRound) return;
       state.activeColumn = Math.max(0, Math.min(CHOICE_COUNT - 1, nextColumn));
       render();
     }
@@ -1101,12 +1101,12 @@
         return;
       }
 
-      if (!state.running || state.feedback) return;
+      if (state.feedback) return;
 
       if (action === 'moveLeft') moveColumn(state.activeColumn - 1);
       else if (action === 'moveRight') moveColumn(state.activeColumn + 1);
       else if (action?.startsWith('select')) moveColumn(Number(action.replace('select', '')) - 1);
-      else if (action === 'drop') {
+      else if (action === 'drop' && state.running) {
         state.activeY = ANSWER_Y - state.activeRound.piece.height - 10;
         resolveRound();
         render();
@@ -1173,6 +1173,12 @@
       deriveGitHubPagesRepoInfo,
       filterValidRepoBanks,
       getChoiceRect,
+      getGameSnapshot: () => ({
+        activeColumn: state.activeColumn,
+        activeY: state.activeY,
+        feedbackActive: Boolean(state.feedback),
+        running: state.running,
+      }),
       parseImportedQuestionBankText,
       parseRepoJsonFileList,
       replaceQuestionBank,
