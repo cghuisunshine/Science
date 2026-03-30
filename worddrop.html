@@ -46,14 +46,15 @@
 
     .board {
       padding: 16px;
-      height: calc(100vh - 48px);
       display: flex;
+      align-items: flex-start;
     }
 
     canvas {
       display: block;
       width: 100%;
-      height: 100%;
+      height: auto;
+      aspect-ratio: 820 / 720;
       background: #fbfaf6;
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -250,6 +251,10 @@
       .page {
         grid-template-columns: 1fr;
       }
+
+      .board {
+        height: auto;
+      }
     }
   </style>
 </head>
@@ -425,6 +430,8 @@
     const importBtn = document.getElementById('importBtn');
     const builtinBtn = document.getElementById('builtinBtn');
 
+    const LOGICAL_CANVAS_WIDTH = 820;
+    const LOGICAL_CANVAS_HEIGHT = 720;
     const BOARD = { x: 36, y: 30, w: 748, h: 660 };
     const CHOICE_COUNT = 4;
     const COL_GAP = 10;
@@ -899,9 +906,9 @@
     function getCanvasPointerPosition(event) {
       const bounds = typeof canvas.getBoundingClientRect === 'function'
         ? canvas.getBoundingClientRect()
-        : { left: 0, top: 0, width: canvas.width, height: canvas.height };
-      const scaleX = bounds.width ? canvas.width / bounds.width : 1;
-      const scaleY = bounds.height ? canvas.height / bounds.height : 1;
+        : { left: 0, top: 0, width: LOGICAL_CANVAS_WIDTH, height: LOGICAL_CANVAS_HEIGHT };
+      const scaleX = bounds.width ? LOGICAL_CANVAS_WIDTH / bounds.width : 1;
+      const scaleY = bounds.height ? LOGICAL_CANVAS_HEIGHT / bounds.height : 1;
 
       if (Number.isFinite(event?.offsetX) && Number.isFinite(event?.offsetY)) {
         return {
@@ -988,10 +995,25 @@
       }
     }
 
+    function resizeCanvasToDisplaySize() {
+      const bounds = typeof canvas.getBoundingClientRect === 'function'
+        ? canvas.getBoundingClientRect()
+        : { width: LOGICAL_CANVAS_WIDTH, height: LOGICAL_CANVAS_HEIGHT };
+      const displayWidth = Math.max(1, Math.round(bounds.width || LOGICAL_CANVAS_WIDTH));
+      const displayHeight = Math.max(1, Math.round(bounds.height || LOGICAL_CANVAS_HEIGHT));
+      const pixelRatio = Math.max(1, Number(globalThis.devicePixelRatio) || 1);
+      const nextWidth = Math.max(1, Math.round(displayWidth * pixelRatio));
+      const nextHeight = Math.max(1, Math.round(displayHeight * pixelRatio));
+
+      if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
+        canvas.width = nextWidth;
+        canvas.height = nextHeight;
+      }
+    }
+
     function drawBoard() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#f7f4ee';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, LOGICAL_CANVAS_WIDTH, LOGICAL_CANVAS_HEIGHT);
 
       ctx.fillStyle = '#ffffff';
       ctx.strokeStyle = '#d6cfc1';
@@ -1139,12 +1161,24 @@
     }
 
     function render() {
+      resizeCanvasToDisplaySize();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.setTransform(
+        canvas.width / LOGICAL_CANVAS_WIDTH,
+        0,
+        0,
+        canvas.height / LOGICAL_CANVAS_HEIGHT,
+        0,
+        0
+      );
       drawBoard();
       drawLaneGuides();
       drawChoices();
       drawActivePiece();
       drawTopHint();
       drawPauseOverlay();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
 
     function togglePause() {
@@ -1245,6 +1279,7 @@
     bankUrlBtn.addEventListener('click', handleLoadBankUrl);
     importBtn.addEventListener('click', handleImportQuestions);
     builtinBtn.addEventListener('click', handleUseBuiltInSet);
+    window.addEventListener('resize', render);
     hintModeInput.addEventListener('change', () => {
       state.hintMode = Boolean(hintModeInput.checked);
       persistHintMode();
@@ -1302,6 +1337,7 @@
     speedInput.value = String(initialDropSpeed);
     state.dropSpeed = initialDropSpeed;
     state.hintMode = loadStoredHintMode() ?? false;
+    resizeCanvasToDisplaySize();
 
     populateRepoBankSelect([]);
     loadRepoBankManifest();
