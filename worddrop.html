@@ -227,6 +227,19 @@
       overflow-x: auto;
     }
 
+    .toggle-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    .toggle-option input {
+      margin: 0;
+      accent-color: var(--accent);
+    }
+
     input[type="range"] {
       width: 100%;
       margin: 0;
@@ -255,6 +268,17 @@
       <div class="actions">
         <button class="primary" id="restartBtn">Restart</button>
         <button id="pauseBtn">Pause / Resume</button>
+      </div>
+
+      <div class="section">
+        <h2>Study</h2>
+        <div class="speed-control">
+          <label class="toggle-option" for="hintModeInput">
+            <input id="hintModeInput" type="checkbox" />
+            <span>Hint mode</span>
+          </label>
+          <p class="small">Automatically highlight the correct answer so you can study faster.</p>
+        </div>
       </div>
 
       <div class="stats">
@@ -365,6 +389,7 @@
     const PRETEXT_MODULE_URL = 'https://esm.sh/@chenglou/pretext@0.0.3';
     const QUESTION_BANK_STORAGE_KEY = 'wordDropQuestionBank';
     const DROP_SPEED_STORAGE_KEY = `wordDropSpeed:${location.pathname || '/Science/worddrop.html'}`;
+    const HINT_MODE_STORAGE_KEY = `wordDropHintMode:${location.pathname || '/Science/worddrop.html'}`;
 
     const BUILTIN_QUESTION_BANK = [
       { term: 'BLACK HOLE', explanation: 'A region where gravity is so strong that light cannot escape.' },
@@ -389,6 +414,7 @@
     const logEl = document.getElementById('log');
     const restartBtn = document.getElementById('restartBtn');
     const pauseBtn = document.getElementById('pauseBtn');
+    const hintModeInput = document.getElementById('hintModeInput');
     const speedInput = document.getElementById('speedInput');
     const speedValueEl = document.getElementById('speedValue');
     const repoBankSelect = document.getElementById('repoBankSelect');
@@ -429,6 +455,7 @@
       streak: 0,
       answered: 0,
       running: true,
+      hintMode: false,
       dropSpeed: DROP_SPEED_DEFAULT,
       measureCache: new Map(),
       activeRound: null,
@@ -480,11 +507,29 @@
       }
     }
 
+    function persistHintMode() {
+      try {
+        localStorage.setItem(HINT_MODE_STORAGE_KEY, String(state.hintMode));
+      } catch {
+        // ignore persistence errors
+      }
+    }
+
     function loadStoredDropSpeed() {
       try {
         const raw = localStorage.getItem(DROP_SPEED_STORAGE_KEY);
         if (raw === null) return null;
         return normalizeDropSpeed(raw);
+      } catch {
+        return null;
+      }
+    }
+
+    function loadStoredHintMode() {
+      try {
+        const raw = localStorage.getItem(HINT_MODE_STORAGE_KEY);
+        if (raw === null) return null;
+        return raw === 'true';
       } catch {
         return null;
       }
@@ -704,6 +749,7 @@
       statusEl.textContent = state.feedback ? 'Judge' : (state.running ? 'Play' : 'Pause');
       currentTermEl.textContent = state.activeRound ? state.activeRound.term : '—';
       speedValueEl.textContent = `${Math.round(state.dropSpeed)}`;
+      hintModeInput.checked = state.hintMode;
     }
 
     function normalizeDropSpeed(value) {
@@ -1003,6 +1049,9 @@
             fill = '#f5e3e0';
             stroke = '#ab6b63';
           }
+        } else if (state.hintMode && index === state.activeRound.correctChoiceIndex) {
+          fill = '#e6efe3';
+          stroke = '#6d926d';
         } else if (index === state.activeColumn) {
           fill = '#eef3ea';
           stroke = '#70886d';
@@ -1196,6 +1245,15 @@
     bankUrlBtn.addEventListener('click', handleLoadBankUrl);
     importBtn.addEventListener('click', handleImportQuestions);
     builtinBtn.addEventListener('click', handleUseBuiltInSet);
+    hintModeInput.addEventListener('change', () => {
+      state.hintMode = Boolean(hintModeInput.checked);
+      persistHintMode();
+      updateHud();
+      render();
+      if (!state.feedback) {
+        setLog(state.hintMode ? 'Hint mode enabled.' : 'Hint mode disabled.');
+      }
+    });
 
     canvas.addEventListener('click', event => {
       const choiceIndex = getChoiceIndexAtCanvasPoint(getCanvasPointerPosition(event));
@@ -1243,6 +1301,7 @@
     const initialDropSpeed = storedDropSpeed ?? DROP_SPEED_DEFAULT;
     speedInput.value = String(initialDropSpeed);
     state.dropSpeed = initialDropSpeed;
+    state.hintMode = loadStoredHintMode() ?? false;
 
     populateRepoBankSelect([]);
     loadRepoBankManifest();
@@ -1254,7 +1313,12 @@
       getGameSnapshot: () => ({
         activeColumn: state.activeColumn,
         activeY: state.activeY,
+        correctChoiceIndex: state.activeRound ? state.activeRound.correctChoiceIndex : null,
         feedbackActive: Boolean(state.feedback),
+        highlightedChoiceIndex: state.feedback
+          ? state.feedback.correctIndex
+          : (state.hintMode && state.activeRound ? state.activeRound.correctChoiceIndex : null),
+        hintMode: state.hintMode,
         running: state.running,
       }),
       parseImportedQuestionBankText,
