@@ -286,7 +286,7 @@
             <span>Falling speed</span>
             <span class="speed-value" id="speedValue">118</span>
           </div>
-          <input id="speedInput" type="range" min="60" max="260" step="10" value="118" />
+          <input id="speedInput" type="range" min="30" max="260" step="10" value="118" />
         </div>
       </div>
 
@@ -385,7 +385,7 @@
     const TERM_PADDING_Y = 10;
     const DROP_START_Y = BOARD.y + 24;
     const DROP_SPEED_DEFAULT = 118;
-    const DROP_SPEED_MIN = 60;
+    const DROP_SPEED_MIN = 30;
     const DROP_SPEED_MAX = 260;
     const RESOLVE_DELAY = 0.65;
 
@@ -816,6 +816,37 @@
       };
     }
 
+    function getCanvasPointerPosition(event) {
+      if (Number.isFinite(event?.offsetX) && Number.isFinite(event?.offsetY)) {
+        return { x: event.offsetX, y: event.offsetY };
+      }
+
+      const bounds = typeof canvas.getBoundingClientRect === 'function'
+        ? canvas.getBoundingClientRect()
+        : { left: 0, top: 0 };
+      if (Number.isFinite(event?.clientX) && Number.isFinite(event?.clientY)) {
+        return {
+          x: event.clientX - bounds.left,
+          y: event.clientY - bounds.top,
+        };
+      }
+
+      return null;
+    }
+
+    function getChoiceIndexAtCanvasPoint(point) {
+      if (!point) return null;
+
+      for (let index = 0; index < CHOICE_COUNT; index++) {
+        const rect = getChoiceRect(index);
+        const withinX = point.x >= rect.x && point.x <= rect.x + rect.width;
+        const withinY = point.y >= rect.y && point.y <= rect.y + rect.height;
+        if (withinX && withinY) return index;
+      }
+
+      return null;
+    }
+
     function activePieceX() {
       const piece = state.activeRound.piece;
       const centeredX = columnLeft(state.activeColumn) + (COL_W - piece.width) / 2;
@@ -1125,6 +1156,13 @@
     bankUrlBtn.addEventListener('click', handleLoadBankUrl);
     importBtn.addEventListener('click', handleImportQuestions);
     builtinBtn.addEventListener('click', handleUseBuiltInSet);
+
+    canvas.addEventListener('click', event => {
+      const choiceIndex = getChoiceIndexAtCanvasPoint(getCanvasPointerPosition(event));
+      if (choiceIndex === null) return;
+      event.preventDefault();
+      moveColumn(choiceIndex);
+    });
 
     canvas.addEventListener('dblclick', event => {
       const action = parsePointerAction(event.type);
