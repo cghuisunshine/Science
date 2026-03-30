@@ -1,0 +1,563 @@
+{
+  "title": "Earth 4.1-4.8 Combined WordDrop Bank",
+  "source_urls": [
+    "https://cghuisunshine.github.io/Science/Earth4.1",
+    "https://cghuisunshine.github.io/Science/Earth4.2",
+    "https://cghuisunshine.github.io/Science/Earth4.3",
+    "https://cghuisunshine.github.io/Science/Earth4.4",
+    "https://cghuisunshine.github.io/Science/Earth4.5",
+    "https://cghuisunshine.github.io/Science/Earth4.6",
+    "https://cghuisunshine.github.io/Science/Earth4.7",
+    "https://cghuisunshine.github.io/Science/Earth4.8"
+  ],
+  "questions": [
+    {
+      "term": "Universe",
+      "explanation": "All matter, energy, and space; includes stars, planets, gas, dust, and empty space."
+    },
+    {
+      "term": "Galaxy",
+      "explanation": "A huge collection of stars, gas, and dust held together by gravity."
+    },
+    {
+      "term": "Elliptical galaxy",
+      "explanation": "A galaxy that is round or oval-shaped."
+    },
+    {
+      "term": "Spiral galaxy",
+      "explanation": "A galaxy shaped like a pinwheel with curved arms."
+    },
+    {
+      "term": "Irregular galaxy",
+      "explanation": "A galaxy that does not fit the spiral or elliptical categories."
+    },
+    {
+      "term": "Milky Way",
+      "explanation": "The spiral galaxy that contains our solar system."
+    },
+    {
+      "term": "Star",
+      "explanation": "A huge ball of gas held together by gravity that gives off light and energy."
+    },
+    {
+      "term": "Star cluster",
+      "explanation": "A group of stars formed at the same time and place and held together by gravity."
+    },
+    {
+      "term": "Constellation",
+      "explanation": "A recognized pattern of stars in the sky."
+    },
+    {
+      "term": "Solar system",
+      "explanation": "The Sun and the objects that orbit it, including planets, moons, asteroids, and comets."
+    },
+    {
+      "term": "Planet",
+      "explanation": "A body that orbits the Sun, is round from its own gravity, and dominates its neighbourhood."
+    },
+    {
+      "term": "Moon",
+      "explanation": "A natural object that orbits a planet."
+    },
+    {
+      "term": "Asteroid",
+      "explanation": "A small rocky body revolving around the Sun."
+    },
+    {
+      "term": "Comet",
+      "explanation": "A ball of rock and ice that orbits the Sun and can develop a glowing tail when heated."
+    },
+    {
+      "term": "Light-year",
+      "explanation": "A unit of distance equal to how far light travels in one year."
+    },
+    {
+      "term": "Speed of light",
+      "explanation": "About 300,000 kilometres per second."
+    },
+    {
+      "term": "One light-year",
+      "explanation": "About 9.46 trillion kilometres."
+    },
+    {
+      "term": "Astronomical Unit (AU)",
+      "explanation": "The average distance from Earth to the Sun, about 150 million kilometres."
+    },
+    {
+      "term": "Interplanetary distance",
+      "explanation": "Distance between planets, often measured in kilometres or AU."
+    },
+    {
+      "term": "Interstellar distance",
+      "explanation": "Distance between stars within a galaxy, usually measured in light-years."
+    },
+    {
+      "term": "Intergalactic distance",
+      "explanation": "Distance between galaxies, usually measured in light-years."
+    },
+    {
+      "term": "Planets in order",
+      "explanation": "Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune."
+    },
+    {
+      "term": "Pluto",
+      "explanation": "Reclassified as a dwarf planet in 2006 instead of being counted as the ninth planet."
+    },
+    {
+      "term": "Big Bang Theory",
+      "explanation": "The theory that the universe began with a rapid expansion of matter and radiation."
+    },
+    {
+      "term": "Beginning of space and time",
+      "explanation": "According to the Big Bang Theory, space and time started with the initial expansion."
+    },
+    {
+      "term": "Early particles",
+      "explanation": "Soon after the Big Bang, energy changed into particles and anti-particles such as electrons and positrons."
+    },
+    {
+      "term": "First nuclei",
+      "explanation": "Hydrogen and helium nuclei formed within minutes after the Big Bang."
+    },
+    {
+      "term": "Formation of stars and galaxies",
+      "explanation": "Millions of years after the Big Bang, stars and galaxies began to form."
+    },
+    {
+      "term": "Origin of heavier elements",
+      "explanation": "Stars produced the other elements through reactions in their interiors."
+    },
+    {
+      "term": "Doppler Effect",
+      "explanation": "A change in wavelength and frequency caused by motion between a source and an observer."
+    },
+    {
+      "term": "Toward the observer",
+      "explanation": "Wavelengths get compressed and frequency increases."
+    },
+    {
+      "term": "Away from the observer",
+      "explanation": "Wavelengths stretch out and frequency decreases."
+    },
+    {
+      "term": "Red-shift",
+      "explanation": "Light shifted toward lower frequencies, showing an object is moving away."
+    },
+    {
+      "term": "Blue-shift",
+      "explanation": "Light shifted toward higher frequencies, showing an object is moving closer."
+    },
+    {
+      "term": "Edwin Hubble",
+      "explanation": "The astronomer who used Doppler evidence in the 1920s to show the universe is expanding."
+    },
+    {
+      "term": "Expanding universe",
+      "explanation": "The idea that space itself is stretching, increasing the distance between galaxies."
+    },
+    {
+      "term": "Distant galaxies evidence",
+      "explanation": "Galaxies are generally red-shifted and the farther they are, the faster they move away."
+    },
+    {
+      "term": "Cosmic Microwave Background Radiation (CMBR)",
+      "explanation": "Microwave radiation found throughout the universe and interpreted as afterglow from the Big Bang."
+    },
+    {
+      "term": "Afterglow of the Big Bang",
+      "explanation": "Another way to describe the cosmic microwave background radiation."
+    },
+    {
+      "term": "Microwave discovery",
+      "explanation": "Since 1965, scientists have observed microwave radiation filling the universe."
+    },
+    {
+      "term": "Why CMBR matters",
+      "explanation": "It supports the idea that leftover energy from the early universe is still present today."
+    },
+    {
+      "term": "Characteristics of stars",
+      "explanation": "Stars can be described by colour, temperature, and absolute magnitude."
+    },
+    {
+      "term": "Prism",
+      "explanation": "An object that bends light and separates it into individual colours."
+    },
+    {
+      "term": "Spectroscope",
+      "explanation": "An instrument that splits incoming light into a spectrum."
+    },
+    {
+      "term": "Spectrum",
+      "explanation": "The band or series of colours produced when light is separated."
+    },
+    {
+      "term": "Starlight",
+      "explanation": "Light from a star reveals information about its properties."
+    },
+    {
+      "term": "Element",
+      "explanation": "A substance made of only one kind of atom."
+    },
+    {
+      "term": "Fingerprints of the elements",
+      "explanation": "Each element gives off a distinct colour pattern when heated."
+    },
+    {
+      "term": "Spectral evidence",
+      "explanation": "Astronomers use spectra to identify which elements are present in stars."
+    },
+    {
+      "term": "Colour and temperature",
+      "explanation": "A star’s colour is linked to how hot or cool it is."
+    },
+    {
+      "term": "Red star",
+      "explanation": "A cooler star compared with blue or blue-white stars."
+    },
+    {
+      "term": "Blue star",
+      "explanation": "A hotter star than a red star."
+    },
+    {
+      "term": "Whitish appearance",
+      "explanation": "Stars may look white to the eye but show different colours through binoculars or telescopes."
+    },
+    {
+      "term": "Life cycle of a star",
+      "explanation": "The long sequence of stages from a star’s birth to its later changes."
+    },
+    {
+      "term": "Birth of a star",
+      "explanation": "A star forms when gas and dust collapse and conditions allow fusion to begin."
+    },
+    {
+      "term": "Fusion",
+      "explanation": "The process that powers stars by combining lighter nuclei into heavier ones."
+    },
+    {
+      "term": "Why stars seem constant",
+      "explanation": "Their life cycles are so long that they appear unchanged in the night sky."
+    },
+    {
+      "term": "Nebular theory",
+      "explanation": "The most accepted theory that the solar system formed from the collapse of a cloud of gas and dust."
+    },
+    {
+      "term": "Nebula",
+      "explanation": "A cloud of dust and gas in space."
+    },
+    {
+      "term": "Age of solar system formation",
+      "explanation": "About 5 billion years ago."
+    },
+    {
+      "term": "Gravitational collapse",
+      "explanation": "The inward pull that caused the nebula to shrink and form the solar system."
+    },
+    {
+      "term": "Spinning disk",
+      "explanation": "As the nebula collapsed, it flattened into a rotating disk."
+    },
+    {
+      "term": "Protosun",
+      "explanation": "The forming young Sun at the centre of the solar nebula."
+    },
+    {
+      "term": "Protoplanets",
+      "explanation": "Clumps of matter that were still condensing and later became planets."
+    },
+    {
+      "term": "Inner planets",
+      "explanation": "Mercury, Venus, Earth, and Mars; small rocky terrestrial planets."
+    },
+    {
+      "term": "Outer planets",
+      "explanation": "Jupiter, Saturn, Uranus, and Neptune; large Jovian planets."
+    },
+    {
+      "term": "Why planets differ",
+      "explanation": "They formed in different parts of the nebula where temperatures were different."
+    },
+    {
+      "term": "Hot inner region",
+      "explanation": "Close to the Sun, ices vaporized and mostly rock and metal could condense."
+    },
+    {
+      "term": "Cold outer region",
+      "explanation": "Farther from the Sun, ices and gases could condense to build giant planets."
+    },
+    {
+      "term": "Terrestrial planets",
+      "explanation": "Small rocky planets formed in the hotter inner solar system."
+    },
+    {
+      "term": "Jovian planets",
+      "explanation": "Large gas-rich planets formed in the colder outer solar system."
+    },
+    {
+      "term": "Moons",
+      "explanation": "Natural satellites that formed or were captured during solar system development."
+    },
+    {
+      "term": "Comets and asteroids",
+      "explanation": "Leftover smaller bodies from the formation of the solar system."
+    },
+    {
+      "term": "Key cause of diversity",
+      "explanation": "Distance from the Sun affected temperature, which affected what materials could condense."
+    },
+    {
+      "term": "Sun",
+      "explanation": "An ordinary yellow dwarf star and the closest star to Earth."
+    },
+    {
+      "term": "Importance of the Sun",
+      "explanation": "It controls Earth’s climate and weather and sustains life."
+    },
+    {
+      "term": "Solar mass",
+      "explanation": "The Sun contains over 99.8% of the mass of the solar system."
+    },
+    {
+      "term": "Solar atmosphere",
+      "explanation": "The Sun’s outer layers that we can observe."
+    },
+    {
+      "term": "Photosphere",
+      "explanation": "The visible surface layer of the Sun."
+    },
+    {
+      "term": "Chromosphere",
+      "explanation": "A transparent layer above the photosphere."
+    },
+    {
+      "term": "Corona",
+      "explanation": "The outermost transparent layer of the Sun’s atmosphere."
+    },
+    {
+      "term": "Solar core",
+      "explanation": "The central region of the Sun where energy is produced."
+    },
+    {
+      "term": "Nuclear fusion",
+      "explanation": "The process in the Sun’s core that changes hydrogen into helium and releases huge amounts of energy."
+    },
+    {
+      "term": "Energy transfer",
+      "explanation": "Energy moves from the core to outer layers and is radiated as heat, ultraviolet rays, and x-rays."
+    },
+    {
+      "term": "Sunspot",
+      "explanation": "A cooler, darker area on the Sun’s visible surface caused by magnetic activity."
+    },
+    {
+      "term": "Solar cycle",
+      "explanation": "A repeating pattern in sunspot activity over time."
+    },
+    {
+      "term": "Solar flare",
+      "explanation": "A sudden release of magnetic energy from the Sun’s corona."
+    },
+    {
+      "term": "Effect of solar flares",
+      "explanation": "They can disrupt electrical power and communications on Earth."
+    },
+    {
+      "term": "Quebec blackout example",
+      "explanation": "A 1989 solar flare caused a power outage across Quebec for more than nine hours."
+    },
+    {
+      "term": "Solar prominence",
+      "explanation": "An eruption of gas from the chromosphere forming columns or loops."
+    },
+    {
+      "term": "Magnetic suspension",
+      "explanation": "Some prominences stay arched because magnetic fields hold them up."
+    },
+    {
+      "term": "Solar wind",
+      "explanation": "A stream of charged particles flowing outward from the Sun."
+    },
+    {
+      "term": "Optical telescope",
+      "explanation": "A telescope that collects and focuses visible light to magnify distant objects."
+    },
+    {
+      "term": "Observing from Earth",
+      "explanation": "Using ground-based tools such as telescopes to study space."
+    },
+    {
+      "term": "Observing from space",
+      "explanation": "Using satellites, probes, and orbiting observatories above Earth’s atmosphere."
+    },
+    {
+      "term": "Satellite",
+      "explanation": "Anything that orbits something else."
+    },
+    {
+      "term": "Natural satellite",
+      "explanation": "A naturally orbiting body such as the Moon."
+    },
+    {
+      "term": "Artificial satellite",
+      "explanation": "A human-made object placed in orbit, such as communication satellites around Earth."
+    },
+    {
+      "term": "Probe",
+      "explanation": "An unpiloted device sent to another celestial body to collect information."
+    },
+    {
+      "term": "Why use probes",
+      "explanation": "They are usually less costly and less dangerous than sending humans."
+    },
+    {
+      "term": "Space junk",
+      "explanation": "Non-functioning satellites and debris orbiting Earth."
+    },
+    {
+      "term": "Hubble Space Telescope",
+      "explanation": "An orbiting observatory that collects detailed images and data from space."
+    },
+    {
+      "term": "International Space Station (ISS)",
+      "explanation": "A large permanently occupied orbiting laboratory used for research and technology development."
+    },
+    {
+      "term": "ISS importance",
+      "explanation": "A stepping-stone for future space exploration and a platform for scientific study."
+    },
+    {
+      "term": "Cassini mission",
+      "explanation": "A spacecraft mission that explored Saturn and its rings, ending in 2017."
+    },
+    {
+      "term": "Curiosity rover",
+      "explanation": "A robotic rover exploring Mars to gather scientific data."
+    },
+    {
+      "term": "Parker Solar Probe",
+      "explanation": "A NASA spacecraft designed to study the Sun up close."
+    },
+    {
+      "term": "Parker mission goal",
+      "explanation": "To gather close-up data about solar wind and solar activity."
+    },
+    {
+      "term": "First artificial satellite",
+      "explanation": "The Soviet Union launched the first artificial satellite to orbit Earth over fifty years ago."
+    },
+    {
+      "term": "Cultural perspectives on the universe",
+      "explanation": "Different cultures use stories, observation, and traditions to understand the sky."
+    },
+    {
+      "term": "The oldest science",
+      "explanation": "Astronomy is often seen as one of the oldest sciences."
+    },
+    {
+      "term": "Sky knowledge",
+      "explanation": "People used the sky to guide travel, tell time, and understand seasons."
+    },
+    {
+      "term": "Weather and agriculture",
+      "explanation": "Observing the sky helped people predict seasonal change and plan farming activities."
+    },
+    {
+      "term": "Creation myths",
+      "explanation": "Stories created by cultures to explain the origin of the universe and Earth."
+    },
+    {
+      "term": "Western science",
+      "explanation": "A tradition that mainly studies the physical realm of the world."
+    },
+    {
+      "term": "Other cultures’ contributions",
+      "explanation": "They add both physical knowledge and broader perspectives to our understanding of the universe."
+    },
+    {
+      "term": "Earth Diver story",
+      "explanation": "A First Peoples of North America oral story in which mud is brought from primeval water to form Earth."
+    },
+    {
+      "term": "Great Spirit or Transformer",
+      "explanation": "The being in the Earth Diver story who dives or sends animals to bring back mud."
+    },
+    {
+      "term": "Barnumbir",
+      "explanation": "The Morning Star in an oral story from Arnhem Land in Australia."
+    },
+    {
+      "term": "Bralgu",
+      "explanation": "The Island of the Dead where Barnumbir lives in the story."
+    },
+    {
+      "term": "Morning Star story",
+      "explanation": "An Australian First Peoples story linking Venus and cultural understanding of the sky."
+    },
+    {
+      "term": "Space exploration",
+      "explanation": "The study and travel beyond Earth, including scientific, technical, and ethical issues."
+    },
+    {
+      "term": "Risks and hazards",
+      "explanation": "Astronauts face dangers because technology can fail and space is a harsh environment."
+    },
+    {
+      "term": "Challenger",
+      "explanation": "A space shuttle disaster in 1986 often used as an example of spaceflight risk."
+    },
+    {
+      "term": "Columbia",
+      "explanation": "A space shuttle disaster in 2003 showing the dangers of space travel."
+    },
+    {
+      "term": "Space junk",
+      "explanation": "Orbiting debris from human space activity that can damage spacecraft."
+    },
+    {
+      "term": "Orbital debris danger",
+      "explanation": "Even a tiny speck of paint can seriously damage a shuttle or probe in a collision."
+    },
+    {
+      "term": "Private spaceflight",
+      "explanation": "Commercial companies are increasingly involved in launching and carrying people or payloads into space."
+    },
+    {
+      "term": "Space tourism",
+      "explanation": "Paying for a trip into space or near-space as a private customer."
+    },
+    {
+      "term": "Virgin Galactic",
+      "explanation": "A company planning sub-orbital tourist flights to about 100 kilometres above Earth."
+    },
+    {
+      "term": "Space Adventures",
+      "explanation": "A company known for arranging private spaceflight opportunities."
+    },
+    {
+      "term": "Terraforming",
+      "explanation": "Changing another planet’s environment to make it more like Earth."
+    },
+    {
+      "term": "Possible benefit of space tourism",
+      "explanation": "It may drive the development of new technologies."
+    },
+    {
+      "term": "Research and development",
+      "explanation": "Space-related projects require major investment in science and technology."
+    },
+    {
+      "term": "Funding controversy",
+      "explanation": "People debate whether limited public money should be spent on space projects."
+    },
+    {
+      "term": "Other considerations",
+      "explanation": "Issues in space exploration often involve ethics, environment, and politics."
+    },
+    {
+      "term": "Weighing pros and cons",
+      "explanation": "Space exploration issues are complex and do not fit neatly into only good or bad categories."
+    }
+  ]
+}
