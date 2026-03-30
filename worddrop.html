@@ -1,0 +1,1137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Word Drop Demo 2</title>
+  <style>
+    :root {
+      --page: #f4f1ea;
+      --panel: #fffdfa;
+      --line: #d6cfc1;
+      --line-strong: #b8af9e;
+      --ink: #1f2328;
+      --muted: #5f665f;
+      --accent: #3b5f41;
+      --accent-soft: #e7efe5;
+      --wrong: #8c3b32;
+      --wrong-soft: #f4e5e2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "IBM Plex Sans", "Helvetica Neue", sans-serif;
+      color: var(--ink);
+      background: var(--page);
+    }
+
+    .page {
+      max-width: 1180px;
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 20px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .board {
+      padding: 16px;
+      height: calc(100vh - 48px);
+      display: flex;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: #fbfaf6;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .side {
+      padding: 18px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    h1, h2 {
+      margin: 0;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    h1 { font-size: 28px; }
+    h2 { font-size: 16px; }
+
+    p {
+      margin: 0;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #fff;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 600;
+    }
+
+    .section {
+      display: grid;
+      gap: 8px;
+    }
+
+    .term-box,
+    .log,
+    .controls {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .term-box strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1.1;
+      margin-top: 6px;
+    }
+
+    .controls {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      padding: 10px 14px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .log {
+      min-height: 84px;
+      line-height: 1.45;
+    }
+
+    .speed-control {
+      display: grid;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .speed-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 14px;
+    }
+
+    .speed-value {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .field-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .text-input,
+    .bank-select {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .small {
+      font-size: 13px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      margin: 0;
+      accent-color: var(--accent);
+    }
+
+    @media (max-width: 980px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="panel board">
+      <canvas id="game" width="820" height="720"></canvas>
+    </div>
+
+    <div class="panel side">
+      <div class="section">
+        <h1>Word Drop 2</h1>
+        <p>Guide the falling term into the correct explanation column before it reaches the answer floor.</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Score</div>
+          <div class="stat-value" id="score">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Streak</div>
+          <div class="stat-value" id="streak">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Answered</div>
+          <div class="stat-value" id="answered">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Status</div>
+          <div class="stat-value" id="status">Play</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Current Term</h2>
+        <div class="term-box">
+          <div class="stat-label">Move into the correct lane</div>
+          <strong id="currentTerm">Loading…</strong>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Controls</h2>
+        <div class="controls">
+          <div><strong>Left / Right</strong> move across lanes</div>
+          <div><strong>1-4</strong> jump to a lane</div>
+          <div><strong>Space</strong> drop immediately</div>
+          <div><strong>Up / P</strong> pause</div>
+          <div><strong>Down</strong> resume</div>
+          <div><strong>Double click</strong> pause or resume</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Speed</h2>
+        <div class="speed-control">
+          <div class="speed-head">
+            <span>Falling speed</span>
+            <span class="speed-value" id="speedValue">118</span>
+          </div>
+          <input id="speedInput" type="range" min="60" max="260" step="10" value="118" />
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Question Bank</h2>
+        <div class="speed-control">
+          <label class="field-label" for="repoBankSelect">Load from repo</label>
+          <div class="field-row">
+            <select id="repoBankSelect" class="bank-select" aria-label="Choose repo bank"></select>
+            <button id="repoBankBtn" type="button">Load Repo Bank</button>
+          </div>
+
+          <label class="field-label" for="bankUrlInput">Load from URL</label>
+          <div class="field-row">
+            <input
+              id="bankUrlInput"
+              class="text-input"
+              type="url"
+              spellcheck="false"
+              placeholder="https://example.com/worddrop-bank.json"
+            />
+            <button id="bankUrlBtn" type="button">Load URL</button>
+          </div>
+
+          <label class="field-label" for="importFile">Import JSON</label>
+          <div class="field-row">
+            <input id="importFile" class="text-input" type="file" accept=".json,application/json" />
+            <button id="importBtn" type="button">Import File</button>
+          </div>
+
+          <div class="field-row">
+            <button id="builtinBtn" type="button">Use Built-in Set</button>
+          </div>
+          <p class="small">Supported format: a JSON array, or an object with a <code>questions</code> array. Each item needs a term/title and an explanation/prompt.</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="restartBtn">Restart</button>
+        <button id="pauseBtn">Pause / Resume</button>
+      </div>
+
+      <div class="section">
+        <h2>Game Log</h2>
+        <div class="log" id="log">Loading round…</div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    const PRETEXT_MODULE_URL = 'https://esm.sh/@chenglou/pretext@0.0.3';
+    const QUESTION_BANK_STORAGE_KEY = 'wordDropQuestionBank';
+
+    const BUILTIN_QUESTION_BANK = [
+      { term: 'BLACK HOLE', explanation: 'A region where gravity is so strong that light cannot escape.' },
+      { term: 'RED GIANT', explanation: 'A late-stage star that expands after using much of its hydrogen.' },
+      { term: 'SOLAR WIND', explanation: 'A stream of charged particles flowing outward from the Sun.' },
+      { term: 'DARK MATTER', explanation: 'Matter inferred from gravity that does not emit or reflect detectable light.' },
+      { term: 'SUPERNOVA', explanation: 'A powerful stellar explosion that suddenly makes a star shine far brighter.' },
+      { term: 'NEBULA', explanation: 'A cloud of gas and dust in space where stars can form or leave remnants.' },
+      { term: 'EVENT HORIZON', explanation: 'The boundary around a black hole beyond which return is impossible.' },
+      { term: 'COMET', explanation: 'An icy body that can grow a glowing tail when it passes near the Sun.' },
+    ];
+    let QUESTION_BANK = cloneQuestionBank(BUILTIN_QUESTION_BANK);
+    globalThis.QUESTION_BANK = cloneQuestionBank(QUESTION_BANK);
+
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const streakEl = document.getElementById('streak');
+    const answeredEl = document.getElementById('answered');
+    const statusEl = document.getElementById('status');
+    const currentTermEl = document.getElementById('currentTerm');
+    const logEl = document.getElementById('log');
+    const restartBtn = document.getElementById('restartBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const speedInput = document.getElementById('speedInput');
+    const speedValueEl = document.getElementById('speedValue');
+    const repoBankSelect = document.getElementById('repoBankSelect');
+    const repoBankBtn = document.getElementById('repoBankBtn');
+    const bankUrlInput = document.getElementById('bankUrlInput');
+    const bankUrlBtn = document.getElementById('bankUrlBtn');
+    const importFile = document.getElementById('importFile');
+    const importBtn = document.getElementById('importBtn');
+    const builtinBtn = document.getElementById('builtinBtn');
+
+    const BOARD = { x: 36, y: 30, w: 748, h: 660 };
+    const CHOICE_COUNT = 4;
+    const COL_GAP = 10;
+    const ANSWER_H = 172;
+    const ANSWER_Y = BOARD.y + BOARD.h - ANSWER_H;
+    const COL_W = (BOARD.w - COL_GAP * (CHOICE_COUNT - 1)) / CHOICE_COUNT;
+    const TERM_FONT = '700 30px Georgia';
+    const TERM_PADDING_X = 16;
+    const TERM_PADDING_Y = 10;
+    const DROP_START_Y = BOARD.y + 24;
+    const DROP_SPEED_DEFAULT = 118;
+    const DROP_SPEED_MIN = 60;
+    const DROP_SPEED_MAX = 260;
+    const RESOLVE_DELAY = 0.65;
+
+    let pretextApi = null;
+    let usingFallbackMeasure = false;
+
+    try {
+      pretextApi = await import(PRETEXT_MODULE_URL);
+    } catch (error) {
+      console.warn(`Failed to load ${PRETEXT_MODULE_URL}; using canvas measurement fallback instead.`, error);
+      usingFallbackMeasure = true;
+    }
+
+    const state = {
+      score: 0,
+      streak: 0,
+      answered: 0,
+      running: true,
+      dropSpeed: DROP_SPEED_DEFAULT,
+      measureCache: new Map(),
+      activeRound: null,
+      activeColumn: 1,
+      activeY: DROP_START_Y,
+      feedback: null,
+      log: 'Use Left/Right or 1-4 before the term reaches the answer band.',
+      lastTime: 0,
+      lastTermIndex: -1,
+    };
+
+    function setLog(text) {
+      state.log = text;
+      logEl.textContent = text;
+    }
+
+    function cloneQuestionBank(sourceQuestions) {
+      return sourceQuestions.map(item => ({
+        term: String(item.term || '').trim(),
+        explanation: String(item.explanation || '').trim(),
+      }));
+    }
+
+    function syncQuestionBankGlobal() {
+      globalThis.QUESTION_BANK = cloneQuestionBank(QUESTION_BANK);
+    }
+
+    function persistQuestionBank() {
+      try {
+        localStorage.setItem(QUESTION_BANK_STORAGE_KEY, JSON.stringify(QUESTION_BANK));
+      } catch {
+        // ignore persistence errors
+      }
+    }
+
+    function clearPersistedQuestionBank() {
+      try {
+        localStorage.removeItem(QUESTION_BANK_STORAGE_KEY);
+      } catch {
+        // ignore persistence errors
+      }
+    }
+
+    function parseImportedQuestionBankText(text) {
+      const parsed = JSON.parse(text);
+      const sourceQuestions = Array.isArray(parsed) ? parsed : parsed?.questions;
+
+      if (!Array.isArray(sourceQuestions) || sourceQuestions.length === 0) {
+        throw new Error('Imported JSON must contain a non-empty questions array.');
+      }
+
+      return sourceQuestions.map((question, index) => {
+        const term = String(question.term ?? question.title ?? '').trim();
+        const explanation = String(
+          question.explanation
+          ?? question.prompt
+          ?? question.question
+          ?? question.answer
+          ?? question.reference_answer
+          ?? ''
+        ).trim();
+
+        if (!term || !explanation) {
+          throw new Error(`Entry ${index + 1} must include a term/title and an explanation/prompt.`);
+        }
+
+        return { term, explanation };
+      });
+    }
+
+    function loadStoredQuestionBank() {
+      try {
+        const raw = localStorage.getItem(QUESTION_BANK_STORAGE_KEY);
+        if (!raw) return null;
+        return parseImportedQuestionBankText(raw);
+      } catch {
+        return null;
+      }
+    }
+
+    function deriveGitHubPagesRepoInfo(locationLike = location) {
+      const hostname = String(locationLike?.hostname || '');
+      const pathname = String(locationLike?.pathname || '');
+      const origin = String(locationLike?.origin || '');
+
+      if (!hostname.endsWith('.github.io')) return null;
+
+      const owner = hostname.replace(/\.github\.io$/, '');
+      const parts = pathname.split('/').filter(Boolean);
+      if (parts.length === 0) return null;
+
+      const repo = parts[0];
+      return {
+        owner,
+        repo,
+        pagesBaseUrl: `${origin}/${repo}/`
+      };
+    }
+
+    function parseRepoJsonFileList(paths) {
+      if (!Array.isArray(paths)) {
+        throw new Error('Repo JSON file list must be an array.');
+      }
+
+      return paths
+        .filter(path => typeof path === 'string' && path.toLowerCase().endsWith('.json'))
+        .map(path => path.replace(/^\.?\//, ''))
+        .sort((a, b) => a.localeCompare(b))
+        .map(path => ({
+          id: path,
+          label: path,
+          path: `./${path}`
+        }));
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function populateRepoBankSelect(banks) {
+      if (!banks.length) {
+        repoBankSelect.innerHTML = '<option value="">No repo banks found</option>';
+        repoBankBtn.disabled = true;
+        return;
+      }
+
+      repoBankSelect.innerHTML = banks
+        .map(bank => `<option value="${escapeHtml(bank.path)}">${escapeHtml(bank.label)}</option>`)
+        .join('');
+      repoBankBtn.disabled = false;
+    }
+
+    async function loadQuestionBankFromUrl(url) {
+      const trimmedUrl = String(url || '').trim();
+      if (!trimmedUrl) {
+        throw new Error('Provide a JSON URL first.');
+      }
+
+      const response = await fetch(trimmedUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to load ${trimmedUrl} (${response.status}).`);
+      }
+
+      const text = await response.text();
+      const importedQuestions = parseImportedQuestionBankText(text);
+      replaceQuestionBank(importedQuestions);
+      return importedQuestions;
+    }
+
+    async function loadRepoBankManifest() {
+      const repoInfo = deriveGitHubPagesRepoInfo();
+      if (!repoInfo) {
+        populateRepoBankSelect([]);
+        return;
+      }
+
+      try {
+        const repoResponse = await fetch(`https://api.github.com/repos/${repoInfo.owner}/${repoInfo.repo}`);
+        if (!repoResponse.ok) {
+          populateRepoBankSelect([]);
+          return;
+        }
+
+        const repoData = await repoResponse.json();
+        const defaultBranch = String(repoData.default_branch || 'main');
+        const treeResponse = await fetch(`https://api.github.com/repos/${repoInfo.owner}/${repoInfo.repo}/git/trees/${encodeURIComponent(defaultBranch)}?recursive=1`);
+        if (!treeResponse.ok) {
+          populateRepoBankSelect([]);
+          return;
+        }
+
+        const treeData = await treeResponse.json();
+        const jsonPaths = Array.isArray(treeData.tree)
+          ? treeData.tree
+              .filter(item => item && item.type === 'blob' && typeof item.path === 'string')
+              .map(item => item.path)
+          : [];
+
+        const banks = parseRepoJsonFileList(jsonPaths).map(bank => ({
+          ...bank,
+          path: `${repoInfo.pagesBaseUrl}${bank.path.replace(/^\.\//, '')}`
+        }));
+        populateRepoBankSelect(banks);
+      } catch {
+        populateRepoBankSelect([]);
+      }
+    }
+
+    function replaceQuestionBank(nextQuestions) {
+      if (!Array.isArray(nextQuestions) || nextQuestions.length < CHOICE_COUNT) {
+        throw new Error(`Question bank must include at least ${CHOICE_COUNT} entries.`);
+      }
+
+      QUESTION_BANK = cloneQuestionBank(nextQuestions);
+      syncQuestionBankGlobal();
+      persistQuestionBank();
+      state.measureCache.clear();
+      resetGame();
+      render();
+    }
+
+    function restoreBuiltInQuestionBank() {
+      QUESTION_BANK = cloneQuestionBank(BUILTIN_QUESTION_BANK);
+      syncQuestionBankGlobal();
+      clearPersistedQuestionBank();
+      state.measureCache.clear();
+      resetGame();
+      render();
+    }
+
+    function updateHud() {
+      scoreEl.textContent = String(state.score);
+      streakEl.textContent = String(state.streak);
+      answeredEl.textContent = String(state.answered);
+      statusEl.textContent = state.feedback ? 'Judge' : (state.running ? 'Play' : 'Pause');
+      currentTermEl.textContent = state.activeRound ? state.activeRound.term : '—';
+      speedValueEl.textContent = `${Math.round(state.dropSpeed)}`;
+    }
+
+    function normalizeDropSpeed(value) {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) return DROP_SPEED_DEFAULT;
+      return Math.max(DROP_SPEED_MIN, Math.min(DROP_SPEED_MAX, numeric));
+    }
+
+    function parseControlKey(key) {
+      if (key === 'ArrowUp') return 'pause';
+      if (key === 'ArrowDown') return 'resume';
+      if (key === 'p' || key === 'P') return 'togglePause';
+      if (key === 'ArrowLeft') return 'moveLeft';
+      if (key === 'ArrowRight') return 'moveRight';
+      if (key >= '1' && key <= '4') return `select${key}`;
+      if (key === ' ') return 'drop';
+      return null;
+    }
+
+    function parsePointerAction(type) {
+      if (type === 'dblclick') return 'togglePause';
+      return null;
+    }
+
+    function fallbackMeasureWidth(text, font) {
+      ctx.save();
+      ctx.font = font;
+      const width = ctx.measureText(text).width;
+      ctx.restore();
+      return width;
+    }
+
+    function measureWord(text, font = TERM_FONT) {
+      const key = `${font}|${text}`;
+      if (state.measureCache.has(key)) return state.measureCache.get(key);
+
+      let width = 0;
+      let height = 34;
+
+      if (pretextApi?.prepareWithSegments && pretextApi?.layoutWithLines) {
+        const prepared = pretextApi.prepareWithSegments(text, font);
+        const layout = pretextApi.layoutWithLines(prepared, 9999, 36);
+        width = Math.ceil((layout.lines[0] || { width: 0 }).width);
+        height = Math.ceil(layout.height);
+      } else {
+        width = Math.ceil(fallbackMeasureWidth(text, font));
+        height = 36;
+      }
+
+      const result = {
+        text,
+        width: width + TERM_PADDING_X * 2,
+        height: height + TERM_PADDING_Y * 2,
+      };
+      state.measureCache.set(key, result);
+      return result;
+    }
+
+    function shuffle(values) {
+      const copy = values.slice();
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function sampleDistractorIndices(correctIndex) {
+      const candidates = QUESTION_BANK
+        .map((_, index) => index)
+        .filter(index => index !== correctIndex);
+      return shuffle(candidates).slice(0, 3);
+    }
+
+    function createQuizRound(termIndex) {
+      const entry = QUESTION_BANK[termIndex];
+      const rawChoices = [
+        { text: entry.explanation, correct: true },
+        ...sampleDistractorIndices(termIndex).map(index => ({
+          text: QUESTION_BANK[index].explanation,
+          correct: false,
+        })),
+      ];
+      const choices = shuffle(rawChoices);
+
+      return {
+        term: entry.term,
+        answer: entry.explanation,
+        choices,
+        correctChoiceIndex: choices.findIndex(choice => choice.correct),
+        piece: measureWord(entry.term),
+      };
+    }
+
+    function resolveQuizAttempt(round, selectedChoiceIndex) {
+      const correct = selectedChoiceIndex === round.correctChoiceIndex;
+      if (correct) {
+        return { correct: true, deltaScore: 120, nextStreak: state.streak + 1 };
+      }
+      return { correct: false, deltaScore: -40, nextStreak: 0 };
+    }
+
+    function nextTermIndex() {
+      let index = Math.floor(Math.random() * QUESTION_BANK.length);
+      if (QUESTION_BANK.length > 1) {
+        while (index === state.lastTermIndex) {
+          index = Math.floor(Math.random() * QUESTION_BANK.length);
+        }
+      }
+      state.lastTermIndex = index;
+      return index;
+    }
+
+    function spawnRound() {
+      state.activeRound = createQuizRound(nextTermIndex());
+      state.activeColumn = Math.floor(Math.random() * CHOICE_COUNT);
+      state.activeY = DROP_START_Y;
+      state.feedback = null;
+      updateHud();
+    }
+
+    function resetGame() {
+      state.score = 0;
+      state.streak = 0;
+      state.answered = 0;
+      state.running = true;
+      state.feedback = null;
+      state.lastTime = 0;
+      state.dropSpeed = normalizeDropSpeed(speedInput.value);
+      setLog('Use Left/Right or 1-4 before the term reaches the answer band.');
+      spawnRound();
+    }
+
+    function columnLeft(index) {
+      return BOARD.x + index * (COL_W + COL_GAP);
+    }
+
+    function getChoiceRect(index) {
+      return {
+        x: columnLeft(index),
+        y: ANSWER_Y,
+        width: COL_W,
+        height: ANSWER_H,
+      };
+    }
+
+    function activePieceX() {
+      const piece = state.activeRound.piece;
+      const centeredX = columnLeft(state.activeColumn) + (COL_W - piece.width) / 2;
+      return Math.max(BOARD.x + 8, Math.min(BOARD.x + BOARD.w - piece.width - 8, centeredX));
+    }
+
+    function resolveRound() {
+      if (!state.activeRound || state.feedback) return;
+
+      const result = resolveQuizAttempt(state.activeRound, state.activeColumn);
+      state.score += result.deltaScore;
+      state.streak = result.nextStreak;
+      state.answered += 1;
+
+      state.feedback = {
+        ttl: RESOLVE_DELAY,
+        selectedIndex: state.activeColumn,
+        correctIndex: state.activeRound.correctChoiceIndex,
+        wasCorrect: result.correct,
+      };
+
+      if (result.correct) {
+        setLog(`Correct. ${state.activeRound.term} matched the right explanation.`);
+      } else {
+        setLog(`Wrong lane. ${state.activeRound.term} belongs in column ${state.activeRound.correctChoiceIndex + 1}.`);
+      }
+
+      updateHud();
+    }
+
+    function moveColumn(nextColumn) {
+      if (!state.running || state.feedback || !state.activeRound) return;
+      state.activeColumn = Math.max(0, Math.min(CHOICE_COUNT - 1, nextColumn));
+      render();
+    }
+
+    function update(dt) {
+      if (!state.running) return;
+
+      if (state.feedback) {
+        state.feedback.ttl -= dt;
+        if (state.feedback.ttl <= 0) {
+          spawnRound();
+        }
+        return;
+      }
+
+      state.activeY += state.dropSpeed * dt;
+      const limitY = ANSWER_Y - state.activeRound.piece.height - 10;
+      if (state.activeY >= limitY) {
+        state.activeY = limitY;
+        resolveRound();
+      }
+    }
+
+    function drawBoard() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#f7f4ee';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#d6cfc1';
+      ctx.lineWidth = 1.5;
+      ctx.fillRect(BOARD.x, BOARD.y, BOARD.w, BOARD.h);
+      ctx.strokeRect(BOARD.x, BOARD.y, BOARD.w, BOARD.h);
+
+      ctx.strokeStyle = '#e8e1d4';
+      ctx.beginPath();
+      ctx.moveTo(BOARD.x, ANSWER_Y - 14);
+      ctx.lineTo(BOARD.x + BOARD.w, ANSWER_Y - 14);
+      ctx.stroke();
+
+      ctx.fillStyle = '#72695b';
+      ctx.font = '13px "IBM Plex Sans", sans-serif';
+      ctx.fillText('Guide the falling term into the correct explanation lane.', BOARD.x + 16, BOARD.y + 24);
+      ctx.fillText('Answer floor', BOARD.x + 16, ANSWER_Y - 20);
+    }
+
+    function wrapText(text, x, y, maxWidth, lineHeight) {
+      const words = text.split(' ');
+      let line = '';
+      let currentY = y;
+
+      for (const word of words) {
+        const next = line ? `${line} ${word}` : word;
+        if (ctx.measureText(next).width > maxWidth && line) {
+          ctx.fillText(line, x, currentY);
+          line = word;
+          currentY += lineHeight;
+        } else {
+          line = next;
+        }
+      }
+
+      if (line) ctx.fillText(line, x, currentY);
+    }
+
+    function drawChoices() {
+      if (!state.activeRound) return;
+
+      ctx.font = '15px "IBM Plex Sans", sans-serif';
+      ctx.textBaseline = 'top';
+
+      for (let index = 0; index < CHOICE_COUNT; index++) {
+        const rect = getChoiceRect(index);
+        let fill = '#f7f2e8';
+        let stroke = '#d6cfc1';
+
+        if (state.feedback) {
+          if (index === state.feedback.correctIndex) {
+            fill = '#e6efe3';
+            stroke = '#6d926d';
+          } else if (!state.feedback.wasCorrect && index === state.feedback.selectedIndex) {
+            fill = '#f5e3e0';
+            stroke = '#ab6b63';
+          }
+        } else if (index === state.activeColumn) {
+          fill = '#eef3ea';
+          stroke = '#70886d';
+        }
+
+        ctx.fillStyle = fill;
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = 1.2;
+        ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+        ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+
+        ctx.fillStyle = '#675f52';
+        ctx.font = '12px "IBM Plex Sans", sans-serif';
+        ctx.fillText(`Choice ${index + 1}`, rect.x + 12, rect.y + 12);
+
+        ctx.fillStyle = '#1f2328';
+        ctx.font = '15px "IBM Plex Sans", sans-serif';
+        wrapText(
+          state.activeRound.choices[index].text,
+          rect.x + 12,
+          rect.y + 36,
+          rect.width - 24,
+          22
+        );
+      }
+    }
+
+    function drawActivePiece() {
+      if (!state.activeRound) return;
+
+      const piece = state.activeRound.piece;
+      const x = activePieceX();
+      const y = state.activeY;
+
+      ctx.fillStyle = '#f1e7c9';
+      ctx.strokeStyle = '#a98f49';
+      ctx.lineWidth = 1.4;
+      ctx.fillRect(x, y, piece.width, piece.height);
+      ctx.strokeRect(x, y, piece.width, piece.height);
+
+      ctx.fillStyle = '#1f2328';
+      ctx.font = TERM_FONT;
+      ctx.textBaseline = 'top';
+      ctx.fillText(state.activeRound.term, x + TERM_PADDING_X, y + TERM_PADDING_Y + 2);
+    }
+
+    function drawLaneGuides() {
+      ctx.strokeStyle = '#ece6da';
+      ctx.lineWidth = 1;
+      for (let index = 1; index < CHOICE_COUNT; index++) {
+        const x = columnLeft(index) - COL_GAP / 2;
+        ctx.beginPath();
+        ctx.moveTo(x, BOARD.y + 40);
+        ctx.lineTo(x, BOARD.y + BOARD.h);
+        ctx.stroke();
+      }
+    }
+
+    function drawTopHint() {
+      ctx.fillStyle = '#786f60';
+      ctx.font = '13px "IBM Plex Sans", sans-serif';
+      ctx.fillText('Shortcuts: Left/Right, 1-4, Space, Up/P, Down, Double click', BOARD.x + BOARD.w - 416, BOARD.y + 24);
+    }
+
+    function drawPauseOverlay() {
+      if (state.running) return;
+      const badgeX = BOARD.x + 16;
+      const badgeY = BOARD.y + 42;
+      const badgeW = 112;
+      const badgeH = 42;
+
+      ctx.fillStyle = '#fffdfa';
+      ctx.strokeStyle = '#b8af9e';
+      ctx.lineWidth = 1.2;
+      ctx.fillRect(badgeX, badgeY, badgeW, badgeH);
+      ctx.strokeRect(badgeX, badgeY, badgeW, badgeH);
+
+      ctx.fillStyle = '#1f2328';
+      ctx.font = '600 24px "IBM Plex Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('Paused', badgeX + badgeW / 2, badgeY + badgeH / 2);
+      ctx.textAlign = 'start';
+      ctx.textBaseline = 'alphabetic';
+    }
+
+    function render() {
+      drawBoard();
+      drawLaneGuides();
+      drawChoices();
+      drawActivePiece();
+      drawTopHint();
+      drawPauseOverlay();
+    }
+
+    function togglePause() {
+      state.running = !state.running;
+      updateHud();
+      setLog(state.running ? 'Resumed.' : 'Paused.');
+      render();
+    }
+
+    async function handleImportQuestions() {
+      const file = importFile.files && importFile.files[0];
+      if (!file) {
+        setLog('Choose a JSON file first.');
+        return;
+      }
+
+      try {
+        const text = await file.text();
+        const importedQuestions = parseImportedQuestionBankText(text);
+        replaceQuestionBank(importedQuestions);
+        setLog(`Imported ${importedQuestions.length} term${importedQuestions.length === 1 ? '' : 's'} from file.`);
+      } catch (error) {
+        setLog(`Import failed: ${String(error.message || error)}`);
+      }
+    }
+
+    async function handleLoadRepoBank() {
+      if (!repoBankSelect.value) {
+        setLog('Choose a repo bank first.');
+        return;
+      }
+
+      try {
+        const importedQuestions = await loadQuestionBankFromUrl(repoBankSelect.value);
+        setLog(`Loaded ${importedQuestions.length} term${importedQuestions.length === 1 ? '' : 's'} from repo.`);
+      } catch (error) {
+        setLog(`Repo bank load failed: ${String(error.message || error)}`);
+      }
+    }
+
+    async function handleLoadBankUrl() {
+      try {
+        const importedQuestions = await loadQuestionBankFromUrl(bankUrlInput.value);
+        setLog(`Loaded ${importedQuestions.length} term${importedQuestions.length === 1 ? '' : 's'} from URL.`);
+      } catch (error) {
+        setLog(`URL load failed: ${String(error.message || error)}`);
+      }
+    }
+
+    function handleUseBuiltInSet() {
+      restoreBuiltInQuestionBank();
+      setLog('Restored the built-in question bank.');
+    }
+
+    window.addEventListener('keydown', event => {
+      const { key } = event;
+      const action = parseControlKey(key);
+      if (action) {
+        event.preventDefault();
+      }
+
+      if (action === 'pause') {
+        if (state.running) togglePause();
+        return;
+      }
+
+      if (action === 'resume') {
+        if (!state.running) togglePause();
+        return;
+      }
+
+      if (action === 'togglePause') {
+        togglePause();
+        return;
+      }
+
+      if (!state.running || state.feedback) return;
+
+      if (action === 'moveLeft') moveColumn(state.activeColumn - 1);
+      else if (action === 'moveRight') moveColumn(state.activeColumn + 1);
+      else if (action?.startsWith('select')) moveColumn(Number(action.replace('select', '')) - 1);
+      else if (action === 'drop') {
+        state.activeY = ANSWER_Y - state.activeRound.piece.height - 10;
+        resolveRound();
+        render();
+      }
+    });
+
+    restartBtn.addEventListener('click', () => {
+      resetGame();
+      render();
+    });
+
+    pauseBtn.addEventListener('click', () => {
+      togglePause();
+    });
+    repoBankBtn.addEventListener('click', handleLoadRepoBank);
+    bankUrlBtn.addEventListener('click', handleLoadBankUrl);
+    importBtn.addEventListener('click', handleImportQuestions);
+    builtinBtn.addEventListener('click', handleUseBuiltInSet);
+
+    canvas.addEventListener('dblclick', event => {
+      const action = parsePointerAction(event.type);
+      if (action === 'togglePause') {
+        event.preventDefault();
+        togglePause();
+      }
+    });
+
+    speedInput.addEventListener('input', () => {
+      state.dropSpeed = normalizeDropSpeed(speedInput.value);
+      speedInput.value = String(state.dropSpeed);
+      updateHud();
+      if (!state.feedback) {
+        setLog(`Falling speed set to ${state.dropSpeed}.`);
+      }
+    });
+
+    function frame(ts) {
+      if (!state.lastTime) state.lastTime = ts;
+      const dt = Math.min(0.05, (ts - state.lastTime) / 1000);
+      state.lastTime = ts;
+      update(dt);
+      render();
+      requestAnimationFrame(frame);
+    }
+
+    const storedQuestionBank = loadStoredQuestionBank();
+    if (storedQuestionBank && storedQuestionBank.length >= CHOICE_COUNT) {
+      QUESTION_BANK = cloneQuestionBank(storedQuestionBank);
+      syncQuestionBankGlobal();
+    } else if (storedQuestionBank) {
+      clearPersistedQuestionBank();
+    }
+
+    populateRepoBankSelect([]);
+    loadRepoBankManifest();
+
+    Object.assign(globalThis, {
+      deriveGitHubPagesRepoInfo,
+      getChoiceRect,
+      parseImportedQuestionBankText,
+      parseRepoJsonFileList,
+      replaceQuestionBank,
+    });
+
+    resetGame();
+    if (!usingFallbackMeasure) {
+      setLog('Move the term into the correct explanation lane before it reaches the answer floor.');
+    }
+    updateHud();
+    requestAnimationFrame(frame);
+  </script>
+</body>
+</html>
