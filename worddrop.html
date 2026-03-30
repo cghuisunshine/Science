@@ -339,6 +339,7 @@
   <script type="module">
     const PRETEXT_MODULE_URL = 'https://esm.sh/@chenglou/pretext@0.0.3';
     const QUESTION_BANK_STORAGE_KEY = 'wordDropQuestionBank';
+    const DROP_SPEED_STORAGE_KEY = `wordDropSpeed:${location.pathname || '/Science/worddrop.html'}`;
 
     const BUILTIN_QUESTION_BANK = [
       { term: 'BLACK HOLE', explanation: 'A region where gravity is so strong that light cannot escape.' },
@@ -443,6 +444,24 @@
         localStorage.removeItem(QUESTION_BANK_STORAGE_KEY);
       } catch {
         // ignore persistence errors
+      }
+    }
+
+    function persistDropSpeed() {
+      try {
+        localStorage.setItem(DROP_SPEED_STORAGE_KEY, String(state.dropSpeed));
+      } catch {
+        // ignore persistence errors
+      }
+    }
+
+    function loadStoredDropSpeed() {
+      try {
+        const raw = localStorage.getItem(DROP_SPEED_STORAGE_KEY);
+        if (raw === null) return null;
+        return normalizeDropSpeed(raw);
+      } catch {
+        return null;
       }
     }
 
@@ -1118,6 +1137,7 @@
     speedInput.addEventListener('input', () => {
       state.dropSpeed = normalizeDropSpeed(speedInput.value);
       speedInput.value = String(state.dropSpeed);
+      persistDropSpeed();
       updateHud();
       if (!state.feedback) {
         setLog(`Falling speed set to ${state.dropSpeed}.`);
@@ -1140,6 +1160,11 @@
     } else if (storedQuestionBank) {
       clearPersistedQuestionBank();
     }
+
+    const storedDropSpeed = loadStoredDropSpeed();
+    const initialDropSpeed = storedDropSpeed ?? DROP_SPEED_DEFAULT;
+    speedInput.value = String(initialDropSpeed);
+    state.dropSpeed = initialDropSpeed;
 
     populateRepoBankSelect([]);
     loadRepoBankManifest();
