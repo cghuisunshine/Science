@@ -215,6 +215,18 @@
       font-size: 13px;
     }
 
+    .format-example {
+      margin: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #f8f5ee;
+      color: var(--ink);
+      font: 12px/1.5 "IBM Plex Mono", "SFMono-Regular", monospace;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+
     input[type="range"] {
       width: 100%;
       margin: 0;
@@ -238,6 +250,11 @@
       <div class="section">
         <h1>Word Drop</h1>
         <p>Guide the falling term into the correct explanation column before it reaches the answer floor.</p>
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="restartBtn">Restart</button>
+        <button id="pauseBtn">Pause / Resume</button>
       </div>
 
       <div class="stats">
@@ -321,12 +338,20 @@
             <button id="builtinBtn" type="button">Use Built-in Set</button>
           </div>
           <p class="small">Supported format: a JSON array, or an object with a <code>questions</code> array. Each item needs a term/title and an explanation/prompt.</p>
+          <p class="small"><strong>Example JSON</strong></p>
+          <pre class="format-example"><code>{
+  "questions": [
+    {
+      "term": "BLACK HOLE",
+      "explanation": "A region where gravity is so strong that light cannot escape."
+    },
+    {
+      "term": "RED GIANT",
+      "explanation": "A late-stage star that expands after using much of its hydrogen."
+    }
+  ]
+}</code></pre>
         </div>
-      </div>
-
-      <div class="actions">
-        <button class="primary" id="restartBtn">Restart</button>
-        <button id="pauseBtn">Pause / Resume</button>
       </div>
 
       <div class="section">
@@ -584,6 +609,14 @@
       repoBankBtn.disabled = false;
     }
 
+    async function autoLoadFirstRepoBank(banks) {
+      const firstBank = banks[0];
+      if (!firstBank) return;
+
+      repoBankSelect.value = firstBank.path;
+      await loadQuestionBankFromUrl(firstBank.path);
+    }
+
     async function loadQuestionBankFromUrl(url) {
       const trimmedUrl = String(url || '').trim();
       if (!trimmedUrl) {
@@ -636,6 +669,7 @@
         }));
         const validBanks = await filterValidRepoBanks(banks);
         populateRepoBankSelect(validBanks);
+        await autoLoadFirstRepoBank(validBanks);
       } catch {
         populateRepoBankSelect([]);
       }
