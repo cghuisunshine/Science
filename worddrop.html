@@ -236,7 +236,7 @@
 
     <div class="panel side">
       <div class="section">
-        <h1>Word Drop 2</h1>
+        <h1>Word Drop</h1>
         <p>Guide the falling term into the correct explanation column before it reaches the answer floor.</p>
       </div>
 
@@ -817,17 +817,23 @@
     }
 
     function getCanvasPointerPosition(event) {
-      if (Number.isFinite(event?.offsetX) && Number.isFinite(event?.offsetY)) {
-        return { x: event.offsetX, y: event.offsetY };
-      }
-
       const bounds = typeof canvas.getBoundingClientRect === 'function'
         ? canvas.getBoundingClientRect()
-        : { left: 0, top: 0 };
+        : { left: 0, top: 0, width: canvas.width, height: canvas.height };
+      const scaleX = bounds.width ? canvas.width / bounds.width : 1;
+      const scaleY = bounds.height ? canvas.height / bounds.height : 1;
+
+      if (Number.isFinite(event?.offsetX) && Number.isFinite(event?.offsetY)) {
+        return {
+          x: event.offsetX * scaleX,
+          y: event.offsetY * scaleY,
+        };
+      }
+
       if (Number.isFinite(event?.clientX) && Number.isFinite(event?.clientY)) {
         return {
-          x: event.clientX - bounds.left,
-          y: event.clientY - bounds.top,
+          x: (event.clientX - bounds.left) * scaleX,
+          y: (event.clientY - bounds.top) * scaleY,
         };
       }
 
