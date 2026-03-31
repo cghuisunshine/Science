@@ -267,7 +267,7 @@
     <div class="panel side">
       <div class="section">
         <h1>Word Drop</h1>
-        <p>Guide the falling term into the correct explanation column before it reaches the answer floor.</p>
+        <p>Guide the falling term into the matching explanation lane before it locks into place.</p>
       </div>
 
       <div class="actions">
@@ -446,6 +446,13 @@
     const DROP_SPEED_MIN = 30;
     const DROP_SPEED_MAX = 260;
     const RESOLVE_DELAY = 0.65;
+    const MOBILE_LAYOUT_MAX_WIDTH = 520;
+    const MOBILE_PLAYFIELD = { x: 52, y: 92, w: 350, h: 546 };
+    const MOBILE_ANSWER_X = 470;
+    const MOBILE_ANSWER_W = 278;
+    const MOBILE_ANSWER_H = 116;
+    const MOBILE_ANSWER_GAP = 12;
+    const MOBILE_ANSWER_START_Y = 132;
 
     let pretextApi = null;
     let usingFallbackMeasure = false;
@@ -890,23 +897,95 @@
       spawnRound();
     }
 
-    function columnLeft(index) {
-      return BOARD.x + index * (COL_W + COL_GAP);
+    function getCanvasDisplayBounds() {
+      if (typeof canvas.getBoundingClientRect === 'function') {
+        return canvas.getBoundingClientRect();
+      }
+      return { left: 0, top: 0, width: LOGICAL_CANVAS_WIDTH, height: LOGICAL_CANVAS_HEIGHT };
     }
 
-    function getChoiceRect(index) {
+    function buildLaneColumns(originX, totalWidth, gap) {
+      const width = (totalWidth - gap * (CHOICE_COUNT - 1)) / CHOICE_COUNT;
+      return Array.from({ length: CHOICE_COUNT }, (_, index) => ({
+        x: originX + index * (width + gap),
+        width,
+        centerX: originX + index * (width + gap) + width / 2,
+      }));
+    }
+
+    function isMobileBoardLayout() {
+      const bounds = getCanvasDisplayBounds();
+      const displayWidth = Number(bounds.width || canvas.clientWidth || LOGICAL_CANVAS_WIDTH);
+      return displayWidth <= MOBILE_LAYOUT_MAX_WIDTH;
+    }
+
+    function createDesktopBoardLayout() {
+      const columns = buildLaneColumns(BOARD.x, BOARD.w, COL_GAP);
       return {
-        x: columnLeft(index),
-        y: ANSWER_Y,
-        width: COL_W,
-        height: ANSWER_H,
+        mode: 'desktop',
+        board: BOARD,
+        playfield: BOARD,
+        columns,
+        choiceRects: columns.map(column => ({
+          x: column.x,
+          y: ANSWER_Y,
+          width: column.width,
+          height: ANSWER_H,
+        })),
+        guideTopY: BOARD.y + 40,
+        guideBottomY: BOARD.y + BOARD.h,
+        resolveY: ANSWER_Y - 10,
+        instructionText: 'Guide the falling term into the correct explanation lane.',
+        answerLabel: 'Answer floor',
+        answerLabelX: BOARD.x + 16,
+        answerLabelY: ANSWER_Y - 20,
+        topHintText: 'Shortcuts: Left/Right, 1-4, Space, Up/P, Down, Double click',
+        topHintX: BOARD.x + BOARD.w - 416,
+        topHintY: BOARD.y + 24,
       };
     }
 
+    function createMobileBoardLayout() {
+      const columns = buildLaneColumns(MOBILE_PLAYFIELD.x, MOBILE_PLAYFIELD.w, COL_GAP);
+      return {
+        mode: 'mobile',
+        board: BOARD,
+        playfield: MOBILE_PLAYFIELD,
+        columns,
+        choiceRects: Array.from({ length: CHOICE_COUNT }, (_, index) => ({
+          x: MOBILE_ANSWER_X,
+          y: MOBILE_ANSWER_START_Y + index * (MOBILE_ANSWER_H + MOBILE_ANSWER_GAP),
+          width: MOBILE_ANSWER_W,
+          height: MOBILE_ANSWER_H,
+        })),
+        guideTopY: MOBILE_PLAYFIELD.y + 18,
+        guideBottomY: MOBILE_PLAYFIELD.y + MOBILE_PLAYFIELD.h - 18,
+        resolveY: MOBILE_PLAYFIELD.y + MOBILE_PLAYFIELD.h - 18,
+        instructionText: 'Guide the term down a lane, then follow the connector to the matching row.',
+        answerLabel: 'Answer rows',
+        answerLabelX: MOBILE_ANSWER_X,
+        answerLabelY: BOARD.y + 68,
+        topHintText: 'Tap a row or use 1-4 to align.',
+        topHintX: BOARD.x + 16,
+        topHintY: BOARD.y + 46,
+      };
+    }
+
+    function getBoardLayout() {
+      return isMobileBoardLayout() ? createMobileBoardLayout() : createDesktopBoardLayout();
+    }
+
+    function columnLeft(index) {
+      return getBoardLayout().columns[index].x;
+    }
+
+    function getChoiceRect(index) {
+      const rect = getBoardLayout().choiceRects[index];
+      return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
+    }
+
     function getCanvasPointerPosition(event) {
-      const bounds = typeof canvas.getBoundingClientRect === 'function'
-        ? canvas.getBoundingClientRect()
-        : { left: 0, top: 0, width: LOGICAL_CANVAS_WIDTH, height: LOGICAL_CANVAS_HEIGHT };
+      const bounds = getCanvasDisplayBounds();
       const scaleX = bounds.width ? LOGICAL_CANVAS_WIDTH / bounds.width : 1;
       const scaleY = bounds.height ? LOGICAL_CANVAS_HEIGHT / bounds.height : 1;
 
@@ -927,6 +1006,10 @@
       return null;
     }
 
+    function getPieceLimitY() {
+      return getBoardLayout().resolveY - state.activeRound.piece.height;
+    }
+
     function getChoiceIndexAtCanvasPoint(point) {
       if (!point) return null;
 
@@ -941,9 +1024,14 @@
     }
 
     function activePieceX() {
+      const layout = getBoardLayout();
       const piece = state.activeRound.piece;
-      const centeredX = columnLeft(state.activeColumn) + (COL_W - piece.width) / 2;
-      return Math.max(BOARD.x + 8, Math.min(BOARD.x + BOARD.w - piece.width - 8, centeredX));
+      const column = layout.columns[state.activeColumn];
+      const centeredX = column.x + (column.width - piece.width) / 2;
+      return Math.max(
+        layout.playfield.x + 8,
+        Math.min(layout.playfield.x + layout.playfield.w - piece.width - 8, centeredX)
+      );
     }
 
     function resolveRound() {
@@ -988,7 +1076,7 @@
       }
 
       state.activeY += state.dropSpeed * dt;
-      const limitY = ANSWER_Y - state.activeRound.piece.height - 10;
+      const limitY = getPieceLimitY();
       if (state.activeY >= limitY) {
         state.activeY = limitY;
         resolveRound();
@@ -1012,6 +1100,7 @@
     }
 
     function drawBoard() {
+      const layout = getBoardLayout();
       ctx.fillStyle = '#f7f4ee';
       ctx.fillRect(0, 0, LOGICAL_CANVAS_WIDTH, LOGICAL_CANVAS_HEIGHT);
 
@@ -1021,16 +1110,29 @@
       ctx.fillRect(BOARD.x, BOARD.y, BOARD.w, BOARD.h);
       ctx.strokeRect(BOARD.x, BOARD.y, BOARD.w, BOARD.h);
 
-      ctx.strokeStyle = '#e8e1d4';
-      ctx.beginPath();
-      ctx.moveTo(BOARD.x, ANSWER_Y - 14);
-      ctx.lineTo(BOARD.x + BOARD.w, ANSWER_Y - 14);
-      ctx.stroke();
+      if (layout.mode === 'mobile') {
+        ctx.fillStyle = '#fcfbf8';
+        ctx.strokeStyle = '#ded6c8';
+        ctx.fillRect(layout.playfield.x, layout.playfield.y, layout.playfield.w, layout.playfield.h);
+        ctx.strokeRect(layout.playfield.x, layout.playfield.y, layout.playfield.w, layout.playfield.h);
+
+        ctx.strokeStyle = '#e8e1d4';
+        ctx.beginPath();
+        ctx.moveTo(layout.choiceRects[0].x - 24, BOARD.y + 50);
+        ctx.lineTo(layout.choiceRects[0].x - 24, BOARD.y + BOARD.h - 20);
+        ctx.stroke();
+      } else {
+        ctx.strokeStyle = '#e8e1d4';
+        ctx.beginPath();
+        ctx.moveTo(BOARD.x, ANSWER_Y - 14);
+        ctx.lineTo(BOARD.x + BOARD.w, ANSWER_Y - 14);
+        ctx.stroke();
+      }
 
       ctx.fillStyle = '#72695b';
       ctx.font = '13px "IBM Plex Sans", sans-serif';
-      ctx.fillText('Guide the falling term into the correct explanation lane.', BOARD.x + 16, BOARD.y + 24);
-      ctx.fillText('Answer floor', BOARD.x + 16, ANSWER_Y - 20);
+      ctx.fillText(layout.instructionText, BOARD.x + 16, BOARD.y + 24);
+      ctx.fillText(layout.answerLabel, layout.answerLabelX, layout.answerLabelY);
     }
 
     function wrapText(text, x, y, maxWidth, lineHeight) {
@@ -1054,8 +1156,16 @@
 
     function drawChoices() {
       if (!state.activeRound) return;
+      const layout = getBoardLayout();
+      const isMobileLayout = layout.mode === 'mobile';
+      const choiceLabelFont = isMobileLayout ? '11px "IBM Plex Sans", sans-serif' : '12px "IBM Plex Sans", sans-serif';
+      const choiceBodyFont = isMobileLayout ? '14px "IBM Plex Sans", sans-serif' : '15px "IBM Plex Sans", sans-serif';
+      const choicePaddingX = isMobileLayout ? 10 : 12;
+      const choiceLabelY = isMobileLayout ? 10 : 12;
+      const choiceTextY = isMobileLayout ? 30 : 36;
+      const choiceLineHeight = isMobileLayout ? 18 : 22;
 
-      ctx.font = '15px "IBM Plex Sans", sans-serif';
+      ctx.font = choiceBodyFont;
       ctx.textBaseline = 'top';
 
       for (let index = 0; index < CHOICE_COUNT; index++) {
@@ -1086,17 +1196,17 @@
         ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
 
         ctx.fillStyle = '#675f52';
-        ctx.font = '12px "IBM Plex Sans", sans-serif';
-        ctx.fillText(`Choice ${index + 1}`, rect.x + 12, rect.y + 12);
+        ctx.font = choiceLabelFont;
+        ctx.fillText(`Choice ${index + 1}`, rect.x + choicePaddingX, rect.y + choiceLabelY);
 
         ctx.fillStyle = '#1f2328';
-        ctx.font = '15px "IBM Plex Sans", sans-serif';
+        ctx.font = choiceBodyFont;
         wrapText(
           state.activeRound.choices[index].text,
-          rect.x + 12,
-          rect.y + 36,
-          rect.width - 24,
-          22
+          rect.x + choicePaddingX,
+          rect.y + choiceTextY,
+          rect.width - choicePaddingX * 2,
+          choiceLineHeight
         );
       }
     }
@@ -1121,21 +1231,47 @@
     }
 
     function drawLaneGuides() {
+      const layout = getBoardLayout();
       ctx.strokeStyle = '#ece6da';
       ctx.lineWidth = 1;
+
+      if (layout.mode === 'mobile') {
+        for (let index = 0; index < CHOICE_COUNT; index++) {
+          const column = layout.columns[index];
+          const rect = layout.choiceRects[index];
+          const connectorY = rect.y + rect.height / 2;
+
+          if (index > 0) {
+            const dividerX = column.x - COL_GAP / 2;
+            ctx.beginPath();
+            ctx.moveTo(dividerX, layout.playfield.y);
+            ctx.lineTo(dividerX, layout.guideBottomY);
+            ctx.stroke();
+          }
+
+          ctx.beginPath();
+          ctx.moveTo(column.centerX, layout.guideTopY);
+          ctx.lineTo(column.centerX, connectorY);
+          ctx.lineTo(rect.x - 14, connectorY);
+          ctx.stroke();
+        }
+        return;
+      }
+
       for (let index = 1; index < CHOICE_COUNT; index++) {
         const x = columnLeft(index) - COL_GAP / 2;
         ctx.beginPath();
-        ctx.moveTo(x, BOARD.y + 40);
-        ctx.lineTo(x, BOARD.y + BOARD.h);
+        ctx.moveTo(x, layout.guideTopY);
+        ctx.lineTo(x, layout.guideBottomY);
         ctx.stroke();
       }
     }
 
     function drawTopHint() {
+      const layout = getBoardLayout();
       ctx.fillStyle = '#786f60';
       ctx.font = '13px "IBM Plex Sans", sans-serif';
-      ctx.fillText('Shortcuts: Left/Right, 1-4, Space, Up/P, Down, Double click', BOARD.x + BOARD.w - 416, BOARD.y + 24);
+      ctx.fillText(layout.topHintText, layout.topHintX, layout.topHintY);
     }
 
     function drawPauseOverlay() {
@@ -1261,7 +1397,7 @@
       else if (action === 'moveRight') moveColumn(state.activeColumn + 1);
       else if (action?.startsWith('select')) moveColumn(Number(action.replace('select', '')) - 1);
       else if (action === 'drop' && state.running) {
-        state.activeY = ANSWER_Y - state.activeRound.piece.height - 10;
+        state.activeY = getPieceLimitY();
         resolveRound();
         render();
       }
@@ -1355,6 +1491,7 @@
           ? state.feedback.correctIndex
           : (state.hintMode && state.activeRound ? state.activeRound.correctChoiceIndex : null),
         hintMode: state.hintMode,
+        layoutMode: getBoardLayout().mode,
         running: state.running,
       }),
       parseImportedQuestionBankText,
