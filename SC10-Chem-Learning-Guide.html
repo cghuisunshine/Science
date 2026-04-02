@@ -1084,6 +1084,7 @@ sub{
 <div class="answer-block "><div class="prompt">a) Why does this information matter?</div><textarea class="persist" data-key="p26-a" rows="3"></textarea></div>
 <div class="answer-block "><div class="prompt">b) Connections to other topics you’ve studied.</div><textarea class="persist" data-key="p26-b" rows="3"></textarea></div>
 <div class="answer-block "><div class="prompt">c) Write a quiz question to test your memory later.</div><textarea class="persist" data-key="p26-c" rows="3"></textarea></div>
+<div class="answer-block "><div class="prompt">d) Do you have any questions that came up for you while going through the content?</div><textarea class="persist" data-key="p26-d" rows="3"></textarea></div>
 </section>
 
 <section class="page">
@@ -1488,6 +1489,706 @@ const LOCAL_MODEL_ANSWERS = {
   }
 };
 
+Object.assign(LOCAL_MODEL_ANSWERS, {
+  'p2-read': {
+    en: 'Yes'
+  },
+  'p2-a': {
+    en: 'False. Do not proceed if you are unsure about a safety symbol or procedure; ask the teacher first.'
+  },
+  'p2-b': {
+    en: 'True.'
+  },
+  'p2-c': {
+    en: 'True.'
+  },
+  'p3-d': {
+    en: 'False. Tie back long hair and secure loose clothing or jewelry during all lab work, not only when using fire.'
+  },
+  'p3-e': {
+    en: 'False. Stop and ask if you are unsure about any lab instruction.'
+  },
+  'p3-f': {
+    en: 'False. Do not do your own science experiments without proper adult supervision and safety procedures.'
+  },
+  'p4-lab': {
+    en: 'Examples of unsafe activities: not wearing goggles, loose hair near flames, eating or drinking in the lab, horseplay, pointing test tubes at others, spills left uncleaned, broken glass not reported, heating a closed container, and handling chemicals without instructions.'
+  },
+  'p4-hhps': {
+    en: 'HHPS = Hazardous Household Product Symbols; WHMIS = Workplace Hazardous Materials Information System.'
+  },
+  'p7-name1': {
+    en: 'magnesium iodide'
+  },
+  'p7-name2': {
+    en: 'silver nitride'
+  },
+  'p8-name3': {
+    en: 'titanium(III) bromide'
+  },
+  'p8-name4': {
+    en: 'copper(II) phosphide'
+  },
+  'p8-name5': {
+    en: 'tin(IV) selenide'
+  },
+  'p8-name6': {
+    en: 'gallium arsenide'
+  },
+  'p8-name7': {
+    en: 'lead(II) chloride'
+  },
+  'p8-name8': {
+    en: 'beryllium selenide'
+  },
+  'p8-name9': {
+    en: 'niobium(III) oxide'
+  },
+  'p8-name10': {
+    en: 'aluminum astatide'
+  },
+  'p8-form11': {
+    en: 'PuP2'
+  },
+  'p8-form12': {
+    en: 'V3N4'
+  },
+  'p8-form13': {
+    en: 'SnO2'
+  },
+  'p8-form14': {
+    en: 'CoF3'
+  },
+  'p8-form15': {
+    en: 'TiAt3'
+  },
+  'p8-form16': {
+    en: 'V2Se5'
+  },
+  'p8-form17': {
+    en: 'CrH3'
+  },
+  'p8-form18': {
+    en: 'LiI'
+  },
+  'p8-form19': {
+    en: 'Pb3N2'
+  },
+  'p8-form20': {
+    en: 'AgBr'
+  },
+  'p9-1': {
+    en: 'not created or destroyed'
+  },
+  'p9-2': {
+    en: 'law of conservation of mass'
+  },
+  'p9-3': {
+    en: 'mass is conserved'
+  },
+  'p9-4': {
+    en: 'chemical changes'
+  },
+  'p9-5': {
+    en: 'reactants'
+  },
+  'p9-6': {
+    en: 'products'
+  },
+  'p9-7': {
+    en: 'new substances'
+  },
+  'p9-8': {
+    en: 'rearranged'
+  },
+  'p9-9': {
+    en: 'no new matter is created or destroyed'
+  },
+  'p9-10': {
+    en: 'word equation'
+  },
+  'p9-11': {
+    en: 'chemical equation'
+  },
+  'p9-12': {
+    en: 'twice'
+  },
+  'p9-13': {
+    en: 'diatomic elements'
+  },
+  'p10-methane': {
+    en: 'CH4'
+  },
+  'p10-glucose': {
+    en: 'C6H12O6'
+  },
+  'p10-ethane': {
+    en: 'C2H6'
+  },
+  'p10-ammonia': {
+    en: 'NH3'
+  },
+  'p11-1': {
+    en: 'possible'
+  },
+  'p11-aq': {
+    en: 'aqueous'
+  },
+  'p11-s': {
+    en: 'solid'
+  },
+  'p11-l': {
+    en: 'liquid'
+  },
+  'p11-g': {
+    en: 'gas'
+  },
+  'p11-bal1': {
+    en: 'compounds first'
+  },
+  'p11-bal2': {
+    en: 'an element or polyatomic ion'
+  },
+  'p11-bal3': {
+    en: 'balanced as a unit'
+  },
+  'p13-2': {
+    en: 'reactants'
+  },
+  'p13-3': {
+    en: 'products'
+  },
+  'p13-4': {
+    en: 'solid, liquid, gas'
+  },
+  'p13-5': {
+    en: '100 g'
+  },
+  '14a-r': {
+    en: 'Reactants: Mg + 2HCl'
+  },
+  '14a-p': {
+    en: 'Products: MgCl2 + H2'
+  },
+  '14b-r': {
+    en: 'Reactants: 3Mg + N2',
+    note: 'The worksheet prints MgN2, but magnesium nitride is Mg3N2.'
+  },
+  '14b-p': {
+    en: 'Products: Mg3N2',
+    note: 'The worksheet prints MgN2, but magnesium nitride is Mg3N2.'
+  },
+  '14c-r': {
+    en: 'Reactants: Mg + 2HCl'
+  },
+  '14c-p': {
+    en: 'Products: MgCl2 + H2'
+  },
+  '14d-r': {
+    en: 'Reactants: Ba + 2HBr'
+  },
+  '14d-p': {
+    en: 'Products: BaBr2 + H2'
+  },
+  '15e-r': {
+    en: 'Reactants: 2BiCl3 + 3H2S'
+  },
+  '15e-p': {
+    en: 'Products: Bi2S3 + 6HCl'
+  },
+  '15f-r': {
+    en: 'Reactants: Br2 + 2KI'
+  },
+  '15f-p': {
+    en: 'Products: I2 + 2KBr'
+  },
+  '15g-r': {
+    en: 'Reactants: 4Fe + 3O2'
+  },
+  '15g-p': {
+    en: 'Products: 2Fe2O3'
+  },
+  '15h-r': {
+    en: 'Reactants: CaO + 3C',
+    note: 'The worksheet prints CO2, but a common carbide-formation model answer uses CO.'
+  },
+  '15h-p': {
+    en: 'Products: CaC2 + CO',
+    note: 'The worksheet prints CO2, but a common carbide-formation model answer uses CO.'
+  },
+  '16i-r': {
+    en: 'Reactants: Bi2O3 + 3H2'
+  },
+  '16i-p': {
+    en: 'Products: 2Bi + 3H2O'
+  },
+  '16j-r': {
+    en: 'Reactants: P4 + 6I2'
+  },
+  '16j-p': {
+    en: 'Products: 4PI3'
+  },
+  '16k-r': {
+    en: 'Reactants: Sn + 2NaOH',
+    note: 'The worksheet prints Na2Sn02, but the common formula is Na2SnO2.'
+  },
+  '16k-p': {
+    en: 'Products: Na2SnO2 + H2',
+    note: 'The worksheet prints Na2Sn02, but the common formula is Na2SnO2.'
+  },
+  '16l-r': {
+    en: 'Reactants: C6H12O6 + 6O2'
+  },
+  '16l-p': {
+    en: 'Products: 6CO2 + 6H2O'
+  },
+  '16m-r': {
+    en: 'Reactants: 2C8H18 + 25O2'
+  },
+  '16m-p': {
+    en: 'Products: 16CO2 + 18H2O'
+  },
+  'p17-7': {
+    en: 'H2, N2, O2, F2, Cl2, Br2, I2'
+  },
+  'p17-8': {
+    en: 'Diatomic molecules are molecules made of two atoms bonded together.'
+  },
+  'p18-1': {
+    en: 'release'
+  },
+  'p18-2': {
+    en: 'kilojoules'
+  },
+  'p18-3': {
+    en: 'break bonds'
+  },
+  'p18-4': {
+    en: 'net result'
+  },
+  'p18-5': {
+    en: 'exothermic'
+  },
+  'p18-6': {
+    en: 'heat'
+  },
+  'p18-7': {
+    en: 'energy'
+  },
+  'p18-8': {
+    en: 'cellular respiration'
+  },
+  'p18-9': {
+    en: 'energy gain / absorption'
+  },
+  'p18-10': {
+    en: 'Energy'
+  },
+  'p18-11': {
+    en: 'endothermic'
+  },
+  'p19-1': {
+    en: 'photosynthesis'
+  },
+  'p20-1': {
+    en: 'Exothermic'
+  },
+  'p20-2': {
+    en: 'Endothermic'
+  },
+  'p20-3': {
+    en: 'Endothermic'
+  },
+  'p20-4': {
+    en: 'Exothermic'
+  },
+  'p20-5': {
+    en: 'Endothermic'
+  },
+  'p20-6': {
+    en: 'Exothermic'
+  },
+  'p20-7': {
+    en: 'Endothermic'
+  },
+  'p21-1': {
+    en: 'combination reactions'
+  },
+  'p21-2': {
+    en: 'compound'
+  },
+  'p21-3': {
+    en: 'A + B -> AB'
+  },
+  'p21-4': {
+    en: 'elements'
+  },
+  'p21-5': {
+    en: 'ionic compounds'
+  },
+  'p21-6': {
+    en: 'covalent compounds'
+  },
+  'p21-7': {
+    en: 'opposite of synthesis'
+  },
+  'p21-8': {
+    en: 'one compound breaks down'
+  },
+  'p21-9': {
+    en: 'AB -> A + B'
+  },
+  'p21-10': {
+    en: 'one element'
+  },
+  'p21-11': {
+    en: 'different element'
+  },
+  'p22-1': {
+    en: 'A + BC -> AC + B'
+  },
+  'p22-2': {
+    en: 'A + BC -> BA + C'
+  },
+  'p22-3': {
+    en: 'involve two compounds'
+  },
+  'p22-4': {
+    en: 'two compounds react'
+  },
+  'p22-5': {
+    en: 'AB + CD -> AD + CB'
+  },
+  'p22-6': {
+    en: 'acid reacts with a base'
+  },
+  'p22-7': {
+    en: 'acid'
+  },
+  'p22-8': {
+    en: 'base'
+  },
+  'p22-9': {
+    en: 'hydrocarbon reacts'
+  },
+  'p22-10': {
+    en: 'oxygen'
+  },
+  'p22-11': {
+    en: 'energy'
+  },
+  'p22-12': {
+    en: 'oxide'
+  },
+  'p24-1-d': {
+    en: 'One compound breaks into simpler substances.'
+  },
+  'p24-1-g': {
+    en: 'AB -> A + B'
+  },
+  'p24-1-e': {
+    en: '2H2O -> 2H2 + O2'
+  },
+  'p24-2-d': {
+    en: 'One element replaces another element in a compound.'
+  },
+  'p24-2-g': {
+    en: 'A + BC -> AC + B'
+  },
+  'p24-2-e': {
+    en: 'Al + CuCl2 -> Cu + AlCl3'
+  },
+  'p24-3-d': {
+    en: 'Two compounds switch partners to form two new compounds.'
+  },
+  'p24-3-g': {
+    en: 'AB + CD -> AD + CB'
+  },
+  'p24-3-e': {
+    en: 'K2CrO4 + 2AgNO3 -> Ag2CrO4 + 2KNO3'
+  },
+  'p25-1-d': {
+    en: 'An acid and a base react to form a salt and water.'
+  },
+  'p25-1-g': {
+    en: 'HX + MOH -> MX + H2O'
+  },
+  'p25-1-e': {
+    en: 'H2SO4 + Ca(OH)2 -> CaSO4 + 2H2O'
+  },
+  'p25-2-d': {
+    en: 'A hydrocarbon reacts with oxygen to form carbon dioxide and water, releasing energy.'
+  },
+  'p25-2-g': {
+    en: 'CxHy + O2 -> CO2 + H2O'
+  },
+  'p25-2-e': {
+    en: 'CH4 + 2O2 -> CO2 + 2H2O'
+  },
+  'p25-a': {
+    en: 'DEC; 2H2O2 -> 2H2O + O2'
+  },
+  'p25-b': {
+    en: 'NEU; HCl + NaOH -> NaCl + H2O'
+  },
+  'p25-c': {
+    en: 'SR; 2Al + 3NiBr2 -> 2AlBr3 + 3Ni'
+  },
+  'p25-d': {
+    en: 'SYN; N2 + 3H2 -> 2NH3'
+  },
+  'p25-e': {
+    en: 'DR; AgNO3 + KCl -> AgCl + KNO3'
+  },
+  'p25-f': {
+    en: 'COMB; 2C6H6 + 15O2 -> 12CO2 + 6H2O'
+  },
+  'p25-g': {
+    en: 'SR; Mg + 2HCl -> MgCl2 + H2'
+  },
+  'p25-h': {
+    en: 'SYN; 3Mg + N2 -> Mg3N2'
+  },
+  'p25-i': {
+    en: 'SR; Ba + 2HBr -> BaBr2 + H2'
+  },
+  'p26-j': {
+    en: 'DR; 2BiCl3 + 3H2S -> Bi2S3 + 6HCl'
+  },
+  'p26-k': {
+    en: 'SR; Br2 + 2KI -> I2 + 2KBr'
+  },
+  'p26-l': {
+    en: 'SYN; 4Fe + 3O2 -> 2Fe2O3'
+  },
+  'p26-m': {
+    en: 'COMB; 2C4H10 + 13O2 -> 8CO2 + 10H2O'
+  },
+  'p26-n': {
+    en: 'Likely worksheet typo; do not use this prompt as a strict model answer.',
+    note: 'If the intended reaction was carbide formation, one common form is CaO + 3C -> CaC2 + CO.',
+    accepted: ['CaO + 3C -> CaC2 + CO']
+  },
+  'p26-o': {
+    en: 'NEU; LiOH + HBr -> LiBr + H2O'
+  },
+  'p26-p': {
+    en: 'SR; Bi2O3 + 3H2 -> 2Bi + 3H2O'
+  },
+  'p26-q': {
+    en: 'SYN; P4 + 6I2 -> 4PI3'
+  },
+  'p26-r': {
+    en: 'DEC; 2H2O2 -> 2H2O + O2'
+  },
+  'p26-s': {
+    en: 'COMB; C6H12O6 + 6O2 -> 6CO2 + 6H2O'
+  },
+  'p26-t': {
+    en: 'DEC; NH4NO3 -> N2O + 2H2O'
+  },
+  'p26-u': {
+    en: 'DR; Al4C3 + 12H2O -> 3CH4 + 4Al(OH)3'
+  },
+  'p26-v': {
+    en: 'SYN; Ca(OH)2 + 2CO2 -> Ca(HCO3)2'
+  },
+  'p26-w': {
+    en: 'DEC; 2Pb(NO3)2 -> 2PbO + 4NO2 + O2'
+  },
+  'p26-x': {
+    en: 'COMB; 2C8H18 + 25O2 -> 16CO2 + 18H2O'
+  },
+  'p26-y': {
+    en: 'NEU; H2SO4 + Be(OH)2 -> 2H2O + BeSO4'
+  },
+  'p26-d': {
+    en: 'How do I tell neutralization from double replacement?'
+  },
+  'p27-1': {
+    en: 'Completed the acids and bases check-your-understanding activity.'
+  },
+  'p27-2': {
+    en: '7'
+  },
+  'p27-3': {
+    en: '100 times'
+  },
+  'p27-4': {
+    en: 'pH paper / indicator paper; pH meter'
+  },
+  'p27-5': {
+    en: 'Litmus; red in acid and blue in base'
+  },
+  'p27-6': {
+    en: 'aqueous / dissolved in water'
+  },
+  'p27-7': {
+    en: 'H'
+  },
+  'p27-8': {
+    en: 'The H is written at the end, as in CH3COOH.'
+  },
+  'p27-acid-1': {
+    en: 'hydrobromic acid'
+  },
+  'p27-acid-2': {
+    en: 'hydrosulfuric acid'
+  },
+  'p27-acid-3': {
+    en: 'nitrous acid'
+  },
+  'p27-acid-4': {
+    en: 'nitric acid'
+  },
+  'p27-acid-5': {
+    en: 'perchloric acid'
+  },
+  'p28-acid-6': {
+    en: 'carbonic acid'
+  },
+  'p28-acid-7': {
+    en: 'acetic acid'
+  },
+  'p28-10': {
+    en: 'A base usually contains OH (hydroxide).'
+  },
+  'p28-11': {
+    en: 'potassium hydroxide; aluminum hydroxide; ammonium hydroxide'
+  },
+  'p28-12': {
+    en: 'They conduct electricity because they form ions in water.'
+  },
+  'p28-13': {
+    en: 'Acid: H+; Base: OH-'
+  },
+  'p28-14': {
+    en: 'Acids and bases neutralize each other; the process is neutralization.'
+  },
+  'p28-Taste-a': {
+    en: 'sour'
+  },
+  'p28-Taste-b': {
+    en: 'bitter'
+  },
+  'p28-Touch-a': {
+    en: 'stings'
+  },
+  'p28-Touch-b': {
+    en: 'slippery'
+  },
+  'p28-Colour of Litmus-a': {
+    en: 'red'
+  },
+  'p28-Colour of Litmus-b': {
+    en: 'blue'
+  },
+  'p28-Reaction with metal-a': {
+    en: 'often reacts and releases hydrogen gas'
+  },
+  'p28-Reaction with metal-b': {
+    en: 'usually little or no reaction at this level'
+  },
+  'p28-pH-a': {
+    en: 'below 7'
+  },
+  'p28-pH-b': {
+    en: 'above 7'
+  },
+  'p29-1': {
+    en: 'ionic compounds'
+  },
+  'p29-2': {
+    en: 'an acid reacts with a base'
+  },
+  'p29-3': {
+    en: 'NaCl'
+  },
+  'p29-4': {
+    en: 'positive ion (cation)'
+  },
+  'p29-5': {
+    en: 'seawater'
+  },
+  'p29-6': {
+    en: 'food'
+  },
+  'p29-7': {
+    en: 'minerals / rocks'
+  },
+  'p30-1': {
+    en: 'acid and a base'
+  },
+  'p30-2': {
+    en: 'salt and water'
+  },
+  'p30-3': {
+    en: '2NaOH'
+  },
+  'p30-4': {
+    en: 'H2SO3'
+  },
+  'p30-5': {
+    en: 'acid rain / acid precipitation'
+  },
+  'p30-6': {
+    en: 'groups 1 and 2 metals'
+  },
+  'p30-7': {
+    en: 'less reactive'
+  },
+  'p30-8': {
+    en: 'hydrogen gas'
+  },
+  'p30-9': {
+    en: 'H2(g)'
+  },
+  'p30-10': {
+    en: 'Carbonates'
+  },
+  'p30-11': {
+    en: 'neutralize acids'
+  },
+  'p30-q1': {
+    en: 'ionic compounds'
+  },
+  'p30-q2': {
+    en: 'acid + base; acid + metal oxide; acid + carbonate'
+  },
+  'p30-q3': {
+    en: 'NaCl'
+  },
+  'p30-q4': {
+    en: 'seawater, table salt, fertilizer, rocks/minerals, medicines'
+  },
+  'p31-1': {
+    en: 'CaS + 2H2O'
+  },
+  'p31-2': {
+    en: 'Ca(OH)2'
+  },
+  'p31-3': {
+    en: 'HNO3',
+    note: 'Teacher notes may simplify this oxide-plus-water pattern.',
+    accepted: ['HNO2 + HNO3', 'an acid formed from NO2 and water']
+  },
+  'p31-6': {
+    en: 'sulfur dioxide (SO2)'
+  },
+  'p32-1': {
+    en: 'Yes'
+  },
+  'p32-2': {
+    en: 'Yes'
+  },
+  'p32-3': {
+    en: 'Yes'
+  },
+  'p32-4': {
+    en: 'Yes'
+  }
+});
+
 function getCurrentLanguageMode(){
   if (document.body.classList.contains('lang-zh')) return 'zh';
   if (document.body.classList.contains('lang-bi')) return 'bi';
@@ -1502,9 +2203,34 @@ function uiText(key, mode = getCurrentLanguageMode()){
 
 function formatLocalizedModelAnswer(answer, mode = getCurrentLanguageMode()){
   if (!answer || typeof answer !== 'object') return '';
-  if (mode === 'zh') return answer.zh || answer.en || '';
-  if (mode === 'bi') return [answer.en, answer.zh].filter(Boolean).join('\n');
-  return answer.en || answer.zh || '';
+  const lines = [];
+  const primary = mode === 'zh'
+    ? (answer.zh || answer.en || '')
+    : mode === 'bi'
+      ? uniqNonEmptyLines([answer.en, answer.zh]).join('\n')
+      : (answer.en || answer.zh || '');
+  if (primary) lines.push(primary);
+
+  const note = mode === 'zh'
+    ? (answer.noteZh || answer.note || '')
+    : mode === 'bi'
+      ? uniqNonEmptyLines([answer.note, answer.noteZh]).join('\n')
+      : (answer.note || '');
+  if (note) {
+    const noteLabel = mode === 'zh' ? '注：' : mode === 'bi' ? 'Note / 注：' : 'Note:';
+    lines.push(noteLabel + ' ' + note);
+  }
+
+  const accepted = [];
+  if (Array.isArray(answer.accepted)) accepted.push(...answer.accepted);
+  if ((mode === 'zh' || mode === 'bi') && Array.isArray(answer.acceptedZh)) accepted.push(...answer.acceptedZh);
+  const acceptedLines = uniqNonEmptyLines(accepted);
+  if (acceptedLines.length) {
+    const acceptedLabel = mode === 'zh' ? '也可接受：' : mode === 'bi' ? 'Also accept / 也可接受：' : 'Also accept:';
+    lines.push(acceptedLabel + ' ' + acceptedLines.join('; '));
+  }
+
+  return lines.join('\n');
 }
 
 function getLocalModelAnswer(field){
