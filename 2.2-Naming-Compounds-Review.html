@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.2 Naming Compounds - Review</title>
+  <style>
+    :root{
+      --paper-min-height: 11in;
+      --bg: #ece7df;
+      --page: #ffffff;
+      --ink: #1f2328;
+      --muted: #5f6368;
+      --line: #b9b1a4;
+      --line-strong: #7a7267;
+      --surface: #f7f4ef;
+      --accent: #7c2d12;
+      --accent-soft: #efe3d5;
+      --shadow: 0 3px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    *{
+      box-sizing: border-box;
+    }
+
+    body{
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Calibri, "Aptos", "Segoe UI", sans-serif;
+      line-height: 1.35;
+    }
+
+    .topbar-global{
+      width: min(1580px, calc(100vw - 40px));
+      margin: 18px auto 0;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .lang-controls{
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .lang-btn{
+      padding: 7px 12px;
+      border: 1px solid rgba(31, 35, 40, 0.18);
+      background: rgba(255, 255, 255, 0.75);
+      color: var(--ink);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+    }
+
+    .lang-btn.is-active{
+      background: #e8ddd0;
+      border-color: rgba(124, 45, 18, 0.35);
+    }
+
+    .lang-btn:focus-visible{
+      outline: 3px solid rgba(124, 45, 18, 0.25);
+      outline-offset: 2px;
+    }
+
+    .i18n-wrap{
+      max-width: 100%;
+    }
+
+    .i18n-en{
+      display: block;
+    }
+
+    .i18n-zh{
+      display: none;
+      margin-top: 4px;
+      color: #2b2b2b;
+    }
+
+    .i18n-inline .i18n-en,
+    .i18n-inline .i18n-zh{
+      display: inline;
+    }
+
+    .i18n-inline .i18n-zh{
+      display: none;
+      margin-top: 0;
+    }
+
+    body.lang-bi .i18n-zh{
+      display: block;
+    }
+
+    body.lang-bi .i18n-inline .i18n-zh{
+      display: inline;
+    }
+
+    body.lang-zh .i18n-en{
+      display: none !important;
+    }
+
+    body.lang-zh .i18n-zh{
+      display: block;
+    }
+
+    body.lang-zh .i18n-inline .i18n-zh{
+      display: inline;
+    }
+
+    .wrapper{
+      padding: 24px 0 40px;
+    }
+
+    .page{
+      width: min(1580px, calc(100vw - 40px));
+      min-height: var(--paper-min-height);
+      margin: 0 auto 20px;
+      background: var(--page);
+      box-shadow: var(--shadow);
+      padding: 0.72in 0.72in 0.78in;
+      position: relative;
+    }
+
+    .page-header{
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: end;
+      border-bottom: 2px solid var(--line-strong);
+      padding-bottom: 8px;
+      margin-bottom: 18px;
+      font-size: 15px;
+    }
+
+    .course{
+      font-weight: 700;
+    }
+
+    .page-no{
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    h1{
+      margin: 0 0 10px;
+      font-size: 28px;
+      line-height: 1.15;
+    }
+
+    h2{
+      margin: 18px 0 10px;
+      font-size: 21px;
+      line-height: 1.2;
+    }
+
+    h3{
+      margin: 14px 0 8px;
+      font-size: 17px;
+      line-height: 1.2;
+    }
+
+    p{
+      margin: 8px 0;
+      font-size: 15px;
+    }
+
+    ul, ol{
+      margin: 8px 0 10px 22px;
+      padding: 0;
+      font-size: 15px;
+    }
+
+    li{
+      margin: 5px 0;
+    }
+
+    a{
+      color: #0b5cad;
+    }
+
+    .intro-box,
+    .note-box,
+    .example-box{
+      border: 1px solid var(--line-strong);
+      background: var(--surface);
+      padding: 14px 16px;
+      margin: 14px 0 18px;
+    }
+
+    .section-lead{
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      padding: 10px 12px;
+      margin: 10px 0 16px;
+    }
+
+    .rule-list{
+      margin-left: 24px;
+    }
+
+    .example-title{
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .formula{
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      margin: 10px 0;
+    }
+
+    .worked-step{
+      margin: 6px 0;
+      padding-left: 16px;
+    }
+
+    .worked-answer{
+      margin-top: 10px;
+      font-size: 17px;
+      font-weight: 700;
+      color: #3f2f1f;
+    }
+
+    .video-link{
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    .video-embed{
+      margin: 14px 0 18px;
+      border: 1px solid var(--line);
+      background: #fbfaf8;
+      padding: 12px;
+    }
+
+    .video-frame{
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #d8d2c8;
+    }
+
+    .video-frame iframe{
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .prefix-grid{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 12px 0 18px;
+    }
+
+    .prefix-card{
+      border: 1px solid var(--line);
+      background: #fbfaf8;
+      padding: 12px 14px;
+    }
+
+    .prefix-card ul{
+      margin-bottom: 0;
+    }
+
+    .callout-link{
+      display: inline-block;
+      margin-top: 8px;
+      font-weight: 700;
+      text-decoration: none;
+      color: #0b5cad;
+    }
+
+    .callout-link:hover{
+      text-decoration: underline;
+    }
+
+    @media print{
+      body{
+        background: #fff;
+      }
+
+      .wrapper{
+        padding: 0;
+      }
+
+      .page{
+        width: auto;
+        box-shadow: none;
+        margin: 0;
+        min-height: 0;
+        page-break-after: always;
+      }
+
+      .page:last-child{
+        page-break-after: auto;
+      }
+    }
+
+    @media (max-width: 920px){
+      .wrapper{
+        padding: 12px;
+      }
+
+      .topbar-global{
+        width: 100%;
+        margin: 12px auto 0;
+        padding: 0 12px;
+      }
+
+      .page{
+        width: 100%;
+        min-height: 0;
+        padding: 20px 18px 28px;
+      }
+
+      .prefix-grid{
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="lang-en">
+  <div class="topbar-global">
+    <div aria-label="Language" class="lang-controls" role="group">
+      <button aria-pressed="true" class="lang-btn is-active" data-lang="en" type="button">English</button>
+      <button aria-pressed="false" class="lang-btn" data-lang="bi" type="button">En + Zh</button>
+      <button aria-pressed="false" class="lang-btn" data-lang="zh" type="button">Zh only</button>
+    </div>
+  </div>
+  <div class="wrapper">
+    <section class="page">
+      <div class="page-header">
+        <div class="course" data-i18n="course"></div>
+        <div class="page-no" data-i18n="page_1" data-i18n-mode="inline"></div>
+      </div>
+
+      <h1 data-i18n="title"></h1>
+
+      <div class="section-lead">
+        <p data-i18n="ionic_heading"></p>
+        <p data-i18n="ionic_intro"></p>
+      </div>
+
+      <div class="intro-box">
+        <h2 data-i18n="ionic_rules_heading"></h2>
+        <p data-i18n="ionic_rules_intro"></p>
+        <ol class="rule-list" data-i18n-list="ionic_rules"></ol>
+      </div>
+
+      <div class="example-box">
+        <p class="example-title" data-i18n="example_1_title" data-i18n-mode="inline"></p>
+        <p data-i18n="example_1_intro"></p>
+        <p class="worked-step" data-i18n="example_1_step_1"></p>
+        <p class="worked-step" data-i18n="example_1_step_2"></p>
+        <p class="worked-step" data-i18n="example_1_step_3"></p>
+        <p class="worked-answer" data-i18n="example_1_answer"></p>
+      </div>
+
+      <div class="example-box">
+        <p class="example-title" data-i18n="example_2_title" data-i18n-mode="inline"></p>
+        <p data-i18n="example_2_name"></p>
+        <p class="worked-step" data-i18n="example_2_step_1"></p>
+        <p class="worked-step" data-i18n="example_2_step_2"></p>
+        <p class="worked-step" data-i18n="example_2_step_3"></p>
+        <p class="worked-step" data-i18n="example_2_step_4"></p>
+        <p class="worked-step" data-i18n="example_2_step_5"></p>
+        <p class="worked-step" data-i18n="example_2_step_6"></p>
+        <p class="worked-step" data-i18n="example_2_step_7"></p>
+        <p class="worked-step" data-i18n="example_2_step_8"></p>
+        <p class="worked-answer" data-i18n="example_2_answer"></p>
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/ZEZxi82kiN8"
+              title="Ionic naming review video"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=ZEZxi82kiN8" data-i18n="open_ionic_video" data-i18n-mode="inline"></a></p>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <p data-i18n="capitalization_note"></p>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-header">
+        <div class="course" data-i18n="course"></div>
+        <div class="page-no" data-i18n="page_2" data-i18n-mode="inline"></div>
+      </div>
+
+      <h2 data-i18n="covalent_heading"></h2>
+      <div class="video-embed">
+        <div class="video-frame">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/bDMySCO28fc"
+            title="Covalent naming review video"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+        </div>
+        <p class="video-link"><a href="https://www.youtube.com/watch?v=bDMySCO28fc" data-i18n="open_covalent_video" data-i18n-mode="inline"></a></p>
+      </div>
+
+      <div class="section-lead">
+        <p data-i18n="covalent_intro_1"></p>
+        <p data-i18n="covalent_intro_2"></p>
+        <p data-i18n="covalent_intro_3"></p>
+      </div>
+
+      <div class="intro-box">
+        <h2 data-i18n="covalent_rules_heading"></h2>
+        <ol class="rule-list" data-i18n-list="covalent_rules"></ol>
+      </div>
+
+      <div class="prefix-grid">
+        <div class="prefix-card">
+          <h3 data-i18n="common_prefixes_heading"></h3>
+          <ul data-i18n-list="prefixes_left"></ul>
+        </div>
+        <div class="prefix-card">
+          <h3 data-i18n="more_prefixes_heading"></h3>
+          <ul data-i18n-list="prefixes_right"></ul>
+        </div>
+      </div>
+
+      <div class="example-box">
+        <p class="example-title" data-i18n="examples_title" data-i18n-mode="inline"></p>
+        <p class="formula">N<sub>2</sub>O</p>
+        <p class="worked-answer" data-i18n="covalent_example_1"></p>
+        <p class="formula">SO<sub>3</sub></p>
+        <p class="worked-answer" data-i18n="covalent_example_2"></p>
+        <p data-i18n="covalent_example_note"></p>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-header">
+        <div class="course" data-i18n="course"></div>
+        <div class="page-no" data-i18n="page_3" data-i18n-mode="inline"></div>
+      </div>
+
+      <h2 data-i18n="polyatomic_heading"></h2>
+
+      <div class="section-lead">
+        <p data-i18n="polyatomic_intro"></p>
+        <p data-i18n="common_ion_chart"></p>
+      </div>
+
+      <p data-i18n="polyatomic_explainer"></p>
+
+      <div class="example-box">
+        <p class="example-title" data-i18n="poly_example_1_title" data-i18n-mode="inline"></p>
+        <p data-i18n="poly_example_1_step_1"></p>
+        <p data-i18n="poly_example_1_step_2"></p>
+        <p data-i18n="poly_example_1_step_3"></p>
+        <p class="worked-answer" data-i18n="poly_example_1_answer"></p>
+        <p data-i18n="poly_example_1_note"></p>
+      </div>
+
+      <div class="example-box">
+        <p class="example-title" data-i18n="poly_example_2_title" data-i18n-mode="inline"></p>
+        <p data-i18n="poly_example_2_step_1"></p>
+        <p data-i18n="poly_example_2_step_2"></p>
+        <p class="formula">Co<sup>3+</sup>(SO<sub>4</sub>)<sup>2-</sup></p>
+        <p data-i18n="poly_example_2_step_3"></p>
+        <p data-i18n="poly_example_2_step_4"></p>
+        <p class="worked-answer" data-i18n="poly_example_2_answer"></p>
+      </div>
+
+      <div class="video-embed">
+        <div class="video-frame">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/ETX0qNMKk_U"
+            title="Polyatomic ions review video"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+        </div>
+        <p class="video-link"><a href="https://www.youtube.com/watch?v=ETX0qNMKk_U" data-i18n="open_polyatomic_video" data-i18n-mode="inline"></a></p>
+      </div>
+    </section>
+  </div>
+  <script>
+    (function () {
+      const textEntries = {
+        course: { en: "Science 10 Chemistry", zh: "10年级科学：化学" },
+        page_1: { en: "Page 1", zh: "第 1 页" },
+        page_2: { en: "Page 2", zh: "第 2 页" },
+        page_3: { en: "Page 3", zh: "第 3 页" },
+        title: { en: "2.2 Naming Compounds - Review", zh: "2.2 化合物命名复习" },
+        ionic_heading: { en: "<strong>Naming Ionic Compounds</strong>", zh: "<strong>离子化合物命名</strong>" },
+        ionic_intro: { en: "As you have seen in Science 9, ionic bonding occurs when a metal ion and a non-metal ion combine together.", zh: "你在 9 年级科学中已经学过，离子键是在金属离子和非金属离子结合时形成的。" },
+        ionic_rules_heading: { en: "Rules for Naming Ionic Compounds", zh: "离子化合物命名规则" },
+        ionic_rules_intro: { en: "As previously mentioned, for ionic bonding, we are looking for a metal combined with a non-metal. For example, the combination of magnesium and fluoride ions.", zh: "如前所述，在离子键中，我们要寻找的是金属与非金属的组合。例如，镁离子与氟离子的组合。" },
+        example_1_title: { en: "Example 1", zh: "例题 1" },
+        example_1_intro: { en: "Let's tackle magnesium and fluorine.", zh: "让我们来看镁和氟。" },
+        example_1_step_1: { en: "Rule 1 says to put the metal ion first in the name: <strong>magnesium</strong>", zh: "规则 1 说明要先写金属离子的名称：<strong>magnesium（镁）</strong>" },
+        example_1_step_2: { en: "Rule 2 says to put the non-metal ion second in the name: <strong>magnesium then fluorine</strong>", zh: "规则 2 说明把非金属离子的名称放在后面：<strong>magnesium 然后 fluorine</strong>" },
+        example_1_step_3: { en: "Rule 3 tells us to change the name of the non-metal ion, replacing the ending with <code>-ide</code>.", zh: "规则 3 告诉我们要把非金属离子的名称词尾改成 <code>-ide</code>。" },
+        example_1_answer: { en: "Magnesium fluoride", zh: "magnesium fluoride（氟化镁）" },
+        example_2_title: { en: "Example 2", zh: "例题 2" },
+        example_2_name: { en: "Name <span class=\"formula\">Sn<sub>3</sub>P<sub>4</sub></span>", zh: "写出 <span class=\"formula\">Sn<sub>3</sub>P<sub>4</sub></span> 的名称" },
+        example_2_step_1: { en: "Rule 1 says to put the metal ion first in the name: <strong>tin</strong>", zh: "规则 1 说明先写金属离子的名称：<strong>tin（锡）</strong>" },
+        example_2_step_2: { en: "Rule 2 says to put the non-metal ion second in the name: <strong>tin then phosphorus</strong>", zh: "规则 2 说明把非金属离子的名称放在后面：<strong>tin 然后 phosphorus</strong>" },
+        example_2_step_3: { en: "Rule 3 tells us to change the name of the non-metal ion, replacing the ending with <code>-ide</code>.", zh: "规则 3 告诉我们把非金属离子的名称词尾改成 <code>-ide</code>。" },
+        example_2_step_4: { en: "<strong>Tin phosphide</strong>", zh: "<strong>Tin phosphide（磷化锡）</strong>" },
+        example_2_step_5: { en: "Rule 4 then kicks in, dealing with the roman numeral telling us which version of tin we have: Sn<sup>2+</sup> or Sn<sup>4+</sup>.", zh: "接着要用规则 4，通过罗马数字判断这里是哪一种锡：Sn<sup>2+</sup> 还是 Sn<sup>4+</sup>。" },
+        example_2_step_6: { en: "We can see the formula Sn<sub>3</sub>P<sub>4</sub> has four phosphide ions. Each phosphide ion is 3-. This makes a total negative charge of 4 × (-3) = -12.", zh: "我们可以看到 Sn<sub>3</sub>P<sub>4</sub> 中有 4 个 phosphide 离子。每个 phosphide 离子带 3- 电荷，因此总负电荷为 4 × (-3) = -12。" },
+        example_2_step_7: { en: "The total positive charge must balance this with +12. We have 3 tin ions, so each ion must be +4. This means that we are dealing with Sn<sup>4+</sup>.", zh: "总正电荷必须用 +12 来平衡。这里有 3 个 tin 离子，所以每个 tin 离子必须是 +4。这说明这里是 Sn<sup>4+</sup>。" },
+        example_2_step_8: { en: "Since we have Sn<sup>4+</sup>, we use the roman numeral <strong>IV</strong>.", zh: "因为这里是 Sn<sup>4+</sup>，所以要使用罗马数字 <strong>IV</strong>。" },
+        example_2_answer: { en: "Tin (IV) phosphide", zh: "Tin (IV) phosphide〔磷化锡(IV)〕" },
+        open_ionic_video: { en: "Open the ionic naming review video on YouTube", zh: "在 YouTube 打开离子化合物命名复习视频" },
+        capitalization_note: { en: "<strong>Note:</strong> the names of compounds are only capitalized if they are at the start of a sentence or in the title of something.", zh: "<strong>注意：</strong>化合物的名称只有在句首或标题中才需要大写。" },
+        covalent_heading: { en: "Naming Covalent Compounds", zh: "共价化合物命名" },
+        open_covalent_video: { en: "Open the covalent naming review video on YouTube", zh: "在 YouTube 打开共价化合物命名复习视频" },
+        covalent_intro_1: { en: "We distinguish covalent compounds by the fact they are made from non-metals combining with other non-metals.", zh: "我们通过一个特征来区分共价化合物：它们是由非金属和非金属结合形成的。" },
+        covalent_intro_2: { en: "We need a way to indicate the ratio of the non-metal elements in the compound. In this case, we use prefixes, which are mini-names added before the element name.", zh: "我们需要一种方法来表示化合物中各非金属元素的比例。在这种情况下，我们使用前缀，也就是加在元素名称前面的“小名称”。" },
+        covalent_intro_3: { en: "You have likely already used covalent names without realizing it: <strong>carbon monoxide</strong>.", zh: "你可能早就已经在不知不觉中使用过共价化合物名称了，例如：<strong>carbon monoxide（一氧化碳）</strong>。" },
+        covalent_rules_heading: { en: "Rules for Naming Covalent Compounds", zh: "共价化合物命名规则" },
+        common_prefixes_heading: { en: "Common Prefixes", zh: "常见前缀" },
+        more_prefixes_heading: { en: "More Prefixes", zh: "更多前缀" },
+        examples_title: { en: "Examples", zh: "例子" },
+        covalent_example_1: { en: "dinitrogen monoxide", zh: "dinitrogen monoxide（monoxide 代表一个氧）" },
+        covalent_example_2: { en: "sulfur trioxide", zh: "sulfur trioxide（三氧化硫）" },
+        covalent_example_note: { en: "In the second example, the prefix <code>mono-</code> is usually omitted for the first element.", zh: "在第二个例子中，第一个元素前面的前缀 <code>mono-</code> 通常会省略。" },
+        polyatomic_heading: { en: "Polyatomic Ions and Their Compounds", zh: "多原子离子及其化合物" },
+        polyatomic_intro: { en: "With polyatomic ions, there are a number of atoms grouped together that behave as a single entity. These groupings of atoms in an ion are called <strong>poly</strong> (many) <strong>atomic</strong> (atom) ions.", zh: "在多原子离子中，有若干个原子组合在一起，并作为一个整体来表现。这种在离子中组合在一起的原子群被称为 <strong>poly</strong>（多个）<strong>atomic</strong>（原子）ions。" },
+        common_ion_chart: { en: "<strong>Download and print this Common Ion Chart</strong>", zh: "<strong>下载并打印这张常见离子表</strong>" },
+        polyatomic_explainer: { en: "When writing a chemical formula with a polyatomic ion, it's just like writing a formula for any other compound. The only catch comes when there are more than one of the polyatomic ions needed to balance the ionic compound.", zh: "书写含有多原子离子的化学式时，方法与书写其他化合物的化学式基本相同。唯一需要特别注意的是：当为了平衡离子化合物而需要不止一个多原子离子时，就要进行额外处理。" },
+        poly_example_1_title: { en: "Example 1: Calcium Hydroxide", zh: "例题 1：Calcium Hydroxide（氢氧化钙）" },
+        poly_example_1_step_1: { en: "Calcium has the symbol Ca and an ionic charge of <strong>+2</strong>.", zh: "Calcium 的符号是 Ca，它的离子电荷是 <strong>+2</strong>。" },
+        poly_example_1_step_2: { en: "Hydroxide is a polyatomic ion, OH<sup>-</sup>, with an ionic charge of <strong>-1</strong>.", zh: "Hydroxide 是一个多原子离子，写作 OH<sup>-</sup>，它的离子电荷是 <strong>-1</strong>。" },
+        poly_example_1_step_3: { en: "To balance ionic charges, the total ionic charge of the compound must be <strong>0</strong>. We have +2 from calcium, so we need -2 from hydroxide. To do so, we need two hydroxide groups, written as <strong>(OH)<sub>2</sub></strong>.", zh: "为了平衡离子电荷，化合物的总离子电荷必须是 <strong>0</strong>。Calcium 提供了 +2，所以我们需要从 hydroxide 得到 -2。为此，需要两个 hydroxide 基团，写作 <strong>(OH)<sub>2</sub></strong>。" },
+        poly_example_1_answer: { en: "Ca(OH)<sub>2</sub>", zh: "Ca(OH)<sub>2</sub>" },
+        poly_example_1_note: { en: "Note that the OH needs brackets around it to keep it together as a group, indicating there are 2 of that group.", zh: "注意，OH 外面需要加括号，以表示它作为一个整体出现，并且这个整体有 2 个。" },
+        poly_example_2_title: { en: "Example 2: Cobalt (III) sulfate", zh: "例题 2：Cobalt (III) sulfate（硫酸钴(III)）" },
+        poly_example_2_step_1: { en: "Cobalt has the symbol Co with an ionic charge of <strong>+3</strong>, as indicated by the roman numeral III.", zh: "Cobalt 的符号是 Co，它的离子电荷为 <strong>+3</strong>，这是由罗马数字 III 指示出来的。" },
+        poly_example_2_step_2: { en: "Sulfate is a polyatomic ion, SO<sub>4</sub><sup>2-</sup>, with an ionic charge of <strong>-2</strong>.", zh: "Sulfate 是一个多原子离子，写作 SO<sub>4</sub><sup>2-</sup>，它的离子电荷是 <strong>-2</strong>。" },
+        poly_example_2_step_3: { en: "The charges do not add up to 0 yet. Find the lowest common multiple of 2 and 3, which is <strong>6</strong>.", zh: "这些电荷现在还没有相加到 0。找出 2 和 3 的最小公倍数，也就是 <strong>6</strong>。" },
+        poly_example_2_step_4: { en: "We need 2 Co<sup>3+</sup> ions and 3 (SO<sub>4</sub>)<sup>2-</sup> ions in order to balance the charges.", zh: "为了平衡电荷，我们需要 2 个 Co<sup>3+</sup> 离子和 3 个 (SO<sub>4</sub>)<sup>2-</sup> 离子。" },
+        poly_example_2_answer: { en: "Co<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>", zh: "Co<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub>" },
+        open_polyatomic_video: { en: "Open the polyatomic ions review video on YouTube", zh: "在 YouTube 打开多原子离子复习视频" }
+      };
+
+      const listEntries = {
+        ionic_rules: {
+          en: [
+            "Always put the metal ion first in the name.",
+            "Put the non-metal ion second in the name.",
+            "Change the ending of the non-metal ion from its element name by replacing it with <code>-ide</code>.<ul><li>For example, chlorine becomes <strong>chloride</strong>, fluorine becomes <strong>fluoride</strong>, sulphur becomes <strong>sulphide</strong>, and so on.</li></ul>",
+            "Do not change the metal element's name."
+          ],
+          zh: [
+            "始终把金属离子的名称写在前面。",
+            "把非金属离子的名称写在后面。",
+            "把非金属离子的元素名称词尾改成 <code>-ide</code>。<ul><li>例如，chlorine 变成 <strong>chloride</strong>，fluorine 变成 <strong>fluoride</strong>，sulphur 变成 <strong>sulphide</strong>，等等。</li></ul>",
+            "不要改变金属元素本身的名称。"
+          ]
+        },
+        covalent_rules: {
+          en: [
+            "Identify the non-metal elements in the compound.",
+            "Determine how many of each non-metal element are present.",
+            "Use a prefix to indicate how many of the first element there are.",
+            "Repeat the process for the second element.",
+            "Replace the ending of the second element with <code>-ide</code>."
+          ],
+          zh: [
+            "先找出化合物中的非金属元素。",
+            "确定每种非金属元素各有多少个。",
+            "使用前缀来表示第一个元素有多少个。",
+            "对第二个元素重复这个过程。",
+            "把第二个元素的词尾改成 <code>-ide</code>。"
+          ]
+        },
+        prefixes_left: {
+          en: ["1 - mono", "2 - di", "3 - tri", "4 - tetra", "5 - penta"],
+          zh: ["1 - mono（单）", "2 - di（双）", "3 - tri（三）", "4 - tetra（四）", "5 - penta（五）"]
+        },
+        prefixes_right: {
+          en: ["6 - hexa", "7 - hepta", "8 - octa", "9 - nona", "10 - deca"],
+          zh: ["6 - hexa（六）", "7 - hepta（七）", "8 - octa（八）", "9 - nona（九）", "10 - deca（十）"]
+        }
+      };
+
+      const langButtons = Array.from(document.querySelectorAll(".lang-btn[data-lang]"));
+      let currentLang = localStorage.getItem("naming-compounds-lang") || "en";
+
+      function bilingualHtml(en, zh, inline) {
+        const className = inline ? "i18n-wrap i18n-inline" : "i18n-wrap";
+        return '<span class="' + className + '"><span class="i18n-en">' + en + '</span><span class="i18n-zh" lang="zh-Hans">' + zh + "</span></span>";
+      }
+
+      function localizedHtml(key, inline) {
+        const entry = textEntries[key];
+        if (!entry) return "";
+        return bilingualHtml(entry.en, entry.zh, inline);
+      }
+
+      function applyStaticLocalization() {
+        document.querySelectorAll("[data-i18n]").forEach((element) => {
+          const key = element.dataset.i18n;
+          element.innerHTML = localizedHtml(key, element.dataset.i18nMode === "inline");
+        });
+
+        document.querySelectorAll("[data-i18n-list]").forEach((element) => {
+          const key = element.dataset.i18nList;
+          const entry = listEntries[key];
+          if (!entry) return;
+          element.innerHTML = entry.en.map((english, index) => {
+            return "<li>" + bilingualHtml(english, entry.zh[index], false) + "</li>";
+          }).join("");
+        });
+      }
+
+      function applyLanguageMode(mode) {
+        currentLang = mode;
+        document.body.classList.toggle("lang-bi", mode === "bi");
+        document.body.classList.toggle("lang-zh", mode === "zh");
+        langButtons.forEach((button) => {
+          const selected = button.dataset.lang === mode;
+          button.classList.toggle("is-active", selected);
+          button.setAttribute("aria-pressed", String(selected));
+        });
+        localStorage.setItem("naming-compounds-lang", mode);
+      }
+
+      applyStaticLocalization();
+      applyLanguageMode(currentLang);
+
+      langButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          applyLanguageMode(button.dataset.lang);
+        });
+      });
+    }());
+  </script>
+</body>
+</html>
