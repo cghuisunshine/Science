@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.1 Lab Safety</title>
+  <style>
+    :root{
+      --paper-width: 8.5in;
+      --paper-min-height: 11in;
+      --bg: #ece7df;
+      --page: #ffffff;
+      --ink: #1f2328;
+      --muted: #5f6368;
+      --line: #b9b1a4;
+      --line-strong: #7a7267;
+      --surface: #f7f4ef;
+      --accent: #7c2d12;
+      --accent-soft: #efe3d5;
+      --shadow: 0 3px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    *{
+      box-sizing: border-box;
+    }
+
+    body{
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Calibri, "Aptos", "Segoe UI", sans-serif;
+      line-height: 1.35;
+    }
+
+    .topbar-global{
+      width: min(1580px, calc(100vw - 40px));
+      margin: 18px auto 0;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .lang-controls{
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .lang-btn{
+      padding: 7px 12px;
+      border: 1px solid rgba(31, 35, 40, 0.18);
+      background: rgba(255, 255, 255, 0.75);
+      color: var(--ink);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+    }
+
+    .lang-btn.is-active{
+      background: #e8ddd0;
+      border-color: rgba(124, 45, 18, 0.35);
+    }
+
+    .lang-btn:focus-visible{
+      outline: 3px solid rgba(124, 45, 18, 0.25);
+      outline-offset: 2px;
+    }
+
+    .i18n-wrap{
+      max-width: 100%;
+    }
+
+    .i18n-en{
+      display: block;
+    }
+
+    .i18n-zh{
+      display: none;
+      margin-top: 4px;
+      color: #2b2b2b;
+    }
+
+    .i18n-inline .i18n-en,
+    .i18n-inline .i18n-zh{
+      display: inline;
+    }
+
+    .i18n-inline .i18n-zh{
+      display: none;
+      margin-top: 0;
+    }
+
+    body.lang-bi .i18n-zh{
+      display: block;
+    }
+
+    body.lang-bi .i18n-inline .i18n-zh{
+      display: inline;
+    }
+
+    body.lang-zh .i18n-en{
+      display: none !important;
+    }
+
+    body.lang-zh .i18n-zh{
+      display: block;
+    }
+
+    body.lang-zh .i18n-inline .i18n-zh{
+      display: inline;
+    }
+
+    .wrapper{
+      padding: 24px 0 40px;
+    }
+
+    .page{
+      width: min(1580px, calc(100vw - 40px));
+      min-height: var(--paper-min-height);
+      margin: 0 auto 20px;
+      background: var(--page);
+      box-shadow: var(--shadow);
+      padding: 0.72in 0.72in 0.78in;
+      position: relative;
+    }
+
+    .page.page-exercise{
+      min-height: auto;
+    }
+
+    .page-header{
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: end;
+      border-bottom: 2px solid var(--line-strong);
+      padding-bottom: 8px;
+      margin-bottom: 18px;
+      font-size: 15px;
+    }
+
+    .page-header .course{
+      font-weight: 700;
+    }
+
+    .page-header .page-no{
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    h1{
+      margin: 0 0 10px;
+      font-size: 28px;
+      line-height: 1.15;
+    }
+
+    h2{
+      margin: 18px 0 10px;
+      font-size: 21px;
+      line-height: 1.2;
+    }
+
+    h3{
+      margin: 14px 0 8px;
+      font-size: 17px;
+      line-height: 1.2;
+    }
+
+    p{
+      margin: 8px 0;
+      font-size: 15px;
+    }
+
+    ul, ol{
+      margin: 8px 0 10px 22px;
+      padding: 0;
+      font-size: 15px;
+    }
+
+    li{
+      margin: 5px 0;
+    }
+
+    .intro-box{
+      border: 1px solid var(--line-strong);
+      background: var(--surface);
+      padding: 14px 16px;
+      margin: 14px 0 18px;
+    }
+
+    .objective-list{
+      margin-top: 8px;
+    }
+
+    .objective-list li{
+      margin: 6px 0;
+      font-weight: 700;
+    }
+
+    .section-note{
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .rule-list{
+      margin-left: 24px;
+    }
+
+    .rule-list li{
+      padding-left: 2px;
+    }
+
+    .symbol-lead{
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      padding: 10px 12px;
+      margin: 10px 0 16px;
+    }
+
+    .card-grid{
+      display: grid;
+      gap: 12px;
+      margin: 14px 0 18px;
+    }
+
+    .hhps-grid{
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .whmis-grid{
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .symbol-card{
+      border: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      min-height: 130px;
+    }
+
+    .symbol-visual{
+      border-right: 1px solid var(--line);
+      background: #fbfaf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    .symbol-visual img{
+      max-width: 84px;
+      max-height: 84px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .symbol-copy{
+      padding: 12px 14px;
+    }
+
+    .symbol-copy h3{
+      margin-top: 0;
+    }
+
+    .symbol-copy p:last-child,
+    .symbol-copy ul:last-child{
+      margin-bottom: 0;
+    }
+
+    .hazard-meaning{
+      font-weight: 700;
+    }
+
+    .review-box{
+      border: 1px solid var(--line-strong);
+      padding: 14px 16px;
+      background: #fcfbf9;
+      margin-top: 12px;
+    }
+
+    .exercise-toolbar{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 10px 0 14px;
+    }
+
+    .exercise-status{
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .exercise-actions{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .exercise-button{
+      border: 1px solid var(--line-strong);
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 12px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .exercise-button:hover{
+      background: #f4efe8;
+    }
+
+    .matching-board{
+      display: grid;
+      grid-template-columns: 200px minmax(0, 1fr);
+      gap: 18px;
+      margin-top: 10px;
+      background: linear-gradient(180deg, #2d4372, #23345d);
+      border: 1px solid #263558;
+      padding: 16px;
+      color: #f7fbff;
+    }
+
+    .matching-prompt{
+      margin: 0 0 14px;
+      font-size: 15px;
+      text-align: center;
+      color: #dbe8ff;
+    }
+
+    .clue-bank{
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .clue-chip{
+      width: 100%;
+      border: 1px solid rgba(18, 44, 88, 0.55);
+      background: #d8f4ff;
+      color: #22303e;
+      padding: 10px 12px;
+      text-align: center;
+      font: inherit;
+      font-weight: 700;
+      line-height: 1.2;
+      cursor: grab;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.14);
+    }
+
+    .clue-chip:active{
+      cursor: grabbing;
+    }
+
+    .clue-chip.is-selected{
+      outline: 3px solid #ffd76b;
+      outline-offset: 2px;
+    }
+
+    .clue-chip.is-hidden{
+      display: none;
+    }
+
+    .rule-grid{
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      align-content: start;
+    }
+
+    .rule-card{
+      background: #4e95c4;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 12px;
+      min-height: 248px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.16);
+    }
+
+    .rule-text{
+      margin: 0 0 14px;
+      font-size: 13px;
+      line-height: 1.25;
+      text-align: center;
+      color: #0d1b2a;
+    }
+
+    .drop-zone{
+      border: 3px dashed rgba(255, 255, 255, 0.75);
+      background: rgba(96, 191, 233, 0.9);
+      color: #ffffff;
+      min-height: 64px;
+      width: 100%;
+      padding: 10px 8px;
+      text-align: center;
+      font: inherit;
+      font-size: 14px;
+      line-height: 1.2;
+      cursor: pointer;
+    }
+
+    .drop-zone.is-active{
+      border-color: #ffd76b;
+      box-shadow: inset 0 0 0 2px rgba(255, 215, 107, 0.35);
+    }
+
+    .drop-zone.is-filled{
+      background: #e5f9ff;
+      color: #153045;
+      border-style: solid;
+      border-color: #f7fbff;
+      font-weight: 700;
+    }
+
+    .small{
+      font-size: 14px;
+    }
+
+    @media print{
+      body{
+        background: #fff;
+      }
+
+      .wrapper{
+        padding: 0;
+      }
+
+      .page{
+        width: auto;
+        box-shadow: none;
+        margin: 0;
+        min-height: 0;
+        page-break-after: always;
+      }
+
+      .page:last-child{
+        page-break-after: auto;
+      }
+    }
+
+      @media (max-width: 920px){
+      .wrapper{
+        padding: 12px;
+      }
+
+      .topbar-global{
+        width: 100%;
+        margin: 12px auto 0;
+        padding: 0 12px;
+      }
+
+      .page{
+        width: 100%;
+        min-height: 0;
+        padding: 20px 18px 28px;
+      }
+
+      .page.page-exercise{
+        width: 100%;
+      }
+
+      .hhps-grid,
+      .whmis-grid,
+      .rule-grid{
+        grid-template-columns: 1fr;
+      }
+
+      .symbol-card{
+        grid-template-columns: 90px 1fr;
+      }
+
+      .matching-board{
+        grid-template-columns: 1fr;
+      }
+
+      .symbol-visual img{
+        max-width: 62px;
+        max-height: 62px;
+      }
+    }
+  </style>
+</head>
+<body class="lang-en">
+  <div class="topbar-global">
+    <div aria-label="Language" class="lang-controls" role="group">
+      <button aria-pressed="true" class="lang-btn is-active" data-lang="en" type="button">English</button>
+      <button aria-pressed="false" class="lang-btn" data-lang="bi" type="button">En + Zh</button>
+      <button aria-pressed="false" class="lang-btn" data-lang="zh" type="button">Zh only</button>
+    </div>
+  </div>
+  <div class="wrapper">
+    <section class="page">
+      <div class="page-header">
+        <div class="course" data-i18n="course"></div>
+        <div class="page-no" data-i18n="page_1" data-i18n-mode="inline"></div>
+      </div>
+
+      <h1 data-i18n="title"></h1>
+
+      <div class="intro-box">
+        <h2 data-i18n="slo_heading"></h2>
+        <p data-i18n="slo_intro"></p>
+        <ul class="objective-list" data-i18n-list="objectives"></ul>
+      </div>
+
+      <h2 data-i18n="safety_rules_heading"></h2>
+      <p class="section-note" data-i18n="safety_rules_note"></p>
+      <ol class="rule-list" data-i18n-list="safety_rules"></ol>
+    </section>
+
+    <section class="page">
+      <div class="page-header">
+        <div class="course" data-i18n="course"></div>
+        <div class="page-no" data-i18n="page_2" data-i18n-mode="inline"></div>
+      </div>
+
+      <h2 data-i18n="hhps_whmis_heading"></h2>
+      <p class="symbol-lead" data-i18n="symbol_lead"></p>
+
+      <h2 data-i18n="hhps_heading"></h2>
+      <p data-i18n="hhps_intro"></p>
+
+      <div class="card-grid hhps-grid">
+        <article class="symbol-card">
+          <div class="symbol-visual">
+            <img src="assets/sc10-u2-chem-icons/hhps-caution-triangle.png" alt="HHPS caution triangle">
+          </div>
+          <div class="symbol-copy">
+            <h3 data-i18n="hhps_container_title"></h3>
+            <p data-i18n="hhps_container_desc"></p>
+          </div>
+        </article>
+
+        <article class="symbol-card">
+          <div class="symbol-visual">
+            <img src="assets/sc10-u2-chem-icons/hhps-explosive-triangle.png" alt="HHPS explosive triangle">
+          </div>
+          <div class="symbol-copy">
+            <h3 data-i18n="hhps_explosive_title"></h3>
+            <p data-i18n="hhps_explosive_desc"></p>
+          </div>
+        </article>
+
+        <article class="symbol-card">
+          <div class="symbol-visual">
+            <img src="assets/sc10-u2-chem-icons/hhps-danger-octagon.png" alt="HHPS danger octagon">
+          </div>
+          <div class="symbol-copy">
+            <h3 data-i18n="hhps_product_title"></h3>
+            <p data-i18n="hhps_product_desc"></p>
+          </div>
+        </article>
+
+        <article class="symbol-card">
+          <div class="symbol-visual">
+            <img src="assets/sc10-u2-chem-icons/HHPS/corrosive-1.jpg" alt="HHPS corrosive product example">
+          </div>
+          <div class="symbol-copy">
+            <h3 data-i18n="hhps_corrosive_title"></h3>
+            <p data-i18n="hhps_corrosive_desc"></p>
+          </div>
+        </article>
+
+        <article class="symbol-card">
+          <div class="symbol-visual">
+            <img src="assets/sc10-u2-chem-icons/hhps-flammable-octagon.png" alt="HHPS flammable octagon">
+          </div>
+          <div class="symbol-copy">
+            <h3 data-i18n="hhps_flammable_title"></h3>
+            <p data-i18n="hhps_flammable_desc"></p>
+          </div>
+        </article>
+
+        <article class="symbol-card">
+          <div class="symbol-visual">
+            <img src="assets/sc10-u2-chem-icons/hhps-poison-octagon.png" alt="HHPS poisonous octagon">
+          </div>
+          <div class="symbol-copy">
+            <h3 data-i18n="hhps_poisonous_title"></h3>
+            <p data-i18n="hhps_poisonous_desc"></p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-header">
+        <div class="course" data-i18n="course"></div>
+        <div class="page-no" data-i18n="page_3" data-i18n-mode="inline"></div>
+      </div>
+
+      <h2 data-i18n="whmis_heading"></h2>
+      <p data-i18n="whmis_intro_1"></p>
+      <p data-i18n="whmis_intro_2"></p>
+
+      <div class="card-grid whmis-grid">
+        <article class="symbol-card">
+          <div class="symbol-visual">
+            <img src="assets/sc10-u2-chem-icons/whmis-gas-cylinder-diamond.png" alt="WHMIS compressed gas symbol">
+          </div>
+          <div class="symbol-copy">
+            <h3 data-i18n="whmis_gas_title"></h3>
+            <p data-i18n="whmis_gas_desc"></p>
+          </div>
+        </article>
+
+        <article class="symbol-card">
+          <div class="symbol-visual">
+            <img src="assets/sc10-u2-chem-icons/whmis-flame-diamond.png" alt="WHMIS flammable and combustible material symbol">
+          </div>
+          <div class="symbol-copy">
+            <h3 data-i18n="whmis_flammable_title"></h3>
+            <ul data-i18n-list="whmis_flammable_list"></ul>
+          </div>
+        </article>
+
+        <article class="symbol-card">
+          <div class="symbol-visual">
+            <img src="assets/sc10-u2-chem-icons/whmis-corrosive-diamond.png" alt="WHMIS corrosive material symbol">
+          </div>
+          <div class="symbol-copy">
+            <h3 data-i18n="whmis_corrosive_title"></h3>
+            <p data-i18n="whmis_corrosive_desc"></p>
+          </div>
+        </article>
+
+        <article class="symbol-card">
+          <div class="symbol-visual">
+            <img src="assets/sc10-u2-chem-icons/whmis-oxidizer-diamond.png" alt="WHMIS oxidizing material symbol">
+          </div>
+          <div class="symbol-copy">
+            <h3 data-i18n="whmis_oxidizing_title"></h3>
+            <p data-i18n="whmis_oxidizing_desc"></p>
+          </div>
+        </article>
+
+        <article class="symbol-card">
+          <div class="symbol-visual">
+            <img src="assets/sc10-u2-chem-icons/whmis-health-hazard-diamond.png" alt="WHMIS health hazard symbol">
+          </div>
+          <div class="symbol-copy">
+            <h3 data-i18n="whmis_health_title"></h3>
+            <ul data-i18n-list="whmis_health_list"></ul>
+          </div>
+        </article>
+
+        <article class="symbol-card">
+          <div class="symbol-visual">
+            <img src="assets/sc10-u2-chem-icons/WHMIS/exclamation_mark-2.gif" alt="WHMIS exclamation mark symbol">
+          </div>
+          <div class="symbol-copy">
+            <h3 data-i18n="whmis_exclamation_title"></h3>
+            <ul data-i18n-list="whmis_exclamation_list"></ul>
+          </div>
+        </article>
+
+        <article class="symbol-card">
+          <div class="symbol-visual">
+            <img src="assets/sc10-u2-chem-icons/whmis-exploding-bomb-diamond.png" alt="WHMIS exploding bomb symbol">
+          </div>
+          <div class="symbol-copy">
+            <h3 data-i18n="whmis_exploding_title"></h3>
+            <ul data-i18n-list="whmis_exploding_list"></ul>
+          </div>
+        </article>
+
+        <article class="symbol-card">
+          <div class="symbol-visual">
+            <img src="assets/sc10-u2-chem-icons/whmis-skull-diamond.png" alt="WHMIS poisonous and infectious material symbol">
+          </div>
+          <div class="symbol-copy">
+            <h3 data-i18n="whmis_toxic_title"></h3>
+            <p data-i18n="whmis_toxic_desc"></p>
+          </div>
+        </article>
+
+        <article class="symbol-card">
+          <div class="symbol-visual">
+            <img src="assets/sc10-u2-chem-icons/whmis-biohazard-circle.png" alt="WHMIS biohazardous infectious material symbol">
+          </div>
+          <div class="symbol-copy">
+            <h3 data-i18n="whmis_biohazard_title"></h3>
+            <p data-i18n="whmis_biohazard_desc"></p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="page-header">
+        <div class="course" data-i18n="course"></div>
+        <div class="page-no" data-i18n="page_4" data-i18n-mode="inline"></div>
+      </div>
+
+      <h2 data-i18n="review_heading"></h2>
+      <div class="review-box">
+        <p data-i18n="review_intro"></p>
+        <div class="exercise-toolbar">
+          <div class="exercise-status" id="match-status"></div>
+          <div class="exercise-actions">
+            <span class="small" data-i18n="match_instructions"></span>
+            <button class="exercise-button" id="matching-reset" type="button" data-i18n="reset_exercise" data-i18n-mode="inline"></button>
+          </div>
+        </div>
+        <div class="matching-board">
+          <div class="clue-bank" aria-label="Matching clues">
+            <button class="clue-chip" type="button" draggable="true" data-clue-id="fish" data-i18n="clue_fish"></button>
+            <button class="clue-chip" type="button" draggable="true" data-clue-id="flushing" data-i18n="clue_flushing"></button>
+            <button class="clue-chip" type="button" draggable="true" data-clue-id="backhand" data-i18n="clue_backhand"></button>
+            <button class="clue-chip" type="button" draggable="true" data-clue-id="sand" data-i18n="clue_sand"></button>
+            <button class="clue-chip" type="button" draggable="true" data-clue-id="waft" data-i18n="clue_waft"></button>
+            <button class="clue-chip" type="button" draggable="true" data-clue-id="first-rule" data-i18n="clue_first_rule"></button>
+            <button class="clue-chip" type="button" draggable="true" data-clue-id="stop-drop-roll" data-i18n="clue_stop_drop_roll"></button>
+            <button class="clue-chip" type="button" draggable="true" data-clue-id="butter" data-i18n="clue_butter"></button>
+            <button class="clue-chip" type="button" draggable="true" data-clue-id="home-alone" data-i18n="clue_home_alone"></button>
+            <button class="clue-chip" type="button" draggable="true" data-clue-id="locations" data-i18n="clue_locations"></button>
+          </div>
+          <div>
+            <p class="matching-prompt" data-i18n="matching_prompt"></p>
+            <div class="rule-grid">
+              <div class="rule-card">
+                <p class="rule-text" data-i18n="rule_chemicals"></p>
+                <button class="drop-zone" type="button" data-rule-id="chemicals"></button>
+              </div>
+              <div class="rule-card">
+                <p class="rule-text" data-i18n="rule_dispose"></p>
+                <button class="drop-zone" type="button" data-rule-id="dispose"></button>
+              </div>
+              <div class="rule-card">
+                <p class="rule-text" data-i18n="rule_equipment"></p>
+                <button class="drop-zone" type="button" data-rule-id="equipment"></button>
+              </div>
+              <div class="rule-card">
+                <p class="rule-text" data-i18n="rule_supervision"></p>
+                <button class="drop-zone" type="button" data-rule-id="supervision"></button>
+              </div>
+              <div class="rule-card">
+                <p class="rule-text" data-i18n="rule_hot_objects"></p>
+                <button class="drop-zone" type="button" data-rule-id="hot-objects"></button>
+              </div>
+              <div class="rule-card">
+                <p class="rule-text" data-i18n="rule_taste"></p>
+                <button class="drop-zone" type="button" data-rule-id="taste"></button>
+              </div>
+              <div class="rule-card">
+                <p class="rule-text" data-i18n="rule_fire"></p>
+                <button class="drop-zone" type="button" data-rule-id="fire"></button>
+              </div>
+              <div class="rule-card">
+                <p class="rule-text" data-i18n="rule_instructions"></p>
+                <button class="drop-zone" type="button" data-rule-id="instructions"></button>
+              </div>
+              <div class="rule-card">
+                <p class="rule-text" data-i18n="rule_wafting"></p>
+                <button class="drop-zone" type="button" data-rule-id="wafting"></button>
+              </div>
+              <div class="rule-card">
+                <p class="rule-text" data-i18n="rule_sand_fire"></p>
+                <button class="drop-zone" type="button" data-rule-id="sand-fire"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+    (function () {
+      const textEntries = {
+        course: { en: "Science 10 Chemistry", zh: "10年级科学：化学" },
+        page_1: { en: "Page 1", zh: "第 1 页" },
+        page_2: { en: "Page 2", zh: "第 2 页" },
+        page_3: { en: "Page 3", zh: "第 3 页" },
+        page_4: { en: "Page 4", zh: "第 4 页" },
+        title: { en: "2.1 Lab Safety", zh: "2.1 实验室安全" },
+        slo_heading: { en: "Safety Learning Objectives", zh: "安全学习目标" },
+        slo_intro: { en: "In this lesson, you will learn to", zh: "在本课中，你将学习如何" },
+        safety_rules_heading: { en: "Safety Rules", zh: "安全规则" },
+        safety_rules_note: { en: "Read each rule carefully before beginning any science activity.", zh: "在开始任何科学活动之前，请仔细阅读每一条规则。" },
+        hhps_whmis_heading: { en: "HHPS and WHMIS", zh: "HHPS 与 WHMIS" },
+        symbol_lead: { en: "Hazard symbols are used to warn you before you open, touch, heat, smell, or store a product. You must be able to connect each symbol with its meaning.", zh: "危险符号会在你打开、触摸、加热、闻或储存产品之前提醒你注意风险。你必须能够把每个符号和它的含义对应起来。" },
+        hhps_heading: { en: "HHPS", zh: "HHPS" },
+        hhps_intro: { en: "<strong>Hazardous Household Products Symbols (HHPS)</strong> are found on many household cleaners and on containers in the science laboratory. They alert the user to the potential dangers of that particular product. In recent years the symbols have changed. There used to be three shapes but now there are only two: the triangle and the octagon.", zh: "<strong>家用危险品符号（HHPS）</strong> 出现在许多家用清洁剂以及科学实验室中的容器上。它们用来提醒使用者该产品可能带来的危险。近些年来这些符号有所变化。过去有三种外形，现在只剩下两种：三角形和八角形。" },
+        hhps_container_title: { en: "Dangerous Container", zh: "危险容器" },
+        hhps_container_desc: { en: "This symbol means the <span class=\"hazard-meaning\">container</span> is dangerous. It can explode if heated or punctured, causing flying bits of metal or plastic that can lead to serious injuries.", zh: "这个符号表示危险的是<span class=\"hazard-meaning\">容器</span>本身。容器如果被加热或刺穿，可能会爆炸，飞散的金属或塑料碎片会造成严重伤害。" },
+        hhps_explosive_title: { en: "Explosive", zh: "爆炸性" },
+        hhps_explosive_desc: { en: "Usually you will see the triangle with the <span class=\"hazard-meaning\">explosive</span> symbol inside it. Examples include aerosol cans, such as hair spray or spray paint.", zh: "你通常会看到三角形中间带有<span class=\"hazard-meaning\">爆炸性</span>标志。例子包括气雾罐，例如发胶或喷漆。" },
+        hhps_product_title: { en: "Dangerous Product", zh: "危险产品" },
+        hhps_product_desc: { en: "This symbol means the <span class=\"hazard-meaning\">product</span> inside the container is dangerous. The octagonal stop sign usually appears with one of three cautions.", zh: "这个符号表示危险的是容器里面的<span class=\"hazard-meaning\">产品</span>。八角形停止标志通常会搭配三种警示中的一种出现。" },
+        hhps_corrosive_title: { en: "Corrosive", zh: "腐蚀性" },
+        hhps_corrosive_desc: { en: "Product is <span class=\"hazard-meaning\">corrosive</span> and will burn skin, eyes, throat, or stomach. Examples include oven cleaner and toilet bowl cleaner.", zh: "产品具有<span class=\"hazard-meaning\">腐蚀性</span>，会灼伤皮肤、眼睛、喉咙或胃。例子包括烤箱清洁剂和马桶清洁剂。" },
+        hhps_flammable_title: { en: "Flammable", zh: "易燃" },
+        hhps_flammable_desc: { en: "Product is <span class=\"hazard-meaning\">flammable</span> and will catch fire easily if it is near heat, flames, or sparks. Examples include gasoline and hair spray.", zh: "产品是<span class=\"hazard-meaning\">易燃</span>的，靠近热源、火焰或火花时很容易起火。例子包括汽油和发胶。" },
+        hhps_poisonous_title: { en: "Poisonous", zh: "有毒" },
+        hhps_poisonous_desc: { en: "Product is <span class=\"hazard-meaning\">poisonous</span> and will cause illness or death if ingested. Examples include furniture polish and windshield washer fluid.", zh: "产品具有<span class=\"hazard-meaning\">毒性</span>，如果吞食会导致生病甚至死亡。例子包括家具上光剂和挡风玻璃清洗液。" },
+        whmis_heading: { en: "WHMIS", zh: "WHMIS" },
+        whmis_intro_1: { en: "All containers in the chemical storage area in your science classroom, if you are in a school, have <strong>Workplace Hazardous Materials Information System (WHMIS)</strong> symbols. This system is used across Canada in every workplace that uses chemicals. Each chemical comes with an information sheet that gives all the known data on its toxic effects and other hazards.", zh: "如果你在学校，科学教室化学品储存区中的所有容器都会带有<strong>工作场所危险品信息系统（WHMIS）</strong>符号。这个系统在加拿大所有使用化学品的工作场所中都会使用。每一种化学品都附有一份信息说明，提供有关其毒性作用和其他危险的已知资料。" },
+        whmis_intro_2: { en: "Look at the following WHMIS symbols. Make sure you can recall the symbol with its meaning.", zh: "请观察下面的 WHMIS 符号，并确保你能够把每个符号和它的含义对应起来。" },
+        whmis_gas_title: { en: "Compressed Gas", zh: "压缩气体" },
+        whmis_gas_desc: { en: "The substance is a compressed, liquefied, or dissolved gas under pressure at 29 pounds per square inch or more.", zh: "该物质是在每平方英寸 29 磅或更高压力下的压缩、液化或溶解气体。" },
+        whmis_flammable_title: { en: "Flammable and Combustible Material", zh: "易燃和可燃材料" },
+        whmis_corrosive_title: { en: "Corrosive Material", zh: "腐蚀性材料" },
+        whmis_corrosive_desc: { en: "Causes skin burns, eye damage, or destroys metals.", zh: "会造成皮肤灼伤、眼睛损伤，或腐蚀金属。" },
+        whmis_oxidizing_title: { en: "Oxidizing Material", zh: "氧化性材料" },
+        whmis_oxidizing_desc: { en: "Oxidizers may cause a fire by increasing the concentration of oxygen in the air.", zh: "氧化剂可能会通过增加空气中的氧气浓度而引发火灾。" },
+        whmis_health_title: { en: "Health Hazard", zh: "健康危害" },
+        whmis_exclamation_title: { en: "Exclamation Mark", zh: "感叹号" },
+        whmis_exploding_title: { en: "Exploding Bomb", zh: "爆炸炸弹" },
+        whmis_toxic_title: { en: "Poisonous and Infectious Material Causing Immediate and Serious Toxic Effects", zh: "会造成即时且严重毒性作用的有毒和传染性材料" },
+        whmis_toxic_desc: { en: "Acute toxicity means that exposure to a single dose of the chemical may be toxic or fatal if inhaled or swallowed, or if it comes into contact with the skin.", zh: "急性毒性表示只接触一次这种化学品，如果吸入、吞咽，或接触皮肤，就可能有毒甚至致命。" },
+        whmis_biohazard_title: { en: "Biohazardous Infectious Material", zh: "生物危害性传染材料" },
+        whmis_biohazard_desc: { en: "Used for organisms or toxins that can cause disease in people or animals.", zh: "用于表示会使人类或动物致病的生物体或毒素。" },
+        review_heading: { en: "Safety Rules Review", zh: "安全规则复习" },
+        review_intro: { en: "<strong>Please complete this safety rules matching exercise:</strong>", zh: "<strong>请完成这个安全规则配对练习：</strong>" },
+        match_instructions: { en: "Drag a clue to a box, or click a clue and then click a box. Click a filled box to clear it.", zh: "把线索拖到方框中，或先点击线索再点击方框。点击已经填入的方框可以清除它。" },
+        reset_exercise: { en: "Reset Exercise", zh: "重置练习" },
+        matching_prompt: { en: "Match the clue tiles to the safety rule cards.", zh: "把左边的线索卡片与右边的安全规则卡片配对。" },
+        ui_drop_here: { en: "Drop clue here", zh: "将线索放在这里" },
+        clue_fish: { en: "How could your safety behaviour protect fish?", zh: "你的安全行为如何保护鱼类？" },
+        clue_flushing: { en: "Flushing has another meaning (or two) in science safety.", zh: "在科学安全中，“冲洗”还有别的意思。" },
+        clue_backhand: { en: "The backhand rules!", zh: "手背规则！" },
+        clue_sand: { en: "A bucket of sand saves the land!", zh: "一桶沙子能救场！" },
+        clue_waft: { en: "To wave or waft, that is the question.", zh: "挥动还是轻扇，这就是问题所在。" },
+        clue_first_rule: { en: "Safety starts before the experiment. What's the first rule?", zh: "安全从实验前就开始了。第一条规则是什么？" },
+        clue_stop_drop_roll: { en: "Why would you want to roll on the dirty floor?", zh: "为什么你会想在脏地板上打滚？" },
+        clue_butter: { en: "Butter is not very good for this.", zh: "黄油对这种情况可没什么帮助。" },
+        clue_home_alone: { en: "Home Alone isn't a good science safety movie.", zh: "《小鬼当家》不是科学安全的好示范。" },
+        clue_locations: { en: "Forgetting these locations can be hazardous to your health.", zh: "忘记这些位置会危害你的安全。" },
+        rule_chemicals: { en: "If chemicals splash on you, rinse immediately with water. For eye exposure, flush for 10 minutes and seek medical help.", zh: "如果化学品溅到你身上，要立刻用水冲洗。如果进入眼睛，要立即冲洗 10 分钟并尽快就医。" },
+        rule_dispose: { en: "Dispose of materials as directed by your teacher. Do not pour chemicals down the drain as these may get into a salmon-spawning stream.", zh: "按老师的要求处理材料。不要把化学品倒进下水道，因为它们可能流入鲑鱼产卵溪流。" },
+        rule_equipment: { en: "Know the location of safety and first-aid equipment, including fire extinguisher, fire blanket, first-aid kit, and fire alarm. Never play with safety equipment.", zh: "要知道安全和急救设备的位置，包括灭火器、防火毯、急救箱和火警警报器。绝不要玩弄安全设备。" },
+        rule_supervision: { en: "Never do any experiment without the approval and direct supervision of your teacher, parent, or guardian.", zh: "未经老师、家长或监护人的批准和直接监督，绝不要做任何实验。" },
+        rule_hot_objects: { en: "Handle hot objects carefully. Bring the back of your hand close to, but not touching, the object. If you are burned, hold the burned area under cold water or put ice directly on it.", zh: "要小心处理热的物体。把手背靠近物体但不要碰到它。如果被烫伤，把烫伤部位放在冷水下冲洗，或直接敷冰。" },
+        rule_taste: { en: "Never taste anything or directly smell an unknown chemical.", zh: "绝不要品尝任何物质，也不要直接闻未知化学品。" },
+        rule_fire: { en: "If you are on fire, drop to the ground, and roll on the floor to smother the flames. Cover the flames with coats or blankets to help smother the flames.", zh: "如果你身上着火了，要立刻倒地并在地上打滚，把火焰闷灭。还可以用外套或毯子覆盖火焰帮助灭火。" },
+        rule_instructions: { en: "Read all written instructions before doing an activity.", zh: "在进行活动之前，要先读完所有书面说明。" },
+        rule_wafting: { en: "If you need to smell a chemical, hold the container away from your face and slowly waft or wave the air directly above the container toward your nose with your hand.", zh: "如果你需要闻一种化学品，要把容器拿远离脸部，并用手慢慢把容器上方的空气朝鼻子方向轻轻扇过来。" },
+        rule_sand_fire: { en: "Use sand or a large container to smother small fires.", zh: "使用沙子或一个较大的容器来闷灭小火。" }
+      };
+
+      const listEntries = {
+        objectives: {
+          en: [
+            "demonstrate safe procedures",
+            "demonstrate scientific literacy",
+            "demonstrate ethical, responsible, and cooperative behaviour"
+          ],
+          zh: [
+            "展示安全操作程序",
+            "展示科学素养",
+            "展示符合伦理、负责任并能合作的行为"
+          ]
+        },
+        safety_rules: {
+          en: [
+            "Always read and follow all instructions and ask your teacher about anything you do not understand.",
+            "Never do an experiment without the approval and direct supervision of an adult.",
+            "Make sure you understand all the safety labels (HHPS and WHMIS).",
+            "Tie back long hair and avoid wearing loose clothing, such as scarves, ties, or long necklaces.",
+            "Wear proper safety protection as instructed by your teacher.",
+            "Know the location of safety and first-aid equipment, including fire extinguisher, fire blanket, first-aid kit, and fire alarm.",
+            "When using a knife or razor blade, always cut away from yourself and others.",
+            "If you need to walk while holding scissors or other sharp objects, always keep the pointed ends facing away from yourself and others.",
+            "Work carefully and make sure your work area is not cluttered.",
+            "Do not use open flames unless you are instructed to do so.",
+            "Handle hot objects carefully. Bring the back of your hand close to, but not touching, the object. If you are burned, hold the burned area under cold water or put ice directly on it.",
+            "If you need to smell a chemical, hold the container away from your face and slowly move (waft or wave) the air directly above the container towards your nose with your hand.",
+            "To avoid electrical shock, make sure your hands are dry when touching electrical cords, plugs, or sockets.",
+            "Unplug electrical cords and equipment by holding the plug, not by pulling on the cord. Do not use equipment if the cord is frayed or cracked.",
+            "Never play or tamper with safety equipment.",
+            "Never drink or taste any substances during an activity.",
+            "Never eat or drink in the laboratory.",
+            "Never remove your goggles during an activity.",
+            "Never use cracked or broken glassware.",
+            "Wash hands carefully with soap and water after handling chemicals.",
+            "Clean equipment before you put it away.",
+            "Clean up your work area after you complete an activity.",
+            "Dispose of broken glass as your teacher directs.",
+            "Dispose of materials as directed by your teacher. Do not pour chemicals down the drain as they may get into a salmon-spawning stream or cause other problems.",
+            "If chemicals splash onto your body, immediately flush them off with water. If the chemical splashes in your eyes, wash your eyes immediately and continue for 10 minutes. Get to a physician as soon as possible. Proper laboratories will have eyewash stations and many have showers.",
+            "Tell your teacher immediately if an accident or spill occurs, no matter how minor.",
+            "If you are on fire, drop to the ground and roll on the floor to smother the flames. To help smother the flames, cover them with coats or blankets.",
+            "In case of fire, use a fire extinguisher (if available). Call 911 or the fire department.",
+            "Use sand or a large container to smother small fires. This cuts off the supply of oxygen."
+          ],
+          zh: [
+            "始终阅读并遵循所有说明；凡是你不明白的地方，都要询问老师。",
+            "未经成年人批准和直接监督，绝不要做实验。",
+            "确保你理解所有安全标签（HHPS 和 WHMIS）。",
+            "把长发绑好，避免穿戴宽松物品，例如围巾、领带或长项链。",
+            "按老师要求佩戴合适的安全防护用品。",
+            "知道安全和急救设备的位置，包括灭火器、防火毯、急救箱和火警警报器。",
+            "使用刀或剃刀片时，始终朝远离自己和他人的方向切割。",
+            "如果你需要拿着剪刀或其他尖锐物体走动，始终让尖端朝远离自己和他人的方向。",
+            "小心操作，并确保你的工作区域不杂乱。",
+            "除非老师指示，否则不要使用明火。",
+            "小心处理热的物体。把手背靠近物体但不要碰到它。如果烫伤了，把烫伤部位放在冷水下冲洗，或直接敷冰。",
+            "如果你需要闻一种化学品，把容器拿远离脸部，并用手慢慢把容器上方的空气朝鼻子方向轻轻扇过来。",
+            "为了避免触电，接触电线、电源插头或插座时要确保双手干燥。",
+            "拔掉电线或设备时，要握住插头而不是拉电线。如果电线磨损或开裂，不要使用该设备。",
+            "绝不要玩弄或摆弄安全设备。",
+            "活动过程中绝不要饮用或品尝任何物质。",
+            "实验室里绝不要吃东西或喝东西。",
+            "活动过程中绝不要摘下护目镜。",
+            "绝不要使用有裂纹或破损的玻璃器皿。",
+            "接触化学品后，要用肥皂和清水认真洗手。",
+            "把设备收起来之前，先把它清洁干净。",
+            "完成活动后，清理你的工作区域。",
+            "按老师的指示处理碎玻璃。",
+            "按老师的要求处理材料。不要把化学品倒进下水道，因为它们可能流入鲑鱼产卵溪流或造成其他问题。",
+            "如果化学品溅到身体上，立刻用水冲洗。如果化学品溅入眼睛，要立即冲洗并持续 10 分钟。尽快去看医生。正规的实验室会有洗眼器，很多还配有冲淋设备。",
+            "无论事故或泼洒多么轻微，都要立刻告诉老师。",
+            "如果你身上着火了，立刻趴倒在地并在地上打滚，把火焰闷灭。也可以用外套或毯子覆盖火焰帮助灭火。",
+            "发生火灾时，使用灭火器（如果有）。拨打 911 或消防部门电话。",
+            "用沙子或较大的容器来闷灭小火，这样可以切断氧气供应。"
+          ]
+        },
+        whmis_flammable_list: {
+          en: [
+            "Flammables: gases, aerosols, liquids, or solids that will burn or ignite under certain conditions.",
+            "Self-reactives: heating alone, without air, may cause fire or explosion.",
+            "Pyrophorics: in small amounts, may ignite within 5 minutes after contact with air.",
+            "Self-heating: may catch fire only in large amounts and after long periods of time when exposed to air.",
+            "Emitters of flammable gas.",
+            "Organic peroxides: when heated, may cause fire or explosion; may be sensitive to impact or friction; and may react dangerously with other chemicals."
+          ],
+          zh: [
+            "易燃物：在某些条件下会燃烧或点燃的气体、气雾剂、液体或固体。",
+            "自反应物：即使没有空气，仅靠受热也可能引起火灾或爆炸。",
+            "自燃物：少量物质在接触空气后 5 分钟内可能起火。",
+            "自热物：暴露在空气中较长时间后，大量物质可能会起火。",
+            "可释放易燃气体的物质。",
+            "有机过氧化物：受热时可能引起火灾或爆炸；可能对撞击或摩擦敏感；并且可能与其他化学品发生危险反应。"
+          ]
+        },
+        whmis_health_list: {
+          en: [
+            "Carcinogen: may cause cancer.",
+            "Respiratory sensitizer: may cause respiratory irritation.",
+            "Reproductive toxicity: may damage fertility or the unborn child.",
+            "Target organ toxicity: may cause damage to bodily organs.",
+            "Mutagenicity: may cause genetic defects.",
+            "Aspiration toxicity: may be fatal if swallowed and it enters the airways."
+          ],
+          zh: [
+            "致癌物：可能导致癌症。",
+            "呼吸道致敏物：可能引起呼吸系统刺激或敏感反应。",
+            "生殖毒性：可能损害生育能力或伤害胎儿。",
+            "特定靶器官毒性：可能对身体器官造成损害。",
+            "致突变性：可能导致遗传缺陷。",
+            "吸入危害：如果吞咽后进入呼吸道，可能致命。"
+          ]
+        },
+        whmis_exclamation_list: {
+          en: [
+            "Irritant: irritates the skin or eyes.",
+            "Skin sensitizer: an allergic response following skin contact.",
+            "Acute toxicity: may be fatal or cause organ damage from a single short-term exposure.",
+            "Narcotic effects like drowsiness, lack of coordination, and dizziness.",
+            "Respiratory tract irritation."
+          ],
+          zh: [
+            "刺激物：刺激皮肤或眼睛。",
+            "皮肤致敏物：皮肤接触后会引起过敏反应。",
+            "急性毒性：一次短时间接触就可能致命或造成器官损伤。",
+            "麻醉样作用，例如困倦、协调能力下降和头晕。",
+            "呼吸道刺激。"
+          ]
+        },
+        whmis_exploding_list: {
+          en: [
+            "Explosives: a solid or liquid chemical capable of a chemical reaction that causes damage to the surroundings.",
+            "Self-reactive: heating may cause fire or explosion without the need for air.",
+            "Organic peroxides: again, heating may cause fire or explosion."
+          ],
+          zh: [
+            "爆炸物：能够发生化学反应并对周围环境造成破坏的固体或液体化学品。",
+            "自反应物：受热时即使没有空气也可能引起火灾或爆炸。",
+            "有机过氧化物：同样在受热时可能引起火灾或爆炸。"
+          ]
+        }
+      };
+
+      const langButtons = Array.from(document.querySelectorAll(".lang-btn[data-lang]"));
+      const clueButtons = Array.from(document.querySelectorAll(".clue-chip"));
+      const dropZones = Array.from(document.querySelectorAll(".drop-zone"));
+      const resetButton = document.getElementById("matching-reset");
+      const status = document.getElementById("match-status");
+
+      const clueByRule = new Map();
+      const ruleByClue = new Map();
+      let activeClueId = null;
+      let currentLang = localStorage.getItem("lab-safety-lang") || "en";
+
+      function bilingualHtml(en, zh, inline) {
+        const className = inline ? "i18n-wrap i18n-inline" : "i18n-wrap";
+        return '<span class="' + className + '"><span class="i18n-en">' + en + '</span><span class="i18n-zh" lang="zh-Hans">' + zh + "</span></span>";
+      }
+
+      function localizedHtml(key, inline) {
+        const entry = textEntries[key];
+        if (!entry) return "";
+        return bilingualHtml(entry.en, entry.zh, inline);
+      }
+
+      function applyStaticLocalization() {
+        document.querySelectorAll("[data-i18n]").forEach((element) => {
+          const key = element.dataset.i18n;
+          element.innerHTML = localizedHtml(key, element.dataset.i18nMode === "inline");
+        });
+
+        document.querySelectorAll("[data-i18n-list]").forEach((element) => {
+          const key = element.dataset.i18nList;
+          const entry = listEntries[key];
+          if (!entry) return;
+          element.innerHTML = entry.en.map((english, index) => {
+            return "<li>" + bilingualHtml(english, entry.zh[index], false) + "</li>";
+          }).join("");
+        });
+      }
+
+      function applyLanguageMode(mode) {
+        currentLang = mode;
+        document.body.classList.toggle("lang-bi", mode === "bi");
+        document.body.classList.toggle("lang-zh", mode === "zh");
+        langButtons.forEach((button) => {
+          const selected = button.dataset.lang === mode;
+          button.classList.toggle("is-active", selected);
+          button.setAttribute("aria-pressed", String(selected));
+        });
+        localStorage.setItem("lab-safety-lang", mode);
+      }
+
+      function clueButtonById(clueId) {
+        return clueButtons.find((button) => button.dataset.clueId === clueId);
+      }
+
+      function setActiveClue(clueId) {
+        activeClueId = clueId;
+        clueButtons.forEach((button) => {
+          button.classList.toggle("is-selected", button.dataset.clueId === clueId);
+        });
+      }
+
+      function clearRule(ruleId) {
+        const clueId = clueByRule.get(ruleId);
+        if (!clueId) return;
+        clueByRule.delete(ruleId);
+        ruleByClue.delete(clueId);
+        const clueButton = clueButtonById(clueId);
+        if (clueButton) clueButton.classList.remove("is-hidden");
+      }
+
+      function placeClue(clueId, ruleId) {
+        if (!clueId) return;
+        const currentRuleForClue = ruleByClue.get(clueId);
+        if (currentRuleForClue) {
+          clueByRule.delete(currentRuleForClue);
+        }
+        clearRule(ruleId);
+        ruleByClue.set(clueId, ruleId);
+        clueByRule.set(ruleId, clueId);
+        const clueButton = clueButtonById(clueId);
+        if (clueButton) clueButton.classList.add("is-hidden");
+        setActiveClue(null);
+        render();
+      }
+
+      function render() {
+        dropZones.forEach((zone) => {
+          const clueId = clueByRule.get(zone.dataset.ruleId);
+          const clueButton = clueId ? clueButtonById(clueId) : null;
+          zone.innerHTML = clueButton ? clueButton.innerHTML : localizedHtml("ui_drop_here", true);
+          zone.classList.toggle("is-filled", Boolean(clueId));
+        });
+        status.innerHTML = bilingualHtml(
+          "Placed " + clueByRule.size + " of " + dropZones.length + " clues.",
+          "已放置 " + clueByRule.size + " / " + dropZones.length + " 条线索。",
+          true
+        );
+      }
+
+      applyStaticLocalization();
+      applyLanguageMode(currentLang);
+
+      langButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          applyLanguageMode(button.dataset.lang);
+        });
+      });
+
+      clueButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          if (button.classList.contains("is-hidden")) return;
+          const clueId = button.dataset.clueId;
+          setActiveClue(activeClueId === clueId ? null : clueId);
+        });
+
+        button.addEventListener("dragstart", function (event) {
+          setActiveClue(button.dataset.clueId);
+          event.dataTransfer.setData("text/plain", button.dataset.clueId);
+          event.dataTransfer.effectAllowed = "move";
+        });
+      });
+
+      dropZones.forEach((zone) => {
+        zone.addEventListener("click", function () {
+          if (activeClueId) {
+            placeClue(activeClueId, zone.dataset.ruleId);
+            return;
+          }
+          clearRule(zone.dataset.ruleId);
+          render();
+        });
+
+        zone.addEventListener("dragover", function (event) {
+          event.preventDefault();
+          zone.classList.add("is-active");
+        });
+
+        zone.addEventListener("dragleave", function () {
+          zone.classList.remove("is-active");
+        });
+
+        zone.addEventListener("drop", function (event) {
+          event.preventDefault();
+          zone.classList.remove("is-active");
+          const clueId = event.dataTransfer.getData("text/plain") || activeClueId;
+          placeClue(clueId, zone.dataset.ruleId);
+        });
+      });
+
+      resetButton.addEventListener("click", function () {
+        clueByRule.clear();
+        ruleByClue.clear();
+        clueButtons.forEach((button) => button.classList.remove("is-hidden"));
+        setActiveClue(null);
+        render();
+      });
+
+      render();
+    }());
+  </script>
+</body>
+</html>
