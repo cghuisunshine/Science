@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Science 10 Quiz: Lab Safety and Naming Compounds</title>
+  <style>
+    :root {
+      --bg: #ece7df;
+      --panel: #fffdf9;
+      --panel-2: #f7f2ea;
+      --text: #2a241d;
+      --muted: #6a6258;
+      --line: #c8bfb2;
+      --line-strong: #9e9385;
+      --accent: #7c2d12;
+      --accent-soft: #efe2d6;
+      --good: #1f5f38;
+      --good-bg: #e6f3ea;
+      --bad: #8b2c2c;
+      --bad-bg: #f8e6e3;
+      --warn: #7a5314;
+      --warn-bg: #f7edd7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Calibri, Aptos, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    .topbar,
+    .summary,
+    .card,
+    .sources {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 2px 10px rgba(53, 43, 32, 0.06);
+    }
+
+    .topbar {
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.8rem;
+      line-height: 1.2;
+    }
+
+    .intro {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .toolbar-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .toolbar-spacer {
+      flex: 1 1 auto;
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    button {
+      padding: 9px 12px;
+      border: 1px solid var(--line-strong);
+      background: #fff;
+      color: var(--text);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      border-color: var(--accent);
+    }
+
+    button.primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    select {
+      padding: 9px 10px;
+      border: 1px solid var(--line-strong);
+      background: #fff;
+      color: var(--text);
+      border-radius: 8px;
+    }
+
+    .scorebox {
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      border-radius: 8px;
+      min-width: 160px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .summary {
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .summary h2 {
+      margin: 0 0 8px;
+      font-size: 1.15rem;
+    }
+
+    .summary p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .quiz-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      padding: 16px 18px;
+    }
+
+    .card.correct {
+      border-color: #9fceb0;
+      background: #fbfffc;
+    }
+
+    .card.incorrect {
+      border-color: #dfb0ab;
+      background: #fffaf9;
+    }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .question-number {
+      font-size: 0.92rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .topic-tag {
+      font-size: 0.82rem;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid #dfc7b5;
+      padding: 3px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .prompt {
+      margin: 0 0 12px;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .i18n-wrap {
+      display: block;
+    }
+
+    .i18n-en {
+      display: block;
+    }
+
+    .i18n-zh {
+      display: none;
+      margin-top: 4px;
+      color: var(--muted);
+    }
+
+    body.lang-bi .i18n-zh {
+      display: block;
+    }
+
+    body.lang-zh .i18n-en {
+      display: none !important;
+    }
+
+    body.lang-zh .i18n-zh {
+      display: block;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .option:hover {
+      background: #fcfaf6;
+    }
+
+    .option input {
+      margin-top: 3px;
+      accent-color: var(--accent);
+    }
+
+    .option-text {
+      flex: 1 1 auto;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback.correct {
+      background: var(--good-bg);
+      border-color: #b7d7c2;
+      color: var(--good);
+    }
+
+    .feedback.incorrect {
+      background: var(--bad-bg);
+      border-color: #e1b8b0;
+      color: var(--bad);
+    }
+
+    .feedback.unanswered {
+      background: var(--warn-bg);
+      border-color: #e3c98a;
+      color: var(--warn);
+    }
+
+    .feedback .detail {
+      margin-top: 6px;
+      color: var(--text);
+    }
+
+    .sources {
+      margin-top: 18px;
+      padding: 14px 16px;
+    }
+
+    .sources h2 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .sources ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .sources a {
+      color: var(--accent);
+    }
+
+    @media (max-width: 720px) {
+      .question-meta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .toolbar-spacer {
+        display: none;
+      }
+
+      .scorebox {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body class="lang-bi">
+  <div class="page">
+    <section class="topbar">
+      <h1>Science 10 Practice Quiz</h1>
+      <p class="intro">Practice questions from 2.1 Lab Safety and 2.2 Naming Compounds Review. You can check one question at a time or grade the whole set at once.</p>
+
+      <div class="toolbar">
+        <div class="toolbar-group">
+          <button id="gradeAllBtn" class="primary" type="button">Grade Quiz</button>
+          <button id="resetBtn" type="button">Reset</button>
+          <button id="showAnswersBtn" type="button">Show Answers</button>
+          <button id="shuffleBtn" type="button">Shuffle Questions</button>
+        </div>
+        <div class="toolbar-spacer"></div>
+        <div class="toolbar-group">
+          <label for="languageMode">Display:</label>
+          <select id="languageMode">
+            <option value="en">English</option>
+            <option value="zh">Chinese</option>
+            <option value="bi" selected>English + Chinese</option>
+          </select>
+          <div id="scoreBox" class="scorebox">Not graded</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="summary" class="summary">
+      <h2 id="summaryTitle">Quiz Summary</h2>
+      <p id="summaryText"></p>
+    </section>
+
+    <main id="quizList" class="quiz-list"></main>
+
+    <section class="sources">
+      <h2>Source Lessons</h2>
+      <ul>
+        <li><a href="https://cghuisunshine.github.io/Science/2.1-Lab-Safety.html" target="_blank" rel="noopener noreferrer">2.1 Lab Safety</a></li>
+        <li><a href="https://cghuisunshine.github.io/Science/2.2-Naming-Compounds-Review.html" target="_blank" rel="noopener noreferrer">2.2 Naming Compounds - Review</a></li>
+      </ul>
+    </section>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        id: "q01",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "What should you do before beginning any science activity?",
+          zh: "开始任何科学活动之前，你应该做什么？"
+        },
+        options: [
+          { key: "a", text: { en: "Put on goggles only", zh: "只戴上护目镜" } },
+          { key: "b", text: { en: "Read each rule carefully", zh: "认真阅读每一条规则" } },
+          { key: "c", text: { en: "Ask a friend what to do", zh: "问同学该怎么做" } },
+          { key: "d", text: { en: "Start setting up equipment", zh: "开始摆放器材" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "The lesson says safety starts before the activity, and students should read the rules and written instructions first.",
+          zh: "课程强调安全从活动开始前就开始了，学生应先阅读安全规则和书面说明。"
+        }
+      },
+      {
+        id: "q02",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "A science experiment should only be done",
+          zh: "科学实验只能在什么情况下进行？"
+        },
+        options: [
+          { key: "a", text: { en: "after lunch", zh: "午饭后" } },
+          { key: "b", text: { en: "with a partner", zh: "和同伴一起" } },
+          { key: "c", text: { en: "with approval and direct adult supervision", zh: "经批准并在成人直接监督下" } },
+          { key: "d", text: { en: "in a large room", zh: "在宽敞的房间里" } }
+        ],
+        answerKey: "c",
+        explanation: {
+          en: "The lesson states that experiments must not be done without approval and direct supervision from a teacher, parent, or guardian.",
+          zh: "课程指出，未经老师、家长或监护人批准并直接监督，不能进行实验。"
+        }
+      },
+      {
+        id: "q03",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "If you need to smell a chemical, you should",
+          zh: "如果你需要闻一种化学品，你应该怎么做？"
+        },
+        options: [
+          { key: "a", text: { en: "sniff directly from the container", zh: "直接对着容器闻" } },
+          { key: "b", text: { en: "hold it close to your nose", zh: "把它靠近鼻子" } },
+          { key: "c", text: { en: "waft the air toward your nose", zh: "把上方空气轻轻扇向鼻子" } },
+          { key: "d", text: { en: "shake the container first", zh: "先摇晃容器" } }
+        ],
+        answerKey: "c",
+        explanation: {
+          en: "The correct safety method is wafting, not smelling directly from the container.",
+          zh: "正确的安全方法是轻轻扇气味过来，而不是直接对着容器闻。"
+        }
+      },
+      {
+        id: "q04",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "If a chemical splashes into your eyes, you should",
+          zh: "如果化学品溅进眼睛，你应该怎么做？"
+        },
+        options: [
+          { key: "a", text: { en: "wipe it with a paper towel", zh: "用纸巾擦掉" } },
+          { key: "b", text: { en: "flush with water for 10 minutes and get medical help", zh: "用水冲洗 10 分钟并寻求医疗帮助" } },
+          { key: "c", text: { en: "close your eyes and wait", zh: "闭上眼睛等一会儿" } },
+          { key: "d", text: { en: "use soap immediately", zh: "立刻用肥皂洗" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "The lesson specifically says to flush the eyes for 10 minutes and seek medical help as soon as possible.",
+          zh: "课程明确指出要立即冲洗眼睛 10 分钟，并尽快就医。"
+        }
+      },
+      {
+        id: "q05",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "Why should chemicals not be poured down the drain?",
+          zh: "为什么不能把化学品倒进下水道？"
+        },
+        options: [
+          { key: "a", text: { en: "They stain the sink", zh: "它们会弄脏水槽" } },
+          { key: "b", text: { en: "They smell bad", zh: "它们气味难闻" } },
+          { key: "c", text: { en: "They may get into a salmon-spawning stream", zh: "它们可能流入鲑鱼产卵溪流" } },
+          { key: "d", text: { en: "They are expensive", zh: "它们很昂贵" } }
+        ],
+        answerKey: "c",
+        explanation: {
+          en: "The lesson connects proper disposal to protecting waterways, including salmon-spawning streams.",
+          zh: "课程把正确处理化学品与保护水道联系起来，包括保护鲑鱼产卵溪流。"
+        }
+      },
+      {
+        id: "q06",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "To check whether an object is hot, you should",
+          zh: "要判断一个物体是否烫，你应该怎么做？"
+        },
+        options: [
+          { key: "a", text: { en: "tap it quickly with your finger", zh: "用手指快速碰一下" } },
+          { key: "b", text: { en: "use the back of your hand near it without touching", zh: "把手背靠近它但不要碰到" } },
+          { key: "c", text: { en: "pour water on it", zh: "往上面倒水" } },
+          { key: "d", text: { en: "hold it with bare hands", zh: "直接用手拿起" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "The lesson teaches the back-of-the-hand safety check for hot objects.",
+          zh: "课程教授了用手背靠近而不接触来判断热物体的方法。"
+        }
+      },
+      {
+        id: "q07",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "If your clothing catches fire, you should",
+          zh: "如果你的衣物着火了，你应该怎么做？"
+        },
+        options: [
+          { key: "a", text: { en: "run outside", zh: "跑到外面去" } },
+          { key: "b", text: { en: "jump up and down", zh: "原地跳动" } },
+          { key: "c", text: { en: "drop to the ground and roll", zh: "倒在地上并打滚" } },
+          { key: "d", text: { en: "take off your shoes", zh: "脱掉鞋子" } }
+        ],
+        answerKey: "c",
+        explanation: {
+          en: "The lesson gives the standard fire response: drop and roll to smother the flames.",
+          zh: "课程给出的标准做法是倒地并打滚，把火焰闷灭。"
+        }
+      },
+      {
+        id: "q08",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "A small fire can be smothered with",
+          zh: "小火可以用什么来闷灭？"
+        },
+        options: [
+          { key: "a", text: { en: "sugar", zh: "糖" } },
+          { key: "b", text: { en: "sand or a large container", zh: "沙子或较大的容器" } },
+          { key: "c", text: { en: "paper towels", zh: "纸巾" } },
+          { key: "d", text: { en: "glassware", zh: "玻璃器皿" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "The lesson says sand or a large container can cut off oxygen and smother a small fire.",
+          zh: "课程说明可以用沙子或较大的容器切断氧气，从而闷灭小火。"
+        }
+      },
+      {
+        id: "q09",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "In HHPS, the “dangerous container” symbol means",
+          zh: "在 HHPS 中，“危险容器”符号表示什么？"
+        },
+        options: [
+          { key: "a", text: { en: "the liquid is safe", zh: "里面的液体是安全的" } },
+          { key: "b", text: { en: "the container may explode if heated or punctured", zh: "容器被加热或刺穿时可能爆炸" } },
+          { key: "c", text: { en: "the product must be refrigerated", zh: "产品必须冷藏" } },
+          { key: "d", text: { en: "the product is edible", zh: "产品可以食用" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "The “dangerous container” warning is about the container itself, not just the substance inside it.",
+          zh: "“危险容器”警告针对的是容器本身，而不只是内部物质。"
+        }
+      },
+      {
+        id: "q10",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "Which WHMIS symbol is used for organisms or toxins that can cause disease in people or animals?",
+          zh: "哪一个 WHMIS 符号用于表示能使人或动物致病的生物体或毒素？"
+        },
+        options: [
+          { key: "a", text: { en: "Compressed Gas", zh: "压缩气体" } },
+          { key: "b", text: { en: "Oxidizing Material", zh: "氧化性材料" } },
+          { key: "c", text: { en: "Biohazardous Infectious Material", zh: "生物危害性传染材料" } },
+          { key: "d", text: { en: "Exclamation Mark", zh: "感叹号" } }
+        ],
+        answerKey: "c",
+        explanation: {
+          en: "The WHMIS biohazard symbol covers organisms or toxins that can cause disease in people or animals.",
+          zh: "WHMIS 的生物危害符号用于表示能使人或动物致病的生物体或毒素。"
+        }
+      },
+      {
+        id: "q11",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "Ionic compounds form when",
+          zh: "离子化合物形成于什么情况下？"
+        },
+        options: [
+          { key: "a", text: { en: "two non-metals combine", zh: "两个非金属结合" } },
+          { key: "b", text: { en: "a metal ion and a non-metal ion combine", zh: "金属离子和非金属离子结合" } },
+          { key: "c", text: { en: "two metals combine", zh: "两个金属结合" } },
+          { key: "d", text: { en: "noble gases combine", zh: "稀有气体结合" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "The lesson defines ionic compounds as combinations of metal ions with non-metal ions.",
+          zh: "课程把离子化合物定义为金属离子和非金属离子的结合。"
+        }
+      },
+      {
+        id: "q12",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "In naming an ionic compound, the first part of the name is always the",
+          zh: "在给离子化合物命名时，名称的第一部分总是"
+        },
+        options: [
+          { key: "a", text: { en: "non-metal ion", zh: "非金属离子" } },
+          { key: "b", text: { en: "polyatomic ion", zh: "多原子离子" } },
+          { key: "c", text: { en: "metal ion", zh: "金属离子" } },
+          { key: "d", text: { en: "prefix", zh: "前缀" } }
+        ],
+        answerKey: "c",
+        explanation: {
+          en: "One of the core ionic naming rules is to put the metal ion first in the name.",
+          zh: "离子化合物命名的核心规则之一是先写金属离子的名称。"
+        }
+      },
+      {
+        id: "q13",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "In an ionic compound name, the non-metal ending is usually changed to",
+          zh: "在离子化合物名称中，非金属名称的词尾通常改成"
+        },
+        options: [
+          { key: "a", text: { en: "-ate", zh: "-ate" } },
+          { key: "b", text: { en: "-ite", zh: "-ite" } },
+          { key: "c", text: { en: "-ium", zh: "-ium" } },
+          { key: "d", text: { en: "-ide", zh: "-ide" } }
+        ],
+        answerKey: "d",
+        explanation: {
+          en: "The lesson gives examples such as fluorine becoming fluoride and sulfur becoming sulfide.",
+          zh: "课程给出的例子包括 fluorine 变成 fluoride，sulfur 变成 sulfide。"
+        }
+      },
+      {
+        id: "q14",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "What is the correct name for magnesium and fluorine in an ionic compound?",
+          zh: "由 magnesium 和 fluorine 形成的离子化合物正确名称是什么？"
+        },
+        options: [
+          { key: "a", text: { en: "Fluorine magnesium", zh: "fluorine magnesium" } },
+          { key: "b", text: { en: "Magnesium fluoride", zh: "magnesium fluoride" } },
+          { key: "c", text: { en: "Magnesium fluorine", zh: "magnesium fluorine" } },
+          { key: "d", text: { en: "Fluoride magnesium", zh: "fluoride magnesium" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "The lesson uses magnesium and fluorine as the first ionic naming example: magnesium fluoride.",
+          zh: "课程用 magnesium 和 fluorine 作为第一个离子命名例子，答案是 magnesium fluoride。"
+        }
+      },
+      {
+        id: "q15",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "What is the correct name for Sn3P4?",
+          zh: "Sn3P4 的正确名称是什么？"
+        },
+        options: [
+          { key: "a", text: { en: "Tin phosphide", zh: "Tin phosphide" } },
+          { key: "b", text: { en: "Tin (III) phosphide", zh: "Tin (III) phosphide" } },
+          { key: "c", text: { en: "Tin (IV) phosphide", zh: "Tin (IV) phosphide" } },
+          { key: "d", text: { en: "Tin phosphate", zh: "Tin phosphate" } }
+        ],
+        answerKey: "c",
+        explanation: {
+          en: "The lesson works out the charges and shows that each tin ion must be +4, so the name is tin (IV) phosphide.",
+          zh: "课程通过电荷计算得出每个 tin 离子必须是 +4，因此名称是 tin (IV) phosphide。"
+        }
+      },
+      {
+        id: "q16",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "Compound names are capitalized",
+          zh: "化合物名称在什么情况下要大写？"
+        },
+        options: [
+          { key: "a", text: { en: "always", zh: "总是" } },
+          { key: "b", text: { en: "only for ionic compounds", zh: "只在离子化合物中" } },
+          { key: "c", text: { en: "only at the start of a sentence or in a title", zh: "只在句首或标题中" } },
+          { key: "d", text: { en: "only for covalent compounds", zh: "只在共价化合物中" } }
+        ],
+        answerKey: "c",
+        explanation: {
+          en: "The lesson includes a note that compound names are not normally capitalized except at the start of a sentence or in a title.",
+          zh: "课程特别说明，化合物名称通常不大写，除非位于句首或标题中。"
+        }
+      },
+      {
+        id: "q17",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "Covalent compounds are made from",
+          zh: "共价化合物是由什么组成的？"
+        },
+        options: [
+          { key: "a", text: { en: "metals only", zh: "只有金属" } },
+          { key: "b", text: { en: "a metal and a non-metal", zh: "一个金属和一个非金属" } },
+          { key: "c", text: { en: "two non-metals", zh: "两个非金属" } },
+          { key: "d", text: { en: "ions only", zh: "只有离子" } }
+        ],
+        answerKey: "c",
+        explanation: {
+          en: "The lesson distinguishes covalent compounds as combinations of non-metals with non-metals.",
+          zh: "课程把共价化合物区分为非金属与非金属的结合。"
+        }
+      },
+      {
+        id: "q18",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "Which prefix means 3 in covalent naming?",
+          zh: "在共价化合物命名中，表示 3 的前缀是哪个？"
+        },
+        options: [
+          { key: "a", text: { en: "mono-", zh: "mono-" } },
+          { key: "b", text: { en: "di-", zh: "di-" } },
+          { key: "c", text: { en: "tri-", zh: "tri-" } },
+          { key: "d", text: { en: "tetra-", zh: "tetra-" } }
+        ],
+        answerKey: "c",
+        explanation: {
+          en: "The prefix chart in the lesson lists tri- for 3.",
+          zh: "课程中的前缀表列出 3 对应 tri-。"
+        }
+      },
+      {
+        id: "q19",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "What is the correct name for N2O?",
+          zh: "N2O 的正确名称是什么？"
+        },
+        options: [
+          { key: "a", text: { en: "Nitrogen oxide", zh: "Nitrogen oxide" } },
+          { key: "b", text: { en: "Dinitrogen monoxide", zh: "Dinitrogen monoxide" } },
+          { key: "c", text: { en: "Nitrogen monooxide", zh: "Nitrogen monooxide" } },
+          { key: "d", text: { en: "Dioxide nitrogen", zh: "Dioxide nitrogen" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "The lesson gives N2O as an example and names it dinitrogen monoxide.",
+          zh: "课程把 N2O 作为例子，并给出名称 dinitrogen monoxide。"
+        }
+      },
+      {
+        id: "q20",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "Why are brackets needed in Ca(OH)2?",
+          zh: "为什么 Ca(OH)2 中需要括号？"
+        },
+        options: [
+          { key: "a", text: { en: "To show calcium is negative", zh: "表示 calcium 带负电" } },
+          { key: "b", text: { en: "To show OH is a polyatomic group repeated twice", zh: "表示 OH 是重复两次的多原子离子整体" } },
+          { key: "c", text: { en: "To separate metals from non-metals", zh: "把金属和非金属分开" } },
+          { key: "d", text: { en: "To indicate a covalent bond", zh: "表示共价键" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "The lesson notes that OH needs brackets to keep the polyatomic ion together when there are two hydroxide groups.",
+          zh: "课程说明，当需要两个 hydroxide 基团时，必须用括号把 OH 这个多原子离子整体括起来。"
+        }
+      }
+    ];
+
+    const state = {
+      lang: "bi",
+      order: [],
+      lastAction: "idle",
+      score: null
+    };
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function localizedBlock(text) {
+      return [
+        '<span class="i18n-wrap">',
+        '<span class="i18n-en">' + escapeHtml(text.en) + "</span>",
+        '<span class="i18n-zh" lang="zh-Hans">' + escapeHtml(text.zh) + "</span>",
+        "</span>"
+      ].join("");
+    }
+
+    function getQuestionById(id) {
+      return questions.find((question) => question.id === id);
+    }
+
+    function shuffled(array) {
+      const copy = array.slice();
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = copy[i];
+        copy[i] = copy[j];
+        copy[j] = temp;
+      }
+      return copy;
+    }
+
+    function ensureOrder() {
+      if (!state.order.length) {
+        state.order = questions.map((question) => question.id);
+      }
+    }
+
+    function currentSelections() {
+      const selections = {};
+      state.order.forEach((questionId) => {
+        const checked = document.querySelector('input[name="' + questionId + '"]:checked');
+        selections[questionId] = checked ? checked.value : "";
+      });
+      return selections;
+    }
+
+    function updateLanguage() {
+      document.body.classList.toggle("lang-bi", state.lang === "bi");
+      document.body.classList.toggle("lang-zh", state.lang === "zh");
+      document.documentElement.lang = state.lang === "zh" ? "zh" : "en";
+      document.getElementById("languageMode").value = state.lang;
+    }
+
+    function buildOptionMarkup(questionId, option, checked) {
+      const inputId = questionId + "_" + option.key;
+      return [
+        '<label class="option" for="' + inputId + '">',
+        '<input type="radio" id="' + inputId + '" name="' + questionId + '" value="' + option.key + '"' + (checked ? " checked" : "") + " />",
+        '<span class="option-text">' + localizedBlock(option.text) + "</span>",
+        "</label>"
+      ].join("");
+    }
+
+    function renderQuiz(savedSelections) {
+      ensureOrder();
+      const list = document.getElementById("quizList");
+      list.innerHTML = "";
+
+      state.order.forEach((questionId, index) => {
+        const question = getQuestionById(questionId);
+        const card = document.createElement("section");
+        card.className = "card";
+        card.id = "card_" + question.id;
+
+        const options = shuffled(question.options);
+        const selected = savedSelections[question.id] || "";
+
+        card.innerHTML = [
+          '<div class="question-meta">',
+          '<div class="question-number">Question ' + (index + 1) + "</div>",
+          '<div class="topic-tag">' + localizedBlock(question.topic) + "</div>",
+          "</div>",
+          '<p class="prompt">' + localizedBlock(question.prompt) + "</p>",
+          '<div class="options">' + options.map((option) => buildOptionMarkup(question.id, option, selected === option.key)).join("") + "</div>",
+          '<div class="action-row">',
+          '<button type="button" data-action="check" data-question="' + question.id + '">Check This Question</button>',
+          "</div>",
+          '<div class="feedback" id="feedback_' + question.id + '"></div>'
+        ].join("");
+
+        list.appendChild(card);
+      });
+    }
+
+    function markQuestion(questionId, mode, messageHtml) {
+      const card = document.getElementById("card_" + questionId);
+      const feedback = document.getElementById("feedback_" + questionId);
+      card.classList.remove("correct", "incorrect");
+      feedback.className = "feedback show";
+
+      if (mode === "correct") {
+        card.classList.add("correct");
+        feedback.classList.add("correct");
+      } else if (mode === "incorrect") {
+        card.classList.add("incorrect");
+        feedback.classList.add("incorrect");
+      } else {
+        feedback.classList.add("unanswered");
+      }
+
+      feedback.innerHTML = messageHtml;
+    }
+
+    function gradeQuestion(questionId) {
+      const question = getQuestionById(questionId);
+      const selected = document.querySelector('input[name="' + questionId + '"]:checked');
+      const answer = question.options.find((option) => option.key === question.answerKey);
+
+      if (!selected) {
+        markQuestion(
+          questionId,
+          "unanswered",
+          '<strong>Not answered.</strong><div class="detail">Correct answer: ' + localizedBlock(answer.text) + "<br>" + localizedBlock(question.explanation) + "</div>"
+        );
+        return false;
+      }
+
+      if (selected.value === question.answerKey) {
+        markQuestion(
+          questionId,
+          "correct",
+          '<strong>Correct.</strong><div class="detail">' + localizedBlock(question.explanation) + "</div>"
+        );
+        return true;
+      }
+
+      markQuestion(
+        questionId,
+        "incorrect",
+        '<strong>Incorrect.</strong><div class="detail">Correct answer: ' + localizedBlock(answer.text) + "<br>" + localizedBlock(question.explanation) + "</div>"
+      );
+      return false;
+    }
+
+    function updateScoreBox() {
+      const box = document.getElementById("scoreBox");
+      if (state.lastAction === "graded" && state.score) {
+        box.textContent = "Score: " + state.score.correct + "/" + state.score.total + " (" + state.score.percent + "%)";
+        return;
+      }
+      if (state.lastAction === "answers") {
+        box.textContent = "Answers shown";
+        return;
+      }
+      box.textContent = "Not graded";
+    }
+
+    function updateSummary(correct, total, shownAnswers) {
+      const summary = document.getElementById("summary");
+      const text = document.getElementById("summaryText");
+      summary.style.display = "block";
+
+      if (shownAnswers) {
+        text.textContent = "All answers are now visible. Reset or shuffle if you want another practice round.";
+        return;
+      }
+
+      const percent = Math.round((correct / total) * 100);
+      if (percent >= 90) {
+        text.textContent = "Strong result. You have a solid grasp of the safety rules and naming patterns in these two lessons.";
+      } else if (percent >= 75) {
+        text.textContent = "Good result. Review the missed questions, especially symbol meanings, Roman numerals, and polyatomic ion notation.";
+      } else if (percent >= 60) {
+        text.textContent = "Partial understanding. Re-read the lessons and focus on safety response steps and the naming rules for ionic versus covalent compounds.";
+      } else {
+        text.textContent = "This set needs another pass. Review the source lessons, then reset and try again.";
+      }
+    }
+
+    function gradeAll() {
+      let correct = 0;
+      state.order.forEach((questionId) => {
+        if (gradeQuestion(questionId)) {
+          correct += 1;
+        }
+      });
+
+      state.score = {
+        correct: correct,
+        total: state.order.length,
+        percent: Math.round((correct / state.order.length) * 100)
+      };
+      state.lastAction = "graded";
+      updateScoreBox();
+      updateSummary(correct, state.order.length, false);
+    }
+
+    function showAnswers() {
+      state.order.forEach((questionId) => {
+        const question = getQuestionById(questionId);
+        const correctInput = document.querySelector('input[name="' + questionId + '"][value="' + question.answerKey + '"]');
+        if (correctInput) {
+          correctInput.checked = true;
+        }
+        gradeQuestion(questionId);
+      });
+
+      state.lastAction = "answers";
+      state.score = null;
+      updateScoreBox();
+      updateSummary(0, state.order.length, true);
+    }
+
+    function resetQuiz() {
+      state.lastAction = "idle";
+      state.score = null;
+      renderQuiz({});
+      updateLanguage();
+      updateScoreBox();
+      document.getElementById("summary").style.display = "none";
+      document.getElementById("summaryText").textContent = "";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function shuffleQuestions() {
+      const selections = currentSelections();
+      state.order = shuffled(state.order);
+      state.lastAction = "idle";
+      state.score = null;
+      renderQuiz(selections);
+      updateLanguage();
+      updateScoreBox();
+      document.getElementById("summary").style.display = "none";
+      document.getElementById("summaryText").textContent = "";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.getElementById("quizList").addEventListener("click", (event) => {
+      const button = event.target.closest('button[data-action="check"]');
+      if (!button) {
+        return;
+      }
+      gradeQuestion(button.dataset.question);
+    });
+
+    document.getElementById("gradeAllBtn").addEventListener("click", gradeAll);
+    document.getElementById("resetBtn").addEventListener("click", resetQuiz);
+    document.getElementById("showAnswersBtn").addEventListener("click", showAnswers);
+    document.getElementById("shuffleBtn").addEventListener("click", shuffleQuestions);
+    document.getElementById("languageMode").addEventListener("change", (event) => {
+      state.lang = event.target.value;
+      updateLanguage();
+    });
+
+    ensureOrder();
+    renderQuiz({});
+    updateLanguage();
+    updateScoreBox();
+  </script>
+</body>
+</html>
