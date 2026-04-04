@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Short-Answer Practice Quiz: Lab Safety and Naming Compounds</title>
+  <style>
+    :root {
+      --bg: #ece7df;
+      --panel: #fffdf9;
+      --panel-alt: #f5efe6;
+      --text: #2a241d;
+      --muted: #6a6258;
+      --line: #c8bfb2;
+      --line-strong: #9e9385;
+      --accent: #7c2d12;
+      --accent-soft: #efe2d6;
+      --good: #1f5f38;
+      --good-bg: #e6f3ea;
+      --bad: #8b2c2c;
+      --bad-bg: #f8e6e3;
+      --note: #7a5314;
+      --note-bg: #f7edd7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Calibri, Aptos, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    .panel,
+    .card,
+    .summary,
+    .sources {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 2px 8px rgba(53, 43, 32, 0.07);
+    }
+
+    .panel {
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.8rem;
+      line-height: 1.2;
+    }
+
+    .intro {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .toolbar-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .toolbar-spacer {
+      flex: 1 1 auto;
+    }
+
+    button,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      padding: 9px 12px;
+      border: 1px solid var(--line-strong);
+      background: #fff;
+      color: var(--text);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      border-color: var(--accent);
+    }
+
+    button.primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    button.mark-good {
+      border-color: #8cb49a;
+      background: var(--good-bg);
+      color: var(--good);
+    }
+
+    button.mark-review {
+      border-color: #d8b1aa;
+      background: var(--bad-bg);
+      color: var(--bad);
+    }
+
+    select {
+      padding: 9px 10px;
+      border: 1px solid var(--line-strong);
+      background: #fff;
+      color: var(--text);
+      border-radius: 8px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+
+    .summary-item {
+      border: 1px solid var(--line);
+      background: var(--panel-alt);
+      padding: 10px 12px;
+      border-radius: 8px;
+    }
+
+    .summary-label {
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-bottom: 4px;
+    }
+
+    .summary-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .quiz-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      padding: 16px 18px;
+    }
+
+    .card.is-good {
+      border-color: #9fceb0;
+      background: #fbfffc;
+    }
+
+    .card.is-review {
+      border-color: #dfb0ab;
+      background: #fffaf9;
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .card-meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .card-status {
+      min-width: 130px;
+      text-align: right;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .prompt {
+      margin: 0 0 12px;
+      font-size: 1.02rem;
+      font-weight: 700;
+    }
+
+    .i18n-wrap {
+      display: block;
+    }
+
+    .i18n-en {
+      display: block;
+    }
+
+    .i18n-zh {
+      display: none;
+      margin-top: 4px;
+      color: var(--muted);
+    }
+
+    body.lang-bi .i18n-zh {
+      display: block;
+    }
+
+    body.lang-zh .i18n-en {
+      display: none !important;
+    }
+
+    body.lang-zh .i18n-zh {
+      display: block;
+    }
+
+    .answer-box {
+      width: 100%;
+      min-height: 96px;
+      padding: 10px 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      resize: vertical;
+    }
+
+    .answer-box:focus {
+      outline: 2px solid rgba(124, 45, 18, 0.16);
+      border-color: var(--accent);
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .feedback,
+    .suggested {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+    }
+
+    .feedback.show,
+    .suggested.show {
+      display: block;
+    }
+
+    .feedback.good {
+      background: var(--good-bg);
+      border-color: #b7d7c2;
+      color: var(--good);
+    }
+
+    .feedback.note {
+      background: var(--note-bg);
+      border-color: #e3c98a;
+      color: var(--note);
+    }
+
+    .suggested {
+      background: var(--panel-alt);
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    .keyword-note {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .sources {
+      margin-top: 18px;
+      padding: 14px 16px;
+    }
+
+    .sources h2 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .sources ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .sources a {
+      color: var(--accent);
+    }
+
+    @media (max-width: 760px) {
+      .summary {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .card-head {
+        flex-direction: column;
+      }
+
+      .card-status {
+        text-align: left;
+        min-width: 0;
+      }
+
+      .toolbar-spacer {
+        display: none;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .summary {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="lang-bi">
+  <div class="page">
+    <section class="panel">
+      <h1>Short-Answer Practice Quiz</h1>
+      <p class="intro">Type an answer for each question, use the keyword check for a quick signal, then self-mark each one as <strong>I Got It</strong> or <strong>Needs Review</strong>.</p>
+
+      <div class="toolbar">
+        <div class="toolbar-group">
+          <button id="checkAllBtn" class="primary" type="button">Check All Answers</button>
+          <button id="showAllBtn" type="button">Show All Suggested Answers</button>
+          <button id="resetBtn" type="button">Reset</button>
+        </div>
+        <div class="toolbar-spacer"></div>
+        <div class="toolbar-group">
+          <label for="languageMode">Display:</label>
+          <select id="languageMode">
+            <option value="en">English</option>
+            <option value="zh">Chinese</option>
+            <option value="bi" selected>English + Chinese</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <section class="summary">
+      <div class="summary-item">
+        <div class="summary-label">Questions</div>
+        <div id="totalCount" class="summary-value">20</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Answered</div>
+        <div id="answeredCount" class="summary-value">0</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">I Got It</div>
+        <div id="gotItCount" class="summary-value">0</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Needs Review</div>
+        <div id="reviewCount" class="summary-value">0</div>
+      </div>
+    </section>
+
+    <main id="quizList" class="quiz-list"></main>
+
+    <section class="sources">
+      <h2>Source Lessons</h2>
+      <ul>
+        <li><a href="https://cghuisunshine.github.io/Science/2.1-Lab-Safety.html" target="_blank" rel="noopener noreferrer">2.1 Lab Safety</a></li>
+        <li><a href="https://cghuisunshine.github.io/Science/2.2-Naming-Compounds-Review.html" target="_blank" rel="noopener noreferrer">2.2 Naming Compounds - Review</a></li>
+      </ul>
+    </section>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        id: "q01",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "Before starting a science activity, what should you do first?",
+          zh: "开始科学活动之前，首先应该做什么？"
+        },
+        suggestedAnswer: {
+          en: "Read the safety rules and written instructions before you begin.",
+          zh: "开始之前先阅读安全规则和书面说明。"
+        },
+        keywords: ["read", "instruction", "rule"]
+      },
+      {
+        id: "q02",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "If you need to smell a chemical, what safe method should you use?",
+          zh: "如果需要闻一种化学品，应该使用什么安全方法？"
+        },
+        suggestedAnswer: {
+          en: "Use wafting: hold the container away and gently wave the air toward your nose.",
+          zh: "使用轻扇法：把容器拿远一些，用手轻轻把上方空气扇向鼻子。"
+        },
+        keywords: ["waft", "wave", "air", "nose"]
+      },
+      {
+        id: "q03",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "If chemicals splash into your eyes, what should you do immediately?",
+          zh: "如果化学品溅进眼睛，应该立刻怎么做？"
+        },
+        suggestedAnswer: {
+          en: "Flush the eyes with water for 10 minutes and get medical help as soon as possible.",
+          zh: "立刻用水冲洗眼睛 10 分钟，并尽快就医。"
+        },
+        keywords: ["flush", "water", "10", "medical"]
+      },
+      {
+        id: "q04",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "Why should chemicals not be poured down the drain?",
+          zh: "为什么不能把化学品倒进下水道？"
+        },
+        suggestedAnswer: {
+          en: "They can enter waterways, including salmon-spawning streams, and cause environmental harm.",
+          zh: "它们可能流入水道，包括鲑鱼产卵溪流，并造成环境危害。"
+        },
+        keywords: ["salmon", "stream", "water", "environment"]
+      },
+      {
+        id: "q05",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "What should you do if your clothes catch fire?",
+          zh: "如果衣服着火了，应该怎么做？"
+        },
+        suggestedAnswer: {
+          en: "Drop to the ground and roll to smother the flames.",
+          zh: "倒在地上并打滚，把火焰闷灭。"
+        },
+        keywords: ["drop", "roll", "smother", "flame"]
+      },
+      {
+        id: "q06",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "What can be used to smother a small fire?",
+          zh: "什么东西可以用来闷灭小火？"
+        },
+        suggestedAnswer: {
+          en: "Use sand or a large container to cut off the oxygen supply.",
+          zh: "用沙子或较大的容器来切断氧气供应。"
+        },
+        keywords: ["sand", "container", "oxygen"]
+      },
+      {
+        id: "q07",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "In HHPS, what does the “dangerous container” symbol mean?",
+          zh: "在 HHPS 中，“危险容器”符号表示什么？"
+        },
+        suggestedAnswer: {
+          en: "It means the container itself is dangerous and may explode if heated or punctured.",
+          zh: "表示容器本身危险，如果被加热或刺穿可能会爆炸。"
+        },
+        keywords: ["container", "explode", "heated", "punctured"]
+      },
+      {
+        id: "q08",
+        topic: { en: "Lab Safety", zh: "实验室安全" },
+        prompt: {
+          en: "What does the WHMIS biohazardous infectious material symbol warn about?",
+          zh: "WHMIS 生物危害性传染材料符号警告什么？"
+        },
+        suggestedAnswer: {
+          en: "It warns about organisms or toxins that can cause disease in people or animals.",
+          zh: "它警告会使人或动物致病的生物体或毒素。"
+        },
+        keywords: ["organism", "toxin", "disease", "animal", "people"]
+      },
+      {
+        id: "q09",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "In an ionic compound, which part is named first?",
+          zh: "在离子化合物中，哪一部分先命名？"
+        },
+        suggestedAnswer: {
+          en: "The metal ion is named first.",
+          zh: "先写金属离子的名称。"
+        },
+        keywords: ["metal", "first"]
+      },
+      {
+        id: "q10",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "What ending is usually used for the non-metal part of an ionic compound name?",
+          zh: "离子化合物中，非金属部分通常使用什么词尾？"
+        },
+        suggestedAnswer: {
+          en: "The non-metal name usually ends in -ide.",
+          zh: "非金属名称通常改成 -ide 结尾。"
+        },
+        keywords: ["ide"]
+      },
+      {
+        id: "q11",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "Name the ionic compound made from magnesium and fluorine.",
+          zh: "写出由 magnesium 和 fluorine 形成的离子化合物名称。"
+        },
+        suggestedAnswer: {
+          en: "Magnesium fluoride.",
+          zh: "Magnesium fluoride。"
+        },
+        keywords: ["magnesium", "fluoride"]
+      },
+      {
+        id: "q12",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "Name Sn3P4.",
+          zh: "写出 Sn3P4 的名称。"
+        },
+        suggestedAnswer: {
+          en: "Tin (IV) phosphide.",
+          zh: "Tin (IV) phosphide。"
+        },
+        keywords: ["tin", "iv", "phosphide"]
+      },
+      {
+        id: "q13",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "What kind of elements make a covalent compound?",
+          zh: "共价化合物由哪类元素组成？"
+        },
+        suggestedAnswer: {
+          en: "Covalent compounds are made from non-metals combining with other non-metals.",
+          zh: "共价化合物由非金属与非金属结合形成。"
+        },
+        keywords: ["non-metal", "nonmetal"]
+      },
+      {
+        id: "q14",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "What prefix means 3 in covalent naming?",
+          zh: "在共价化合物命名中，表示 3 的前缀是什么？"
+        },
+        suggestedAnswer: {
+          en: "Tri-.",
+          zh: "Tri-。"
+        },
+        keywords: ["tri"]
+      },
+      {
+        id: "q15",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "Name N2O.",
+          zh: "写出 N2O 的名称。"
+        },
+        suggestedAnswer: {
+          en: "Dinitrogen monoxide.",
+          zh: "Dinitrogen monoxide。"
+        },
+        keywords: ["dinitrogen", "monoxide"]
+      },
+      {
+        id: "q16",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "Name SO3.",
+          zh: "写出 SO3 的名称。"
+        },
+        suggestedAnswer: {
+          en: "Sulfur trioxide.",
+          zh: "Sulfur trioxide。"
+        },
+        keywords: ["sulfur", "trioxide", "sulphur"]
+      },
+      {
+        id: "q17",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "Why are brackets needed in Ca(OH)2?",
+          zh: "为什么 Ca(OH)2 中需要括号？"
+        },
+        suggestedAnswer: {
+          en: "The brackets keep OH together as one polyatomic ion group and show there are two hydroxide groups.",
+          zh: "括号把 OH 作为一个多原子离子整体保留，并表示有两个 hydroxide 基团。"
+        },
+        keywords: ["oh", "group", "polyatomic", "two", "hydroxide"]
+      },
+      {
+        id: "q18",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "Write the formula for calcium hydroxide.",
+          zh: "写出 calcium hydroxide 的化学式。"
+        },
+        suggestedAnswer: {
+          en: "Ca(OH)2.",
+          zh: "Ca(OH)2。"
+        },
+        keywords: ["ca", "oh", "2"]
+      },
+      {
+        id: "q19",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "Write the formula for cobalt (III) sulfate.",
+          zh: "写出 cobalt (III) sulfate 的化学式。"
+        },
+        suggestedAnswer: {
+          en: "Co2(SO4)3.",
+          zh: "Co2(SO4)3。"
+        },
+        keywords: ["co2", "so4", "3"]
+      },
+      {
+        id: "q20",
+        topic: { en: "Naming Compounds", zh: "化合物命名" },
+        prompt: {
+          en: "When are capital letters normally used in compound names?",
+          zh: "化合物名称通常在什么时候使用大写字母？"
+        },
+        suggestedAnswer: {
+          en: "Only at the start of a sentence or in a title.",
+          zh: "只在句首或标题中使用大写。"
+        },
+        keywords: ["start", "sentence", "title"]
+      }
+    ];
+
+    const state = {
+      lang: "bi",
+      marks: {}
+    };
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function localizedBlock(text) {
+      return [
+        '<span class="i18n-wrap">',
+        '<span class="i18n-en">' + escapeHtml(text.en) + "</span>",
+        '<span class="i18n-zh" lang="zh-Hans">' + escapeHtml(text.zh) + "</span>",
+        "</span>"
+      ].join("");
+    }
+
+    function normalize(text) {
+      return text
+        .toLowerCase()
+        .replace(/[^a-z0-9()+-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function buildQuestionCard(question, index) {
+      return [
+        '<section class="card" id="card_' + question.id + '">',
+        '<div class="card-head">',
+        '<div>',
+        '<div class="card-meta">Question ' + (index + 1) + " of " + questions.length + "</div>",
+        '<p class="prompt">' + localizedBlock(question.prompt) + "</p>",
+        '<div class="card-meta">' + localizedBlock(question.topic) + "</div>",
+        "</div>",
+        '<div class="card-status" id="status_' + question.id + '">Not marked</div>',
+        "</div>",
+        '<textarea class="answer-box" id="answer_' + question.id + '" placeholder="Type your answer here"></textarea>',
+        '<div class="action-row">',
+        '<button type="button" data-action="check" data-question="' + question.id + '">Check This Answer</button>',
+        '<button type="button" data-action="show" data-question="' + question.id + '">Show Suggested Answer</button>',
+        '<button type="button" class="mark-good" data-action="good" data-question="' + question.id + '">I Got It</button>',
+        '<button type="button" class="mark-review" data-action="review" data-question="' + question.id + '">Needs Review</button>',
+        "</div>",
+        '<div class="feedback" id="feedback_' + question.id + '"></div>',
+        '<div class="suggested" id="suggested_' + question.id + '"><strong>Suggested answer:</strong><div>' + localizedBlock(question.suggestedAnswer) + "</div></div>",
+        "</section>"
+      ].join("");
+    }
+
+    function renderQuestions() {
+      const list = document.getElementById("quizList");
+      list.innerHTML = questions.map((question, index) => buildQuestionCard(question, index)).join("");
+    }
+
+    function updateLanguage() {
+      document.body.classList.toggle("lang-bi", state.lang === "bi");
+      document.body.classList.toggle("lang-zh", state.lang === "zh");
+      document.documentElement.lang = state.lang === "zh" ? "zh" : "en";
+      document.getElementById("languageMode").value = state.lang;
+    }
+
+    function setCardMark(questionId, mark) {
+      state.marks[questionId] = mark;
+      const card = document.getElementById("card_" + questionId);
+      const status = document.getElementById("status_" + questionId);
+      card.classList.remove("is-good", "is-review");
+
+      if (mark === "good") {
+        card.classList.add("is-good");
+        status.textContent = "Marked: I Got It";
+      } else if (mark === "review") {
+        card.classList.add("is-review");
+        status.textContent = "Marked: Needs Review";
+      } else {
+        status.textContent = "Not marked";
+      }
+
+      updateSummary();
+    }
+
+    function updateSummary() {
+      const answered = questions.reduce((count, question) => {
+        const value = document.getElementById("answer_" + question.id).value.trim();
+        return count + (value ? 1 : 0);
+      }, 0);
+
+      const gotIt = Object.values(state.marks).filter((value) => value === "good").length;
+      const review = Object.values(state.marks).filter((value) => value === "review").length;
+
+      document.getElementById("answeredCount").textContent = String(answered);
+      document.getElementById("gotItCount").textContent = String(gotIt);
+      document.getElementById("reviewCount").textContent = String(review);
+    }
+
+    function checkAnswer(questionId) {
+      const question = questions.find((entry) => entry.id === questionId);
+      const feedback = document.getElementById("feedback_" + questionId);
+      const rawAnswer = document.getElementById("answer_" + questionId).value.trim();
+
+      if (!rawAnswer) {
+        feedback.className = "feedback show note";
+        feedback.innerHTML = "Write an answer first, then check it.";
+        updateSummary();
+        return;
+      }
+
+      const normalized = normalize(rawAnswer);
+      const hits = question.keywords.filter((keyword) => normalized.includes(normalize(keyword)));
+      const likelyGood = hits.length >= Math.min(2, question.keywords.length);
+
+      if (likelyGood) {
+        feedback.className = "feedback show good";
+        feedback.innerHTML = "Your answer includes several key ideas from the lesson." +
+          '<div class="keyword-note">Matched keywords: ' + hits.map(escapeHtml).join(", ") + "</div>";
+      } else {
+        feedback.className = "feedback show note";
+        feedback.innerHTML = "Your answer may be missing some important ideas." +
+          '<div class="keyword-note">Try checking for ideas such as: ' + question.keywords.map(escapeHtml).join(", ") + "</div>";
+      }
+
+      updateSummary();
+    }
+
+    function showSuggestedAnswer(questionId) {
+      document.getElementById("suggested_" + questionId).classList.add("show");
+    }
+
+    function checkAllAnswers() {
+      questions.forEach((question) => checkAnswer(question.id));
+    }
+
+    function showAllSuggestedAnswers() {
+      questions.forEach((question) => showSuggestedAnswer(question.id));
+    }
+
+    function resetQuiz() {
+      questions.forEach((question) => {
+        document.getElementById("answer_" + question.id).value = "";
+        document.getElementById("feedback_" + question.id).className = "feedback";
+        document.getElementById("feedback_" + question.id).innerHTML = "";
+        document.getElementById("suggested_" + question.id).classList.remove("show");
+        setCardMark(question.id, "");
+      });
+      state.marks = {};
+      updateSummary();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.getElementById("quizList").addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) {
+        return;
+      }
+
+      const questionId = button.dataset.question;
+      const action = button.dataset.action;
+
+      if (action === "check") {
+        checkAnswer(questionId);
+      } else if (action === "show") {
+        showSuggestedAnswer(questionId);
+      } else if (action === "good") {
+        setCardMark(questionId, "good");
+      } else if (action === "review") {
+        setCardMark(questionId, "review");
+      }
+    });
+
+    document.getElementById("quizList").addEventListener("input", (event) => {
+      if (event.target.classList.contains("answer-box")) {
+        updateSummary();
+      }
+    });
+
+    document.getElementById("checkAllBtn").addEventListener("click", checkAllAnswers);
+    document.getElementById("showAllBtn").addEventListener("click", showAllSuggestedAnswers);
+    document.getElementById("resetBtn").addEventListener("click", resetQuiz);
+    document.getElementById("languageMode").addEventListener("change", (event) => {
+      state.lang = event.target.value;
+      updateLanguage();
+    });
+
+    renderQuestions();
+    updateLanguage();
+    updateSummary();
+  </script>
+</body>
+</html>
