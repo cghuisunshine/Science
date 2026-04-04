@@ -244,6 +244,57 @@
       border-color: var(--accent);
     }
 
+    .ai-tools {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      background: var(--panel-alt);
+    }
+
+    .ai-tools summary {
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .ai-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .ai-row label {
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .ai-row input {
+      flex: 1 1 380px;
+      min-width: 240px;
+      padding: 9px 10px;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+    }
+
+    .ai-note,
+    .ai-status {
+      margin-top: 10px;
+      font-size: 0.94rem;
+      color: var(--muted);
+    }
+
+    .ai-status.ok {
+      color: var(--good);
+    }
+
+    .ai-status.bad {
+      color: var(--bad);
+    }
+
     .action-row {
       display: flex;
       flex-wrap: wrap;
@@ -275,6 +326,19 @@
       background: var(--note-bg);
       border-color: #e3c98a;
       color: var(--note);
+    }
+
+    .feedback.bad {
+      background: var(--bad-bg);
+      border-color: #d8b1aa;
+      color: var(--bad);
+    }
+
+    .feedback.info {
+      display: block;
+      background: var(--panel-alt);
+      border-color: var(--line);
+      color: var(--muted);
     }
 
     .suggested {
@@ -338,11 +402,11 @@
   <div class="page">
     <section class="panel">
       <h1>Short-Answer Practice Quiz</h1>
-      <p class="intro">Type an answer for each question, use the keyword check for a quick signal, then self-mark each one as <strong>I Got It</strong> or <strong>Needs Review</strong>.</p>
+      <p class="intro">Type an answer for each question, then use <strong>Check with AI</strong> to send the question, your answer, and the suggested answer to the grader service.</p>
 
       <div class="toolbar">
         <div class="toolbar-group">
-          <button id="checkAllBtn" class="primary" type="button">Check All Answers</button>
+          <button id="checkAllBtn" class="primary" type="button">Check All with AI</button>
           <button id="showAllBtn" type="button">Show All Suggested Answers</button>
           <button id="resetBtn" type="button">Reset</button>
         </div>
@@ -356,6 +420,17 @@
           </select>
         </div>
       </div>
+
+      <details class="ai-tools" open>
+        <summary>AI grader settings</summary>
+        <div class="ai-row">
+          <label for="grade-api-url">Grade API URL</label>
+          <input id="grade-api-url" type="text" placeholder="https://.../grade" />
+          <button id="btn-test-api" type="button">Test</button>
+        </div>
+        <div class="ai-note">Each AI check sends the question, your answer, and the suggested answer to the grader service.</div>
+        <div id="api-status" class="ai-status"></div>
+      </details>
     </section>
 
     <section class="summary">
@@ -368,8 +443,8 @@
         <div id="answeredCount" class="summary-value">0</div>
       </div>
       <div class="summary-item">
-        <div class="summary-label">I Got It</div>
-        <div id="gotItCount" class="summary-value">0</div>
+        <div class="summary-label">Accepted</div>
+        <div id="acceptedCount" class="summary-value">0</div>
       </div>
       <div class="summary-item">
         <div class="summary-label">Needs Review</div>
@@ -652,9 +727,12 @@
       }
     ];
 
+    const DEFAULT_GRADE_API_URL = "https://lakesideart.gochatus.org/grade-service/grade";
+    const GRADE_API_STORAGE_KEY = "gradeApiUrl";
     const state = {
       lang: "bi",
-      marks: {}
+      verdicts: {},
+      checking: {}
     };
 
     function escapeHtml(text) {
@@ -683,6 +761,150 @@
         .trim();
     }
 
+    function getGradeApiUrl() {
+      const input = document.getElementById("grade-api-url");
+      if (!input) {
+        return "";
+      }
+      return (input.value || "").trim();
+    }
+
+    function saveGradeApiUrl() {
+      const input = document.getElementById("grade-api-url");
+      if (!input) {
+        return;
+      }
+      try {
+        localStorage.setItem(GRADE_API_STORAGE_KEY, (input.value || "").trim());
+      } catch {}
+    }
+
+    function setApiStatus(text, kind) {
+      const el = document.getElementById("api-status");
+      if (!el) {
+        return;
+      }
+      el.textContent = text || "";
+      el.className = "ai-status" + (kind ? " " + kind : "");
+    }
+
+    async function fetchJsonWithTimeout(url, options, timeoutMs) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(url, { ...(options || {}), signal: controller.signal });
+        const text = await response.text().catch(() => "");
+        let data = null;
+        try {
+          data = text ? JSON.parse(text) : null;
+        } catch {
+          data = null;
+        }
+        return { ok: response.ok, status: response.status, data, text, aborted: false };
+      } catch (error) {
+        if (error && error.name === "AbortError") {
+          return { ok: false, status: 0, data: null, text: "", aborted: true };
+        }
+        throw error;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function extractFirstGradeResult(data) {
+      if (!data) return null;
+      if (Array.isArray(data.results) && data.results[0]) return data.results[0];
+      if (data.result && Array.isArray(data.result.results) && data.result.results[0]) return data.result.results[0];
+      if (data.model_result && Array.isArray(data.model_result.results) && data.model_result.results[0]) return data.model_result.results[0];
+      return null;
+    }
+
+    function deriveHealthUrl(gradeUrl) {
+      try {
+        const url = new URL(gradeUrl);
+        url.search = "";
+        url.hash = "";
+        url.pathname = url.pathname.endsWith("/grade")
+          ? url.pathname.replace(/\/grade$/, "/health")
+          : url.pathname.replace(/\/+$/, "") + "/health";
+        return url.toString();
+      } catch {
+        return null;
+      }
+    }
+
+    async function testApi() {
+      const gradeUrl = getGradeApiUrl();
+      if (!gradeUrl) {
+        setApiStatus("Add a grade URL first.", "bad");
+        return;
+      }
+      const healthUrl = deriveHealthUrl(gradeUrl);
+      if (!healthUrl) {
+        setApiStatus("Invalid grade URL.", "bad");
+        return;
+      }
+
+      setApiStatus("Testing...", "");
+      try {
+        const { ok, status, data, aborted } = await fetchJsonWithTimeout(healthUrl, { method: "GET" }, 4000);
+        if (aborted) {
+          setApiStatus("Health check timed out.", "bad");
+          return;
+        }
+        if (!ok) {
+          setApiStatus("Health check failed (" + status + ").", "bad");
+          return;
+        }
+        const healthy = !!(data && (data.status === "ok" || data.ok === true));
+        setApiStatus(healthy ? "OK" : "OK (nonstandard response)", healthy ? "ok" : "");
+      } catch {
+        setApiStatus("Health check failed.", "bad");
+      }
+    }
+
+    function buildPrompt(question) {
+      return "Topic: " + question.topic.en + "\nQuestion: " + question.prompt.en;
+    }
+
+    async function requestAiGrade(question, studentAnswer) {
+      const gradeUrl = getGradeApiUrl();
+      const payload = {
+        pairs: [
+          {
+            question: buildPrompt(question),
+            answer: studentAnswer,
+            reference_answer: question.suggestedAnswer.en
+          }
+        ]
+      };
+
+      const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+        gradeUrl,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        },
+        30000
+      );
+
+      if (aborted) {
+        throw new Error("Request timed out.");
+      }
+
+      const first = extractFirstGradeResult(data);
+      if (!ok || !first) {
+        const detail = text ? " " + text.slice(0, 160) : "";
+        throw new Error(("Bad response (" + status + ")." + detail).trim());
+      }
+
+      return {
+        verdict: String(first.verdict || "").toLowerCase(),
+        explanation: String(first.explanation || "").trim()
+      };
+    }
+
     function buildQuestionCard(question, index) {
       return [
         '<section class="card" id="card_' + question.id + '">',
@@ -692,14 +914,12 @@
         '<p class="prompt">' + localizedBlock(question.prompt) + "</p>",
         '<div class="card-meta">' + localizedBlock(question.topic) + "</div>",
         "</div>",
-        '<div class="card-status" id="status_' + question.id + '">Not marked</div>',
+        '<div class="card-status" id="status_' + question.id + '">Not checked</div>',
         "</div>",
         '<textarea class="answer-box" id="answer_' + question.id + '" placeholder="Type your answer here"></textarea>',
         '<div class="action-row">',
-        '<button type="button" data-action="check" data-question="' + question.id + '">Check This Answer</button>',
+        '<button type="button" data-action="check" data-question="' + question.id + '">Check with AI</button>',
         '<button type="button" data-action="show" data-question="' + question.id + '">Show Suggested Answer</button>',
-        '<button type="button" class="mark-good" data-action="good" data-question="' + question.id + '">I Got It</button>',
-        '<button type="button" class="mark-review" data-action="review" data-question="' + question.id + '">Needs Review</button>',
         "</div>",
         '<div class="feedback" id="feedback_' + question.id + '"></div>',
         '<div class="suggested" id="suggested_' + question.id + '"><strong>Suggested answer:</strong><div>' + localizedBlock(question.suggestedAnswer) + "</div></div>",
@@ -719,20 +939,22 @@
       document.getElementById("languageMode").value = state.lang;
     }
 
-    function setCardMark(questionId, mark) {
-      state.marks[questionId] = mark;
+    function setCardVerdict(questionId, verdict) {
+      state.verdicts[questionId] = verdict;
       const card = document.getElementById("card_" + questionId);
       const status = document.getElementById("status_" + questionId);
       card.classList.remove("is-good", "is-review");
 
-      if (mark === "good") {
+      if (verdict === "correct") {
         card.classList.add("is-good");
-        status.textContent = "Marked: I Got It";
-      } else if (mark === "review") {
+        status.textContent = "AI result: Accepted";
+      } else if (verdict === "incorrect") {
         card.classList.add("is-review");
-        status.textContent = "Marked: Needs Review";
+        status.textContent = "AI result: Needs Review";
+      } else if (verdict === "checking") {
+        status.textContent = "Checking with AI...";
       } else {
-        status.textContent = "Not marked";
+        status.textContent = "Not checked";
       }
 
       updateSummary();
@@ -744,41 +966,65 @@
         return count + (value ? 1 : 0);
       }, 0);
 
-      const gotIt = Object.values(state.marks).filter((value) => value === "good").length;
-      const review = Object.values(state.marks).filter((value) => value === "review").length;
+      const accepted = Object.values(state.verdicts).filter((value) => value === "correct").length;
+      const review = Object.values(state.verdicts).filter((value) => value === "incorrect").length;
 
       document.getElementById("answeredCount").textContent = String(answered);
-      document.getElementById("gotItCount").textContent = String(gotIt);
+      document.getElementById("acceptedCount").textContent = String(accepted);
       document.getElementById("reviewCount").textContent = String(review);
     }
 
-    function checkAnswer(questionId) {
-      const question = questions.find((entry) => entry.id === questionId);
+    function setFeedback(questionId, kind, html) {
       const feedback = document.getElementById("feedback_" + questionId);
+      feedback.className = "feedback show " + kind;
+      feedback.innerHTML = html;
+    }
+
+    async function checkAnswer(questionId) {
+      const question = questions.find((entry) => entry.id === questionId);
       const rawAnswer = document.getElementById("answer_" + questionId).value.trim();
+      showSuggestedAnswer(questionId);
 
       if (!rawAnswer) {
-        feedback.className = "feedback show note";
-        feedback.innerHTML = "Write an answer first, then check it.";
+        setFeedback(questionId, "note", "Write an answer first, then check it.");
         updateSummary();
         return;
       }
 
-      const normalized = normalize(rawAnswer);
-      const hits = question.keywords.filter((keyword) => normalized.includes(normalize(keyword)));
-      const likelyGood = hits.length >= Math.min(2, question.keywords.length);
-
-      if (likelyGood) {
-        feedback.className = "feedback show good";
-        feedback.innerHTML = "Your answer includes several key ideas from the lesson." +
-          '<div class="keyword-note">Matched keywords: ' + hits.map(escapeHtml).join(", ") + "</div>";
-      } else {
-        feedback.className = "feedback show note";
-        feedback.innerHTML = "Your answer may be missing some important ideas." +
-          '<div class="keyword-note">Try checking for ideas such as: ' + question.keywords.map(escapeHtml).join(", ") + "</div>";
+      if (!getGradeApiUrl()) {
+        setFeedback(questionId, "bad", "AI grading unavailable. Add a Grade API URL first.");
+        updateSummary();
+        return;
       }
 
-      updateSummary();
+      state.checking[questionId] = true;
+      setCardVerdict(questionId, "checking");
+      setFeedback(questionId, "info", "Checking with AI grader...");
+
+      try {
+        const result = await requestAiGrade(question, rawAnswer);
+        const isCorrect = result.verdict === "correct";
+        setCardVerdict(questionId, isCorrect ? "correct" : "incorrect");
+        setFeedback(
+          questionId,
+          isCorrect ? "good" : "bad",
+          (isCorrect ? "Accepted." : "Needs revision.") +
+            '<div class="keyword-note">' +
+            escapeHtml(result.explanation || (isCorrect ? "The grader accepted this answer." : "The grader did not accept this answer yet.")) +
+            "</div>"
+        );
+      } catch (error) {
+        setCardVerdict(questionId, "incorrect");
+        setFeedback(
+          questionId,
+          "bad",
+          "AI grading unavailable." +
+            '<div class="keyword-note">' + escapeHtml(error && error.message ? error.message : "") + "</div>"
+        );
+      } finally {
+        state.checking[questionId] = false;
+        updateSummary();
+      }
     }
 
     function showSuggestedAnswer(questionId) {
@@ -786,7 +1032,9 @@
     }
 
     function checkAllAnswers() {
-      questions.forEach((question) => checkAnswer(question.id));
+      questions.forEach((question) => {
+        checkAnswer(question.id);
+      });
     }
 
     function showAllSuggestedAnswers() {
@@ -799,9 +1047,10 @@
         document.getElementById("feedback_" + question.id).className = "feedback";
         document.getElementById("feedback_" + question.id).innerHTML = "";
         document.getElementById("suggested_" + question.id).classList.remove("show");
-        setCardMark(question.id, "");
+        setCardVerdict(question.id, "");
       });
-      state.marks = {};
+      state.verdicts = {};
+      state.checking = {};
       updateSummary();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -819,10 +1068,6 @@
         checkAnswer(questionId);
       } else if (action === "show") {
         showSuggestedAnswer(questionId);
-      } else if (action === "good") {
-        setCardMark(questionId, "good");
-      } else if (action === "review") {
-        setCardMark(questionId, "review");
       }
     });
 
@@ -835,12 +1080,26 @@
     document.getElementById("checkAllBtn").addEventListener("click", checkAllAnswers);
     document.getElementById("showAllBtn").addEventListener("click", showAllSuggestedAnswers);
     document.getElementById("resetBtn").addEventListener("click", resetQuiz);
+    document.getElementById("btn-test-api").addEventListener("click", testApi);
+    document.getElementById("grade-api-url").addEventListener("change", () => {
+      saveGradeApiUrl();
+      setApiStatus("", "");
+    });
+    document.getElementById("grade-api-url").addEventListener("input", () => {
+      setApiStatus("", "");
+    });
     document.getElementById("languageMode").addEventListener("change", (event) => {
       state.lang = event.target.value;
       updateLanguage();
     });
 
     renderQuestions();
+    try {
+      const savedGradeUrl = localStorage.getItem(GRADE_API_STORAGE_KEY);
+      document.getElementById("grade-api-url").value = savedGradeUrl === null ? DEFAULT_GRADE_API_URL : savedGradeUrl;
+    } catch {
+      document.getElementById("grade-api-url").value = DEFAULT_GRADE_API_URL;
+    }
     updateLanguage();
     updateSummary();
   </script>
