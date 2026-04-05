@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Science 10 Bilingual Periodic Table</title>
+  <style>
+    :root {
+      --bg: #f5f2eb;
+      --card: #ffffff;
+      --border: #cfc7b7;
+      --text: #222;
+      --muted: #666;
+      --alkali: #f7d794;
+      --alkaline: #f5cd79;
+      --transition: #c8d6e5;
+      --post: #82ccdd;
+      --metalloid: #78e08f;
+      --nonmetal: #b8e994;
+      --halogen: #f8a5c2;
+      --noble: #c7a4ff;
+      --lanthanoid: #d6a2e8;
+      --actinoid: #f5b7b1;
+      --unknown: #dfe6e9;
+      --hydrogen: #ffb6b9;
+      --shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .wrap {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 14px 0 18px;
+      align-items: center;
+    }
+
+    button, select, input {
+      font: inherit;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: white;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.92rem;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fafafa;
+    }
+
+    .swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 1px solid rgba(0,0,0,0.12);
+      flex: 0 0 auto;
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .periodic-table {
+      display: grid;
+      grid-template-columns: 60px repeat(18, minmax(72px, 1fr));
+      gap: 6px;
+      min-width: 1450px;
+      align-items: stretch;
+    }
+
+    .header-cell, .period-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #444;
+      background: #f1efe9;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      min-height: 64px;
+      text-align: center;
+    }
+
+    .element, .empty-cell {
+      min-height: 96px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.10);
+      position: relative;
+    }
+
+    .empty-cell {
+      background: transparent;
+      border: none;
+    }
+
+    .element {
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .element:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    }
+
+    .element.hidden-by-filter {
+      opacity: 0.22;
+    }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 4px;
+      font-size: 0.72rem;
+    }
+
+    .symbol {
+      font-size: 1.45rem;
+      font-weight: 800;
+      line-height: 1;
+      text-align: center;
+      margin: 2px 0;
+    }
+
+    .en-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    .zh-name {
+      font-size: 0.76rem;
+      text-align: center;
+      color: #333;
+    }
+
+    .mass {
+      font-size: 0.72rem;
+      text-align: center;
+      color: #333;
+    }
+
+    .notes {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 16px;
+    }
+
+    .detail-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 16px;
+      min-height: 280px;
+    }
+
+    .detail-card h2 {
+      margin: 0 0 6px;
+      font-size: 1.8rem;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 8px 12px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .detail-grid strong {
+      color: #444;
+    }
+
+    .study-box {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .study-box h3 {
+      margin-top: 0;
+    }
+
+    .tips {
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .family-alkali { background: var(--alkali); }
+    .family-alkaline { background: var(--alkaline); }
+    .family-transition { background: var(--transition); }
+    .family-post-transition { background: var(--post); }
+    .family-metalloid { background: var(--metalloid); }
+    .family-nonmetal { background: var(--nonmetal); }
+    .family-halogen { background: var(--halogen); }
+    .family-noble-gas { background: var(--noble); }
+    .family-lanthanoid { background: var(--lanthanoid); }
+    .family-actinoid { background: var(--actinoid); }
+    .family-unknown { background: var(--unknown); }
+    .family-hydrogen { background: var(--hydrogen); }
+
+    @media (max-width: 1100px) {
+      .notes {
+        grid-template-columns: 1fr;
+      }
+      .detail-card {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <h1>Science 10 Periodic Table 元素周期表</h1>
+      <div class="subtitle">
+        Bilingual classroom version for Science 10 students. Click any element to see its English name, Chinese name, atomic number, atomic mass, group, period, typical charge, and a short note.
+        <br />适合 Science 10 学生的双语元素周期表。点击任意元素可查看英文名、中文名、原子序数、相对原子质量、族、周期、常见离子电荷和简短说明。
+      </div>
+
+      <div class="controls">
+        <label>
+          Show family / 显示类别：
+          <select id="familyFilter">
+            <option value="all">All families / 全部</option>
+          </select>
+        </label>
+        <label>
+          Search / 搜索：
+          <input id="searchBox" type="text" placeholder="e.g. oxygen / 氧 / O" />
+        </label>
+        <button id="resetBtn">Reset / 重置</button>
+      </div>
+
+      <div class="legend" id="legend"></div>
+
+      <div class="table-scroll">
+        <div class="periodic-table" id="table"></div>
+      </div>
+
+      <div class="notes">
+        <div class="detail-card" id="detailCard">
+          <h2>H 氢</h2>
+          <div class="detail-grid">
+            <strong>English</strong><span>Hydrogen</span>
+            <strong>中文</strong><span>氢</span>
+            <strong>Atomic Number</strong><span>1</span>
+            <strong>Atomic Mass</strong><span>1.008</span>
+            <strong>Group</strong><span>1</span>
+            <strong>Period</strong><span>1</span>
+            <strong>Family</strong><span>Hydrogen / 氢</span>
+            <strong>Typical Charge</strong><span>+1</span>
+            <strong>State (25°C)</strong><span>Gas / 气体</span>
+            <strong>Use / Note</strong><span>Lightest element. Found in water and many fuels. 最轻的元素，存在于水和多种燃料中。</span>
+          </div>
+        </div>
+
+        <div class="study-box">
+          <h3>Science 10 Study Tips 学习提示</h3>
+          <div class="tips">
+            <p><strong>1.</strong> The atomic number tells how many protons are in an atom. 原子序数表示原子中有多少个质子。</p>
+            <p><strong>2.</strong> Elements in the same group often have similar chemical properties. 同一族的元素通常有相似的化学性质。</p>
+            <p><strong>3.</strong> Metals are mostly on the left, non-metals are mostly on the right, and metalloids are along the staircase. 金属大多在左边，非金属大多在右边，类金属通常沿着“楼梯线”分布。</p>
+            <p><strong>4.</strong> For Science 10 naming compounds, pay special attention to common ions such as Group 1 = +1, Group 2 = +2, halogens = -1, oxygen family often = -2. 对于 Science 10 的化合物命名，要特别注意常见离子电荷，如第1族通常是 +1，第2族通常是 +2，卤素通常是 -1，氧族通常常见为 -2。</p>
+            <p><strong>5.</strong> Click an element to review useful facts before quizzes. 点击元素可复习测验前常用知识点。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const elements = [
+      {n:1,s:'H',en:'Hydrogen',zh:'氢',m:'1.008',g:1,p:1,f:'hydrogen',c:'+1',state:'Gas',note:'Lightest element; part of water.'},
+      {n:2,s:'He',en:'Helium',zh:'氦',m:'4.003',g:18,p:1,f:'noble-gas',c:'0',state:'Gas',note:'Used in balloons; very unreactive.'},
+      {n:3,s:'Li',en:'Lithium',zh:'锂',m:'6.94',g:1,p:2,f:'alkali',c:'+1',state:'Solid',note:'Soft metal used in batteries.'},
+      {n:4,s:'Be',en:'Beryllium',zh:'铍',m:'9.012',g:2,p:2,f:'alkaline',c:'+2',state:'Solid',note:'Light metal.'},
+      {n:5,s:'B',en:'Boron',zh:'硼',m:'10.81',g:13,p:2,f:'metalloid',c:'+3',state:'Solid',note:'Metalloid with mixed properties.'},
+      {n:6,s:'C',en:'Carbon',zh:'碳',m:'12.01',g:14,p:2,f:'nonmetal',c:'±4',state:'Solid',note:'Found in living things and fuels.'},
+      {n:7,s:'N',en:'Nitrogen',zh:'氮',m:'14.01',g:15,p:2,f:'nonmetal',c:'-3',state:'Gas',note:'Makes up most of Earth’s air.'},
+      {n:8,s:'O',en:'Oxygen',zh:'氧',m:'16.00',g:16,p:2,f:'nonmetal',c:'-2',state:'Gas',note:'Needed for breathing and combustion.'},
+      {n:9,s:'F',en:'Fluorine',zh:'氟',m:'19.00',g:17,p:2,f:'halogen',c:'-1',state:'Gas',note:'Very reactive halogen.'},
+      {n:10,s:'Ne',en:'Neon',zh:'氖',m:'20.18',g:18,p:2,f:'noble-gas',c:'0',state:'Gas',note:'Used in bright signs.'},
+      {n:11,s:'Na',en:'Sodium',zh:'钠',m:'22.99',g:1,p:3,f:'alkali',c:'+1',state:'Solid',note:'Very reactive metal; in table salt compounds.'},
+      {n:12,s:'Mg',en:'Magnesium',zh:'镁',m:'24.31',g:2,p:3,f:'alkaline',c:'+2',state:'Solid',note:'Burns with bright white light.'},
+      {n:13,s:'Al',en:'Aluminum',zh:'铝',m:'26.98',g:13,p:3,f:'post-transition',c:'+3',state:'Solid',note:'Light, useful metal.'},
+      {n:14,s:'Si',en:'Silicon',zh:'硅',m:'28.09',g:14,p:3,f:'metalloid',c:'±4',state:'Solid',note:'Used in computer chips and sand.'},
+      {n:15,s:'P',en:'Phosphorus',zh:'磷',m:'30.97',g:15,p:3,f:'nonmetal',c:'-3',state:'Solid',note:'Important in DNA and fertilizers.'},
+      {n:16,s:'S',en:'Sulfur',zh:'硫',m:'32.06',g:16,p:3,f:'nonmetal',c:'-2',state:'Solid',note:'Yellow non-metal.'},
+      {n:17,s:'Cl',en:'Chlorine',zh:'氯',m:'35.45',g:17,p:3,f:'halogen',c:'-1',state:'Gas',note:'Used to disinfect water.'},
+      {n:18,s:'Ar',en:'Argon',zh:'氩',m:'39.95',g:18,p:3,f:'noble-gas',c:'0',state:'Gas',note:'Inert gas in light bulbs.'},
+      {n:19,s:'K',en:'Potassium',zh:'钾',m:'39.10',g:1,p:4,f:'alkali',c:'+1',state:'Solid',note:'Very reactive metal.'},
+      {n:20,s:'Ca',en:'Calcium',zh:'钙',m:'40.08',g:2,p:4,f:'alkaline',c:'+2',state:'Solid',note:'Important in bones and teeth.'},
+      {n:21,s:'Sc',en:'Scandium',zh:'钪',m:'44.96',g:3,p:4,f:'transition',c:'+3',state:'Solid',note:'Transition metal.'},
+      {n:22,s:'Ti',en:'Titanium',zh:'钛',m:'47.87',g:4,p:4,f:'transition',c:'+4',state:'Solid',note:'Strong and light metal.'},
+      {n:23,s:'V',en:'Vanadium',zh:'钒',m:'50.94',g:5,p:4,f:'transition',c:'variable',state:'Solid',note:'Transition metal with multiple charges.'},
+      {n:24,s:'Cr',en:'Chromium',zh:'铬',m:'52.00',g:6,p:4,f:'transition',c:'variable',state:'Solid',note:'Used in shiny coatings.'},
+      {n:25,s:'Mn',en:'Manganese',zh:'锰',m:'54.94',g:7,p:4,f:'transition',c:'variable',state:'Solid',note:'Used in steel.'},
+      {n:26,s:'Fe',en:'Iron',zh:'铁',m:'55.85',g:8,p:4,f:'transition',c:'+2, +3',state:'Solid',note:'Used in steel; common variable-charge metal.'},
+      {n:27,s:'Co',en:'Cobalt',zh:'钴',m:'58.93',g:9,p:4,f:'transition',c:'+2, +3',state:'Solid',note:'Used in batteries and pigments.'},
+      {n:28,s:'Ni',en:'Nickel',zh:'镍',m:'58.69',g:10,p:4,f:'transition',c:'+2',state:'Solid',note:'Used in coins and alloys.'},
+      {n:29,s:'Cu',en:'Copper',zh:'铜',m:'63.55',g:11,p:4,f:'transition',c:'+1, +2',state:'Solid',note:'Excellent conductor.'},
+      {n:30,s:'Zn',en:'Zinc',zh:'锌',m:'65.38',g:12,p:4,f:'transition',c:'+2',state:'Solid',note:'Used to coat steel.'},
+      {n:31,s:'Ga',en:'Gallium',zh:'镓',m:'69.72',g:13,p:4,f:'post-transition',c:'+3',state:'Solid',note:'Low melting point metal.'},
+      {n:32,s:'Ge',en:'Germanium',zh:'锗',m:'72.63',g:14,p:4,f:'metalloid',c:'±4',state:'Solid',note:'Semiconductor metalloid.'},
+      {n:33,s:'As',en:'Arsenic',zh:'砷',m:'74.92',g:15,p:4,f:'metalloid',c:'-3, +3, +5',state:'Solid',note:'Metalloid.'},
+      {n:34,s:'Se',en:'Selenium',zh:'硒',m:'78.97',g:16,p:4,f:'nonmetal',c:'-2',state:'Solid',note:'Non-metal used in electronics.'},
+      {n:35,s:'Br',en:'Bromine',zh:'溴',m:'79.90',g:17,p:4,f:'halogen',c:'-1',state:'Liquid',note:'Only non-metal liquid at room temperature.'},
+      {n:36,s:'Kr',en:'Krypton',zh:'氪',m:'83.80',g:18,p:4,f:'noble-gas',c:'0',state:'Gas',note:'Noble gas.'},
+      {n:37,s:'Rb',en:'Rubidium',zh:'铷',m:'85.47',g:1,p:5,f:'alkali',c:'+1',state:'Solid',note:'Very reactive alkali metal.'},
+      {n:38,s:'Sr',en:'Strontium',zh:'锶',m:'87.62',g:2,p:5,f:'alkaline',c:'+2',state:'Solid',note:'Produces red flame.'},
+      {n:39,s:'Y',en:'Yttrium',zh:'钇',m:'88.91',g:3,p:5,f:'transition',c:'+3',state:'Solid',note:'Transition metal.'},
+      {n:40,s:'Zr',en:'Zirconium',zh:'锆',m:'91.22',g:4,p:5,f:'transition',c:'+4',state:'Solid',note:'Corrosion-resistant metal.'},
+      {n:41,s:'Nb',en:'Niobium',zh:'铌',m:'92.91',g:5,p:5,f:'transition',c:'+5',state:'Solid',note:'Transition metal.'},
+      {n:42,s:'Mo',en:'Molybdenum',zh:'钼',m:'95.95',g:6,p:5,f:'transition',c:'variable',state:'Solid',note:'Used in strong steel.'},
+      {n:43,s:'Tc',en:'Technetium',zh:'锝',m:'[98]',g:7,p:5,f:'transition',c:'variable',state:'Solid',note:'Radioactive element.'},
+      {n:44,s:'Ru',en:'Ruthenium',zh:'钌',m:'101.07',g:8,p:5,f:'transition',c:'variable',state:'Solid',note:'Transition metal.'},
+      {n:45,s:'Rh',en:'Rhodium',zh:'铑',m:'102.91',g:9,p:5,f:'transition',c:'+3',state:'Solid',note:'Very reflective metal.'},
+      {n:46,s:'Pd',en:'Palladium',zh:'钯',m:'106.42',g:10,p:5,f:'transition',c:'+2, +4',state:'Solid',note:'Used in catalytic converters.'},
+      {n:47,s:'Ag',en:'Silver',zh:'银',m:'107.87',g:11,p:5,f:'transition',c:'+1',state:'Solid',note:'Best electrical conductor.'},
+      {n:48,s:'Cd',en:'Cadmium',zh:'镉',m:'112.41',g:12,p:5,f:'transition',c:'+2',state:'Solid',note:'Toxic metal.'},
+      {n:49,s:'In',en:'Indium',zh:'铟',m:'114.82',g:13,p:5,f:'post-transition',c:'+3',state:'Solid',note:'Soft metal.'},
+      {n:50,s:'Sn',en:'Tin',zh:'锡',m:'118.71',g:14,p:5,f:'post-transition',c:'+2, +4',state:'Solid',note:'Used in solder.'},
+      {n:51,s:'Sb',en:'Antimony',zh:'锑',m:'121.76',g:15,p:5,f:'metalloid',c:'-3, +3, +5',state:'Solid',note:'Metalloid.'},
+      {n:52,s:'Te',en:'Tellurium',zh:'碲',m:'127.60',g:16,p:5,f:'metalloid',c:'-2, +4, +6',state:'Solid',note:'Metalloid.'},
+      {n:53,s:'I',en:'Iodine',zh:'碘',m:'126.90',g:17,p:5,f:'halogen',c:'-1',state:'Solid',note:'Needed in very small amounts for health.'},
+      {n:54,s:'Xe',en:'Xenon',zh:'氙',m:'131.29',g:18,p:5,f:'noble-gas',c:'0',state:'Gas',note:'Used in special lamps.'},
+      {n:55,s:'Cs',en:'Cesium',zh:'铯',m:'132.91',g:1,p:6,f:'alkali',c:'+1',state:'Solid',note:'Very reactive soft metal.'},
+      {n:56,s:'Ba',en:'Barium',zh:'钡',m:'137.33',g:2,p:6,f:'alkaline',c:'+2',state:'Solid',note:'Heavy alkaline earth metal.'},
+      {n:57,s:'La',en:'Lanthanum',zh:'镧',m:'138.91',g:3,p:8,f:'lanthanoid',c:'+3',state:'Solid',note:'First lanthanoid.'},
+      {n:58,s:'Ce',en:'Cerium',zh:'铈',m:'140.12',g:4,p:8,f:'lanthanoid',c:'+3, +4',state:'Solid',note:'Lanthanoid metal.'},
+      {n:59,s:'Pr',en:'Praseodymium',zh:'镨',m:'140.91',g:5,p:8,f:'lanthanoid',c:'+3',state:'Solid',note:'Lanthanoid metal.'},
+      {n:60,s:'Nd',en:'Neodymium',zh:'钕',m:'144.24',g:6,p:8,f:'lanthanoid',c:'+3',state:'Solid',note:'Used in strong magnets.'},
+      {n:61,s:'Pm',en:'Promethium',zh:'钷',m:'[145]',g:7,p:8,f:'lanthanoid',c:'+3',state:'Solid',note:'Radioactive lanthanoid.'},
+      {n:62,s:'Sm',en:'Samarium',zh:'钐',m:'150.36',g:8,p:8,f:'lanthanoid',c:'+3',state:'Solid',note:'Lanthanoid metal.'},
+      {n:63,s:'Eu',en:'Europium',zh:'铕',m:'151.96',g:9,p:8,f:'lanthanoid',c:'+2, +3',state:'Solid',note:'Used in screens and lamps.'},
+      {n:64,s:'Gd',en:'Gadolinium',zh:'钆',m:'157.25',g:10,p:8,f:'lanthanoid',c:'+3',state:'Solid',note:'Lanthanoid metal.'},
+      {n:65,s:'Tb',en:'Terbium',zh:'铽',m:'158.93',g:11,p:8,f:'lanthanoid',c:'+3',state:'Solid',note:'Lanthanoid metal.'},
+      {n:66,s:'Dy',en:'Dysprosium',zh:'镝',m:'162.50',g:12,p:8,f:'lanthanoid',c:'+3',state:'Solid',note:'Lanthanoid metal.'},
+      {n:67,s:'Ho',en:'Holmium',zh:'钬',m:'164.93',g:13,p:8,f:'lanthanoid',c:'+3',state:'Solid',note:'Lanthanoid metal.'},
+      {n:68,s:'Er',en:'Erbium',zh:'铒',m:'167.26',g:14,p:8,f:'lanthanoid',c:'+3',state:'Solid',note:'Lanthanoid metal.'},
+      {n:69,s:'Tm',en:'Thulium',zh:'铥',m:'168.93',g:15,p:8,f:'lanthanoid',c:'+3',state:'Solid',note:'Lanthanoid metal.'},
+      {n:70,s:'Yb',en:'Ytterbium',zh:'镱',m:'173.05',g:16,p:8,f:'lanthanoid',c:'+2, +3',state:'Solid',note:'Lanthanoid metal.'},
+      {n:71,s:'Lu',en:'Lutetium',zh:'镥',m:'174.97',g:17,p:8,f:'lanthanoid',c:'+3',state:'Solid',note:'Lanthanoid metal.'},
+      {n:72,s:'Hf',en:'Hafnium',zh:'铪',m:'178.49',g:4,p:6,f:'transition',c:'+4',state:'Solid',note:'Transition metal.'},
+      {n:73,s:'Ta',en:'Tantalum',zh:'钽',m:'180.95',g:5,p:6,f:'transition',c:'+5',state:'Solid',note:'Corrosion-resistant metal.'},
+      {n:74,s:'W',en:'Tungsten',zh:'钨',m:'183.84',g:6,p:6,f:'transition',c:'+6',state:'Solid',note:'Very high melting point.'},
+      {n:75,s:'Re',en:'Rhenium',zh:'铼',m:'186.21',g:7,p:6,f:'transition',c:'variable',state:'Solid',note:'Rare transition metal.'},
+      {n:76,s:'Os',en:'Osmium',zh:'锇',m:'190.23',g:8,p:6,f:'transition',c:'variable',state:'Solid',note:'Very dense metal.'},
+      {n:77,s:'Ir',en:'Iridium',zh:'铱',m:'192.22',g:9,p:6,f:'transition',c:'variable',state:'Solid',note:'Very corrosion-resistant.'},
+      {n:78,s:'Pt',en:'Platinum',zh:'铂',m:'195.08',g:10,p:6,f:'transition',c:'+2, +4',state:'Solid',note:'Precious metal.'},
+      {n:79,s:'Au',en:'Gold',zh:'金',m:'196.97',g:11,p:6,f:'transition',c:'+1, +3',state:'Solid',note:'Valuable, unreactive metal.'},
+      {n:80,s:'Hg',en:'Mercury',zh:'汞',m:'200.59',g:12,p:6,f:'transition',c:'+1, +2',state:'Liquid',note:'Metal liquid at room temperature.'},
+      {n:81,s:'Tl',en:'Thallium',zh:'铊',m:'204.38',g:13,p:6,f:'post-transition',c:'+1, +3',state:'Solid',note:'Post-transition metal.'},
+      {n:82,s:'Pb',en:'Lead',zh:'铅',m:'207.2',g:14,p:6,f:'post-transition',c:'+2, +4',state:'Solid',note:'Dense toxic metal.'},
+      {n:83,s:'Bi',en:'Bismuth',zh:'铋',m:'208.98',g:15,p:6,f:'post-transition',c:'+3, +5',state:'Solid',note:'Brittle metal.'},
+      {n:84,s:'Po',en:'Polonium',zh:'钋',m:'[209]',g:16,p:6,f:'post-transition',c:'+2, +4',state:'Solid',note:'Radioactive element.'},
+      {n:85,s:'At',en:'Astatine',zh:'砹',m:'[210]',g:17,p:6,f:'halogen',c:'-1',state:'Solid',note:'Rare radioactive halogen.'},
+      {n:86,s:'Rn',en:'Radon',zh:'氡',m:'[222]',g:18,p:6,f:'noble-gas',c:'0',state:'Gas',note:'Radioactive noble gas.'},
+      {n:87,s:'Fr',en:'Francium',zh:'钫',m:'[223]',g:1,p:7,f:'alkali',c:'+1',state:'Solid',note:'Very rare radioactive metal.'},
+      {n:88,s:'Ra',en:'Radium',zh:'镭',m:'[226]',g:2,p:7,f:'alkaline',c:'+2',state:'Solid',note:'Radioactive metal.'},
+      {n:89,s:'Ac',en:'Actinium',zh:'锕',m:'[227]',g:3,p:9,f:'actinoid',c:'+3',state:'Solid',note:'First actinoid.'},
+      {n:90,s:'Th',en:'Thorium',zh:'钍',m:'232.04',g:4,p:9,f:'actinoid',c:'+4',state:'Solid',note:'Actinoid metal.'},
+      {n:91,s:'Pa',en:'Protactinium',zh:'镤',m:'231.04',g:5,p:9,f:'actinoid',c:'+5',state:'Solid',note:'Actinoid metal.'},
+      {n:92,s:'U',en:'Uranium',zh:'铀',m:'238.03',g:6,p:9,f:'actinoid',c:'+6',state:'Solid',note:'Used in nuclear fuel.'},
+      {n:93,s:'Np',en:'Neptunium',zh:'镎',m:'[237]',g:7,p:9,f:'actinoid',c:'variable',state:'Solid',note:'Radioactive actinoid.'},
+      {n:94,s:'Pu',en:'Plutonium',zh:'钚',m:'[244]',g:8,p:9,f:'actinoid',c:'variable',state:'Solid',note:'Radioactive actinoid.'},
+      {n:95,s:'Am',en:'Americium',zh:'镅',m:'[243]',g:9,p:9,f:'actinoid',c:'variable',state:'Solid',note:'Used in some smoke detectors.'},
+      {n:96,s:'Cm',en:'Curium',zh:'锔',m:'[247]',g:10,p:9,f:'actinoid',c:'+3',state:'Solid',note:'Actinoid metal.'},
+      {n:97,s:'Bk',en:'Berkelium',zh:'锫',m:'[247]',g:11,p:9,f:'actinoid',c:'+3, +4',state:'Solid',note:'Actinoid metal.'},
+      {n:98,s:'Cf',en:'Californium',zh:'锎',m:'[251]',g:12,p:9,f:'actinoid',c:'+3',state:'Solid',note:'Radioactive actinoid.'},
+      {n:99,s:'Es',en:'Einsteinium',zh:'锿',m:'[252]',g:13,p:9,f:'actinoid',c:'+3',state:'Solid',note:'Radioactive actinoid.'},
+      {n:100,s:'Fm',en:'Fermium',zh:'镄',m:'[257]',g:14,p:9,f:'actinoid',c:'+3',state:'Solid',note:'Radioactive actinoid.'},
+      {n:101,s:'Md',en:'Mendelevium',zh:'钔',m:'[258]',g:15,p:9,f:'actinoid',c:'+3',state:'Solid',note:'Radioactive actinoid.'},
+      {n:102,s:'No',en:'Nobelium',zh:'锘',m:'[259]',g:16,p:9,f:'actinoid',c:'+2, +3',state:'Solid',note:'Radioactive actinoid.'},
+      {n:103,s:'Lr',en:'Lawrencium',zh:'铹',m:'[262]',g:17,p:9,f:'actinoid',c:'+3',state:'Solid',note:'Radioactive actinoid.'},
+      {n:104,s:'Rf',en:'Rutherfordium',zh:'𬬻',m:'[267]',g:4,p:7,f:'transition',c:'+4',state:'Solid',note:'Synthetic element.'},
+      {n:105,s:'Db',en:'Dubnium',zh:'𬭊',m:'[270]',g:5,p:7,f:'transition',c:'+5',state:'Solid',note:'Synthetic element.'},
+      {n:106,s:'Sg',en:'Seaborgium',zh:'𬭳',m:'[271]',g:6,p:7,f:'transition',c:'+6',state:'Solid',note:'Synthetic element.'},
+      {n:107,s:'Bh',en:'Bohrium',zh:'𬭛',m:'[270]',g:7,p:7,f:'transition',c:'+7',state:'Solid',note:'Synthetic element.'},
+      {n:108,s:'Hs',en:'Hassium',zh:'𬭶',m:'[277]',g:8,p:7,f:'transition',c:'variable',state:'Solid',note:'Synthetic element.'},
+      {n:109,s:'Mt',en:'Meitnerium',zh:'鿏',m:'[278]',g:9,p:7,f:'unknown',c:'unknown',state:'Unknown',note:'Synthetic element.'},
+      {n:110,s:'Ds',en:'Darmstadtium',zh:'𫟼',m:'[281]',g:10,p:7,f:'unknown',c:'unknown',state:'Unknown',note:'Synthetic element.'},
+      {n:111,s:'Rg',en:'Roentgenium',zh:'錀',m:'[282]',g:11,p:7,f:'unknown',c:'unknown',state:'Unknown',note:'Synthetic element.'},
+      {n:112,s:'Cn',en:'Copernicium',zh:'鎶',m:'[285]',g:12,p:7,f:'unknown',c:'+2',state:'Unknown',note:'Synthetic element.'},
+      {n:113,s:'Nh',en:'Nihonium',zh:'鉨',m:'[286]',g:13,p:7,f:'unknown',c:'+1, +3',state:'Unknown',note:'Synthetic element.'},
+      {n:114,s:'Fl',en:'Flerovium',zh:'鈇',m:'[289]',g:14,p:7,f:'unknown',c:'+2, +4',state:'Unknown',note:'Synthetic element.'},
+      {n:115,s:'Mc',en:'Moscovium',zh:'镆',m:'[290]',g:15,p:7,f:'unknown',c:'+1, +3',state:'Unknown',note:'Synthetic element.'},
+      {n:116,s:'Lv',en:'Livermorium',zh:'鉝',m:'[293]',g:16,p:7,f:'unknown',c:'+2',state:'Unknown',note:'Synthetic element.'},
+      {n:117,s:'Ts',en:'Tennessine',zh:'Ts',m:'[294]',g:17,p:7,f:'halogen',c:'-1',state:'Unknown',note:'Synthetic halogen.'},
+      {n:118,s:'Og',en:'Oganesson',zh:'Og',m:'[294]',g:18,p:7,f:'noble-gas',c:'0',state:'Unknown',note:'Heaviest known element.'}
+    ];
+
+    const familyNames = {
+      hydrogen: 'Hydrogen / 氢',
+      alkali: 'Alkali Metal / 碱金属',
+      alkaline: 'Alkaline Earth Metal / 碱土金属',
+      transition: 'Transition Metal / 过渡金属',
+      'post-transition': 'Post-transition Metal / 后过渡金属',
+      metalloid: 'Metalloid / 类金属',
+      nonmetal: 'Non-metal / 非金属',
+      halogen: 'Halogen / 卤素',
+      'noble-gas': 'Noble Gas / 稀有气体',
+      lanthanoid: 'Lanthanoid / 镧系元素',
+      actinoid: 'Actinoid / 锕系元素',
+      unknown: 'Unknown / 未知或未分类'
+    };
+
+    const table = document.getElementById('table');
+    const detailCard = document.getElementById('detailCard');
+    const legend = document.getElementById('legend');
+    const familyFilter = document.getElementById('familyFilter');
+    const searchBox = document.getElementById('searchBox');
+    const resetBtn = document.getElementById('resetBtn');
+
+    function createLegend() {
+      Object.entries(familyNames).forEach(([key, label]) => {
+        const item = document.createElement('div');
+        item.className = 'legend-item';
+        item.innerHTML = `<span class="swatch family-${key}"></span><span>${label}</span>`;
+        legend.appendChild(item);
+
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = label;
+        familyFilter.appendChild(opt);
+      });
+    }
+
+    function buildTable() {
+      table.innerHTML = '';
+
+      const corner = document.createElement('div');
+      corner.className = 'header-cell';
+      corner.textContent = 'Period / Group';
+      table.appendChild(corner);
+
+      for (let g = 1; g <= 18; g++) {
+        const groupCell = document.createElement('div');
+        groupCell.className = 'header-cell';
+        groupCell.textContent = g;
+        table.appendChild(groupCell);
+      }
+
+      for (let p = 1; p <= 9; p++) {
+        const periodCell = document.createElement('div');
+        periodCell.className = 'period-label';
+        periodCell.textContent = p <= 7 ? `P${p}` : (p === 8 ? 'La-Lu' : 'Ac-Lr');
+        table.appendChild(periodCell);
+
+        for (let g = 1; g <= 18; g++) {
+          const el = elements.find(e => e.p === p && e.g === g);
+          if (!el) {
+            const empty = document.createElement('div');
+            empty.className = 'empty-cell';
+            table.appendChild(empty);
+            continue;
+          }
+
+          const card = document.createElement('div');
+          card.className = `element family-${el.f}`;
+          card.dataset.family = el.f;
+          card.dataset.search = `${el.s} ${el.en} ${el.zh} ${el.n}`.toLowerCase();
+          card.innerHTML = `
+            <div class="topline"><span>${el.n}</span><span>${el.c}</span></div>
+            <div class="symbol">${el.s}</div>
+            <div class="en-name">${el.en}</div>
+            <div class="zh-name">${el.zh}</div>
+            <div class="mass">${el.m}</div>
+          `;
+          card.addEventListener('click', () => showDetail(el));
+          table.appendChild(card);
+        }
+      }
+      applyFilters();
+    }
+
+    function showDetail(el) {
+      detailCard.innerHTML = `
+        <h2>${el.s} ${el.zh}</h2>
+        <div class="detail-grid">
+          <strong>English</strong><span>${el.en}</span>
+          <strong>中文</strong><span>${el.zh}</span>
+          <strong>Atomic Number</strong><span>${el.n}</span>
+          <strong>Atomic Mass</strong><span>${el.m}</span>
+          <strong>Group</strong><span>${el.g <= 18 ? el.g : '-'}</span>
+          <strong>Period</strong><span>${el.p <= 7 ? el.p : (el.p === 8 ? 'Lanthanoid row' : 'Actinoid row')}</span>
+          <strong>Family</strong><span>${familyNames[el.f]}</span>
+          <strong>Typical Charge</strong><span>${el.c}</span>
+          <strong>State (25°C)</strong><span>${el.state}</span>
+          <strong>Use / Note</strong><span>${el.note} / ${translateNote(el)}</span>
+        </div>
+      `;
+    }
+
+    function translateNote(el) {
+      const map = {
+        'Lightest element; part of water.': '最轻的元素，是水的一部分。',
+        'Used in balloons; very unreactive.': '用于气球，性质很不活泼。',
+        'Soft metal used in batteries.': '软金属，用于电池。',
+        'Light metal.': '轻金属。',
+        'Metalloid with mixed properties.': '具有金属和非金属性质的类金属。',
+        'Found in living things and fuels.': '存在于生物和燃料中。',
+        'Makes up most of Earth’s air.': '构成地球空气的大部分。',
+        'Needed for breathing and combustion.': '呼吸和燃烧都需要它。',
+        'Very reactive halogen.': '非常活泼的卤素。',
+        'Used in bright signs.': '用于发光招牌。',
+        'Very reactive metal; in table salt compounds.': '非常活泼的金属，存在于食盐化合物中。',
+        'Burns with bright white light.': '燃烧时发出明亮白光。',
+        'Light, useful metal.': '轻且实用的金属。',
+        'Used in computer chips and sand.': '用于芯片，也存在于沙中。',
+        'Important in DNA and fertilizers.': '对 DNA 和肥料都很重要。',
+        'Yellow non-metal.': '黄色非金属。',
+        'Used to disinfect water.': '用于给水消毒。',
+        'Inert gas in light bulbs.': '灯泡中的惰性气体。',
+        'Very reactive metal.': '非常活泼的金属。',
+        'Important in bones and teeth.': '骨骼和牙齿的重要成分。',
+        'Transition metal.': '过渡金属。',
+        'Strong and light metal.': '坚固而轻的金属。',
+        'Transition metal with multiple charges.': '具有多种电荷的过渡金属。',
+        'Used in shiny coatings.': '用于光亮镀层。',
+        'Used in steel.': '用于钢材。',
+        'Used in batteries and pigments.': '用于电池和颜料。',
+        'Used in coins and alloys.': '用于硬币和合金。',
+        'Excellent conductor.': '优良导体。',
+        'Used to coat steel.': '用于给钢镀层。',
+        'Low melting point metal.': '熔点较低的金属。',
+        'Semiconductor metalloid.': '半导体类金属。',
+        'Metalloid.': '类金属。',
+        'Non-metal used in electronics.': '用于电子工业的非金属。',
+        'Only non-metal liquid at room temperature.': '室温下唯一液态非金属。',
+        'Noble gas.': '稀有气体。',
+        'Produces red flame.': '会产生红色火焰。',
+        'Corrosion-resistant metal.': '耐腐蚀金属。',
+        'Radioactive element.': '放射性元素。',
+        'Very reflective metal.': '反光性很强的金属。',
+        'Used in catalytic converters.': '用于催化转换器。',
+        'Best electrical conductor.': '最好的导电体之一。',
+        'Toxic metal.': '有毒金属。',
+        'Soft metal.': '软金属。',
+        'Used in solder.': '用于焊料。',
+        'Needed in very small amounts for health.': '人体健康所需的微量元素。',
+        'Used in special lamps.': '用于特殊灯具。',
+        'Very reactive soft metal.': '非常活泼的软金属。',
+        'Heavy alkaline earth metal.': '较重的碱土金属。',
+        'First lanthanoid.': '第一个镧系元素。',
+        'Lanthanoid metal.': '镧系金属。',
+        'Used in strong magnets.': '用于强力磁铁。',
+        'Precious metal.': '贵金属。',
+        'Valuable, unreactive metal.': '有价值且不活泼的金属。',
+        'Metal liquid at room temperature.': '室温下呈液态的金属。',
+        'Post-transition metal.': '后过渡金属。',
+        'Dense toxic metal.': '密度大且有毒的金属。',
+        'Brittle metal.': '脆性金属。',
+        'Rare radioactive halogen.': '稀有的放射性卤素。',
+        'Radioactive noble gas.': '放射性稀有气体。',
+        'Very rare radioactive metal.': '非常稀有的放射性金属。',
+        'Radioactive metal.': '放射性金属。',
+        'First actinoid.': '第一个锕系元素。',
+        'Actinoid metal.': '锕系金属。',
+        'Used in nuclear fuel.': '用于核燃料。',
+        'Radioactive actinoid.': '放射性锕系元素。',
+        'Synthetic element.': '人造元素。',
+        'Unknown / 未知或未分类': '未知或未分类。',
+        'Heaviest known element.': '已知最重的元素。',
+        'Synthetic halogen.': '人造卤素。'
+      };
+      return map[el.note] || '常见课堂信息。';
+    }
+
+    function applyFilters() {
+      const fam = familyFilter.value;
+      const query = searchBox.value.trim().toLowerCase();
+      document.querySelectorAll('.element').forEach(card => {
+        const matchFamily = fam === 'all' || card.dataset.family === fam;
+        const matchQuery = !query || card.dataset.search.includes(query);
+        card.classList.toggle('hidden-by-filter', !(matchFamily && matchQuery));
+      });
+    }
+
+    familyFilter.addEventListener('change', applyFilters);
+    searchBox.addEventListener('input', applyFilters);
+    resetBtn.addEventListener('click', () => {
+      familyFilter.value = 'all';
+      searchBox.value = '';
+      applyFilters();
+    });
+
+    createLegend();
+    buildTable();
+  </script>
+</body>
+</html>
