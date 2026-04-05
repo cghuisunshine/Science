@@ -11,6 +11,8 @@
       --border: #cfc7b7;
       --text: #222;
       --muted: #666;
+      --boundary-line: #d17b28;
+      --boundary-glow: rgba(209, 123, 40, 0.26);
       --alkali: #f7d794;
       --alkaline: #f5cd79;
       --transition: #c8d6e5;
@@ -117,6 +119,7 @@
       gap: 6px;
       min-width: 1450px;
       align-items: stretch;
+      position: relative;
     }
 
     .header-cell, .period-label {
@@ -152,6 +155,7 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
       cursor: pointer;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
+      z-index: 1;
     }
 
     .element:hover {
@@ -161,6 +165,25 @@
 
     .element.hidden-by-filter {
       opacity: 0.22;
+    }
+
+    .metal-nonmetal-boundary {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: visible;
+      z-index: 4;
+    }
+
+    .metal-nonmetal-boundary polyline {
+      fill: none;
+      stroke: var(--boundary-line);
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 8px var(--boundary-glow));
     }
 
     .topline {
@@ -477,6 +500,13 @@
     const familyFilter = document.getElementById('familyFilter');
     const searchBox = document.getElementById('searchBox');
     const resetBtn = document.getElementById('resetBtn');
+    const staircaseSteps = [
+      { symbol: 'Al', above: 'B' },
+      { symbol: 'Ge', above: 'Si' },
+      { symbol: 'Sb', above: 'As' },
+      { symbol: 'Po', above: 'Te' }
+    ];
+    const finalBoundarySymbol = 'At';
 
     function createLegend() {
       Object.entries(familyNames).forEach(([key, label]) => {
@@ -490,6 +520,103 @@
         opt.textContent = label;
         familyFilter.appendChild(opt);
       });
+    }
+
+    function getElementCard(symbol) {
+      return table.querySelector(`.element[data-symbol="${symbol}"]`);
+    }
+
+    function createBoundarySegments() {
+      const boron = getElementCard('B');
+      const carbon = getElementCard('C');
+      const aluminum = getElementCard('Al');
+      const finalCard = getElementCard(finalBoundarySymbol);
+
+      if (!boron || !carbon || !aluminum || !finalCard) {
+        return null;
+      }
+
+      const gapX = carbon.offsetLeft - (boron.offsetLeft + boron.offsetWidth);
+      const gapY = aluminum.offsetTop - (boron.offsetTop + boron.offsetHeight);
+
+      if (gapX <= 0 || gapY <= 0) {
+        return null;
+      }
+
+      const steps = staircaseSteps.map(step => {
+        const card = getElementCard(step.symbol);
+        const aboveCard = getElementCard(step.above);
+        if (!card || !aboveCard) {
+          return null;
+        }
+        return {
+          symbol: step.symbol,
+          left: card.offsetLeft - (gapX / 2),
+          right: card.offsetLeft + card.offsetWidth + (gapX / 2),
+          top: card.offsetTop - (gapY / 2)
+        };
+      }).filter(Boolean);
+
+      return {
+        steps,
+        finalX: finalCard.offsetLeft - (gapX / 2),
+        finalY: finalCard.offsetTop + finalCard.offsetHeight + (gapY / 2)
+      };
+    }
+
+    function renderMetalNonmetalBoundary() {
+      table.querySelector('.metal-nonmetal-boundary')?.remove();
+
+      const boundary = createBoundarySegments();
+
+      if (!boundary || !boundary.steps.length) {
+        return;
+      }
+
+      const boundaryPadding = 12;
+      const firstStep = boundary.steps[0];
+      const extendedPoints = [
+        { x: firstStep.left, y: Math.max(0, firstStep.top - boundaryPadding) },
+        { x: firstStep.left, y: firstStep.top }
+      ];
+
+      boundary.steps.forEach((step, index) => {
+        const lastPoint = extendedPoints[extendedPoints.length - 1];
+        if (lastPoint.x !== step.left || lastPoint.y !== step.top) {
+          extendedPoints.push({ x: step.left, y: step.top });
+        }
+
+        extendedPoints.push({ x: step.right, y: step.top });
+
+        if (index < boundary.steps.length - 1) {
+          extendedPoints.push({ x: step.right, y: boundary.steps[index + 1].top });
+          return;
+        }
+
+        if (step.right !== boundary.finalX) {
+          extendedPoints.push({ x: boundary.finalX, y: step.top });
+        }
+
+        extendedPoints.push({
+          x: boundary.finalX,
+          y: Math.min(table.clientHeight, boundary.finalY + boundaryPadding)
+        });
+      });
+
+      const overlay = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      overlay.classList.add('metal-nonmetal-boundary');
+      overlay.setAttribute('viewBox', `0 0 ${table.clientWidth} ${table.clientHeight}`);
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.style.pointerEvents = 'none';
+
+      const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+      polyline.setAttribute(
+        'points',
+        extendedPoints.map(point => `${point.x},${point.y}`).join(' ')
+      );
+
+      overlay.appendChild(polyline);
+      table.appendChild(overlay);
     }
 
     function buildTable() {
@@ -529,6 +656,7 @@
           const card = document.createElement('div');
           card.className = `element family-${el.f}`;
           card.dataset.family = el.f;
+          card.dataset.symbol = el.s;
           card.dataset.search = `${el.s} ${el.en} ${el.zh} ${el.n}`.toLowerCase();
           card.innerHTML = `
             <div class="topline"><span>${el.n}</span><span>${el.c}</span></div>
@@ -542,6 +670,7 @@
         }
       }
       applyFilters();
+      renderMetalNonmetalBoundary();
     }
 
     function showDetail(el) {
@@ -654,6 +783,7 @@
       searchBox.value = '';
       applyFilters();
     });
+    window.addEventListener('resize', renderMetalNonmetalBoundary);
 
     createLegend();
     buildTable();
