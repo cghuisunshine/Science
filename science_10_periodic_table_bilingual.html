@@ -504,9 +504,10 @@
       { symbol: 'Al', above: 'B' },
       { symbol: 'Ge', above: 'Si' },
       { symbol: 'Sb', above: 'As' },
-      { symbol: 'Po', above: 'Te' }
+      { symbol: 'Po', above: 'Te' },
+      { symbol: 'Ts', above: 'At' }
     ];
-    const finalBoundarySymbol = 'At';
+    const finalBoundarySymbol = 'Ts';
 
     function createLegend() {
       Object.entries(familyNames).forEach(([key, label]) => {
@@ -559,7 +560,7 @@
 
       return {
         steps,
-        finalX: finalCard.offsetLeft - (gapX / 2),
+        finalX: finalCard.offsetLeft + finalCard.offsetWidth + (gapX / 2),
         finalY: finalCard.offsetTop + finalCard.offsetHeight + (gapY / 2)
       };
     }
