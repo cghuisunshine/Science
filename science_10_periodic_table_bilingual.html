@@ -531,9 +531,10 @@
       const boron = getElementCard('B');
       const carbon = getElementCard('C');
       const aluminum = getElementCard('Al');
+      const hydrogen = getElementCard('H');
       const finalCard = getElementCard(finalBoundarySymbol);
 
-      if (!boron || !carbon || !aluminum || !finalCard) {
+      if (!boron || !carbon || !aluminum || !hydrogen || !finalCard) {
         return null;
       }
 
@@ -560,6 +561,7 @@
 
       return {
         steps,
+        startY: hydrogen.offsetTop,
         finalX: finalCard.offsetLeft + finalCard.offsetWidth + (gapX / 2),
         finalY: finalCard.offsetTop + finalCard.offsetHeight + (gapY / 2)
       };
@@ -577,7 +579,7 @@
       const boundaryPadding = 12;
       const firstStep = boundary.steps[0];
       const extendedPoints = [
-        { x: firstStep.left, y: Math.max(0, firstStep.top - boundaryPadding) },
+        { x: firstStep.left, y: Math.max(0, boundary.startY) },
         { x: firstStep.left, y: firstStep.top }
       ];
 
