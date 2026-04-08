@@ -1,0 +1,254 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="369" height="602" viewBox="0 0 369 602" role="img" aria-labelledby="title desc">
+  <title id="title">Periodic table excerpt with highlighted diatomic elements</title>
+  <desc id="desc">A cropped periodic table image showing hydrogen and selected p-block elements, with the diatomic elements highlighted in pink.</desc>
+  <style>
+    text { font-family: Arial, Helvetica, sans-serif; fill: #1a1a1a; }
+    .group { font-size: 18px; font-weight: 500; }
+    .num { font-size: 17px; font-weight: 500; }
+    .charge { font-size: 17px; font-weight: 500; }
+    .symbol { font-size: 23px; font-weight: 700; }
+    .name { font-size: 10px; }
+    .mass { font-size: 17px; }
+    .tile { stroke: #444; stroke-width: 1.1; }
+    .outlined { stroke: #2f2f2f; stroke-width: 4; }
+    .pink { fill: #ee9bc8; }
+    .cream { fill: #fbf7d9; }
+    .sage { fill: #dde7d5; }
+    .white { fill: #f9f9f3; }
+  </style>
+
+  <rect x="0" y="0" width="369" height="602" fill="#ffffff" />
+
+  <text class="group" x="80" y="20" text-anchor="middle">1</text>
+  <text class="group" x="18" y="146" text-anchor="middle">14</text>
+  <text class="group" x="93" y="146" text-anchor="middle">15</text>
+  <text class="group" x="166" y="146" text-anchor="middle">16</text>
+  <text class="group" x="241" y="146" text-anchor="middle">17</text>
+  <text class="group" x="327" y="38" text-anchor="middle">18</text>
+
+  <g transform="translate(44,30)">
+    <rect class="tile pink" x="0" y="0" width="74" height="88" />
+    <text class="num" x="8" y="18">1</text>
+    <text class="charge" x="59" y="18">+</text>
+    <text class="symbol" x="12" y="48">H</text>
+    <text class="name" x="12" y="64">Hydrogen</text>
+    <text class="mass" x="12" y="83">1.0</text>
+  </g>
+
+  <g transform="translate(293,50)">
+    <rect class="tile cream" x="0" y="0" width="72" height="88" />
+    <text class="num" x="8" y="18">2</text>
+    <text class="charge" x="58" y="18">0</text>
+    <text class="symbol" x="14" y="48">He</text>
+    <text class="name" x="14" y="64">Helium</text>
+    <text class="mass" x="14" y="83">4.0</text>
+  </g>
+
+  <g transform="translate(0,167)">
+    <rect class="tile cream" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">6</text>
+    <text class="symbol" x="12" y="48">C</text>
+    <text class="name" x="12" y="64">Carbon</text>
+    <text class="mass" x="12" y="83">12.0</text>
+  </g>
+  <g transform="translate(74,167)">
+    <rect class="tile pink" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">7</text>
+    <text class="charge" x="55" y="18">3−</text>
+    <text class="symbol" x="12" y="48">N</text>
+    <text class="name" x="12" y="64">Nitrogen</text>
+    <text class="mass" x="12" y="83">14.0</text>
+  </g>
+  <g transform="translate(148,167)">
+    <rect class="tile pink" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">8</text>
+    <text class="charge" x="55" y="18">2−</text>
+    <text class="symbol" x="12" y="48">O</text>
+    <text class="name" x="12" y="64">Oxygen</text>
+    <text class="mass" x="12" y="83">16.0</text>
+  </g>
+  <g transform="translate(222,167)">
+    <rect class="tile pink" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">9</text>
+    <text class="charge" x="58" y="18">−</text>
+    <text class="symbol" x="12" y="48">F</text>
+    <text class="name" x="12" y="64">Fluorine</text>
+    <text class="mass" x="12" y="83">19.0</text>
+  </g>
+  <g transform="translate(296,167)">
+    <rect class="tile cream" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">10</text>
+    <text class="charge" x="61" y="18">0</text>
+    <text class="symbol" x="12" y="48">Ne</text>
+    <text class="name" x="12" y="64">Neon</text>
+    <text class="mass" x="12" y="83">20.2</text>
+  </g>
+
+  <g transform="translate(0,256)">
+    <rect class="tile sage outlined" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">14</text>
+    <text class="symbol" x="12" y="48">Si</text>
+    <text class="name" x="12" y="64">Silicon</text>
+    <text class="mass" x="12" y="83">28.1</text>
+  </g>
+  <g transform="translate(74,256)">
+    <rect class="tile cream outlined" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">15</text>
+    <text class="charge" x="55" y="18">3−</text>
+    <text class="symbol" x="12" y="48">P</text>
+    <text class="name" x="12" y="64">Phosphorus</text>
+    <text class="mass" x="12" y="83">31.0</text>
+  </g>
+  <g transform="translate(148,256)">
+    <rect class="tile cream" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">16</text>
+    <text class="charge" x="55" y="18">2−</text>
+    <text class="symbol" x="12" y="48">S</text>
+    <text class="name" x="12" y="64">Sulphur</text>
+    <text class="mass" x="12" y="83">32.1</text>
+  </g>
+  <g transform="translate(222,256)">
+    <rect class="tile pink" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">17</text>
+    <text class="charge" x="58" y="18">−</text>
+    <text class="symbol" x="12" y="48">Cl</text>
+    <text class="name" x="12" y="64">Chlorine</text>
+    <text class="mass" x="12" y="83">35.5</text>
+  </g>
+  <g transform="translate(296,256)">
+    <rect class="tile cream" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">18</text>
+    <text class="charge" x="61" y="18">0</text>
+    <text class="symbol" x="12" y="48">Ar</text>
+    <text class="name" x="12" y="64">Argon</text>
+    <text class="mass" x="12" y="83">39.9</text>
+  </g>
+
+  <g transform="translate(0,345)">
+    <rect class="tile sage" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">32</text>
+    <text class="charge" x="51" y="18">4+</text>
+    <text class="symbol" x="12" y="48">Ge</text>
+    <text class="name" x="12" y="64">Germanium</text>
+    <text class="mass" x="12" y="83">72.6</text>
+  </g>
+  <g transform="translate(74,345)">
+    <rect class="tile sage" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">33</text>
+    <text class="charge" x="55" y="18">3−</text>
+    <text class="symbol" x="12" y="48">As</text>
+    <text class="name" x="12" y="64">Arsenic</text>
+    <text class="mass" x="12" y="83">74.9</text>
+  </g>
+  <g transform="translate(148,345)">
+    <rect class="tile white" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">34</text>
+    <text class="charge" x="55" y="18">2−</text>
+    <text class="symbol" x="12" y="48">Se</text>
+    <text class="name" x="12" y="64">Selenium</text>
+    <text class="mass" x="12" y="83">79.0</text>
+  </g>
+  <g transform="translate(222,345)">
+    <rect class="tile pink" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">35</text>
+    <text class="charge" x="58" y="18">−</text>
+    <text class="symbol" x="12" y="48">Br</text>
+    <text class="name" x="12" y="64">Bromine</text>
+    <text class="mass" x="12" y="83">79.9</text>
+  </g>
+  <g transform="translate(296,345)">
+    <rect class="tile white" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">36</text>
+    <text class="charge" x="61" y="18">0</text>
+    <text class="symbol" x="12" y="48">Kr</text>
+    <text class="name" x="12" y="64">Krypton</text>
+    <text class="mass" x="12" y="83">83.8</text>
+  </g>
+
+  <g transform="translate(0,434)">
+    <rect class="tile white" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">50</text>
+    <text class="charge" x="50" y="18">4+</text>
+    <text class="charge" x="56" y="36">2+</text>
+    <text class="symbol" x="12" y="48">Sn</text>
+    <text class="name" x="12" y="64">Tin</text>
+    <text class="mass" x="12" y="83">118.7</text>
+  </g>
+  <g transform="translate(74,434)">
+    <rect class="tile sage" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">51</text>
+    <text class="charge" x="51" y="18">3+</text>
+    <text class="charge" x="50" y="36">5+</text>
+    <text class="symbol" x="12" y="48">Sb</text>
+    <text class="name" x="12" y="64">Antimony</text>
+    <text class="mass" x="12" y="83">121.8</text>
+  </g>
+  <g transform="translate(148,434)">
+    <rect class="tile white" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">52</text>
+    <text class="charge" x="55" y="18">2−</text>
+    <text class="symbol" x="12" y="48">Te</text>
+    <text class="name" x="12" y="64">Tellurium</text>
+    <text class="mass" x="12" y="83">127.6</text>
+  </g>
+  <g transform="translate(222,434)">
+    <rect class="tile pink" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">53</text>
+    <text class="charge" x="58" y="18">−</text>
+    <text class="symbol" x="12" y="48">I</text>
+    <text class="name" x="12" y="64">Iodine</text>
+    <text class="mass" x="12" y="83">126.9</text>
+  </g>
+  <g transform="translate(296,434)">
+    <rect class="tile cream" x="0" y="0" width="73" height="88" />
+    <text class="num" x="8" y="18">54</text>
+    <text class="charge" x="61" y="18">0</text>
+    <text class="symbol" x="12" y="48">Xe</text>
+    <text class="name" x="12" y="64">Xenon</text>
+    <text class="mass" x="12" y="83">131.3</text>
+  </g>
+
+  <g transform="translate(0,523)">
+    <rect class="tile white" x="0" y="0" width="73" height="78" />
+    <text class="num" x="8" y="18">82</text>
+    <text class="charge" x="50" y="18">2+</text>
+    <text class="charge" x="50" y="36">4+</text>
+    <text class="symbol" x="12" y="48">Pb</text>
+    <text class="name" x="12" y="64">Lead</text>
+    <text class="mass" x="12" y="79">207.2</text>
+  </g>
+  <g transform="translate(74,523)">
+    <rect class="tile white" x="0" y="0" width="73" height="78" />
+    <text class="num" x="8" y="18">83</text>
+    <text class="charge" x="51" y="18">3+</text>
+    <text class="charge" x="50" y="36">5+</text>
+    <text class="symbol" x="12" y="48">Bi</text>
+    <text class="name" x="12" y="64">Bismuth</text>
+    <text class="mass" x="12" y="79">209.0</text>
+  </g>
+  <g transform="translate(148,523)">
+    <rect class="tile sage" x="0" y="0" width="73" height="78" />
+    <text class="num" x="8" y="18">84</text>
+    <text class="charge" x="55" y="18">2+</text>
+    <text class="charge" x="50" y="36">4+</text>
+    <text class="symbol" x="12" y="48">Po</text>
+    <text class="name" x="12" y="64">Polonium</text>
+    <text class="mass" x="12" y="79">(209)</text>
+  </g>
+  <g transform="translate(222,523)">
+    <rect class="tile white" x="0" y="0" width="73" height="78" />
+    <text class="num" x="8" y="18">85</text>
+    <text class="charge" x="58" y="18">−</text>
+    <text class="symbol" x="12" y="48">At</text>
+    <text class="name" x="12" y="64">Astatine</text>
+    <text class="mass" x="12" y="79">(210)</text>
+  </g>
+  <g transform="translate(296,523)">
+    <rect class="tile cream" x="0" y="0" width="73" height="78" />
+    <text class="num" x="8" y="18">86</text>
+    <text class="charge" x="61" y="18">0</text>
+    <text class="symbol" x="12" y="48">Rn</text>
+    <text class="name" x="12" y="64">Radon</text>
+    <text class="mass" x="12" y="79">(222)</text>
+  </g>
+</svg>
