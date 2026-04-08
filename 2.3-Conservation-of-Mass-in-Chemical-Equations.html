@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2.3 Conservation of Mass in Chemical Equations</title>
+  <style>
+    :root{
+      --bg:#ece7df;
+      --page:#ffffff;
+      --ink:#1f2328;
+      --muted:#5f6368;
+      --line:#b9b1a4;
+      --line-strong:#7a7267;
+      --surface:#f7f4ef;
+      --shadow:0 3px 14px rgba(0,0,0,.08);
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:Calibri, Aptos, "Segoe UI", sans-serif;
+      line-height:1.4;
+    }
+
+    .topbar-global{
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:rgba(236, 231, 223, 0.96);
+      border-bottom:1px solid var(--line);
+      backdrop-filter:blur(8px);
+    }
+
+    .lang-controls{
+      width:min(1200px, calc(100vw - 40px));
+      margin:0 auto;
+      padding:12px 0;
+      display:flex;
+      justify-content:flex-end;
+      gap:8px;
+    }
+
+    .lang-btn{
+      padding:8px 14px;
+      border:1px solid var(--line-strong);
+      background:#fff;
+      color:var(--ink);
+      border-radius:999px;
+      font:600 14px/1 Calibri, Aptos, "Segoe UI", sans-serif;
+      cursor:pointer;
+    }
+
+    .lang-btn.is-active{
+      background:var(--ink);
+      color:#fff;
+      border-color:var(--ink);
+    }
+
+    .wrapper{
+      padding:24px 0 40px;
+    }
+
+    .page{
+      width:min(1200px, calc(100vw - 40px));
+      margin:0 auto;
+      background:var(--page);
+      box-shadow:var(--shadow);
+      padding:0.72in;
+    }
+
+    h1{
+      margin:0 0 18px;
+      font-size:30px;
+      line-height:1.15;
+    }
+
+    h2{
+      margin:26px 0 10px;
+      font-size:21px;
+      line-height:1.2;
+    }
+
+    h3{
+      margin:18px 0 8px;
+      font-size:17px;
+      line-height:1.2;
+    }
+
+    p, li, div, summary{
+      font-size:15px;
+    }
+
+    p{
+      margin:8px 0;
+    }
+
+    ul, ol{
+      margin:8px 0 12px 22px;
+      padding:0;
+    }
+
+    li{
+      margin:5px 0;
+    }
+
+    a{
+      color:#0b5cad;
+      word-break:break-word;
+    }
+
+    .i18n-wrap{
+      display:block;
+    }
+
+    .i18n-en,
+    .i18n-zh{
+      display:block;
+    }
+
+    .i18n-inline .i18n-en,
+    .i18n-inline .i18n-zh{
+      display:inline;
+    }
+
+    .lang-en .i18n-zh{
+      display:none;
+    }
+
+    .lang-bi .i18n-wrap:not(.i18n-inline) .i18n-zh{
+      margin-top:4px;
+      color:var(--muted);
+    }
+
+    .lang-bi .i18n-inline .i18n-zh::before{
+      content:" / ";
+    }
+
+    .lang-zh .i18n-en{
+      display:none;
+    }
+
+    .video-embed{
+      margin:12px 0 18px;
+      border:1px solid var(--line-strong);
+      background:var(--surface);
+      padding:12px;
+    }
+
+    .video-frame{
+      position:relative;
+      width:100%;
+      padding-top:56.25%;
+      background:#000;
+    }
+
+    .video-frame iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+    }
+
+    .lesson-image{
+      margin:12px 0 16px;
+      border:1px solid var(--line-strong);
+      background:#fff;
+      padding:12px;
+      text-align:center;
+    }
+
+    .lesson-image img{
+      display:block;
+      max-width:100%;
+      height:auto;
+      margin:0 auto;
+    }
+
+    .equation{
+      font-weight:700;
+      font-size:17px;
+      margin:8px 0;
+    }
+
+    .note-box,
+    .placeholder,
+    details{
+      border:1px solid var(--line-strong);
+      background:var(--surface);
+      padding:14px 16px;
+      margin:12px 0 16px;
+    }
+
+    .placeholder{
+      color:var(--muted);
+      font-style:italic;
+    }
+
+    .review-quiz{
+      display:grid;
+      gap:18px;
+    }
+
+    .review-block{
+      background:#fff;
+      border:1px solid var(--line);
+      padding:16px 18px;
+    }
+
+    .review-block p{
+      margin:0 0 10px;
+    }
+
+    .review-equation{
+      margin:12px 0 18px;
+      font-size:28px;
+      font-weight:700;
+      letter-spacing:.02em;
+      line-height:1.25;
+    }
+
+    .review-equation sub,
+    .equation-list sub{
+      font-size:.58em;
+      vertical-align:baseline;
+      position:relative;
+      bottom:-0.28em;
+    }
+
+    .review-row{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:8px;
+      margin:10px 0;
+      font-size:17px;
+    }
+
+    .review-row label{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .review-select{
+      min-width:160px;
+      padding:8px 10px;
+      border:2px solid #8c8780;
+      border-radius:4px;
+      background:#fff;
+      color:var(--ink);
+      font:inherit;
+    }
+
+    .review-select.compact{
+      min-width:110px;
+    }
+
+    .review-select.is-correct{
+      border-color:#2f7d32;
+      background:#eef8ee;
+    }
+
+    .review-select.is-incorrect{
+      border-color:#b42318;
+      background:#fff1f1;
+    }
+
+    .equation-list{
+      margin:12px 0 18px;
+      display:grid;
+      gap:8px;
+      font-size:17px;
+      font-weight:700;
+    }
+
+    .answer-grid{
+      display:grid;
+      gap:10px;
+      max-width:240px;
+    }
+
+    .answer-row{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:17px;
+    }
+
+    .answer-label{
+      width:28px;
+      font-weight:700;
+    }
+
+    .review-actions{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-top:6px;
+    }
+
+    .review-button{
+      padding:9px 22px;
+      border:2px solid var(--line-strong);
+      background:#fff;
+      color:var(--ink);
+      border-radius:4px;
+      font:inherit;
+      cursor:pointer;
+    }
+
+    .review-feedback{
+      min-height:24px;
+      font-weight:700;
+    }
+
+    details summary{
+      cursor:pointer;
+      font-weight:700;
+    }
+
+    pre{
+      margin:0;
+      white-space:pre-wrap;
+      font-family:inherit;
+      line-height:1.4;
+    }
+
+    @media (max-width: 760px){
+      .lang-controls{
+        width:calc(100vw - 24px);
+        justify-content:flex-start;
+        flex-wrap:wrap;
+      }
+
+      .page{
+        width:calc(100vw - 24px);
+        padding:20px 18px 24px;
+      }
+
+      .review-equation{
+        font-size:22px;
+      }
+
+      .review-row,
+      .equation-list,
+      .answer-row{
+        font-size:15px;
+      }
+
+      .review-select{
+        width:100%;
+        min-width:0;
+      }
+
+      .answer-grid{
+        max-width:none;
+      }
+    }
+  </style>
+</head>
+<body class="lang-en">
+  <div class="topbar-global">
+    <div aria-label="Language" class="lang-controls" role="group">
+      <button aria-pressed="true" class="lang-btn is-active" data-lang="en" type="button">English</button>
+      <button aria-pressed="false" class="lang-btn" data-lang="bi" type="button">En + Zh</button>
+      <button aria-pressed="false" class="lang-btn" data-lang="zh" type="button">Zh only</button>
+    </div>
+  </div>
+  <div class="wrapper">
+    <main class="page">
+      <h1><span class="i18n-wrap"><span class="i18n-en">2.3 Conservation of Mass in Chemical Equations</span><span class="i18n-zh" lang="zh-Hans">2.3 化学方程式中的质量守恒</span></span></h1>
+
+      <div class="video-embed">
+        <div class="video-frame">
+          <iframe
+            src="https://www.youtube.com/embed/2S6e11NBwiw"
+            title="2.3 Conservation of Mass in Chemical Equations video 1"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">The Law of Conservation of Mass</span><span class="i18n-zh" lang="zh-Hans">质量守恒定律</span></span></h2>
+      <ul>
+        <li><span class="i18n-wrap"><span class="i18n-en">In chemical reactions, atoms are neither created nor destroyed</span><span class="i18n-zh" lang="zh-Hans">化学反应中，原子既不会被创造，也不会被消灭。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">Developed by Antoine Lavoisier and his wife Marie-Anne in the 1700s</span><span class="i18n-zh" lang="zh-Hans">这一定律由安托万·拉瓦锡和他的妻子玛丽-安娜在 18 世纪提出。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">Mass of reactants = Mass of products</span><span class="i18n-zh" lang="zh-Hans">反应物的质量 = 生成物的质量。</span></span></li>
+      </ul>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Chemical Reactions</span><span class="i18n-zh" lang="zh-Hans">化学反应</span></span></h2>
+      <p><span class="i18n-wrap"><span class="i18n-en">Chemical reactions result in chemical changes.</span><span class="i18n-zh" lang="zh-Hans">化学反应会产生化学变化。</span></span></p>
+      <ul>
+        <li><span class="i18n-wrap"><span class="i18n-en">Chemical changes occur when new substances are created.</span><span class="i18n-zh" lang="zh-Hans">当新的物质被生成时，就发生了化学变化。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">The original substance(s), called reactants, change into new substance(s) called products.</span><span class="i18n-zh" lang="zh-Hans">原来的物质称为反应物，它们会转变成新的物质，称为生成物。</span></span></li>
+      </ul>
+      <p><span class="i18n-wrap"><span class="i18n-en">Chemical change means new compounds are created.</span><span class="i18n-zh" lang="zh-Hans">化学变化表示新的化合物被生成。</span></span></p>
+      <ul>
+        <li><span class="i18n-wrap"><span class="i18n-en">BUT no new matter is created or destroyed; atoms are just rearranged.</span><span class="i18n-zh" lang="zh-Hans">但是，没有新的物质被创造或消灭；原子只是重新排列。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">All of the matter in the reactants = all of the matter in the products</span><span class="i18n-zh" lang="zh-Hans">反应物中的全部物质 = 生成物中的全部物质。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">John Dalton, 200 years ago, realized that atoms simply rearrange themselves during chemical reactions.</span><span class="i18n-zh" lang="zh-Hans">约 200 年前，约翰·道尔顿认识到原子在化学反应中只是重新排列。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">Number of each atom in reactants = number of each atom in products</span><span class="i18n-zh" lang="zh-Hans">反应物中每种原子的数目 = 生成物中每种原子的数目。</span></span></li>
+      </ul>
+      <p><span class="i18n-wrap"><span class="i18n-en">Chemical reactions can be written in different ways.</span><span class="i18n-zh" lang="zh-Hans">化学反应可以用不同的方式表示。</span></span></p>
+      <ul>
+        <li><span class="i18n-wrap"><span class="i18n-en">A word equation:</span><span class="i18n-zh" lang="zh-Hans">文字方程式：</span></span>
+          <ul>
+            <li><span class="i18n-wrap"><span class="i18n-en">Nitrogen monoxide + oxygen --> nitrogen dioxide</span><span class="i18n-zh" lang="zh-Hans">一氧化氮 + 氧气 --> 二氧化氮</span></span></li>
+          </ul>
+        </li>
+        <li><span class="i18n-wrap"><span class="i18n-en">A chemical equation:</span><span class="i18n-zh" lang="zh-Hans">化学方程式：</span></span>
+          <ul>
+            <li>2NO + O2 → 2 NO2</li>
+          </ul>
+        </li>
+      </ul>
+      <p><span class="i18n-wrap"><span class="i18n-en">Coefficients - the big numbers in front of each compound used to indicate the ratio of compounds in the reaction. Here, there are twice as many NO and NO2 as there are O2.</span><span class="i18n-zh" lang="zh-Hans">系数是写在每个化合物前面的较大数字，用来表示反应中各物质的比例。在这里，NO 和 NO2 的数量都是 O2 的两倍。</span></span></p>
+
+      <div class="video-embed">
+        <div class="video-frame">
+          <iframe
+            src="https://www.youtube.com/embed/0Bt6RPP2ANI"
+            title="Conservation of mass video 2"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Polyatomic Elements, Diatomic Elements and Common Names</span><span class="i18n-zh" lang="zh-Hans">多原子单质、双原子单质和常见名称</span></span></h2>
+      <p><span class="i18n-wrap"><span class="i18n-en">Elements and Compounds you should know</span><span class="i18n-zh" lang="zh-Hans">你应该认识的元素和化合物</span></span></p>
+      <ul>
+        <li><span class="i18n-wrap"><span class="i18n-en">Most elements occur naturally as singlets but there are some that you should be aware of.</span><span class="i18n-zh" lang="zh-Hans">大多数元素在自然界中以单原子形式存在，但有一些需要特别注意。</span></span>
+          <ul>
+            <li><span class="i18n-wrap"><span class="i18n-en">Be aware of these polyatomic elements: P4 and S8</span><span class="i18n-zh" lang="zh-Hans">要注意这些多原子单质：P4 和 S8。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">The "special seven" are all diatomic elements you should memorize:</span><span class="i18n-zh" lang="zh-Hans">“特别七种”都是你需要记住的双原子单质：</span></span>
+              <ul>
+                <li>H2, N2, O2, F2, Cl2, Br2, I2</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <p><span class="i18n-wrap"><span class="i18n-en">The pink shaded area in the picture below shows the diatomic atoms.</span><span class="i18n-zh" lang="zh-Hans">下图中粉红色阴影区域表示双原子元素。</span></span></p>
+      <figure class="lesson-image">
+        <img src="assets/diatomic-elements-highlight.svg" alt="Periodic table showing the highlighted diatomic elements area." />
+      </figure>
+      <ul>
+        <li><span class="i18n-wrap"><span class="i18n-en">Several common covalent molecules containing hydrogen have common names that you should memorize as the name gives you no clue as to the formula.</span><span class="i18n-zh" lang="zh-Hans">有几个含氢的常见共价分子有固定俗名，需要记忆，因为名称本身无法直接告诉你化学式。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">methane = CH4, glucose = C6H12O6, ethane = C2H6, ammonia = NH3</span><span class="i18n-zh" lang="zh-Hans">methane = CH4，glucose = C6H12O6，ethane = C2H6，ammonia = NH3</span></span></li>
+      </ul>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Writing Chemical Equations</span><span class="i18n-zh" lang="zh-Hans">书写化学方程式</span></span></h2>
+      <p><span class="i18n-wrap"><span class="i18n-en">The simplest form of a chemical equation is a word equation</span><span class="i18n-zh" lang="zh-Hans">化学方程式最简单的形式是文字方程式。</span></span></p>
+      <ul>
+        <li><span class="i18n-wrap"><span class="i18n-en">there is not much information, other than the elements/compounds that are involved</span><span class="i18n-zh" lang="zh-Hans">除了参与反应的元素或化合物外，提供的信息并不多。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">potassium metal + oxygen gas → potassium oxide</span><span class="i18n-zh" lang="zh-Hans">钾金属 + 氧气 → 氧化钾</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">reactants appear on the left side of the arrow and products appear on the right</span><span class="i18n-zh" lang="zh-Hans">反应物写在箭头左边，生成物写在箭头右边。</span></span></li>
+      </ul>
+
+      <p><span class="i18n-wrap"><span class="i18n-en">A skeleton equation shows the formulas of the elements/compounds</span><span class="i18n-zh" lang="zh-Hans">骨架方程式会显示元素或化合物的化学式。</span></span></p>
+      <ul>
+        <li><span class="i18n-wrap"><span class="i18n-en">it shows atoms and compounds, but not the numbers of each (coefficients are not included)</span><span class="i18n-zh" lang="zh-Hans">它显示原子和化合物，但不显示每种物质的数量（不包含系数）。</span></span></li>
+        <li class="equation">K(s) + O2(g) → K2O(s)</li>
+      </ul>
+
+      <p><span class="i18n-wrap"><span class="i18n-en">A balanced chemical equation shows all atoms and compounds and their quantities</span><span class="i18n-zh" lang="zh-Hans">配平后的化学方程式会显示所有原子、化合物及其数量。</span></span></p>
+      <ul>
+        <li><span class="i18n-wrap"><span class="i18n-en">balancing ensures that the number of each atom is the same on both sides of the reaction arrow</span><span class="i18n-zh" lang="zh-Hans">配平可确保反应箭头两边每种原子的数目相同。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">when determining coefficients, always use the smallest whole number ratio</span><span class="i18n-zh" lang="zh-Hans">确定系数时，要始终使用最小的整数比。</span></span></li>
+        <li class="equation">4K(s) + O2(g) → 2K2O(s)</li>
+      </ul>
+      <p><span class="i18n-wrap"><span class="i18n-en">States of matter are often indicated in chemical equations.</span><span class="i18n-zh" lang="zh-Hans">化学方程式中通常还会标出物质状态。</span></span></p>
+      <p><span class="i18n-wrap"><span class="i18n-en">The letters indicate the state of each compound.<br />(aq)aqueous/dissolved in water<br />(s)solid<br />(l)liquid<br />(g)gas</span><span class="i18n-zh" lang="zh-Hans">这些字母表示每种物质的状态。<br />(aq) 水溶液 / 溶于水<br />(s) 固体<br />(l) 液体<br />(g) 气体</span></span></p>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Balancing Equations</span><span class="i18n-zh" lang="zh-Hans">配平方程式</span></span></h2>
+      <p><span class="i18n-wrap"><span class="i18n-en">If mass is conserved, then we should find the same amount of each element on either side of a reaction equation:</span><span class="i18n-zh" lang="zh-Hans">如果质量守恒，那么在反应方程式两边，每种元素的数量都应该相同：</span></span></p>
+
+      <div class="video-embed">
+        <div class="video-frame">
+          <iframe
+            src="https://www.youtube.com/embed/zmdxMlb88Fs"
+            title="Balancing equations video 1"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+
+      <p><span class="i18n-wrap"><span class="i18n-en">5 steps to balancing an equation:</span><span class="i18n-zh" lang="zh-Hans">配平方程式的 5 个步骤：</span></span></p>
+      <ol>
+        <li><span class="i18n-wrap"><span class="i18n-en">Count the number of each atom on each side of the equation.</span><span class="i18n-zh" lang="zh-Hans">数一数方程式两边每种原子的个数。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">Change coefficients as needed, first balancing the more complicated molecules.</span><span class="i18n-zh" lang="zh-Hans">按需要调整系数，先配平较复杂的分子。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">Just remember - only change coefficients.</span><span class="i18n-zh" lang="zh-Hans">记住：只能改变系数。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">Often, polyatomic ions can be counted as a group instead of as individual atoms.</span><span class="i18n-zh" lang="zh-Hans">多原子离子通常可以作为一个整体来计数，而不是逐个原子计算。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">Practice.</span><span class="i18n-zh" lang="zh-Hans">多练习。</span></span></li>
+      </ol>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Balancing Chemical Equations</span><span class="i18n-zh" lang="zh-Hans">配平化学方程式</span></span></h2>
+      <p><span class="i18n-wrap"><span class="i18n-en">Because of the Law of Conservation of Mass, we can count atoms and use math to balance the number of atoms in chemical equations.</span><span class="i18n-zh" lang="zh-Hans">根据质量守恒定律，我们可以通过数原子并运用数学方法来配平化学方程式中的原子数。</span></span></p>
+      <ul>
+        <li><span class="i18n-wrap"><span class="i18n-en">Word equation: methane + oxygen → water + carbon dioxid</span><span class="i18n-zh" lang="zh-Hans">文字方程式：甲烷 + 氧气 → 水 + 二氧化碳</span></span>
+          <ul>
+            <li><span class="i18n-wrap"><span class="i18n-en">Skeleton equation: CH4 + O2 → H2O + CO2</span><span class="i18n-zh" lang="zh-Hans">骨架方程式：CH4 + O2 → H2O + CO2</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">To balance the compounds, take note of how many atoms of each element occur on each side of the reaction arrow: 1 Carbon, 4 Hydrogen, 2 Oxygen → 1 Carbon, 2 Hydrogen, 3 Oxygen</span><span class="i18n-zh" lang="zh-Hans">要配平方程式，先记录反应箭头两边每种元素的原子数：1 个碳、4 个氢、2 个氧 → 1 个碳、2 个氢、3 个氧。</span></span></li>
+          </ul>
+        </li>
+      </ul>
+      <p><span class="i18n-wrap"><span class="i18n-en">To balance, attempt to find values that equate atoms on both sides. Notice that C is currently balanced. Start by balancing H:</span><span class="i18n-zh" lang="zh-Hans">配平时，尝试找到使两边原子数相等的数值。注意现在 C 已经平衡了，所以先从 H 开始：</span></span></p>
+      <p><span class="i18n-wrap"><span class="i18n-en">By placing a 2 in front of H2O, the "H" are balanced: 4 on both sides.</span><span class="i18n-zh" lang="zh-Hans">在 H2O 前面加上 2 后，H 就平衡了：两边都是 4 个。</span></span></p>
+      <p class="equation">CH4 + O2 → 2 H2O + CO2</p>
+      <p><span class="i18n-wrap"><span class="i18n-en">By placing a 2 in front of O2, the "O" are balanced: 4 on both sides.</span><span class="i18n-zh" lang="zh-Hans">在 O2 前面加上 2 后，O 也平衡了：两边都是 4 个。</span></span></p>
+      <p class="equation">CH4 + 2 O2 → 2 H2O + CO2</p>
+      <p><span class="i18n-wrap"><span class="i18n-en">The equation is now balanced!</span><span class="i18n-zh" lang="zh-Hans">这个方程式现在已经配平了！</span></span></p>
+      <p><span class="i18n-wrap"><span class="i18n-en">1 Carbon, 4 Hydrogen, (2×2) Oxygen → 1 Carbon, (2×2) Hydrogen, (2×1) + 2 Oxygen</span><span class="i18n-zh" lang="zh-Hans">1 个碳、4 个氢、(2×2) 个氧 → 1 个碳、(2×2) 个氢、(2×1)+2 个氧。</span></span></p>
+      <p class="equation">Balanced equation: CH4 + 2 O2 → 2 H2O + CO2</p>
+
+      <p><span class="i18n-wrap"><span class="i18n-en">Balance chemical equations by following these steps:</span><span class="i18n-zh" lang="zh-Hans">配平化学方程式时，请遵循以下步骤：</span></span></p>
+      <ul>
+        <li><span class="i18n-wrap"><span class="i18n-en">Trial and error will work, but can be very inefficient</span><span class="i18n-zh" lang="zh-Hans">尝试与修正的方法可以奏效，但效率可能很低。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">Balance elements found in compounds first and elements that are alone last (in the example O was balanced last)</span><span class="i18n-zh" lang="zh-Hans">先配平化合物中的元素，最后再配平单独存在的元素（在这个例子中 O 最后才配平）。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">Balance one compound at a time</span><span class="i18n-zh" lang="zh-Hans">一次只配平一个化合物。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">Only add coefficients; NEVER change subscripts!</span><span class="i18n-zh" lang="zh-Hans">只能添加系数；绝对不要改下标！</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">If H and O appear in more than one place, attempt to balance them LAST</span><span class="i18n-zh" lang="zh-Hans">如果 H 和 O 出现在多个位置，尽量最后再配平它们。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">Polyatomic ions (such as SO42-) can often be balanced as a whole group</span><span class="i18n-zh" lang="zh-Hans">多原子离子（如 SO42-）通常可以作为一个整体来配平。</span></span></li>
+        <li><span class="i18n-wrap"><span class="i18n-en">Always double-check after you think you are finished. You may have UNbalanced an element without realizing it!</span><span class="i18n-zh" lang="zh-Hans">当你觉得已经完成时，一定要再次检查。你可能会在不知不觉中把某个元素弄得不平衡！</span></span></li>
+      </ul>
+      <p><span class="i18n-wrap"><span class="i18n-en">Balance the following:</span><span class="i18n-zh" lang="zh-Hans">请配平下面的方程式：</span></span></p>
+      <p class="equation">Fe + Br2 → FeBr3</p>
+      <p class="equation">Sn(NO2)4 + K3PO4 → KNO2 + Sn3(PO4)4</p>
+      <p class="equation">C2H6 + O2 → CO2 + H2O</p>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Answer</span><span class="i18n-zh" lang="zh-Hans">答案</span></span></h2>
+      <details>
+        <summary><span class="i18n-wrap i18n-inline"><span class="i18n-en">Answer(Click again to hide)</span><span class="i18n-zh" lang="zh-Hans">答案（再次点击可隐藏）</span></span></summary>
+        <p class="equation">2Fe + 3Br2 → 2FeBr3</p>
+        <p class="equation">3Sn(NO2)4 + 4K3PO4 → 12KNO2 + Sn3(PO4)4</p>
+        <p class="equation">2C2H6 + 7O2 → 4CO2 + 6H2O</p>
+      </details>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Explanation</span><span class="i18n-zh" lang="zh-Hans">讲解</span></span></h2>
+      <div class="video-embed">
+        <div class="video-frame">
+          <iframe
+            src="https://www.youtube.com/embed/bDiBHbM0Its"
+            title="Balancing equations explanation video 1"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+
+      <div class="video-embed">
+        <div class="video-frame">
+          <iframe
+            src="https://www.youtube.com/embed/Al5EFBYJf-0"
+            title="Balancing equations explanation video 2"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Practice</span><span class="i18n-zh" lang="zh-Hans">练习</span></span></h2>
+      <p><span class="i18n-wrap"><span class="i18n-en">Give the following simulation a try by balancing the reactions in the introduction and then trying the game.</span><span class="i18n-zh" lang="zh-Hans">试一试下面的模拟：先在介绍部分配平反应，再尝试玩游戏。</span></span></p>
+      <div class="video-embed">
+        <div class="video-frame">
+          <iframe
+            src="https://phet.colorado.edu/sims/html/balancing-chemical-equations/latest/balancing-chemical-equations_en.html"
+            title="Balancing chemical equations simulation"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Practice Quiz</span><span class="i18n-zh" lang="zh-Hans">练习测验</span></span></h2>
+      <p><span class="i18n-wrap"><span class="i18n-en"><a href="https://chem.libretexts.org/Courses/Oregon_Tech_PortlandMetro_Campus/OT_-_PDX_-_Metro%3A_General_Chemistry_I/05%3A_Transformations_of_Matter/5.01%3A_Writing_and_Balancing_Chemical_Equations/5.1.01%3A_Practice_Problems-_Writing_and_Balancing_Chemical_Equations">Click here</a> to practice writing chemical equations and to prepare for your Chemistry test. Try at least the first two questions.</span><span class="i18n-zh" lang="zh-Hans"><a href="https://chem.libretexts.org/Courses/Oregon_Tech_PortlandMetro_Campus/OT_-_PDX_-_Metro%3A_General_Chemistry_I/05%3A_Transformations_of_Matter/5.01%3A_Writing_and_Balancing_Chemical_Equations/5.1.01%3A_Practice_Problems-_Writing_and_Balancing_Chemical_Equations">点击这里</a> 练习书写化学方程式，并为你的化学测验做准备。请至少完成前两题。</span></span></p>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Balancing Equations Review</span><span class="i18n-zh" lang="zh-Hans">配平方程式复习</span></span></h2>
+      <div class="note-box">
+        <form class="review-quiz" id="review-quiz">
+          <div class="review-block">
+            <p><strong><span class="i18n-wrap"><span class="i18n-en">Gap-fill exercise</span><span class="i18n-zh" lang="zh-Hans">填空练习</span></span></strong></p>
+            <p><span class="i18n-wrap"><span class="i18n-en">Fill in all the gaps, then press "Check" to check your answers.</span><span class="i18n-zh" lang="zh-Hans">填完所有空格后，点击 “Check” 来核对答案。</span></span></p>
+            <p><span class="i18n-wrap"><span class="i18n-en">The following is the chemical reaction that occurs during the combustion of diesel fuel.</span><span class="i18n-zh" lang="zh-Hans">下面是柴油燃烧时发生的化学反应。</span></span></p>
+            <p><span class="i18n-wrap"><span class="i18n-en">word equation: heptane + oxygen --> carbon dioxide + water</span><span class="i18n-zh" lang="zh-Hans">文字方程式：庚烷 + 氧气 --> 二氧化碳 + 水</span></span></p>
+            <p><span class="i18n-wrap"><span class="i18n-en">balanced equation:</span><span class="i18n-zh" lang="zh-Hans">配平方程式：</span></span></p>
+            <div class="review-equation">C<sub>7</sub>H<sub>16</sub> + 11O<sub>2</sub> → 7CO<sub>2</sub> + 8H<sub>2</sub>O</div>
+
+            <div class="review-row">
+              <span><span class="i18n-wrap i18n-inline"><span class="i18n-en">a - list the names of the reactants in order -</span><span class="i18n-zh" lang="zh-Hans">a - 按顺序列出反应物名称 -</span></span></span>
+              <select id="reactant-1" name="reactant-1" class="review-select" data-answer-key="reactant1" aria-label="First reactant">
+                <option value=""></option>
+                <option value="1">1</option>
+                <option value="1, 2, 1">1, 2, 1</option>
+                <option value="1, 2, 1, 2">1, 2, 1, 2</option>
+                <option value="1, 3, 1">1, 3, 1</option>
+                <option value="2, 3, 2">2, 3, 2</option>
+                <option value="2, 3, 2, 3">2, 3, 2, 3</option>
+                <option value="2, 7, 4, 6">2, 7, 4, 6</option>
+                <option value="3, 2, 3, 2">3, 2, 3, 2</option>
+                <option value="3, 2, 6, 1">3, 2, 6, 1</option>
+                <option value="3, 4, 12, 1">3, 4, 12, 1</option>
+                <option value="7CO2">7CO2</option>
+                <option value="8H2O">8H2O</option>
+                <option value="heptane">heptane</option>
+                <option value="oxygen">oxygen</option>
+                <option value="seven">seven</option>
+              </select>
+              <span><span class="i18n-wrap i18n-inline"><span class="i18n-en">and</span><span class="i18n-zh" lang="zh-Hans">和</span></span></span>
+              <select id="reactant-2" name="reactant-2" class="review-select" data-answer-key="reactant2" aria-label="Second reactant">
+                <option value=""></option>
+                <option value="1">1</option>
+                <option value="1, 2, 1">1, 2, 1</option>
+                <option value="1, 2, 1, 2">1, 2, 1, 2</option>
+                <option value="1, 3, 1">1, 3, 1</option>
+                <option value="2, 3, 2">2, 3, 2</option>
+                <option value="2, 3, 2, 3">2, 3, 2, 3</option>
+                <option value="2, 7, 4, 6">2, 7, 4, 6</option>
+                <option value="3, 2, 3, 2">3, 2, 3, 2</option>
+                <option value="3, 2, 6, 1">3, 2, 6, 1</option>
+                <option value="3, 4, 12, 1">3, 4, 12, 1</option>
+                <option value="7CO2">7CO2</option>
+                <option value="8H2O">8H2O</option>
+                <option value="heptane">heptane</option>
+                <option value="oxygen">oxygen</option>
+                <option value="seven">seven</option>
+              </select>
+            </div>
+
+            <div class="review-row">
+              <span><span class="i18n-wrap i18n-inline"><span class="i18n-en">b - give the formulas of the products -</span><span class="i18n-zh" lang="zh-Hans">b - 写出生成物的化学式 -</span></span></span>
+              <select id="product-1" name="product-1" class="review-select" data-answer-key="product1" aria-label="First product formula">
+                <option value=""></option>
+                <option value="1">1</option>
+                <option value="1, 2, 1">1, 2, 1</option>
+                <option value="1, 2, 1, 2">1, 2, 1, 2</option>
+                <option value="1, 3, 1">1, 3, 1</option>
+                <option value="2, 3, 2">2, 3, 2</option>
+                <option value="2, 3, 2, 3">2, 3, 2, 3</option>
+                <option value="2, 7, 4, 6">2, 7, 4, 6</option>
+                <option value="3, 2, 3, 2">3, 2, 3, 2</option>
+                <option value="3, 2, 6, 1">3, 2, 6, 1</option>
+                <option value="3, 4, 12, 1">3, 4, 12, 1</option>
+                <option value="7CO2">7CO2</option>
+                <option value="8H2O">8H2O</option>
+                <option value="heptane">heptane</option>
+                <option value="oxygen">oxygen</option>
+                <option value="seven">seven</option>
+              </select>
+              <span><span class="i18n-wrap i18n-inline"><span class="i18n-en">and</span><span class="i18n-zh" lang="zh-Hans">和</span></span></span>
+              <select id="product-2" name="product-2" class="review-select" data-answer-key="product2" aria-label="Second product formula">
+                <option value=""></option>
+                <option value="1">1</option>
+                <option value="1, 2, 1">1, 2, 1</option>
+                <option value="1, 2, 1, 2">1, 2, 1, 2</option>
+                <option value="1, 3, 1">1, 3, 1</option>
+                <option value="2, 3, 2">2, 3, 2</option>
+                <option value="2, 3, 2, 3">2, 3, 2, 3</option>
+                <option value="2, 7, 4, 6">2, 7, 4, 6</option>
+                <option value="3, 2, 3, 2">3, 2, 3, 2</option>
+                <option value="3, 2, 6, 1">3, 2, 6, 1</option>
+                <option value="3, 4, 12, 1">3, 4, 12, 1</option>
+                <option value="7CO2">7CO2</option>
+                <option value="8H2O">8H2O</option>
+                <option value="heptane">heptane</option>
+                <option value="oxygen">oxygen</option>
+                <option value="seven">seven</option>
+              </select>
+            </div>
+
+            <div class="review-row">
+              <span><span class="i18n-wrap i18n-inline"><span class="i18n-en">c - what is the coefficient of the carbon dioxide? -</span><span class="i18n-zh" lang="zh-Hans">c - 二氧化碳的系数是多少？ -</span></span></span>
+              <select id="co2-coefficient" name="co2-coefficient" class="review-select compact" data-answer-key="co2Coefficient" aria-label="Carbon dioxide coefficient">
+                <option value=""></option>
+                <option value="1">1</option>
+                <option value="1, 2, 1">1, 2, 1</option>
+                <option value="1, 2, 1, 2">1, 2, 1, 2</option>
+                <option value="1, 3, 1">1, 3, 1</option>
+                <option value="2, 3, 2">2, 3, 2</option>
+                <option value="2, 3, 2, 3">2, 3, 2, 3</option>
+                <option value="2, 7, 4, 6">2, 7, 4, 6</option>
+                <option value="3, 2, 3, 2">3, 2, 3, 2</option>
+                <option value="3, 2, 6, 1">3, 2, 6, 1</option>
+                <option value="3, 4, 12, 1">3, 4, 12, 1</option>
+                <option value="7CO2">7CO2</option>
+                <option value="8H2O">8H2O</option>
+                <option value="heptane">heptane</option>
+                <option value="oxygen">oxygen</option>
+                <option value="seven">seven</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="review-block">
+            <p><span class="i18n-wrap"><span class="i18n-en">Balance the equations in the picture by choosing the correct coefficients for each.</span><span class="i18n-zh" lang="zh-Hans">为图中的每个方程式选择正确系数来完成配平。</span></span></p>
+            <div class="equation-list">
+              <div>a) Al + F<sub>2</sub> → AlF<sub>3</sub></div>
+              <div>b) PbCl<sub>4</sub> + K<sub>3</sub>PO<sub>4</sub> → KCl + Pb<sub>3</sub>(PO<sub>4</sub>)<sub>4</sub></div>
+              <div>c) Br<sub>2</sub> + FeI<sub>3</sub> → I<sub>2</sub> + FeBr<sub>3</sub></div>
+              <div>d) Na<sub>2</sub>CO<sub>3</sub> + Cr(NO<sub>3</sub>)<sub>3</sub> → NaNO<sub>3</sub> + Cr<sub>2</sub>(CO<sub>3</sub>)<sub>3</sub></div>
+              <div>e) Mn + I<sub>2</sub> → MnI<sub>4</sub></div>
+              <div>f) C<sub>2</sub>H<sub>6</sub> + O<sub>2</sub> → CO<sub>2</sub> + H<sub>2</sub>O</div>
+              <div>g) K<sub>2</sub>SO<sub>4</sub> + AgNO<sub>3</sub> → Ag<sub>2</sub>SO<sub>4</sub> + KNO<sub>3</sub></div>
+              <div>h) Ca(OH)<sub>2</sub> + HCl → CaCl<sub>2</sub> + H<sub>2</sub>O</div>
+              <div>i) Mg<sub>3</sub>N<sub>2</sub> → Mg + N<sub>2</sub></div>
+              <div>j) Fe + CuCl<sub>2</sub> → FeCl<sub>3</sub> + Cu</div>
+            </div>
+
+            <div class="answer-grid">
+              <div class="answer-row">
+                <span class="answer-label">a)</span>
+                <select id="balance-a" name="balance-a" class="review-select compact" data-answer-key="balanceA">
+                  <option value=""></option>
+                  <option value="1">1</option>
+                  <option value="1, 2, 1">1, 2, 1</option>
+                  <option value="1, 2, 1, 2">1, 2, 1, 2</option>
+                  <option value="1, 3, 1">1, 3, 1</option>
+                  <option value="2, 3, 2">2, 3, 2</option>
+                  <option value="2, 3, 2, 3">2, 3, 2, 3</option>
+                  <option value="2, 7, 4, 6">2, 7, 4, 6</option>
+                  <option value="3, 2, 3, 2">3, 2, 3, 2</option>
+                  <option value="3, 2, 6, 1">3, 2, 6, 1</option>
+                  <option value="3, 4, 12, 1">3, 4, 12, 1</option>
+                  <option value="7CO2">7CO2</option>
+                  <option value="8H2O">8H2O</option>
+                  <option value="heptane">heptane</option>
+                  <option value="oxygen">oxygen</option>
+                  <option value="seven">seven</option>
+                </select>
+              </div>
+              <div class="answer-row">
+                <span class="answer-label">b)</span>
+                <select id="balance-b" name="balance-b" class="review-select compact" data-answer-key="balanceB">
+                  <option value=""></option>
+                  <option value="1">1</option>
+                  <option value="1, 2, 1">1, 2, 1</option>
+                  <option value="1, 2, 1, 2">1, 2, 1, 2</option>
+                  <option value="1, 3, 1">1, 3, 1</option>
+                  <option value="2, 3, 2">2, 3, 2</option>
+                  <option value="2, 3, 2, 3">2, 3, 2, 3</option>
+                  <option value="2, 7, 4, 6">2, 7, 4, 6</option>
+                  <option value="3, 2, 3, 2">3, 2, 3, 2</option>
+                  <option value="3, 2, 6, 1">3, 2, 6, 1</option>
+                  <option value="3, 4, 12, 1">3, 4, 12, 1</option>
+                  <option value="7CO2">7CO2</option>
+                  <option value="8H2O">8H2O</option>
+                  <option value="heptane">heptane</option>
+                  <option value="oxygen">oxygen</option>
+                  <option value="seven">seven</option>
+                </select>
+              </div>
+              <div class="answer-row">
+                <span class="answer-label">c)</span>
+                <select id="balance-c" name="balance-c" class="review-select compact" data-answer-key="balanceC">
+                  <option value=""></option>
+                  <option value="1">1</option>
+                  <option value="1, 2, 1">1, 2, 1</option>
+                  <option value="1, 2, 1, 2">1, 2, 1, 2</option>
+                  <option value="1, 3, 1">1, 3, 1</option>
+                  <option value="2, 3, 2">2, 3, 2</option>
+                  <option value="2, 3, 2, 3">2, 3, 2, 3</option>
+                  <option value="2, 7, 4, 6">2, 7, 4, 6</option>
+                  <option value="3, 2, 3, 2">3, 2, 3, 2</option>
+                  <option value="3, 2, 6, 1">3, 2, 6, 1</option>
+                  <option value="3, 4, 12, 1">3, 4, 12, 1</option>
+                  <option value="7CO2">7CO2</option>
+                  <option value="8H2O">8H2O</option>
+                  <option value="heptane">heptane</option>
+                  <option value="oxygen">oxygen</option>
+                  <option value="seven">seven</option>
+                </select>
+              </div>
+              <div class="answer-row">
+                <span class="answer-label">d)</span>
+                <select id="balance-d" name="balance-d" class="review-select compact" data-answer-key="balanceD">
+                  <option value=""></option>
+                  <option value="1">1</option>
+                  <option value="1, 2, 1">1, 2, 1</option>
+                  <option value="1, 2, 1, 2">1, 2, 1, 2</option>
+                  <option value="1, 3, 1">1, 3, 1</option>
+                  <option value="2, 3, 2">2, 3, 2</option>
+                  <option value="2, 3, 2, 3">2, 3, 2, 3</option>
+                  <option value="2, 7, 4, 6">2, 7, 4, 6</option>
+                  <option value="3, 2, 3, 2">3, 2, 3, 2</option>
+                  <option value="3, 2, 6, 1">3, 2, 6, 1</option>
+                  <option value="3, 4, 12, 1">3, 4, 12, 1</option>
+                  <option value="7CO2">7CO2</option>
+                  <option value="8H2O">8H2O</option>
+                  <option value="heptane">heptane</option>
+                  <option value="oxygen">oxygen</option>
+                  <option value="seven">seven</option>
+                </select>
+              </div>
+              <div class="answer-row">
+                <span class="answer-label">e)</span>
+                <select id="balance-e" name="balance-e" class="review-select compact" data-answer-key="balanceE">
+                  <option value=""></option>
+                  <option value="1">1</option>
+                  <option value="1, 2, 1">1, 2, 1</option>
+                  <option value="1, 2, 1, 2">1, 2, 1, 2</option>
+                  <option value="1, 3, 1">1, 3, 1</option>
+                  <option value="2, 3, 2">2, 3, 2</option>
+                  <option value="2, 3, 2, 3">2, 3, 2, 3</option>
+                  <option value="2, 7, 4, 6">2, 7, 4, 6</option>
+                  <option value="3, 2, 3, 2">3, 2, 3, 2</option>
+                  <option value="3, 2, 6, 1">3, 2, 6, 1</option>
+                  <option value="3, 4, 12, 1">3, 4, 12, 1</option>
+                  <option value="7CO2">7CO2</option>
+                  <option value="8H2O">8H2O</option>
+                  <option value="heptane">heptane</option>
+                  <option value="oxygen">oxygen</option>
+                  <option value="seven">seven</option>
+                </select>
+              </div>
+              <div class="answer-row">
+                <span class="answer-label">f)</span>
+                <select id="balance-f" name="balance-f" class="review-select compact" data-answer-key="balanceF">
+                  <option value=""></option>
+                  <option value="1">1</option>
+                  <option value="1, 2, 1">1, 2, 1</option>
+                  <option value="1, 2, 1, 2">1, 2, 1, 2</option>
+                  <option value="1, 3, 1">1, 3, 1</option>
+                  <option value="2, 3, 2">2, 3, 2</option>
+                  <option value="2, 3, 2, 3">2, 3, 2, 3</option>
+                  <option value="2, 7, 4, 6">2, 7, 4, 6</option>
+                  <option value="3, 2, 3, 2">3, 2, 3, 2</option>
+                  <option value="3, 2, 6, 1">3, 2, 6, 1</option>
+                  <option value="3, 4, 12, 1">3, 4, 12, 1</option>
+                  <option value="7CO2">7CO2</option>
+                  <option value="8H2O">8H2O</option>
+                  <option value="heptane">heptane</option>
+                  <option value="oxygen">oxygen</option>
+                  <option value="seven">seven</option>
+                </select>
+              </div>
+              <div class="answer-row">
+                <span class="answer-label">g)</span>
+                <select id="balance-g" name="balance-g" class="review-select compact" data-answer-key="balanceG">
+                  <option value=""></option>
+                  <option value="1">1</option>
+                  <option value="1, 2, 1">1, 2, 1</option>
+                  <option value="1, 2, 1, 2">1, 2, 1, 2</option>
+                  <option value="1, 3, 1">1, 3, 1</option>
+                  <option value="2, 3, 2">2, 3, 2</option>
+                  <option value="2, 3, 2, 3">2, 3, 2, 3</option>
+                  <option value="2, 7, 4, 6">2, 7, 4, 6</option>
+                  <option value="3, 2, 3, 2">3, 2, 3, 2</option>
+                  <option value="3, 2, 6, 1">3, 2, 6, 1</option>
+                  <option value="3, 4, 12, 1">3, 4, 12, 1</option>
+                  <option value="7CO2">7CO2</option>
+                  <option value="8H2O">8H2O</option>
+                  <option value="heptane">heptane</option>
+                  <option value="oxygen">oxygen</option>
+                  <option value="seven">seven</option>
+                </select>
+              </div>
+              <div class="answer-row">
+                <span class="answer-label">h)</span>
+                <select id="balance-h" name="balance-h" class="review-select compact" data-answer-key="balanceH">
+                  <option value=""></option>
+                  <option value="1">1</option>
+                  <option value="1, 2, 1">1, 2, 1</option>
+                  <option value="1, 2, 1, 2">1, 2, 1, 2</option>
+                  <option value="1, 3, 1">1, 3, 1</option>
+                  <option value="2, 3, 2">2, 3, 2</option>
+                  <option value="2, 3, 2, 3">2, 3, 2, 3</option>
+                  <option value="2, 7, 4, 6">2, 7, 4, 6</option>
+                  <option value="3, 2, 3, 2">3, 2, 3, 2</option>
+                  <option value="3, 2, 6, 1">3, 2, 6, 1</option>
+                  <option value="3, 4, 12, 1">3, 4, 12, 1</option>
+                  <option value="7CO2">7CO2</option>
+                  <option value="8H2O">8H2O</option>
+                  <option value="heptane">heptane</option>
+                  <option value="oxygen">oxygen</option>
+                  <option value="seven">seven</option>
+                </select>
+              </div>
+              <div class="answer-row">
+                <span class="answer-label">i)</span>
+                <select id="balance-i" name="balance-i" class="review-select compact" data-answer-key="balanceI">
+                  <option value=""></option>
+                  <option value="1">1</option>
+                  <option value="1, 2, 1">1, 2, 1</option>
+                  <option value="1, 2, 1, 2">1, 2, 1, 2</option>
+                  <option value="1, 3, 1">1, 3, 1</option>
+                  <option value="2, 3, 2">2, 3, 2</option>
+                  <option value="2, 3, 2, 3">2, 3, 2, 3</option>
+                  <option value="2, 7, 4, 6">2, 7, 4, 6</option>
+                  <option value="3, 2, 3, 2">3, 2, 3, 2</option>
+                  <option value="3, 2, 6, 1">3, 2, 6, 1</option>
+                  <option value="3, 4, 12, 1">3, 4, 12, 1</option>
+                  <option value="7CO2">7CO2</option>
+                  <option value="8H2O">8H2O</option>
+                  <option value="heptane">heptane</option>
+                  <option value="oxygen">oxygen</option>
+                  <option value="seven">seven</option>
+                </select>
+              </div>
+              <div class="answer-row">
+                <span class="answer-label">j)</span>
+                <select id="balance-j" name="balance-j" class="review-select compact" data-answer-key="balanceJ">
+                  <option value=""></option>
+                  <option value="1">1</option>
+                  <option value="1, 2, 1">1, 2, 1</option>
+                  <option value="1, 2, 1, 2">1, 2, 1, 2</option>
+                  <option value="1, 3, 1">1, 3, 1</option>
+                  <option value="2, 3, 2">2, 3, 2</option>
+                  <option value="2, 3, 2, 3">2, 3, 2, 3</option>
+                  <option value="2, 7, 4, 6">2, 7, 4, 6</option>
+                  <option value="3, 2, 3, 2">3, 2, 3, 2</option>
+                  <option value="3, 2, 6, 1">3, 2, 6, 1</option>
+                  <option value="3, 4, 12, 1">3, 4, 12, 1</option>
+                  <option value="7CO2">7CO2</option>
+                  <option value="8H2O">8H2O</option>
+                  <option value="heptane">heptane</option>
+                  <option value="oxygen">oxygen</option>
+                  <option value="seven">seven</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="review-actions">
+              <button type="button" id="review-check" class="review-button">Check</button>
+              <div id="review-feedback" class="review-feedback" aria-live="polite"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+  <script>
+    const langButtons = Array.from(document.querySelectorAll('.lang-btn[data-lang]'));
+    const reviewAnswers = {
+      reactant1: 'heptane',
+      reactant2: 'oxygen',
+      product1: '7CO2',
+      product2: '8H2O',
+      co2Coefficient: 'seven',
+      balanceA: '2,3,2',
+      balanceB: '3,4,12,1',
+      balanceC: '3,2,3,2',
+      balanceD: '3,2,6,1',
+      balanceE: '1,2,1',
+      balanceF: '2,7,4,6',
+      balanceG: '1,2,1,2',
+      balanceH: '1,2,1,2',
+      balanceI: '1,3,1',
+      balanceJ: '2,3,2,3'
+    };
+
+    const sharedReviewOptions = [
+      ['', ''],
+      ['1,2,1', '1,2,1'],
+      ['1,2,1,2', '1,2,1,2'],
+      ['1,3,1', '1,3,1'],
+      ['2,3,2', '2,3,2'],
+      ['2,3,2,3', '2,3,2,3'],
+      ['2,7,4,6', '2,7,4,6'],
+      ['3,2,3,2', '3,2,3,2'],
+      ['3,2,6,1', '3,2,6,1'],
+      ['3,4,12,1', '3,4,12,1'],
+      ['7CO2', '7CO2'],
+      ['8H2O', '8H2O'],
+      ['heptane', 'heptane'],
+      ['oxygen', 'oxygen'],
+      ['seven', 'seven']
+    ];
+    let currentLang = localStorage.getItem('conservation-mass-lang') || 'en';
+
+    const reviewForm = document.getElementById('review-quiz');
+    const reviewButton = document.getElementById('review-check');
+    const reviewFeedback = document.getElementById('review-feedback');
+
+    function applyLanguageMode(mode) {
+      currentLang = mode;
+      document.body.classList.toggle('lang-en', mode === 'en');
+      document.body.classList.toggle('lang-bi', mode === 'bi');
+      document.body.classList.toggle('lang-zh', mode === 'zh');
+      langButtons.forEach((button) => {
+        const selected = button.dataset.lang === mode;
+        button.classList.toggle('is-active', selected);
+        button.setAttribute('aria-pressed', String(selected));
+      });
+      localStorage.setItem('conservation-mass-lang', mode);
+    }
+
+    langButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        applyLanguageMode(button.dataset.lang);
+      });
+    });
+
+    applyLanguageMode(['en', 'bi', 'zh'].includes(currentLang) ? currentLang : 'en');
+
+    if (reviewForm && reviewButton && reviewFeedback) {
+      const reviewFields = Array.from(reviewForm.querySelectorAll('select'));
+
+      const clearFieldState = (field) => {
+        field.classList.remove('is-correct', 'is-incorrect');
+      };
+
+      reviewFields.forEach((field) => {
+        field.innerHTML = sharedReviewOptions
+          .map(([value, label], index) => {
+            if (index === 0) {
+              return '<option value="" selected hidden></option>';
+            }
+
+            return `<option value="${value}">${label}</option>`;
+          })
+          .join('');
+      });
+
+      reviewFields.forEach((field) => {
+        field.addEventListener('change', () => {
+          clearFieldState(field);
+          reviewFeedback.textContent = '';
+        });
+      });
+
+      reviewButton.addEventListener('click', () => {
+        let correctCount = 0;
+
+        reviewFields.forEach((field) => {
+          const expected = reviewAnswers[field.dataset.answerKey];
+          const isCorrect = field.value === expected;
+
+          clearFieldState(field);
+          field.classList.add(isCorrect ? 'is-correct' : 'is-incorrect');
+
+          if (isCorrect) {
+            correctCount += 1;
+          }
+        });
+
+        if (correctCount === reviewFields.length) {
+          reviewFeedback.textContent = currentLang === 'zh'
+            ? '全部答案都正确。'
+            : currentLang === 'bi'
+              ? 'All answers are correct. / 全部答案都正确。'
+              : 'All answers are correct.';
+          reviewFeedback.style.color = '#2f7d32';
+          return;
+        }
+
+        reviewFeedback.textContent = currentLang === 'zh'
+          ? '你答对了 ' + correctCount + ' / ' + reviewFields.length + ' 题。请检查高亮的答案后再试一次。'
+          : currentLang === 'bi'
+            ? correctCount + ' of ' + reviewFields.length + ' correct. Review the highlighted answers and try again. / 你答对了 ' + correctCount + ' / ' + reviewFields.length + ' 题。请检查高亮的答案后再试一次。'
+            : correctCount + ' of ' + reviewFields.length + ' correct. Review the highlighted answers and try again.';
+        reviewFeedback.style.color = '#b42318';
+      });
+    }
+  </script>
+</body>
+</html>
