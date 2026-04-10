@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2.4 Energy Changes During Chemical Reactions</title>
+  <style>
+    :root{
+      --bg:#ece7df;
+      --page:#ffffff;
+      --ink:#1f2328;
+      --muted:#5f6368;
+      --line:#b9b1a4;
+      --line-strong:#7a7267;
+      --surface:#f7f4ef;
+      --shadow:0 3px 14px rgba(0,0,0,.08);
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:Calibri, Aptos, "Segoe UI", sans-serif;
+      line-height:1.4;
+    }
+
+    .topbar-global{
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:rgba(236, 231, 223, 0.96);
+      border-bottom:1px solid var(--line);
+      backdrop-filter:blur(8px);
+    }
+
+    .lang-controls{
+      width:min(1200px, calc(100vw - 40px));
+      margin:0 auto;
+      padding:12px 0;
+      display:flex;
+      justify-content:flex-end;
+      gap:8px;
+    }
+
+    .lang-btn{
+      padding:8px 14px;
+      border:1px solid var(--line-strong);
+      background:#fff;
+      color:var(--ink);
+      border-radius:999px;
+      font:600 14px/1 Calibri, Aptos, "Segoe UI", sans-serif;
+      cursor:pointer;
+    }
+
+    .lang-btn.is-active{
+      background:var(--ink);
+      color:#fff;
+      border-color:var(--ink);
+    }
+
+    .wrapper{
+      padding:24px 0 40px;
+    }
+
+    .page{
+      width:min(1200px, calc(100vw - 40px));
+      margin:0 auto;
+      background:var(--page);
+      box-shadow:var(--shadow);
+      padding:0.72in;
+    }
+
+    h1{
+      margin:0 0 18px;
+      font-size:30px;
+      line-height:1.15;
+    }
+
+    h2{
+      margin:26px 0 10px;
+      font-size:21px;
+      line-height:1.2;
+    }
+
+    h3{
+      margin:18px 0 8px;
+      font-size:17px;
+      line-height:1.2;
+    }
+
+    p, li, div, summary, td, th{
+      font-size:15px;
+    }
+
+    p{
+      margin:8px 0;
+    }
+
+    ul, ol{
+      margin:8px 0 12px 22px;
+      padding:0;
+    }
+
+    li{
+      margin:5px 0;
+    }
+
+    .i18n-wrap{
+      display:block;
+    }
+
+    .i18n-en,
+    .i18n-zh{
+      display:block;
+    }
+
+    .i18n-inline .i18n-en,
+    .i18n-inline .i18n-zh{
+      display:inline;
+    }
+
+    .lang-en .i18n-zh{
+      display:none;
+    }
+
+    .lang-bi .i18n-wrap:not(.i18n-inline) .i18n-zh{
+      margin-top:4px;
+      color:var(--muted);
+    }
+
+    .lang-bi .i18n-inline .i18n-zh::before{
+      content:" / ";
+    }
+
+    .lang-zh .i18n-en{
+      display:none;
+    }
+
+    .term-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:16px;
+      margin:12px 0 18px;
+    }
+
+    .note-box,
+    .term-box,
+    details{
+      border:1px solid var(--line-strong);
+      background:var(--surface);
+      padding:14px 16px;
+      margin:12px 0 16px;
+    }
+
+    .term-box{
+      margin:0;
+    }
+
+    .term-box h3,
+    .note-box h3{
+      margin-top:0;
+    }
+
+    .equation{
+      font-weight:700;
+      font-size:17px;
+      margin:8px 0;
+    }
+
+    .equation-block{
+      border-left:4px solid var(--line-strong);
+      padding:8px 0 8px 14px;
+      margin:10px 0 14px;
+    }
+
+    .compare-table{
+      width:100%;
+      border-collapse:collapse;
+      margin:12px 0 18px;
+    }
+
+    .compare-table th,
+    .compare-table td{
+      border:1px solid var(--line);
+      vertical-align:top;
+      padding:12px 14px;
+    }
+
+    .compare-table th{
+      background:var(--surface);
+      text-align:left;
+      font-size:16px;
+    }
+
+    .video-embed{
+      margin:12px 0 18px;
+      border:1px solid var(--line-strong);
+      background:var(--surface);
+      padding:12px;
+    }
+
+    .video-frame{
+      position:relative;
+      width:100%;
+      padding-top:56.25%;
+      background:#000;
+    }
+
+    .video-frame iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+    }
+
+    details summary{
+      cursor:pointer;
+      font-weight:700;
+    }
+
+    .example-list{
+      margin:10px 0 0;
+      padding-left:20px;
+    }
+
+    .example-list li{
+      margin:8px 0;
+    }
+
+    @media (max-width: 760px){
+      .lang-controls{
+        width:calc(100vw - 24px);
+        justify-content:flex-start;
+        flex-wrap:wrap;
+      }
+
+      .page{
+        width:calc(100vw - 24px);
+        padding:20px 18px 24px;
+      }
+
+      .term-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body class="lang-en">
+  <div class="topbar-global">
+    <div aria-label="Language" class="lang-controls" role="group">
+      <button aria-pressed="true" class="lang-btn is-active" data-lang="en" type="button">English</button>
+      <button aria-pressed="false" class="lang-btn" data-lang="bi" type="button">En + Zh</button>
+      <button aria-pressed="false" class="lang-btn" data-lang="zh" type="button">Zh only</button>
+    </div>
+  </div>
+
+  <div class="wrapper">
+    <main class="page">
+      <h1><span class="i18n-wrap"><span class="i18n-en">2.4 Energy Changes During Chemical Reactions</span><span class="i18n-zh" lang="zh-Hans">2.4 化学反应中的能量变化</span></span></h1>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Kinetic and Potential Energy Definitions</span><span class="i18n-zh" lang="zh-Hans">动能与势能的定义</span></span></h2>
+      <div class="term-grid">
+        <section class="term-box">
+          <h3><span class="i18n-wrap"><span class="i18n-en">Kinetic Energy</span><span class="i18n-zh" lang="zh-Hans">动能</span></span></h3>
+          <p><span class="i18n-wrap"><span class="i18n-en"><strong>Kinetic energy is the energy due to movement.</strong></span><span class="i18n-zh" lang="zh-Hans"><strong>动能是由于运动而具有的能量。</strong></span></span></p>
+          <p><span class="i18n-wrap"><span class="i18n-en">"Kinetic" means "moving." Hence, kinetic energy is the energy due to movement. A thrown ball, a rolling log, a flying atom, and the electrons orbiting the nucleus of an atom all have kinetic energy.</span><span class="i18n-zh" lang="zh-Hans">“Kinetic” 的意思是“运动的”。因此，动能就是由运动产生的能量。被抛出的球、滚动的木头、飞行中的原子，以及围绕原子核运动的电子都具有动能。</span></span></p>
+        </section>
+
+        <section class="term-box">
+          <h3><span class="i18n-wrap"><span class="i18n-en">Potential Energy</span><span class="i18n-zh" lang="zh-Hans">势能</span></span></h3>
+          <p><span class="i18n-wrap"><span class="i18n-en"><strong>Potential energy is stored energy, energy which can be converted into kinetic energy when the conditions are right.</strong></span><span class="i18n-zh" lang="zh-Hans"><strong>势能是储存起来的能量，在条件合适时可以转化为动能。</strong></span></span></p>
+          <p><span class="i18n-wrap"><span class="i18n-en">A rock poised at the top of a hill has potential energy. Give it a push and it rolls downhill converting its potential energy to kinetic. The potential energy in the gasoline burned in an automobile engine is transformed partly into the motion of the car. Because the internal combustion engine is notoriously inefficient, much of the potential energy of the gasoline is converted into wasted heat energy, which is a form of kinetic energy.</span><span class="i18n-zh" lang="zh-Hans">一块位于山顶边缘的石头具有势能。只要轻轻一推，它就会向下滚动，把势能转化为动能。汽车发动机中燃烧的汽油所含的势能，有一部分会转化为汽车的运动。由于内燃机效率并不高，汽油的大量势能会转化成浪费掉的热能，而热能也是动能的一种形式。</span></span></p>
+        </section>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Bond Breaking and Bond Forming</span><span class="i18n-zh" lang="zh-Hans">断键与成键</span></span></h2>
+      <p><span class="i18n-wrap"><span class="i18n-en">For a reaction to occur, reactant particles must collide, creating an opportunity for old bonds to break and new bonds to form. Any one collision may be successful or unsuccessful depending on two factors. These factors are the geometry of the collision (head on versus side swipes, for example) and the energy of the collision (faster moving molecules with more kinetic energy are more likely to react).</span><span class="i18n-zh" lang="zh-Hans">要发生化学反应，反应物粒子必须彼此碰撞，这样旧键才有机会断裂，新键才有机会形成。一次碰撞是否成功，取决于两个因素：碰撞的几何方式（例如正面碰撞还是擦边而过）以及碰撞的能量（运动更快、动能更大的分子更容易发生反应）。</span></span></p>
+      <p><span class="i18n-wrap"><span class="i18n-en">Each chemical reaction has an activation energy or minimum energy required for the reaction to occur. If the colliding atoms or molecules generate sufficient activation energy (kinetic energy is converted to potential energy in the collision) then bonds in reactant molecules will break and atoms can re-arrange and form new bonds in the products that are formed. If collisions occur that do not generate this activation energy, the reactant atoms and molecules will repel each other with no reaction taking place.</span><span class="i18n-zh" lang="zh-Hans">每一种化学反应都有活化能，也就是反应发生所需的最小能量。如果碰撞中的原子或分子产生了足够的活化能（在碰撞中，动能会转化为势能），那么反应物分子中的键就会断裂，原子便能重新排列，并在生成物中形成新的键。如果碰撞没有产生足够的活化能，那么反应物原子和分子就会彼此排斥，不会发生反应。</span></span></p>
+      <p><span class="i18n-wrap"><span class="i18n-en">The bonds within a chemical compound are a source of potential energy. The process of breaking bonds requires energy and then energy is released as new bonds form. If more energy is absorbed than released, the reaction is endothermic (container will feel cold to the touch). If less energy is absorbed than released, the reaction is exothermic (container radiates heat that you can sense on the back of your hand). An analogy for a bond is a partly stretched elastic band where PE is present. Energy must be applied to break the bond, but once broken, a different amount of energy is released.</span><span class="i18n-zh" lang="zh-Hans">化合物中的化学键是势能的来源。断键过程需要吸收能量，而新键形成时会释放能量。如果吸收的能量多于释放的能量，这个反应就是吸热反应（容器摸起来会发冷）。如果吸收的能量少于释放的能量，这个反应就是放热反应（容器会向外散热，你可以在手背上感觉到热）。可以把化学键类比成一条被部分拉伸的橡皮筋，其中储存着势能。要把它弄断，必须输入能量；但一旦断开，又会释放出另一数量的能量。</span></span></p>
+      <p><span class="i18n-wrap"><span class="i18n-en">The changes that occur in a chemical reaction typically involve breaking of the bonds that exist in the reactant molecules. This process requires energy. New bonds are formed as new chemical substances are produced, the products in the reaction. This process releases energy.</span><span class="i18n-zh" lang="zh-Hans">化学反应中的变化通常涉及反应物分子中已有化学键的断裂，这个过程需要能量。当新的化学物质，也就是生成物，形成时，会产生新的化学键，而这个过程会释放能量。</span></span></p>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Exothermic Reactions</span><span class="i18n-zh" lang="zh-Hans">放热反应</span></span></h2>
+      <p><span class="i18n-wrap"><span class="i18n-en">These are reactions which release energy. Energy in chemical reactions is measured in kilojoules (kJ). Consider the following hypothetical reaction:</span><span class="i18n-zh" lang="zh-Hans">这类反应会释放能量。化学反应中的能量通常以千焦（kJ）为单位来测量。请看下面这个假设反应：</span></span></p>
+      <div class="equation-block">
+        <p class="equation">x<sub>2</sub> + y<sub>2</sub> &rarr; 2 xy</p>
+        <p><span class="i18n-wrap"><span class="i18n-en">50 kJ of energy are required to break the bonds that hold the x's and y's together in their respective molecules, but 100 kJ is released when xy forms.</span><span class="i18n-zh" lang="zh-Hans">要断开 x 和 y 在各自分子中所形成的键，需要 50 kJ 的能量；但当 xy 形成时，会释放出 100 kJ 的能量。</span></span></p>
+        <p class="equation">50 kJ + x<sub>2</sub> + y<sub>2</sub> &rarr; 2 xy + 100 kJ</p>
+        <p><span class="i18n-wrap"><span class="i18n-en"><strong>Simplified:</strong></span><span class="i18n-zh" lang="zh-Hans"><strong>简化后：</strong></span></span></p>
+        <p class="equation">x<sub>2</sub> + y<sub>2</sub> &rarr; 2 xy + 50 kJ</p>
+      </div>
+      <p><span class="i18n-wrap"><span class="i18n-en">The net result is that 50 kJ of energy are released.</span><span class="i18n-zh" lang="zh-Hans">净结果是释放了 50 kJ 的能量。</span></span></p>
+      <p><span class="i18n-wrap"><span class="i18n-en">Reactions of this sort which produce energy are called exothermic reactions. "Exo" means "out" and "therm" refers to heat. So, "exothermic" means that heat is coming out, or being produced.</span><span class="i18n-zh" lang="zh-Hans">这种会产生能量的反应叫做放热反应。“Exo” 的意思是“向外”，“therm” 指的是“热”。因此，“exothermic” 的意思就是热向外释放出来，或者说有热产生。</span></span></p>
+      <p class="equation"><span class="i18n-wrap"><span class="i18n-en">Reactants &rarr; Products + energy</span><span class="i18n-zh" lang="zh-Hans">反应物 &rarr; 生成物 + 能量</span></span></p>
+      <p><span class="i18n-wrap"><span class="i18n-en">An example of an exothermic reaction occurs during cellular respiration in animals and plants. The reaction involves "burning" sugar (glucose C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>(s)) to produce energy. Oxygen from the air is required.</span><span class="i18n-zh" lang="zh-Hans">动物和植物进行细胞呼吸时就会发生一个放热反应。这个反应涉及“燃烧”糖类，也就是葡萄糖 C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>(s)，以产生能量。这个过程需要空气中的氧气。</span></span></p>
+      <p class="equation">C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>(s) + 6 O<sub>2</sub>(g) &rarr; 6 CO<sub>2</sub>(g) + 6 H<sub>2</sub>O(l) + 2 803 kJ</p>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Endothermic Reactions</span><span class="i18n-zh" lang="zh-Hans">吸热反应</span></span></h2>
+      <p><span class="i18n-wrap"><span class="i18n-en">There is a net requirement or absorption of energy in some chemical reactions. The bond breaking process in the reactants requires more energy than is released in total. Energy from an external source must be absorbed.</span><span class="i18n-zh" lang="zh-Hans">有些化学反应总体上需要吸收能量。反应物中的断键过程所需的能量，大于整个过程中所释放的能量，因此必须从外界吸收能量。</span></span></p>
+      <p class="equation"><span class="i18n-wrap"><span class="i18n-en">Energy + Reactants &rarr; Products</span><span class="i18n-zh" lang="zh-Hans">能量 + 反应物 &rarr; 生成物</span></span></p>
+      <p><span class="i18n-wrap"><span class="i18n-en">Such reactions which absorb energy are called endothermic reactions. "Endo" means "into".</span><span class="i18n-zh" lang="zh-Hans">这种吸收能量的反应叫做吸热反应。“Endo” 的意思是“向内”。</span></span></p>
+      <p><span class="i18n-wrap"><span class="i18n-en">Plants have the ability to use the sun's energy to convert carbon dioxide and water into glucose and oxygen. This is the opposite process of cellular respiration and is called photosynthesis:</span><span class="i18n-zh" lang="zh-Hans">植物能够利用太阳能，把二氧化碳和水转化成葡萄糖和氧气。这个过程与细胞呼吸相反，叫做光合作用：</span></span></p>
+      <p class="equation">6 CO<sub>2</sub>(g) + 6 H<sub>2</sub>O(l) + 2 803 kJ (from the sun) &rarr; C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>(s) + 6 O<sub>2</sub>(g)</p>
+
+      <div class="video-embed">
+        <div class="video-frame">
+          <iframe
+            src="https://www.youtube.com/embed/hXvsXyteEfQ"
+            title="2.4 Energy Changes During Chemical Reactions video 1"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Heat of Reaction</span><span class="i18n-zh" lang="zh-Hans">反应热</span></span></h2>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th><span class="i18n-wrap"><span class="i18n-en">Exothermic</span><span class="i18n-zh" lang="zh-Hans">放热反应</span></span></th>
+            <th><span class="i18n-wrap"><span class="i18n-en">Endothermic</span><span class="i18n-zh" lang="zh-Hans">吸热反应</span></span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="i18n-wrap"><span class="i18n-en">1) Products have less potential energy than reactants. The potential energy lost during the reaction is changed into heat.</span><span class="i18n-zh" lang="zh-Hans">1）生成物的势能低于反应物。反应中损失的势能转化成热能。</span></span></td>
+            <td><span class="i18n-wrap"><span class="i18n-en">1) Products have more potential energy than reactants. The potential energy gained during the reaction is absorbed from the surroundings.</span><span class="i18n-zh" lang="zh-Hans">1）生成物的势能高于反应物。反应中增加的势能是从周围环境吸收来的。</span></span></td>
+          </tr>
+          <tr>
+            <td><span class="i18n-wrap"><span class="i18n-en">2) Surroundings will feel <strong>hot</strong>. If your hand feels hot when you are holding a test tube containing a reaction, then heat is leaving the reaction in the test tube and is entering your hand. Keep the difference clear between the observer's point of view and the point of view of the particles in the test tube.</span><span class="i18n-zh" lang="zh-Hans">2）周围环境会感觉<strong>热</strong>。如果你拿着装有反应物的试管时感觉手发热，说明热量正从试管中的反应离开，并进入你的手。要分清观察者自己的感受与试管中参与反应粒子的角度之间的区别。</span></span></td>
+            <td><span class="i18n-wrap"><span class="i18n-en">2) Surroundings will feel <strong>cold</strong>.</span><span class="i18n-zh" lang="zh-Hans">2）周围环境会感觉<strong>冷</strong>。</span></span></td>
+          </tr>
+          <tr>
+            <td>
+              <p><span class="i18n-wrap"><span class="i18n-en">3) There are two ways to show the heat effect.</span><span class="i18n-zh" lang="zh-Hans">3）表示热效应有两种方法。</span></span></p>
+              <p><span class="i18n-wrap"><span class="i18n-en">a) The heat term is included on the <strong>right</strong> side.</span><span class="i18n-zh" lang="zh-Hans">a）把热量项写在<strong>右边</strong>。</span></span></p>
+              <p class="equation">H<sub>2</sub>(g) + Cl<sub>2</sub>(g) &rarr; 2 HCl(l) + 184 kJ</p>
+              <p><span class="i18n-wrap"><span class="i18n-en">b) Use &Delta;H notation: the reaction is written, then followed by a <strong>negative</strong> value for &Delta;H that shows the change in heat.</span><span class="i18n-zh" lang="zh-Hans">b）使用 &Delta;H 记号：先写反应式，再写一个<strong>负值</strong>的 &Delta;H，表示热量变化。</span></span></p>
+              <p class="equation">H<sub>2</sub>(g) + Cl<sub>2</sub>(g) &rarr; 2 HCl(l), &Delta;H = -184 kJ</p>
+            </td>
+            <td>
+              <p><span class="i18n-wrap"><span class="i18n-en">3) There are two ways to show the heat effect.</span><span class="i18n-zh" lang="zh-Hans">3）表示热效应有两种方法。</span></span></p>
+              <p><span class="i18n-wrap"><span class="i18n-en">a) The heat term is included on the <strong>left</strong> side.</span><span class="i18n-zh" lang="zh-Hans">a）把热量项写在<strong>左边</strong>。</span></span></p>
+              <p class="equation">2 HCl(l) + 184 kJ &rarr; H<sub>2</sub>(g) + Cl<sub>2</sub>(g)</p>
+              <p><span class="i18n-wrap"><span class="i18n-en">b) Use &Delta;H notation: the reaction is written, then followed by a <strong>positive</strong> value for &Delta;H that shows the change in heat.</span><span class="i18n-zh" lang="zh-Hans">b）使用 &Delta;H 记号：先写反应式，再写一个<strong>正值</strong>的 &Delta;H，表示热量变化。</span></span></p>
+              <p class="equation">2 HCl(l) &rarr; H<sub>2</sub>(g) + Cl<sub>2</sub>(g), &Delta;H = +184 kJ</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Examples</span><span class="i18n-zh" lang="zh-Hans">例题</span></span></h2>
+      <div class="note-box">
+        <p><span class="i18n-wrap"><span class="i18n-en"><strong>Example:</strong> Solve the questions in your notebook, then open the solution below to check your answers.</span><span class="i18n-zh" lang="zh-Hans"><strong>例题：</strong>先在笔记本上完成这些题目，然后打开下面的答案检查你的结果。</span></span></p>
+        <p><span class="i18n-wrap"><span class="i18n-en">Label each of these reactions as endothermic or exothermic.</span><span class="i18n-zh" lang="zh-Hans">判断下面每个反应是吸热反应还是放热反应。</span></span></p>
+        <ol class="example-list">
+          <li class="equation">CH<sub>4</sub> + 2 O<sub>2</sub> &rarr; CO<sub>2</sub> + 2 H<sub>2</sub>O + heat</li>
+          <li class="equation">6 C + 3 H<sub>2</sub> &rarr; C<sub>6</sub>H<sub>6</sub>, &Delta;H = +83 kJ</li>
+          <li class="equation">2 NO<sub>2</sub> + 112 kJ &rarr; 2 NO + O<sub>2</sub></li>
+          <li class="equation">S + O<sub>2</sub> &rarr; SO<sub>2</sub>, &Delta;H = -296 kJ</li>
+        </ol>
+      </div>
+
+      <details>
+        <summary><span class="i18n-wrap i18n-inline"><span class="i18n-en">Solution</span><span class="i18n-zh" lang="zh-Hans">答案</span></span></summary>
+        <ol class="example-list">
+          <li><span class="i18n-wrap i18n-inline"><span class="i18n-en">exothermic</span><span class="i18n-zh" lang="zh-Hans">放热反应</span></span></li>
+          <li><span class="i18n-wrap i18n-inline"><span class="i18n-en">endothermic</span><span class="i18n-zh" lang="zh-Hans">吸热反应</span></span></li>
+          <li><span class="i18n-wrap i18n-inline"><span class="i18n-en">endothermic</span><span class="i18n-zh" lang="zh-Hans">吸热反应</span></span></li>
+          <li><span class="i18n-wrap i18n-inline"><span class="i18n-en">exothermic</span><span class="i18n-zh" lang="zh-Hans">放热反应</span></span></li>
+        </ol>
+      </details>
+
+      <div class="video-embed">
+        <div class="video-frame">
+          <iframe
+            src="https://www.youtube.com/embed/pRQ2_p3MzNY"
+            title="2.4 Energy Changes During Chemical Reactions video 2"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const langButtons = Array.from(document.querySelectorAll('.lang-btn[data-lang]'));
+    let currentLang = localStorage.getItem('energy-changes-lang') || 'en';
+
+    function applyLanguageMode(mode) {
+      currentLang = mode;
+      document.body.classList.toggle('lang-en', mode === 'en');
+      document.body.classList.toggle('lang-bi', mode === 'bi');
+      document.body.classList.toggle('lang-zh', mode === 'zh');
+      langButtons.forEach((button) => {
+        const selected = button.dataset.lang === mode;
+        button.classList.toggle('is-active', selected);
+        button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      });
+      localStorage.setItem('energy-changes-lang', mode);
+    }
+
+    langButtons.forEach((button) => {
+      button.addEventListener('click', () => applyLanguageMode(button.dataset.lang));
+    });
+
+    applyLanguageMode(currentLang);
+  </script>
+</body>
+</html>
