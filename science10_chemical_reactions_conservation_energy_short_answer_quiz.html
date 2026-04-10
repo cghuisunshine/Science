@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Short-Answer Practice Quiz: 2.3 and 2.4</title>
+  <style>
+    :root {
+      --bg: #ece7df;
+      --panel: #fffdf9;
+      --panel-alt: #f5efe6;
+      --text: #2a241d;
+      --muted: #6a6258;
+      --line: #c8bfb2;
+      --line-strong: #9e9385;
+      --accent: #7c2d12;
+      --good: #1f5f38;
+      --good-bg: #e6f3ea;
+      --bad: #8b2c2c;
+      --bad-bg: #f8e6e3;
+      --note: #7a5314;
+      --note-bg: #f7edd7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Calibri, Aptos, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    .panel,
+    .card,
+    .summary,
+    .section-card,
+    .sources {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 2px 8px rgba(53, 43, 32, 0.07);
+    }
+
+    .panel {
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.8rem;
+      line-height: 1.2;
+    }
+
+    .intro {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .toolbar-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .toolbar-spacer {
+      flex: 1 1 auto;
+    }
+
+    button,
+    select,
+    textarea,
+    input {
+      font: inherit;
+    }
+
+    button {
+      padding: 9px 12px;
+      border: 1px solid var(--line-strong);
+      background: #fff;
+      color: var(--text);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      border-color: var(--accent);
+    }
+
+    button.primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    button.mark-good {
+      border-color: #8cb49a;
+      background: var(--good-bg);
+      color: var(--good);
+    }
+
+    button.mark-review {
+      border-color: #d8b1aa;
+      background: var(--bad-bg);
+      color: var(--bad);
+    }
+
+    select,
+    input {
+      padding: 9px 10px;
+      border: 1px solid var(--line-strong);
+      background: #fff;
+      color: var(--text);
+      border-radius: 8px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+
+    .summary-item {
+      border: 1px solid var(--line);
+      background: var(--panel-alt);
+      padding: 10px 12px;
+      border-radius: 8px;
+    }
+
+    .summary-label {
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-bottom: 4px;
+    }
+
+    .summary-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .quiz-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .section-card {
+      padding: 14px 18px;
+      background: var(--panel-alt);
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .section-note {
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+
+    .card {
+      padding: 16px 18px;
+    }
+
+    .card.is-good {
+      border-color: #9fceb0;
+      background: #fbfffc;
+    }
+
+    .card.is-review {
+      border-color: #dfb0ab;
+      background: #fffaf9;
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .card-meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .card-status {
+      min-width: 140px;
+      text-align: right;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .prompt {
+      margin: 0 0 12px;
+      font-size: 1.02rem;
+      font-weight: 700;
+    }
+
+    .i18n-wrap {
+      display: block;
+    }
+
+    .i18n-en {
+      display: block;
+    }
+
+    .i18n-zh {
+      display: none;
+      margin-top: 4px;
+      color: var(--muted);
+    }
+
+    body.lang-bi .i18n-zh {
+      display: block;
+    }
+
+    body.lang-zh .i18n-en {
+      display: none !important;
+    }
+
+    body.lang-zh .i18n-zh {
+      display: block;
+    }
+
+    .answer-box {
+      width: 100%;
+      min-height: 96px;
+      padding: 10px 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      resize: vertical;
+    }
+
+    .answer-box:focus {
+      outline: 2px solid rgba(124, 45, 18, 0.16);
+      border-color: var(--accent);
+    }
+
+    .ai-tools {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      background: var(--panel-alt);
+    }
+
+    .ai-tools summary {
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .ai-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .ai-row label {
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .ai-row input {
+      flex: 1 1 380px;
+      min-width: 240px;
+    }
+
+    .ai-note,
+    .ai-status {
+      margin-top: 10px;
+      font-size: 0.94rem;
+      color: var(--muted);
+    }
+
+    .ai-status.ok {
+      color: var(--good);
+    }
+
+    .ai-status.bad {
+      color: var(--bad);
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .feedback,
+    .suggested {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+    }
+
+    .feedback.show,
+    .suggested.show {
+      display: block;
+    }
+
+    .feedback.good {
+      background: var(--good-bg);
+      border-color: #b7d7c2;
+      color: var(--good);
+    }
+
+    .feedback.note {
+      background: var(--note-bg);
+      border-color: #e3c98a;
+      color: var(--note);
+    }
+
+    .feedback.bad {
+      background: var(--bad-bg);
+      border-color: #d8b1aa;
+      color: var(--bad);
+    }
+
+    .suggested {
+      background: var(--panel-alt);
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    .keyword-note {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .sources {
+      margin-top: 18px;
+      padding: 14px 16px;
+    }
+
+    .sources h2 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .sources ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .sources a {
+      color: var(--accent);
+    }
+
+    @media (max-width: 760px) {
+      .summary {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .card-head {
+        flex-direction: column;
+      }
+
+      .card-status {
+        text-align: left;
+        min-width: 0;
+      }
+
+      .toolbar-spacer {
+        display: none;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .summary {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="lang-bi">
+  <div class="page">
+    <section class="panel">
+      <h1>Short-Answer Practice Quiz</h1>
+      <p class="intro">Practice short-answer questions from 2.3 Conservation of Mass in Chemical Equations and 2.4 Energy Changes During Chemical Reactions. Questions stay grouped by section.</p>
+
+      <div class="toolbar">
+        <div class="toolbar-group">
+          <button id="checkAllBtn" class="primary" type="button">Check All with AI</button>
+          <button id="showAllBtn" type="button">Show All Suggested Answers</button>
+          <button id="resetBtn" type="button">Reset</button>
+        </div>
+        <div class="toolbar-spacer"></div>
+        <div class="toolbar-group">
+          <label for="languageMode">Display:</label>
+          <select id="languageMode">
+            <option value="en">English</option>
+            <option value="zh">Chinese</option>
+            <option value="bi" selected>English + Chinese</option>
+          </select>
+        </div>
+      </div>
+
+      <details class="ai-tools" open>
+        <summary>AI grader settings</summary>
+        <div class="ai-row">
+          <label for="grade-api-url">Grade API URL</label>
+          <input id="grade-api-url" type="text" placeholder="https://.../grade" />
+          <button id="btn-test-api" type="button">Test</button>
+        </div>
+        <div class="ai-note">Each AI check sends the English question, your answer, and the suggested answer to the grader service. Manual marking buttons are also available.</div>
+        <div id="api-status" class="ai-status"></div>
+      </details>
+    </section>
+
+    <section class="summary">
+      <div class="summary-item">
+        <div class="summary-label">Questions</div>
+        <div id="totalCount" class="summary-value">12</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Answered</div>
+        <div id="answeredCount" class="summary-value">0</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Accepted</div>
+        <div id="acceptedCount" class="summary-value">0</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Needs Review</div>
+        <div id="reviewCount" class="summary-value">0</div>
+      </div>
+    </section>
+
+    <main id="quizList" class="quiz-list"></main>
+
+    <section class="sources">
+      <h2>Source Lessons</h2>
+      <ul>
+        <li><a href="2.3-Conservation-of-Mass-in-Chemical-Equations.html" target="_blank" rel="noopener noreferrer">2.3 Conservation of Mass in Chemical Equations</a></li>
+        <li><a href="2.4-Energy-Changes-During-Chemical-Reactions.html" target="_blank" rel="noopener noreferrer">2.4 Energy Changes During Chemical Reactions</a></li>
+      </ul>
+    </section>
+  </div>
+
+  <script>
+    const DEFAULT_GRADE_API_URL = "https://lakesideart.gochatus.org/grade-service/grade";
+    const GRADE_API_STORAGE_KEY = "gradeApiUrl";
+    const LANG_STORAGE_KEY = "science10-23-24-short-answer-lang";
+    const sectionOrder = ["2.3", "2.4"];
+    const sectionMeta = {
+      "2.3": {
+        title: { en: "2.3 Conservation of Mass in Chemical Equations", zh: "2.3 化学方程式中的质量守恒" },
+        note: { en: "Short-answer practice on mass conservation, balancing, and equation meaning.", zh: "关于质量守恒、配平与方程式意义的简答练习。" }
+      },
+      "2.4": {
+        title: { en: "2.4 Energy Changes During Chemical Reactions", zh: "2.4 化学反应中的能量变化" },
+        note: { en: "Short-answer practice on activation energy, bond energy, and exothermic versus endothermic changes.", zh: "关于活化能、键能以及放热与吸热变化的简答练习。" }
+      }
+    };
+
+    const questions = [
+      {
+        id: "q01",
+        section: "2.3",
+        topic: { en: "2.3 Conservation of Mass", zh: "2.3 质量守恒" },
+        prompt: {
+          en: "State the law of conservation of mass in your own words.",
+          zh: "用你自己的话说明质量守恒定律。"
+        },
+        suggestedAnswer: {
+          en: "In a chemical reaction, matter is not created or destroyed, so the mass of the reactants equals the mass of the products.",
+          zh: "在化学反应中，物质不会被创造或消灭，所以反应物的质量等于生成物的质量。"
+        },
+        keywords: ["mass", "reactants", "products", "created", "destroyed"]
+      },
+      {
+        id: "q02",
+        section: "2.3",
+        topic: { en: "2.3 Chemical Equations", zh: "2.3 化学方程式" },
+        prompt: {
+          en: "What is the difference between a word equation, a skeleton equation, and a balanced chemical equation?",
+          zh: "文字方程式、骨架方程式和配平后的化学方程式有什么区别？"
+        },
+        suggestedAnswer: {
+          en: "A word equation uses names of substances, a skeleton equation uses formulas without balancing coefficients, and a balanced chemical equation uses formulas with coefficients so atom counts match on both sides.",
+          zh: "文字方程式使用物质名称，骨架方程式使用化学式但没有配平系数，而配平后的化学方程式使用化学式并加入系数，使两边原子数相同。"
+        },
+        keywords: ["word", "skeleton", "balanced", "formula", "coefficient", "atom"]
+      },
+      {
+        id: "q03",
+        section: "2.3",
+        topic: { en: "2.3 Balancing Equations", zh: "2.3 配平方程式" },
+        prompt: {
+          en: "Why are you allowed to change coefficients but not subscripts when balancing an equation?",
+          zh: "为什么配平方程式时可以改系数，却不能改下标？"
+        },
+        suggestedAnswer: {
+          en: "Changing coefficients changes how many particles are present, but changing subscripts changes the identity of the substance itself.",
+          zh: "改变系数只是改变粒子的数量，而改变下标会改变物质本身的身份和化学式。"
+        },
+        keywords: ["coefficient", "subscript", "identity", "substance", "number"]
+      },
+      {
+        id: "q04",
+        section: "2.3",
+        topic: { en: "2.3 Balancing Equations", zh: "2.3 配平方程式" },
+        prompt: {
+          en: "Write the balanced equation for methane combustion.",
+          zh: "写出甲烷燃烧的配平方程式。"
+        },
+        suggestedAnswer: {
+          en: "CH4 + 2 O2 → 2 H2O + CO2.",
+          zh: "CH4 + 2 O2 → 2 H2O + CO2。"
+        },
+        keywords: ["ch4", "2 o2", "2 h2o", "co2"]
+      },
+      {
+        id: "q05",
+        section: "2.3",
+        topic: { en: "2.3 Diatomic Elements and States", zh: "2.3 双原子元素与状态符号" },
+        prompt: {
+          en: "What does the symbol (aq) mean, and what does it tell you about a substance?",
+          zh: "(aq) 这个符号表示什么？它告诉你这种物质处于什么状态？"
+        },
+        suggestedAnswer: {
+          en: "It means aqueous, which tells you the substance is dissolved in water.",
+          zh: "它表示 aqueous，也就是该物质溶解在水中。"
+        },
+        keywords: ["aqueous", "water", "dissolved"]
+      },
+      {
+        id: "q06",
+        section: "2.3",
+        topic: { en: "2.3 Conservation of Mass", zh: "2.3 质量守恒" },
+        prompt: {
+          en: "Explain why mass is conserved even though new substances are formed in a chemical reaction.",
+          zh: "解释为什么在化学反应中虽然形成了新物质，但质量仍然守恒。"
+        },
+        suggestedAnswer: {
+          en: "Mass is conserved because the atoms are only rearranged into new combinations. No atoms are created or destroyed, so the total mass stays the same.",
+          zh: "质量守恒是因为原子只是重新组合排列，没有原子被创造或消灭，所以总质量保持不变。"
+        },
+        keywords: ["atoms", "rearranged", "created", "destroyed", "same"]
+      },
+      {
+        id: "q07",
+        section: "2.4",
+        topic: { en: "2.4 Energy Definitions", zh: "2.4 能量定义" },
+        prompt: {
+          en: "Define kinetic energy and potential energy.",
+          zh: "定义动能和势能。"
+        },
+        suggestedAnswer: {
+          en: "Kinetic energy is the energy of movement, while potential energy is stored energy that can be converted into kinetic energy.",
+          zh: "动能是运动所具有的能量，而势能是储存起来、能够转化为动能的能量。"
+        },
+        keywords: ["movement", "stored", "converted", "kinetic", "potential"]
+      },
+      {
+        id: "q08",
+        section: "2.4",
+        topic: { en: "2.4 Activation Energy", zh: "2.4 活化能" },
+        prompt: {
+          en: "What is activation energy, and why is it important in a chemical reaction?",
+          zh: "什么是活化能？它为什么在化学反应中很重要？"
+        },
+        suggestedAnswer: {
+          en: "Activation energy is the minimum energy needed for a reaction to occur. Without enough activation energy, particles collide but do not react.",
+          zh: "活化能是反应发生所需的最小能量。如果没有足够的活化能，粒子即使碰撞也不会发生反应。"
+        },
+        keywords: ["minimum", "energy", "reaction", "collide", "react"]
+      },
+      {
+        id: "q09",
+        section: "2.4",
+        topic: { en: "2.4 Bond Breaking and Forming", zh: "2.4 断键与成键" },
+        prompt: {
+          en: "Explain why breaking bonds requires energy but forming bonds releases energy.",
+          zh: "解释为什么断键需要能量，而成键会释放能量。"
+        },
+        suggestedAnswer: {
+          en: "Energy must be added to overcome the attraction holding atoms together in a bond. When a new bond forms, the atoms move into a more stable arrangement and energy is released.",
+          zh: "要断开化学键，必须输入能量去克服把原子吸引在一起的作用力。当新键形成时，原子进入更稳定的排列状态，所以会释放能量。"
+        },
+        keywords: ["overcome", "attraction", "stable", "released", "bond"]
+      },
+      {
+        id: "q10",
+        section: "2.4",
+        topic: { en: "2.4 Exothermic and Endothermic", zh: "2.4 放热与吸热" },
+        prompt: {
+          en: "How can you tell the difference between an exothermic reaction and an endothermic reaction from the energy change and the surroundings?",
+          zh: "从能量变化和周围环境的感觉来看，怎样区分放热反应和吸热反应？"
+        },
+        suggestedAnswer: {
+          en: "An exothermic reaction releases energy to the surroundings and the surroundings feel warmer. An endothermic reaction absorbs energy from the surroundings and the surroundings feel colder.",
+          zh: "放热反应把能量释放到周围环境，所以周围会感觉更热；吸热反应从周围吸收能量，所以周围会感觉更冷。"
+        },
+        keywords: ["releases", "absorbs", "surroundings", "warmer", "colder"]
+      },
+      {
+        id: "q11",
+        section: "2.4",
+        topic: { en: "2.4 Photosynthesis and Respiration", zh: "2.4 光合作用与呼吸作用" },
+        prompt: {
+          en: "Why is photosynthesis considered an endothermic reaction?",
+          zh: "为什么光合作用被认为是吸热反应？"
+        },
+        suggestedAnswer: {
+          en: "Photosynthesis is endothermic because it absorbs energy from the sun to convert carbon dioxide and water into glucose and oxygen.",
+          zh: "光合作用是吸热反应，因为它从太阳吸收能量，把二氧化碳和水转化成葡萄糖和氧气。"
+        },
+        keywords: ["absorbs", "sun", "energy", "glucose", "oxygen"]
+      },
+      {
+        id: "q12",
+        section: "2.4",
+        topic: { en: "2.4 Heat of Reaction", zh: "2.4 反应热" },
+        prompt: {
+          en: "What does a negative ΔH value tell you about a reaction?",
+          zh: "负值的 ΔH 告诉你这个反应有什么特征？"
+        },
+        suggestedAnswer: {
+          en: "A negative ΔH means the reaction releases heat, so the reaction is exothermic.",
+          zh: "负值的 ΔH 表示这个反应会释放热量，因此它是放热反应。"
+        },
+        keywords: ["negative", "releases", "heat", "exothermic"]
+      }
+    ];
+
+    const state = {
+      lang: localStorage.getItem(LANG_STORAGE_KEY) || "bi",
+      verdicts: {},
+      checking: {}
+    };
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function localizedBlock(text) {
+      return [
+        '<span class="i18n-wrap">',
+        '<span class="i18n-en">' + escapeHtml(text.en) + "</span>",
+        '<span class="i18n-zh" lang="zh-Hans">' + escapeHtml(text.zh) + "</span>",
+        "</span>"
+      ].join("");
+    }
+
+    function getGradeApiUrl() {
+      return (document.getElementById("grade-api-url").value || "").trim();
+    }
+
+    function saveGradeApiUrl() {
+      try {
+        localStorage.setItem(GRADE_API_STORAGE_KEY, getGradeApiUrl());
+      } catch {}
+    }
+
+    function setApiStatus(text, kind) {
+      const el = document.getElementById("api-status");
+      el.textContent = text || "";
+      el.className = "ai-status" + (kind ? " " + kind : "");
+    }
+
+    async function fetchJsonWithTimeout(url, options, timeoutMs) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(url, { ...(options || {}), signal: controller.signal });
+        const text = await response.text().catch(() => "");
+        let data = null;
+        try {
+          data = text ? JSON.parse(text) : null;
+        } catch {
+          data = null;
+        }
+        return { ok: response.ok, status: response.status, data, text, aborted: false };
+      } catch (error) {
+        if (error && error.name === "AbortError") {
+          return { ok: false, status: 0, data: null, text: "", aborted: true };
+        }
+        throw error;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function extractFirstGradeResult(data) {
+      if (!data) return null;
+      if (Array.isArray(data.results) && data.results[0]) return data.results[0];
+      if (data.result && Array.isArray(data.result.results) && data.result.results[0]) return data.result.results[0];
+      if (data.model_result && Array.isArray(data.model_result.results) && data.model_result.results[0]) return data.model_result.results[0];
+      return null;
+    }
+
+    function deriveHealthUrl(gradeUrl) {
+      try {
+        const url = new URL(gradeUrl);
+        url.search = "";
+        url.hash = "";
+        url.pathname = url.pathname.endsWith("/grade")
+          ? url.pathname.replace(/\/grade$/, "/health")
+          : url.pathname.replace(/\/+$/, "") + "/health";
+        return url.toString();
+      } catch {
+        return null;
+      }
+    }
+
+    async function testApi() {
+      const gradeUrl = getGradeApiUrl();
+      if (!gradeUrl) {
+        setApiStatus("Add a grade URL first.", "bad");
+        return;
+      }
+      const healthUrl = deriveHealthUrl(gradeUrl);
+      if (!healthUrl) {
+        setApiStatus("Invalid grade URL.", "bad");
+        return;
+      }
+
+      setApiStatus("Testing...", "");
+      try {
+        const { ok, status, data, aborted } = await fetchJsonWithTimeout(healthUrl, { method: "GET" }, 4000);
+        if (aborted) {
+          setApiStatus("Health check timed out.", "bad");
+          return;
+        }
+        if (!ok) {
+          setApiStatus("Health check failed (" + status + ").", "bad");
+          return;
+        }
+        const healthy = !!(data && (data.status === "ok" || data.ok === true));
+        setApiStatus(healthy ? "OK" : "OK (nonstandard response)", healthy ? "ok" : "");
+      } catch {
+        setApiStatus("Health check failed.", "bad");
+      }
+    }
+
+    function buildPrompt(question) {
+      return "Section: " + question.section + "\nTopic: " + question.topic.en + "\nQuestion: " + question.prompt.en;
+    }
+
+    async function requestAiGrade(question, studentAnswer) {
+      const gradeUrl = getGradeApiUrl();
+      const payload = {
+        pairs: [
+          {
+            question: buildPrompt(question),
+            answer: studentAnswer,
+            reference_answer: question.suggestedAnswer.en
+          }
+        ]
+      };
+
+      const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+        gradeUrl,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        },
+        30000
+      );
+
+      if (aborted) {
+        throw new Error("Request timed out.");
+      }
+
+      const first = extractFirstGradeResult(data);
+      if (!ok || !first) {
+        const detail = text ? " " + text.slice(0, 160) : "";
+        throw new Error(("Bad response (" + status + ")." + detail).trim());
+      }
+
+      return {
+        verdict: String(first.verdict || "").toLowerCase(),
+        explanation: String(first.explanation || "").trim()
+      };
+    }
+
+    function buildQuestionCard(question, index) {
+      return [
+        '<section class="card" id="card_' + question.id + '">',
+        '<div class="card-head">',
+        '<div>',
+        '<div class="card-meta">Question ' + (index + 1) + " of " + questions.length + "</div>",
+        '<p class="prompt">' + localizedBlock(question.prompt) + "</p>",
+        '<div class="card-meta">' + localizedBlock(question.topic) + "</div>",
+        "</div>",
+        '<div class="card-status" id="status_' + question.id + '">Not checked</div>',
+        "</div>",
+        '<textarea class="answer-box" id="answer_' + question.id + '" placeholder="Type your answer here"></textarea>',
+        '<div class="action-row">',
+        '<button type="button" data-action="check" data-question="' + question.id + '">Check with AI</button>',
+        '<button type="button" data-action="show" data-question="' + question.id + '">Show Suggested Answer</button>',
+        '<button type="button" class="mark-good" data-action="mark-good" data-question="' + question.id + '">Mark Good</button>',
+        '<button type="button" class="mark-review" data-action="mark-review" data-question="' + question.id + '">Mark Review</button>',
+        "</div>",
+        '<div class="feedback" id="feedback_' + question.id + '"></div>',
+        '<div class="suggested" id="suggested_' + question.id + '"><strong>Suggested answer:</strong><div>' + localizedBlock(question.suggestedAnswer) + '</div><div class="keyword-note">Key ideas: ' + escapeHtml(question.keywords.join(", ")) + "</div></div>",
+        "</section>"
+      ].join("");
+    }
+
+    function renderQuestions() {
+      const list = document.getElementById("quizList");
+      let index = 0;
+      const chunks = [];
+
+      sectionOrder.forEach((sectionId) => {
+        chunks.push([
+          '<section class="section-card">',
+          '<h2 class="section-title">' + localizedBlock(sectionMeta[sectionId].title) + "</h2>",
+          '<p class="section-note">' + localizedBlock(sectionMeta[sectionId].note) + "</p>",
+          "</section>"
+        ].join(""));
+
+        questions.filter((question) => question.section === sectionId).forEach((question) => {
+          chunks.push(buildQuestionCard(question, index));
+          index += 1;
+        });
+      });
+
+      list.innerHTML = chunks.join("");
+    }
+
+    function updateLanguage() {
+      document.body.classList.toggle("lang-bi", state.lang === "bi");
+      document.body.classList.toggle("lang-zh", state.lang === "zh");
+      document.documentElement.lang = state.lang === "zh" ? "zh" : "en";
+      document.getElementById("languageMode").value = state.lang;
+      localStorage.setItem(LANG_STORAGE_KEY, state.lang);
+    }
+
+    function setCardVerdict(questionId, verdict, feedbackHtml) {
+      state.verdicts[questionId] = verdict;
+      const card = document.getElementById("card_" + questionId);
+      const status = document.getElementById("status_" + questionId);
+      const feedback = document.getElementById("feedback_" + questionId);
+      card.classList.remove("is-good", "is-review");
+
+      if (verdict === "correct") {
+        card.classList.add("is-good");
+        status.textContent = "Accepted";
+        feedback.className = "feedback show good";
+      } else if (verdict === "incorrect") {
+        card.classList.add("is-review");
+        status.textContent = "Needs Review";
+        feedback.className = "feedback show bad";
+      } else if (verdict === "checking") {
+        status.textContent = "Checking with AI...";
+        feedback.className = "feedback show note";
+      } else {
+        status.textContent = "Not checked";
+        feedback.className = "feedback";
+      }
+
+      feedback.innerHTML = feedbackHtml || "";
+      updateSummary();
+    }
+
+    function updateSummary() {
+      const answered = questions.reduce((count, question) => {
+        const value = document.getElementById("answer_" + question.id).value.trim();
+        return count + (value ? 1 : 0);
+      }, 0);
+      const accepted = Object.values(state.verdicts).filter((value) => value === "correct").length;
+      const review = Object.values(state.verdicts).filter((value) => value === "incorrect").length;
+
+      document.getElementById("totalCount").textContent = String(questions.length);
+      document.getElementById("answeredCount").textContent = String(answered);
+      document.getElementById("acceptedCount").textContent = String(accepted);
+      document.getElementById("reviewCount").textContent = String(review);
+    }
+
+    async function checkQuestionWithAi(questionId) {
+      const question = questions.find((item) => item.id === questionId);
+      const answerBox = document.getElementById("answer_" + questionId);
+      const studentAnswer = answerBox.value.trim();
+
+      if (!studentAnswer) {
+        setCardVerdict(questionId, "incorrect", "<strong>No answer entered.</strong><div class=\"keyword-note\">Write an answer before sending it to the AI grader.</div>");
+        return;
+      }
+
+      if (!getGradeApiUrl()) {
+        setCardVerdict(questionId, "incorrect", "<strong>No grade URL set.</strong><div class=\"keyword-note\">Add a grade API URL above, or use Show Suggested Answer and manual marking.</div>");
+        return;
+      }
+
+      setCardVerdict(questionId, "checking", "<strong>Checking...</strong>");
+
+      try {
+        const result = await requestAiGrade(question, studentAnswer);
+        const accepted = result.verdict === "correct";
+        setCardVerdict(
+          questionId,
+          accepted ? "correct" : "incorrect",
+          "<strong>" + (accepted ? "Accepted by AI." : "Needs review.") + "</strong><div class=\"keyword-note\">" + escapeHtml(result.explanation || "No explanation returned.") + "</div>"
+        );
+      } catch (error) {
+        setCardVerdict(
+          questionId,
+          "incorrect",
+          "<strong>AI check failed.</strong><div class=\"keyword-note\">" + escapeHtml(error.message || "Unknown error.") + "</div>"
+        );
+      }
+    }
+
+    function showSuggested(questionId) {
+      document.getElementById("suggested_" + questionId).classList.add("show");
+    }
+
+    function showAllSuggested() {
+      questions.forEach((question) => showSuggested(question.id));
+    }
+
+    async function checkAllWithAi() {
+      for (const question of questions) {
+        if (document.getElementById("answer_" + question.id).value.trim()) {
+          await checkQuestionWithAi(question.id);
+        }
+      }
+    }
+
+    function resetAll() {
+      state.verdicts = {};
+      renderQuestions();
+      updateLanguage();
+      updateSummary();
+      const savedUrl = localStorage.getItem(GRADE_API_STORAGE_KEY) || DEFAULT_GRADE_API_URL;
+      document.getElementById("grade-api-url").value = savedUrl;
+      setApiStatus("", "");
+    }
+
+    document.getElementById("quizList").addEventListener("click", async (event) => {
+      const target = event.target.closest("button[data-action]");
+      if (!target) {
+        return;
+      }
+
+      const questionId = target.dataset.question;
+      if (target.dataset.action === "check") {
+        await checkQuestionWithAi(questionId);
+      } else if (target.dataset.action === "show") {
+        showSuggested(questionId);
+      } else if (target.dataset.action === "mark-good") {
+        setCardVerdict(questionId, "correct", "<strong>Marked good.</strong><div class=\"keyword-note\">This response has been accepted manually.</div>");
+      } else if (target.dataset.action === "mark-review") {
+        setCardVerdict(questionId, "incorrect", "<strong>Marked for review.</strong><div class=\"keyword-note\">This response needs revision or teacher review.</div>");
+      }
+    });
+
+    document.getElementById("quizList").addEventListener("input", (event) => {
+      if (event.target.classList.contains("answer-box")) {
+        updateSummary();
+      }
+    });
+
+    document.getElementById("checkAllBtn").addEventListener("click", checkAllWithAi);
+    document.getElementById("showAllBtn").addEventListener("click", showAllSuggested);
+    document.getElementById("resetBtn").addEventListener("click", resetAll);
+    document.getElementById("btn-test-api").addEventListener("click", testApi);
+    document.getElementById("grade-api-url").addEventListener("change", saveGradeApiUrl);
+    document.getElementById("languageMode").addEventListener("change", (event) => {
+      state.lang = event.target.value;
+      updateLanguage();
+    });
+
+    renderQuestions();
+    document.getElementById("grade-api-url").value = localStorage.getItem(GRADE_API_STORAGE_KEY) || DEFAULT_GRADE_API_URL;
+    updateLanguage();
+    updateSummary();
+  </script>
+</body>
+</html>

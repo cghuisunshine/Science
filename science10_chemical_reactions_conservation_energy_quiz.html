@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Science 10 Practice Quiz: 2.3 and 2.4</title>
+  <style>
+    :root {
+      --bg: #ece7df;
+      --panel: #fffdf9;
+      --panel-2: #f7f2ea;
+      --text: #2a241d;
+      --muted: #6a6258;
+      --line: #c8bfb2;
+      --line-strong: #9e9385;
+      --accent: #7c2d12;
+      --accent-soft: #efe2d6;
+      --good: #1f5f38;
+      --good-bg: #e6f3ea;
+      --bad: #8b2c2c;
+      --bad-bg: #f8e6e3;
+      --warn: #7a5314;
+      --warn-bg: #f7edd7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Calibri, Aptos, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    .topbar,
+    .summary,
+    .card,
+    .section-card,
+    .sources {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 2px 10px rgba(53, 43, 32, 0.06);
+    }
+
+    .topbar {
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.8rem;
+      line-height: 1.2;
+    }
+
+    .intro {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .toolbar-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .toolbar-spacer {
+      flex: 1 1 auto;
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    button {
+      padding: 9px 12px;
+      border: 1px solid var(--line-strong);
+      background: #fff;
+      color: var(--text);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      border-color: var(--accent);
+    }
+
+    button.primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    select {
+      padding: 9px 10px;
+      border: 1px solid var(--line-strong);
+      background: #fff;
+      color: var(--text);
+      border-radius: 8px;
+    }
+
+    .scorebox {
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      border-radius: 8px;
+      min-width: 180px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .summary {
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .summary h2 {
+      margin: 0 0 8px;
+      font-size: 1.15rem;
+    }
+
+    .summary p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .quiz-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .section-card {
+      padding: 14px 18px;
+      background: var(--panel-2);
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .section-note {
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+
+    .card {
+      padding: 16px 18px;
+    }
+
+    .card.correct {
+      border-color: #9fceb0;
+      background: #fbfffc;
+    }
+
+    .card.incorrect {
+      border-color: #dfb0ab;
+      background: #fffaf9;
+    }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .question-number {
+      font-size: 0.92rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .topic-tag {
+      font-size: 0.82rem;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid #dfc7b5;
+      padding: 3px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .prompt {
+      margin: 0 0 12px;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .i18n-wrap {
+      display: block;
+    }
+
+    .i18n-en {
+      display: block;
+    }
+
+    .i18n-zh {
+      display: none;
+      margin-top: 4px;
+      color: var(--muted);
+    }
+
+    body.lang-bi .i18n-zh {
+      display: block;
+    }
+
+    body.lang-zh .i18n-en {
+      display: none !important;
+    }
+
+    body.lang-zh .i18n-zh {
+      display: block;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .option:hover {
+      background: #fcfaf6;
+    }
+
+    .option input {
+      margin-top: 3px;
+      accent-color: var(--accent);
+    }
+
+    .option-text {
+      flex: 1 1 auto;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback.correct {
+      background: var(--good-bg);
+      border-color: #b7d7c2;
+      color: var(--good);
+    }
+
+    .feedback.incorrect {
+      background: var(--bad-bg);
+      border-color: #e1b8b0;
+      color: var(--bad);
+    }
+
+    .feedback.unanswered {
+      background: var(--warn-bg);
+      border-color: #e3c98a;
+      color: var(--warn);
+    }
+
+    .feedback .detail {
+      margin-top: 6px;
+      color: var(--text);
+    }
+
+    .sources {
+      margin-top: 18px;
+      padding: 14px 16px;
+    }
+
+    .sources h2 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .sources ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .sources a {
+      color: var(--accent);
+    }
+
+    @media (max-width: 720px) {
+      .question-meta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .toolbar-spacer {
+        display: none;
+      }
+
+      .scorebox {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body class="lang-bi">
+  <div class="page">
+    <section class="topbar">
+      <h1>Science 10 Practice Quiz</h1>
+      <p class="intro">Practice questions from 2.3 Conservation of Mass in Chemical Equations and 2.4 Energy Changes During Chemical Reactions. Questions stay grouped by section.</p>
+
+      <div class="toolbar">
+        <div class="toolbar-group">
+          <button id="gradeAllBtn" class="primary" type="button">Grade Quiz</button>
+          <button id="resetBtn" type="button">Reset</button>
+          <button id="showAnswersBtn" type="button">Show Answers</button>
+          <button id="shuffleBtn" type="button">Shuffle Within Sections</button>
+        </div>
+        <div class="toolbar-spacer"></div>
+        <div class="toolbar-group">
+          <label for="languageMode">Display:</label>
+          <select id="languageMode">
+            <option value="en">English</option>
+            <option value="zh">Chinese</option>
+            <option value="bi" selected>English + Chinese</option>
+          </select>
+          <div id="scoreBox" class="scorebox">Not graded</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="summary" class="summary">
+      <h2 id="summaryTitle">Quiz Summary</h2>
+      <p id="summaryText"></p>
+    </section>
+
+    <main id="quizList" class="quiz-list"></main>
+
+    <section class="sources">
+      <h2>Source Lessons</h2>
+      <ul>
+        <li><a href="2.3-Conservation-of-Mass-in-Chemical-Equations.html" target="_blank" rel="noopener noreferrer">2.3 Conservation of Mass in Chemical Equations</a></li>
+        <li><a href="2.4-Energy-Changes-During-Chemical-Reactions.html" target="_blank" rel="noopener noreferrer">2.4 Energy Changes During Chemical Reactions</a></li>
+      </ul>
+    </section>
+  </div>
+
+  <script>
+    const sectionOrder = ["2.3", "2.4"];
+    const sectionMeta = {
+      "2.3": {
+        title: { en: "2.3 Conservation of Mass in Chemical Equations", zh: "2.3 化学方程式中的质量守恒" },
+        note: { en: "Mass conservation, chemical equations, coefficients, states, and balancing.", zh: "质量守恒、化学方程式、系数、状态符号与配平。" }
+      },
+      "2.4": {
+        title: { en: "2.4 Energy Changes During Chemical Reactions", zh: "2.4 化学反应中的能量变化" },
+        note: { en: "Kinetic and potential energy, activation energy, exothermic and endothermic reactions.", zh: "动能与势能、活化能、放热反应与吸热反应。" }
+      }
+    };
+
+    const questions = [
+      {
+        id: "q01",
+        section: "2.3",
+        topic: { en: "2.3 Conservation of Mass", zh: "2.3 质量守恒" },
+        prompt: {
+          en: "What does the law of conservation of mass say about a chemical reaction?",
+          zh: "质量守恒定律对化学反应有什么说明？"
+        },
+        options: [
+          { key: "a", text: { en: "Mass of reactants is less than mass of products", zh: "反应物质量小于生成物质量" } },
+          { key: "b", text: { en: "Mass of reactants equals mass of products", zh: "反应物质量等于生成物质量" } },
+          { key: "c", text: { en: "Only gases keep the same mass", zh: "只有气体保持相同质量" } },
+          { key: "d", text: { en: "Mass disappears during a reaction", zh: "质量会在反应中消失" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "The lesson states that in a chemical reaction, mass of reactants equals mass of products.",
+          zh: "课程指出，在化学反应中，反应物的质量等于生成物的质量。"
+        }
+      },
+      {
+        id: "q02",
+        section: "2.3",
+        topic: { en: "2.3 Conservation of Mass", zh: "2.3 质量守恒" },
+        prompt: {
+          en: "During a chemical reaction, atoms are",
+          zh: "在化学反应过程中，原子会怎样？"
+        },
+        options: [
+          { key: "a", text: { en: "created from energy", zh: "由能量产生" } },
+          { key: "b", text: { en: "destroyed and replaced", zh: "被消灭并被替换" } },
+          { key: "c", text: { en: "rearranged into new substances", zh: "重新排列成新的物质" } },
+          { key: "d", text: { en: "turned into coefficients", zh: "变成系数" } }
+        ],
+        answerKey: "c",
+        explanation: {
+          en: "Atoms are not created or destroyed. They are rearranged to make new compounds.",
+          zh: "原子不会被创造或消灭，而是重新排列形成新的化合物。"
+        }
+      },
+      {
+        id: "q03",
+        section: "2.3",
+        topic: { en: "2.3 Chemical Equations", zh: "2.3 化学方程式" },
+        prompt: {
+          en: "In a chemical equation, reactants appear on the",
+          zh: "在化学方程式中，反应物写在"
+        },
+        options: [
+          { key: "a", text: { en: "right side of the arrow", zh: "箭头右边" } },
+          { key: "b", text: { en: "left side of the arrow", zh: "箭头左边" } },
+          { key: "c", text: { en: "top of the equation", zh: "方程式上方" } },
+          { key: "d", text: { en: "bottom of the equation", zh: "方程式下方" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "The lesson says reactants are written on the left side and products on the right side.",
+          zh: "课程说明反应物写在左边，生成物写在右边。"
+        }
+      },
+      {
+        id: "q04",
+        section: "2.3",
+        topic: { en: "2.3 Chemical Equations", zh: "2.3 化学方程式" },
+        prompt: {
+          en: "What do coefficients show in a balanced chemical equation?",
+          zh: "在配平后的化学方程式中，系数表示什么？"
+        },
+        options: [
+          { key: "a", text: { en: "The charge on each atom", zh: "每个原子的电荷" } },
+          { key: "b", text: { en: "The state of matter of each substance", zh: "每种物质的状态" } },
+          { key: "c", text: { en: "The ratio of compounds in the reaction", zh: "反应中各物质的数量比" } },
+          { key: "d", text: { en: "The temperature of the reaction", zh: "反应温度" } }
+        ],
+        answerKey: "c",
+        explanation: {
+          en: "Coefficients are the large numbers in front of compounds and show the ratio of substances in the reaction.",
+          zh: "系数是写在化合物前面的大数字，用来表示反应中各物质的数量比。"
+        }
+      },
+      {
+        id: "q05",
+        section: "2.3",
+        topic: { en: "2.3 Diatomic Elements", zh: "2.3 双原子元素" },
+        prompt: {
+          en: "Which set lists only diatomic elements from the “special seven”?",
+          zh: "下面哪一组选项只包含“特别七种”双原子元素？"
+        },
+        options: [
+          { key: "a", text: { en: "H2, N2, O2, F2", zh: "H2、N2、O2、F2" } },
+          { key: "b", text: { en: "P4, S8, O2, Cl2", zh: "P4、S8、O2、Cl2" } },
+          { key: "c", text: { en: "Na, Mg, Cl2, Br2", zh: "Na、Mg、Cl2、Br2" } },
+          { key: "d", text: { en: "CO2, H2O, N2, O2", zh: "CO2、H2O、N2、O2" } }
+        ],
+        answerKey: "a",
+        explanation: {
+          en: "The lesson lists H2, N2, O2, F2, Cl2, Br2, and I2 as the special seven diatomic elements.",
+          zh: "课程把 H2、N2、O2、F2、Cl2、Br2 和 I2 列为特别七种双原子元素。"
+        }
+      },
+      {
+        id: "q06",
+        section: "2.3",
+        topic: { en: "2.3 Balancing Equations", zh: "2.3 配平方程式" },
+        prompt: {
+          en: "When balancing equations, which part are you allowed to change?",
+          zh: "在配平方程式时，你可以改动哪一部分？"
+        },
+        options: [
+          { key: "a", text: { en: "Only coefficients", zh: "只能改系数" } },
+          { key: "b", text: { en: "Only subscripts", zh: "只能改下标" } },
+          { key: "c", text: { en: "States of matter only", zh: "只能改物态符号" } },
+          { key: "d", text: { en: "Any number in the formula", zh: "化学式中的任何数字都可以改" } }
+        ],
+        answerKey: "a",
+        explanation: {
+          en: "The lesson emphasizes that you should only change coefficients and never change subscripts.",
+          zh: "课程强调只能改变系数，绝不能改变下标。"
+        }
+      },
+      {
+        id: "q07",
+        section: "2.3",
+        topic: { en: "2.3 Balancing Equations", zh: "2.3 配平方程式" },
+        prompt: {
+          en: "Which is the balanced equation for methane combustion?",
+          zh: "下面哪一个是甲烷燃烧的配平方程式？"
+        },
+        options: [
+          { key: "a", text: { en: "CH4 + O2 → H2O + CO2", zh: "CH4 + O2 → H2O + CO2" } },
+          { key: "b", text: { en: "CH4 + O2 → 2 H2O + CO2", zh: "CH4 + O2 → 2 H2O + CO2" } },
+          { key: "c", text: { en: "CH4 + 2 O2 → 2 H2O + CO2", zh: "CH4 + 2 O2 → 2 H2O + CO2" } },
+          { key: "d", text: { en: "2 CH4 + O2 → CO2 + 2 H2O", zh: "2 CH4 + O2 → CO2 + 2 H2O" } }
+        ],
+        answerKey: "c",
+        explanation: {
+          en: "The lesson balances methane combustion as CH4 + 2 O2 → 2 H2O + CO2.",
+          zh: "课程把甲烷燃烧配平为 CH4 + 2 O2 → 2 H2O + CO2。"
+        }
+      },
+      {
+        id: "q08",
+        section: "2.3",
+        topic: { en: "2.3 States of Matter", zh: "2.3 物质状态" },
+        prompt: {
+          en: "What does (aq) mean in a chemical equation?",
+          zh: "在化学方程式中，(aq) 表示什么？"
+        },
+        options: [
+          { key: "a", text: { en: "Aqueous, dissolved in water", zh: "水溶液，溶于水" } },
+          { key: "b", text: { en: "A solid precipitate", zh: "固体沉淀" } },
+          { key: "c", text: { en: "A gas under pressure", zh: "受压气体" } },
+          { key: "d", text: { en: "An acid only", zh: "只表示酸" } }
+        ],
+        answerKey: "a",
+        explanation: {
+          en: "The lesson defines (aq) as aqueous, meaning dissolved in water.",
+          zh: "课程把 (aq) 定义为 aqueous，也就是溶于水。"
+        }
+      },
+      {
+        id: "q09",
+        section: "2.4",
+        topic: { en: "2.4 Energy Definitions", zh: "2.4 能量定义" },
+        prompt: {
+          en: "Kinetic energy is",
+          zh: "动能是"
+        },
+        options: [
+          { key: "a", text: { en: "stored energy due to position", zh: "由于位置而储存的能量" } },
+          { key: "b", text: { en: "energy due to movement", zh: "由于运动而具有的能量" } },
+          { key: "c", text: { en: "heat only", zh: "只有热能" } },
+          { key: "d", text: { en: "energy found only in atoms", zh: "只存在于原子中的能量" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "The lesson defines kinetic energy as the energy due to movement.",
+          zh: "课程把动能定义为由于运动而具有的能量。"
+        }
+      },
+      {
+        id: "q10",
+        section: "2.4",
+        topic: { en: "2.4 Energy Definitions", zh: "2.4 能量定义" },
+        prompt: {
+          en: "Potential energy is best described as",
+          zh: "势能最准确的描述是"
+        },
+        options: [
+          { key: "a", text: { en: "energy stored and available to be converted", zh: "储存起来并可被转化的能量" } },
+          { key: "b", text: { en: "energy that can never change form", zh: "永远不能改变形式的能量" } },
+          { key: "c", text: { en: "energy only found in sunlight", zh: "只存在于阳光中的能量" } },
+          { key: "d", text: { en: "the same as activation energy", zh: "与活化能相同" } }
+        ],
+        answerKey: "a",
+        explanation: {
+          en: "Potential energy is stored energy that can be converted into kinetic energy under the right conditions.",
+          zh: "势能是储存起来的能量，在适当条件下可以转化为动能。"
+        }
+      },
+      {
+        id: "q11",
+        section: "2.4",
+        topic: { en: "2.4 Activation Energy", zh: "2.4 活化能" },
+        prompt: {
+          en: "Activation energy is",
+          zh: "活化能是"
+        },
+        options: [
+          { key: "a", text: { en: "the heat already released by products", zh: "生成物已经释放出的热量" } },
+          { key: "b", text: { en: "the minimum energy needed for a reaction to occur", zh: "反应发生所需的最小能量" } },
+          { key: "c", text: { en: "the same as the mass of reactants", zh: "与反应物质量相同" } },
+          { key: "d", text: { en: "the energy in a balanced equation only", zh: "只存在于配平方程式中的能量" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "The lesson defines activation energy as the minimum energy required for a reaction to occur.",
+          zh: "课程把活化能定义为反应发生所需的最小能量。"
+        }
+      },
+      {
+        id: "q12",
+        section: "2.4",
+        topic: { en: "2.4 Bond Breaking and Forming", zh: "2.4 断键与成键" },
+        prompt: {
+          en: "Which statement about bond breaking and bond forming is correct?",
+          zh: "关于断键和成键，哪一个说法正确？"
+        },
+        options: [
+          { key: "a", text: { en: "Breaking bonds releases energy and forming bonds absorbs energy", zh: "断键释放能量，成键吸收能量" } },
+          { key: "b", text: { en: "Both breaking bonds and forming bonds always absorb energy", zh: "断键和成键都总是吸收能量" } },
+          { key: "c", text: { en: "Breaking bonds requires energy and forming bonds releases energy", zh: "断键需要能量，成键释放能量" } },
+          { key: "d", text: { en: "Neither process involves energy", zh: "这两个过程都不涉及能量" } }
+        ],
+        answerKey: "c",
+        explanation: {
+          en: "The lesson explains that breaking bonds requires energy, while forming new bonds releases energy.",
+          zh: "课程说明断开化学键需要能量，而形成新键会释放能量。"
+        }
+      },
+      {
+        id: "q13",
+        section: "2.4",
+        topic: { en: "2.4 Exothermic and Endothermic", zh: "2.4 放热与吸热" },
+        prompt: {
+          en: "If more energy is absorbed than released during a reaction, the reaction is",
+          zh: "如果一个反应吸收的能量多于释放的能量，这个反应是"
+        },
+        options: [
+          { key: "a", text: { en: "exothermic", zh: "放热反应" } },
+          { key: "b", text: { en: "endothermic", zh: "吸热反应" } },
+          { key: "c", text: { en: "balanced", zh: "已配平" } },
+          { key: "d", text: { en: "aqueous", zh: "水溶液反应" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "A reaction is endothermic if it absorbs more energy than it releases.",
+          zh: "如果一个反应吸收的能量多于释放的能量，它就是吸热反应。"
+        }
+      },
+      {
+        id: "q14",
+        section: "2.4",
+        topic: { en: "2.4 Exothermic and Endothermic", zh: "2.4 放热与吸热" },
+        prompt: {
+          en: "Which general equation matches an exothermic reaction?",
+          zh: "下面哪一个总式符合放热反应？"
+        },
+        options: [
+          { key: "a", text: { en: "Energy + Reactants → Products", zh: "能量 + 反应物 → 生成物" } },
+          { key: "b", text: { en: "Reactants → Products + energy", zh: "反应物 → 生成物 + 能量" } },
+          { key: "c", text: { en: "Reactants + Products → energy", zh: "反应物 + 生成物 → 能量" } },
+          { key: "d", text: { en: "Products → Reactants + mass", zh: "生成物 → 反应物 + 质量" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "Exothermic reactions release energy, so energy appears on the product side.",
+          zh: "放热反应会释放能量，所以能量写在生成物一侧。"
+        }
+      },
+      {
+        id: "q15",
+        section: "2.4",
+        topic: { en: "2.4 Photosynthesis and Respiration", zh: "2.4 光合作用与呼吸作用" },
+        prompt: {
+          en: "Photosynthesis is an example of",
+          zh: "光合作用是一个"
+        },
+        options: [
+          { key: "a", text: { en: "an exothermic reaction", zh: "放热反应" } },
+          { key: "b", text: { en: "an endothermic reaction", zh: "吸热反应" } },
+          { key: "c", text: { en: "a diatomic reaction", zh: "双原子反应" } },
+          { key: "d", text: { en: "a reaction with no energy change", zh: "没有能量变化的反应" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "Photosynthesis absorbs energy from the sun, so it is endothermic.",
+          zh: "光合作用从太阳吸收能量，因此它是吸热反应。"
+        }
+      },
+      {
+        id: "q16",
+        section: "2.4",
+        topic: { en: "2.4 Heat of Reaction", zh: "2.4 反应热" },
+        prompt: {
+          en: "For an exothermic reaction, ΔH is usually",
+          zh: "对于放热反应，ΔH 通常是"
+        },
+        options: [
+          { key: "a", text: { en: "positive", zh: "正值" } },
+          { key: "b", text: { en: "negative", zh: "负值" } },
+          { key: "c", text: { en: "zero", zh: "零" } },
+          { key: "d", text: { en: "not used", zh: "不使用" } }
+        ],
+        answerKey: "b",
+        explanation: {
+          en: "The lesson shows exothermic reactions with a negative ΔH value.",
+          zh: "课程中把放热反应写成负值的 ΔH。"
+        }
+      }
+    ];
+
+    const state = {
+      lang: localStorage.getItem("science10-23-24-quiz-lang") || "bi",
+      orderBySection: {},
+      lastAction: "idle",
+      score: null
+    };
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function localizedBlock(text) {
+      return [
+        '<span class="i18n-wrap">',
+        '<span class="i18n-en">' + escapeHtml(text.en) + "</span>",
+        '<span class="i18n-zh" lang="zh-Hans">' + escapeHtml(text.zh) + "</span>",
+        "</span>"
+      ].join("");
+    }
+
+    function getQuestionById(id) {
+      return questions.find((question) => question.id === id);
+    }
+
+    function shuffled(array) {
+      const copy = array.slice();
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = copy[i];
+        copy[i] = copy[j];
+        copy[j] = temp;
+      }
+      return copy;
+    }
+
+    function ensureOrder() {
+      sectionOrder.forEach((sectionId) => {
+        if (!state.orderBySection[sectionId] || !state.orderBySection[sectionId].length) {
+          state.orderBySection[sectionId] = questions
+            .filter((question) => question.section === sectionId)
+            .map((question) => question.id);
+        }
+      });
+    }
+
+    function allOrderedIds() {
+      ensureOrder();
+      return sectionOrder.flatMap((sectionId) => state.orderBySection[sectionId]);
+    }
+
+    function currentSelections() {
+      const selections = {};
+      allOrderedIds().forEach((questionId) => {
+        const checked = document.querySelector('input[name="' + questionId + '"]:checked');
+        selections[questionId] = checked ? checked.value : "";
+      });
+      return selections;
+    }
+
+    function updateLanguage() {
+      document.body.classList.toggle("lang-bi", state.lang === "bi");
+      document.body.classList.toggle("lang-zh", state.lang === "zh");
+      document.documentElement.lang = state.lang === "zh" ? "zh" : "en";
+      document.getElementById("languageMode").value = state.lang;
+      localStorage.setItem("science10-23-24-quiz-lang", state.lang);
+    }
+
+    function buildOptionMarkup(questionId, option, checked) {
+      const inputId = questionId + "_" + option.key;
+      return [
+        '<label class="option" for="' + inputId + '">',
+        '<input type="radio" id="' + inputId + '" name="' + questionId + '" value="' + option.key + '"' + (checked ? " checked" : "") + " />",
+        '<span class="option-text">' + localizedBlock(option.text) + "</span>",
+        "</label>"
+      ].join("");
+    }
+
+    function renderQuiz(savedSelections) {
+      ensureOrder();
+      const list = document.getElementById("quizList");
+      list.innerHTML = "";
+      let questionNumber = 1;
+
+      sectionOrder.forEach((sectionId) => {
+        const sectionHeader = document.createElement("section");
+        sectionHeader.className = "section-card";
+        sectionHeader.innerHTML = [
+          '<h2 class="section-title">' + localizedBlock(sectionMeta[sectionId].title) + "</h2>",
+          '<p class="section-note">' + localizedBlock(sectionMeta[sectionId].note) + "</p>"
+        ].join("");
+        list.appendChild(sectionHeader);
+
+        state.orderBySection[sectionId].forEach((questionId) => {
+          const question = getQuestionById(questionId);
+          const card = document.createElement("section");
+          card.className = "card";
+          card.id = "card_" + question.id;
+          const selected = savedSelections[question.id] || "";
+
+          card.innerHTML = [
+            '<div class="question-meta">',
+            '<div class="question-number">Question ' + questionNumber + "</div>",
+            '<div class="topic-tag">' + localizedBlock(question.topic) + "</div>",
+            "</div>",
+            '<p class="prompt">' + localizedBlock(question.prompt) + "</p>",
+            '<div class="options">' + question.options.map((option) => buildOptionMarkup(question.id, option, selected === option.key)).join("") + "</div>",
+            '<div class="action-row">',
+            '<button type="button" data-action="check" data-question="' + question.id + '">Check This Question</button>',
+            "</div>",
+            '<div class="feedback" id="feedback_' + question.id + '"></div>'
+          ].join("");
+
+          list.appendChild(card);
+          questionNumber += 1;
+        });
+      });
+    }
+
+    function markQuestion(questionId, mode, messageHtml) {
+      const card = document.getElementById("card_" + questionId);
+      const feedback = document.getElementById("feedback_" + questionId);
+      card.classList.remove("correct", "incorrect");
+      feedback.className = "feedback show";
+
+      if (mode === "correct") {
+        card.classList.add("correct");
+        feedback.classList.add("correct");
+      } else if (mode === "incorrect") {
+        card.classList.add("incorrect");
+        feedback.classList.add("incorrect");
+      } else {
+        feedback.classList.add("unanswered");
+      }
+
+      feedback.innerHTML = messageHtml;
+    }
+
+    function gradeQuestion(questionId) {
+      const question = getQuestionById(questionId);
+      const selected = document.querySelector('input[name="' + questionId + '"]:checked');
+      const answer = question.options.find((option) => option.key === question.answerKey);
+
+      if (!selected) {
+        markQuestion(
+          questionId,
+          "unanswered",
+          '<strong>Not answered.</strong><div class="detail">Correct answer: ' + localizedBlock(answer.text) + "<br>" + localizedBlock(question.explanation) + "</div>"
+        );
+        return false;
+      }
+
+      if (selected.value === question.answerKey) {
+        markQuestion(
+          questionId,
+          "correct",
+          '<strong>Correct.</strong><div class="detail">' + localizedBlock(question.explanation) + "</div>"
+        );
+        return true;
+      }
+
+      markQuestion(
+        questionId,
+        "incorrect",
+        '<strong>Incorrect.</strong><div class="detail">Correct answer: ' + localizedBlock(answer.text) + "<br>" + localizedBlock(question.explanation) + "</div>"
+      );
+      return false;
+    }
+
+    function updateScoreBox() {
+      const box = document.getElementById("scoreBox");
+      if (state.lastAction === "graded" && state.score) {
+        box.textContent = "Score: " + state.score.correct + "/" + state.score.total + " (" + state.score.percent + "%)";
+        return;
+      }
+      if (state.lastAction === "answers") {
+        box.textContent = "Answers shown";
+        return;
+      }
+      box.textContent = "Not graded";
+    }
+
+    function updateSummary(correct, total, shownAnswers) {
+      const summary = document.getElementById("summary");
+      const summaryTitle = document.getElementById("summaryTitle");
+      const summaryText = document.getElementById("summaryText");
+
+      if (shownAnswers) {
+        summary.style.display = "block";
+        summaryTitle.textContent = "Answer Key Displayed";
+        summaryText.textContent = "All questions are showing the correct answer and explanation.";
+        return;
+      }
+
+      summary.style.display = "block";
+      summaryTitle.textContent = "Quiz Summary";
+      summaryText.textContent = "You answered " + correct + " out of " + total + " questions correctly.";
+    }
+
+    function gradeAll() {
+      let correct = 0;
+      const total = questions.length;
+      allOrderedIds().forEach((questionId) => {
+        if (gradeQuestion(questionId)) {
+          correct += 1;
+        }
+      });
+      state.lastAction = "graded";
+      state.score = {
+        correct,
+        total,
+        percent: Math.round((correct / total) * 100)
+      };
+      updateScoreBox();
+      updateSummary(correct, total, false);
+    }
+
+    function showAnswers() {
+      allOrderedIds().forEach((questionId) => {
+        const question = getQuestionById(questionId);
+        const answer = question.options.find((option) => option.key === question.answerKey);
+        markQuestion(
+          questionId,
+          "correct",
+          '<strong>Answer shown.</strong><div class="detail">Correct answer: ' + localizedBlock(answer.text) + "<br>" + localizedBlock(question.explanation) + "</div>"
+        );
+      });
+      state.lastAction = "answers";
+      state.score = null;
+      updateScoreBox();
+      updateSummary(0, questions.length, true);
+    }
+
+    function resetQuiz() {
+      state.lastAction = "idle";
+      state.score = null;
+      document.getElementById("summary").style.display = "none";
+      renderQuiz({});
+      updateLanguage();
+      updateScoreBox();
+    }
+
+    function shuffleWithinSections() {
+      const savedSelections = currentSelections();
+      sectionOrder.forEach((sectionId) => {
+        state.orderBySection[sectionId] = shuffled(state.orderBySection[sectionId]);
+      });
+      state.lastAction = "idle";
+      state.score = null;
+      document.getElementById("summary").style.display = "none";
+      renderQuiz(savedSelections);
+      updateLanguage();
+      updateScoreBox();
+    }
+
+    document.getElementById("quizList").addEventListener("click", (event) => {
+      const target = event.target.closest("button[data-action]");
+      if (!target) {
+        return;
+      }
+      if (target.dataset.action === "check") {
+        gradeQuestion(target.dataset.question);
+        state.lastAction = "idle";
+        state.score = null;
+        updateScoreBox();
+      }
+    });
+
+    document.getElementById("gradeAllBtn").addEventListener("click", gradeAll);
+    document.getElementById("showAnswersBtn").addEventListener("click", showAnswers);
+    document.getElementById("resetBtn").addEventListener("click", resetQuiz);
+    document.getElementById("shuffleBtn").addEventListener("click", shuffleWithinSections);
+    document.getElementById("languageMode").addEventListener("change", (event) => {
+      state.lang = event.target.value;
+      updateLanguage();
+    });
+
+    ensureOrder();
+    renderQuiz({});
+    updateLanguage();
+    updateScoreBox();
+  </script>
+</body>
+</html>
