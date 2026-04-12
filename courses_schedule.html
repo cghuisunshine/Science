@@ -210,11 +210,32 @@
       background:#fff;
       box-shadow:var(--shadow);
     }
-    .month h2{
+    .month details{
+      display:block;
+    }
+    .month summary{
+      list-style:none;
+      cursor:pointer;
       margin:0;
       padding:12px 16px;
       background:#f4c400;
       font-size:22px;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .month summary::-webkit-details-marker{
+      display:none;
+    }
+    .month summary::after{
+      content:"▼";
+      font-size:14px;
+      transition:transform .2s ease;
+    }
+    .month details:not([open]) summary::after{
+      transform:rotate(-90deg);
     }
     .month ul{
       list-style:none;
@@ -461,7 +482,15 @@
         monthBox.className = "month";
         const monthEvents = grouped[key];
         const firstDate = new Date(monthEvents[0].ev.start);
-        monthBox.innerHTML = `<h2>${monthFmt.format(firstDate)}（${monthEvents.length}节课）</h2><ul></ul>`;
+        const isPastMonth =
+          firstDate.getFullYear() < now.getFullYear() ||
+          (firstDate.getFullYear() === now.getFullYear() && firstDate.getMonth() < now.getMonth());
+        monthBox.innerHTML = `
+          <details ${isPastMonth ? "" : "open"}>
+            <summary>${monthFmt.format(firstDate)}（${monthEvents.length}节课）</summary>
+            <ul></ul>
+          </details>
+        `;
         const ul = monthBox.querySelector("ul");
         monthEvents.forEach(({ev, idx}) => {
           const s = new Date(ev.start), e = new Date(ev.end);
