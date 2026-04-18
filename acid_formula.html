@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acid Formulas Matching</title>
+  <style>
+    :root{
+      --bg-dark:#002c63;
+      --bg-mid:#0b59b7;
+      --bg-light:#1977de;
+
+      --left-card:#7e8ff0;
+      --left-glow:rgba(185, 203, 255, 0.55);
+
+      --row-blue:#5e8ecb;
+      --drop-blue:#2f70a8;
+      --drop-border:rgba(255,255,255,0.72);
+
+      --green:#58bb57;
+      --green-dark:#409947;
+      --white:#fff;
+      --shadow:rgba(0,0,0,0.35);
+      --shadow-strong:rgba(0,0,0,0.48);
+      --gold:#ffd95d;
+    }
+
+    *{ box-sizing:border-box; }
+
+    html, body{
+      margin:0;
+      min-height:100%;
+      font-family:"Trebuchet MS","Arial Rounded MT Bold",Arial,sans-serif;
+      color:#fff;
+      background:
+        radial-gradient(circle at 68% 16%, var(--bg-light) 0%, var(--bg-mid) 28%, #03458f 52%, var(--bg-dark) 100%);
+      overflow-x:hidden;
+    }
+
+    body{
+      padding:0;
+    }
+
+    .top-badge{
+      position:fixed;
+      left:18px;
+      top:14px;
+      z-index:30;
+      background:rgba(0,0,0,0.58);
+      color:#fff;
+      padding:10px 18px;
+      border-radius:12px;
+      font-size:22px;
+      line-height:1;
+    }
+
+    .page{
+      width:min(1760px, 98vw);
+      margin:0 auto;
+      padding:10px 18px 18px;
+      position:relative;
+    }
+
+    .brand{
+      position:absolute;
+      right:10px;
+      top:4px;
+      font-weight:900;
+      font-size:clamp(26px,2.8vw,56px);
+      color:rgba(0,0,0,0.88);
+      letter-spacing:1px;
+    }
+
+    .title{
+      margin:0;
+      text-align:center;
+      font-size:clamp(52px,7.2vw,132px);
+      line-height:0.95;
+      font-weight:900;
+      color:#f6f6f6;
+      text-shadow:
+        0 3px 0 #ababab,
+        0 6px 0 #7d7d7d,
+        0 9px 14px rgba(0,0,0,0.38);
+    }
+
+    .subtitle{
+      text-align:center;
+      margin:8px 0 18px;
+      font-size:clamp(22px,2.3vw,46px);
+      font-style:italic;
+      color:rgba(255,255,255,0.96);
+      text-shadow:0 2px 6px rgba(0,0,0,0.32);
+    }
+
+    .hud{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .pill{
+      background:rgba(255,255,255,0.16);
+      border:1px solid rgba(255,255,255,0.22);
+      padding:10px 18px;
+      border-radius:999px;
+      font-size:20px;
+      font-weight:700;
+      box-shadow:0 4px 10px rgba(0,0,0,0.18);
+      backdrop-filter: blur(2px);
+    }
+
+    .game{
+      display:grid;
+      grid-template-columns: 440px 1fr;
+      gap:36px;
+      align-items:start;
+    }
+
+    .left-column{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      padding-top:4px;
+    }
+
+    .formula-card{
+      min-height:90px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:var(--left-card);
+      color:#fff;
+      font-size:clamp(42px,3.9vw,82px);
+      font-weight:700;
+      box-shadow:
+        0 0 24px var(--left-glow),
+        0 8px 16px var(--shadow);
+      user-select:none;
+      cursor:grab;
+      touch-action:none;
+      transition:transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .formula-card sub{
+      font-size:0.56em;
+      line-height:0;
+      vertical-align:baseline;
+      position:relative;
+      bottom:-0.14em;
+    }
+
+    .formula-card.dragging{
+      opacity:0.55;
+      transform:scale(1.03);
+      cursor:grabbing;
+    }
+
+    .formula-card.placed{
+      opacity:0.25;
+      pointer-events:none;
+      filter:saturate(0.7);
+    }
+
+    .formula-card.touch-dragging{
+      position:fixed;
+      left:0;
+      top:0;
+      width:min(330px, 42vw);
+      z-index:1000;
+      pointer-events:none;
+      margin:0;
+      transform:translate(-9999px,-9999px);
+      box-shadow:
+        0 0 18px rgba(255,255,255,0.5),
+        0 12px 20px rgba(0,0,0,0.42);
+    }
+
+    .right-column{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .row{
+      min-height:108px;
+      background:var(--row-blue);
+      display:grid;
+      grid-template-columns: 420px 1fr;
+      align-items:center;
+      box-shadow:0 7px 14px rgba(0,0,0,0.28);
+      transition:transform 0.15s ease, background 0.15s ease;
+    }
+
+    .row.correct{
+      background:linear-gradient(90deg, var(--green-dark), var(--green));
+    }
+
+    .drop-zone-wrap{
+      padding-left:18px;
+      padding-right:16px;
+    }
+
+    .drop-zone{
+      min-height:84px;
+      background:var(--drop-blue);
+      border:4px dashed var(--drop-border);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:rgba(255,255,255,0.96);
+      font-size:clamp(26px,2vw,48px);
+      text-align:center;
+      transition:border-color 0.12s ease, background 0.12s ease, transform 0.12s ease;
+      position:relative;
+    }
+
+    .drop-zone.hover{
+      background:#4383bb;
+      border-color:#fff;
+      transform:scale(1.01);
+    }
+
+    .drop-zone.filled{
+      border-style:solid;
+      background:rgba(255,255,255,0.18);
+      font-size:clamp(34px,2.5vw,60px);
+      font-weight:700;
+    }
+
+    .drop-zone.correct-fill{
+      background:rgba(255,255,255,0.18);
+      border-color:rgba(255,255,255,0.88);
+    }
+
+    .drop-zone sub{
+      font-size:0.56em;
+      line-height:0;
+      vertical-align:baseline;
+      position:relative;
+      bottom:-0.14em;
+    }
+
+    .name-box{
+      padding:0 26px 0 6px;
+      font-size:clamp(36px,3.35vw,72px);
+      font-weight:700;
+      color:rgba(255,255,255,0.98);
+      text-shadow:0 2px 5px rgba(0,0,0,0.2);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .controls{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
+    button{
+      border:none;
+      border-radius:999px;
+      padding:13px 22px;
+      font-size:18px;
+      font-weight:800;
+      cursor:pointer;
+      box-shadow:0 6px 12px rgba(0,0,0,0.24);
+    }
+
+    .btn-check{ background:#fff; color:#083e77; }
+    .btn-reset{ background:#f0a72d; color:#4d2a00; }
+    .btn-clear{ background:#d9e7ff; color:#08396f; }
+    .btn-solve{ background:#59c36a; color:#083b12; }
+
+    button:disabled{
+      opacity:0.5;
+      cursor:not-allowed;
+      box-shadow:none;
+    }
+
+    .status{
+      min-height:34px;
+      margin-top:14px;
+      text-align:center;
+      font-size:24px;
+      font-weight:800;
+      text-shadow:0 2px 5px rgba(0,0,0,0.34);
+    }
+
+    .status.win{ color:var(--gold); }
+
+    .small-note{
+      text-align:center;
+      margin-top:8px;
+      font-size:17px;
+      opacity:0.92;
+    }
+
+    .solved-tag{
+      position:absolute;
+      right:12px;
+      top:10px;
+      background:rgba(255,255,255,0.18);
+      border:1px solid rgba(255,255,255,0.38);
+      padding:5px 10px;
+      border-radius:999px;
+      font-size:15px;
+      font-weight:800;
+      display:none;
+    }
+
+    .row.correct .solved-tag{
+      display:inline-block;
+    }
+
+    .hint{
+      outline:4px solid rgba(255,255,255,0.16);
+    }
+
+    @media (max-width: 1200px){
+      .game{
+        grid-template-columns:1fr;
+      }
+
+      .left-column{
+        display:grid;
+        grid-template-columns:repeat(2, minmax(160px,1fr));
+        gap:16px;
+      }
+    }
+
+    @media (max-width: 760px){
+      .page{
+        width:min(98vw, 980px);
+        padding:10px 10px 18px;
+      }
+
+      .left-column{
+        grid-template-columns:1fr;
+      }
+
+      .row{
+        grid-template-columns:1fr;
+        min-height:auto;
+        padding:10px 0 12px;
+      }
+
+      .drop-zone-wrap{
+        padding:0 12px 8px;
+      }
+
+      .name-box{
+        padding:0 16px 4px;
+        text-align:center;
+        white-space:normal;
+      }
+
+      .formula-card{
+        min-height:78px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-badge">1.00</div>
+
+  <div class="page">
+    <div class="brand">WCLN.ca</div>
+
+    <h1 class="title">Acid Formulas</h1>
+    <div class="subtitle">Match terms until ALL are green.</div>
+
+    <div class="hud">
+      <div class="pill">Score: <span id="score">0</span> / <span id="total">8</span></div>
+      <div class="pill">Completed: <span id="percent">0%</span></div>
+      <div class="pill">Progress saved automatically</div>
+    </div>
+
+    <div class="game">
+      <div class="left-column" id="formulaBank"></div>
+      <div class="right-column" id="matchList"></div>
+    </div>
+
+    <div class="controls">
+      <button class="btn-check" id="checkBtn">Check All</button>
+      <button class="btn-solve" id="solveBtn">Solve</button>
+      <button class="btn-clear" id="clearBtn">Clear Placements</button>
+      <button class="btn-reset" id="resetBtn">Shuffle + Reset</button>
+    </div>
+
+    <div class="status" id="status"></div>
+    <div class="small-note">Drag or tap-and-drag a formula into the correct drop box.</div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'acid-formulas-progress-v2';
+
+    const items = [
+      { formula: 'HF', plain: 'HF', name: 'Hydrofluoric' },
+      { formula: 'HNO<sub>3</sub>', plain: 'HNO3', name: 'Nitric' },
+      { formula: 'H<sub>2</sub>SO<sub>4</sub>', plain: 'H2SO4', name: 'Sulfuric' },
+      { formula: 'H<sub>3</sub>PO<sub>4</sub>', plain: 'H3PO4', name: 'Phosphoric' },
+      { formula: 'H<sub>2</sub>CO<sub>3</sub>', plain: 'H2CO3', name: 'Carbonic' },
+      { formula: 'CH<sub>3</sub>COOH', plain: 'CH3COOH', name: 'Acetic' },
+      { formula: 'HClO', plain: 'HClO', name: 'Hypochlorous' },
+      { formula: 'H<sub>3</sub>BO<sub>3</sub>', plain: 'H3BO3', name: 'Boric' }
+    ];
+
+    const formulaBank = document.getElementById('formulaBank');
+    const matchList = document.getElementById('matchList');
+    const statusEl = document.getElementById('status');
+    const scoreEl = document.getElementById('score');
+    const totalEl = document.getElementById('total');
+    const percentEl = document.getElementById('percent');
+    const checkBtn = document.getElementById('checkBtn');
+    const solveBtn = document.getElementById('solveBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    totalEl.textContent = String(items.length);
+
+    let draggedCard = null;
+    let touchGhost = null;
+    let isSolved = false;
+
+    function shuffle(arr){
+      return [...arr].sort(() => Math.random() - 0.5);
+    }
+
+    function saveState(){
+      const placements = {};
+      document.querySelectorAll('.row').forEach(row => {
+        const dz = row.querySelector('.drop-zone');
+        placements[row.dataset.name] = dz.dataset.formulaPlain || '';
+      });
+
+      const state = {
+        formulaOrder: [...document.querySelectorAll('.formula-card')].map(c => c.dataset.formulaPlain),
+        nameOrder: [...document.querySelectorAll('.row')].map(r => r.dataset.name),
+        placements,
+        isSolved
+      };
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadState(){
+      try{
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+      }catch{
+        return null;
+      }
+    }
+
+    function getItemByPlain(plain){
+      return items.find(item => item.plain === plain);
+    }
+
+    function getItemByName(name){
+      return items.find(item => item.name === name);
+    }
+
+    function setSolvedLock(locked){
+      isSolved = locked;
+      checkBtn.disabled = locked;
+      solveBtn.disabled = locked;
+      clearBtn.disabled = locked;
+    }
+
+    function makeFormulaCard(item){
+      const card = document.createElement('div');
+      card.className = 'formula-card';
+      card.draggable = true;
+      card.innerHTML = item.formula;
+      card.dataset.formula = item.formula;
+      card.dataset.formulaPlain = item.plain;
+      card.dataset.name = item.name;
+
+      card.addEventListener('dragstart', () => {
+        if (isSolved || card.classList.contains('placed')) return;
+        draggedCard = card;
+        card.classList.add('dragging');
+      });
+
+      card.addEventListener('dragend', () => {
+        card.classList.remove('dragging');
+      });
+
+      setupTouchDrag(card);
+      return card;
+    }
+
+    function makeRow(item){
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.dataset.name = item.name;
+      row.dataset.answerPlain = item.plain;
+
+      const wrap = document.createElement('div');
+      wrap.className = 'drop-zone-wrap';
+
+      const drop = document.createElement('div');
+      drop.className = 'drop-zone';
+      drop.textContent = 'drop here';
+
+      drop.addEventListener('dragover', e => {
+        e.preventDefault();
+        if (isSolved || row.classList.contains('correct')) return;
+        drop.classList.add('hover');
+      });
+
+      drop.addEventListener('dragleave', () => {
+        drop.classList.remove('hover');
+      });
+
+      drop.addEventListener('drop', e => {
+        e.preventDefault();
+        drop.classList.remove('hover');
+        if (isSolved || !draggedCard) return;
+        placeCardInRow(draggedCard, row);
+      });
+
+      wrap.appendChild(drop);
+
+      const label = document.createElement('div');
+      label.className = 'name-box';
+      label.textContent = item.name;
+
+      const solvedTag = document.createElement('div');
+      solvedTag.className = 'solved-tag';
+      solvedTag.textContent = 'Correct';
+
+      row.appendChild(wrap);
+      row.appendChild(label);
+      row.appendChild(solvedTag);
+
+      return row;
+    }
+
+    function setDropContents(drop, item){
+      drop.innerHTML = item.formula;
+      drop.classList.add('filled');
+      drop.dataset.formulaPlain = item.plain;
+      drop.dataset.formula = item.formula;
+    }
+
+    function clearDropContents(drop){
+      drop.textContent = 'drop here';
+      drop.classList.remove('filled', 'correct-fill');
+      delete drop.dataset.formulaPlain;
+      delete drop.dataset.formula;
+    }
+
+    function freeCardByPlain(plain){
+      const card = [...document.querySelectorAll('.formula-card')]
+        .find(c => c.dataset.formulaPlain === plain);
+      if(card) card.classList.remove('placed');
+    }
+
+    function placeCardInRow(card, row){
+      if (isSolved || row.classList.contains('correct')) return;
+
+      const drop = row.querySelector('.drop-zone');
+      const existingPlain = drop.dataset.formulaPlain;
+
+      if (existingPlain) {
+        freeCardByPlain(existingPlain);
+      }
+
+      const previouslyUsedRow = [...document.querySelectorAll('.row')].find(r => {
+        const dz = r.querySelector('.drop-zone');
+        return dz.dataset.formulaPlain === card.dataset.formulaPlain;
+      });
+
+      if (previouslyUsedRow && previouslyUsedRow !== row) {
+        if (!previouslyUsedRow.classList.contains('correct')) {
+          clearDropContents(previouslyUsedRow.querySelector('.drop-zone'));
+        }
+      }
+
+      setDropContents(drop, {
+        formula: card.dataset.formula,
+        plain: card.dataset.formulaPlain
+      });
+
+      card.classList.add('placed');
+
+      autoCheckRow(row);
+      updateScore();
+      saveState();
+    }
+
+    function autoCheckRow(row){
+      const drop = row.querySelector('.drop-zone');
+      const placedPlain = drop.dataset.formulaPlain;
+
+      if (!placedPlain) {
+        row.classList.remove('correct');
+        drop.classList.remove('correct-fill');
+        return;
+      }
+
+      if (placedPlain === row.dataset.answerPlain) {
+        row.classList.add('correct');
+        drop.classList.add('correct-fill');
+        setStatus('Correct match!', false);
+      } else {
+        row.classList.remove('correct');
+        drop.classList.remove('correct-fill');
+        setStatus('Not quite. Try another formula.', false);
+      }
+
+      maybeWin();
+    }
+
+    function checkAll(){
+      if (isSolved) return;
+      let correct = 0;
+
+      document.querySelectorAll('.row').forEach(row => {
+        const drop = row.querySelector('.drop-zone');
+        const placedPlain = drop.dataset.formulaPlain;
+
+        if (placedPlain === row.dataset.answerPlain) {
+          row.classList.add('correct');
+          drop.classList.add('correct-fill');
+          correct++;
+        } else {
+          row.classList.remove('correct');
+          drop.classList.remove('correct-fill');
+        }
+      });
+
+      updateScore();
+
+      if (correct === items.length) {
+        setStatus('Excellent! All matches are correct.', true);
+      } else {
+        setStatus(`You have ${correct} of ${items.length} correct.`, false);
+      }
+
+      saveState();
+    }
+
+    function updateScore(){
+      let correct = 0;
+      let filled = 0;
+
+      document.querySelectorAll('.row').forEach(row => {
+        const drop = row.querySelector('.drop-zone');
+        if (drop.dataset.formulaPlain) filled++;
+        if (drop.dataset.formulaPlain === row.dataset.answerPlain) correct++;
+      });
+
+      scoreEl.textContent = String(correct);
+      percentEl.textContent = `${Math.round((correct / items.length) * 100)}%`;
+
+      return { correct, filled };
+    }
+
+    function maybeWin(){
+      const { correct } = updateScore();
+      if (correct === items.length) {
+        setStatus('Excellent! All are green.', true);
+      }
+    }
+
+    function setStatus(message, win=false){
+      statusEl.textContent = message;
+      statusEl.className = win ? 'status win' : 'status';
+    }
+
+    function clearPlacements(){
+      if (isSolved) return;
+      document.querySelectorAll('.formula-card').forEach(card => {
+        card.classList.remove('placed');
+      });
+
+      document.querySelectorAll('.row').forEach(row => {
+        row.classList.remove('correct');
+        clearDropContents(row.querySelector('.drop-zone'));
+      });
+
+      updateScore();
+      setStatus('');
+      saveState();
+    }
+
+    function solveAll(){
+      document.querySelectorAll('.formula-card').forEach(card => {
+        card.classList.remove('placed');
+      });
+
+      document.querySelectorAll('.row').forEach(row => {
+        const item = getItemByPlain(row.dataset.answerPlain);
+        const drop = row.querySelector('.drop-zone');
+        const card = [...document.querySelectorAll('.formula-card')]
+          .find(c => c.dataset.formulaPlain === row.dataset.answerPlain);
+
+        if (!item || !card) return;
+
+        setDropContents(drop, item);
+        row.classList.add('correct');
+        drop.classList.add('correct-fill');
+        card.classList.add('placed');
+      });
+
+      setSolvedLock(true);
+      updateScore();
+      setStatus('Solved. Press Shuffle + Reset to play again.', true);
+      saveState();
+    }
+
+    function render(state=null){
+      formulaBank.innerHTML = '';
+      matchList.innerHTML = '';
+      setStatus('');
+      setSolvedLock(false);
+
+      const formulaOrder = state?.formulaOrder?.length
+        ? state.formulaOrder.map(getItemByPlain).filter(Boolean)
+        : shuffle(items);
+
+      const nameOrder = state?.nameOrder?.length
+        ? state.nameOrder.map(getItemByName).filter(Boolean)
+        : shuffle(items);
+
+      formulaOrder.forEach(item => formulaBank.appendChild(makeFormulaCard(item)));
+      nameOrder.forEach(item => matchList.appendChild(makeRow(item)));
+
+      if (state?.placements) {
+        for (const [name, plain] of Object.entries(state.placements)) {
+          if (!plain) continue;
+          const row = [...document.querySelectorAll('.row')].find(r => r.dataset.name === name);
+          const card = [...document.querySelectorAll('.formula-card')].find(c => c.dataset.formulaPlain === plain);
+          const item = getItemByPlain(plain);
+
+          if (row && card && item) {
+            const drop = row.querySelector('.drop-zone');
+            setDropContents(drop, item);
+            card.classList.add('placed');
+            autoCheckRow(row);
+          }
+        }
+      }
+
+      updateScore();
+      if (state?.isSolved) {
+        setSolvedLock(true);
+        setStatus('Solved. Press Shuffle + Reset to play again.', true);
+      } else {
+        maybeWin();
+      }
+    }
+
+    function resetShuffle(){
+      localStorage.removeItem(STORAGE_KEY);
+      isSolved = false;
+      render(null);
+    }
+
+    function setupTouchDrag(card){
+      let active = false;
+      let startX = 0;
+      let startY = 0;
+
+      card.addEventListener('pointerdown', e => {
+        if (isSolved || card.classList.contains('placed')) return;
+        if (e.pointerType !== 'touch' && e.pointerType !== 'pen') return;
+
+        active = true;
+        draggedCard = card;
+        startX = e.clientX;
+        startY = e.clientY;
+
+        touchGhost = card.cloneNode(true);
+        touchGhost.classList.add('touch-dragging');
+        document.body.appendChild(touchGhost);
+        moveGhost(e.clientX, e.clientY);
+
+        card.setPointerCapture?.(e.pointerId);
+      });
+
+      card.addEventListener('pointermove', e => {
+        if (!active || !touchGhost) return;
+        moveGhost(e.clientX, e.clientY);
+
+        const targetDrop = getDropUnderPoint(e.clientX, e.clientY);
+        highlightDrop(targetDrop);
+      });
+
+      card.addEventListener('pointerup', e => {
+        if (!active) return;
+        active = false;
+
+        const targetDrop = getDropUnderPoint(e.clientX, e.clientY);
+        clearDropHighlights();
+
+        if (targetDrop) {
+          const row = targetDrop.closest('.row');
+          if (row) placeCardInRow(card, row);
+        }
+
+        cleanupGhost();
+      });
+
+      card.addEventListener('pointercancel', () => {
+        active = false;
+        clearDropHighlights();
+        cleanupGhost();
+      });
+    }
+
+    function moveGhost(x, y){
+      if (!touchGhost) return;
+      touchGhost.style.transform = `translate(${x - touchGhost.offsetWidth / 2}px, ${y - touchGhost.offsetHeight / 2}px)`;
+    }
+
+    function getDropUnderPoint(x, y){
+      const el = document.elementFromPoint(x, y);
+      if (!el) return null;
+      const drop = el.closest('.drop-zone');
+      if (!drop) return null;
+      const row = drop.closest('.row');
+      if (row?.classList.contains('correct')) return null;
+      return drop;
+    }
+
+    function clearDropHighlights(){
+      document.querySelectorAll('.drop-zone.hover').forEach(d => d.classList.remove('hover'));
+    }
+
+    function highlightDrop(drop){
+      clearDropHighlights();
+      if (drop) drop.classList.add('hover');
+    }
+
+    function cleanupGhost(){
+      if (touchGhost) {
+        touchGhost.remove();
+        touchGhost = null;
+      }
+    }
+
+    checkBtn.addEventListener('click', checkAll);
+    solveBtn.addEventListener('click', solveAll);
+    clearBtn.addEventListener('click', clearPlacements);
+    resetBtn.addEventListener('click', resetShuffle);
+
+    render(loadState());
+  </script>
+</body>
+</html>
