@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Check Your Understanding - Acids, Metals, and Salts</title>
+<style>
+  :root {
+    --bg: #d9d9d9;
+    --panel: #e1e1e1;
+    --border: #222;
+    --text: #111;
+    --select-border: #888;
+    --correct: #dff5df;
+    --incorrect: #ffdada;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--text);
+  }
+  .page {
+    width: 1560px;
+    margin: 0 auto;
+    padding: 12px 0 20px;
+    background: var(--bg);
+  }
+  h1 {
+    text-align: center;
+    font-size: 38px;
+    font-weight: 500;
+    margin: 6px 0 28px;
+  }
+  h2 {
+    text-align: center;
+    font-size: 36px;
+    font-weight: 600;
+    margin: 0 0 46px;
+  }
+  .instruction {
+    width: 1414px;
+    margin: 0 auto 2px;
+    background: #ededed;
+    border: 2px solid var(--border);
+    text-align: center;
+    font-size: 32px;
+    padding: 14px 10px 12px;
+  }
+  .panel {
+    width: 1414px;
+    margin: 0 auto;
+    background: var(--panel);
+    border: 2px solid var(--border);
+    padding: 38px 12px 10px;
+  }
+  .line {
+    font-size: 31px;
+    line-height: 1.9;
+    margin: 10px 0;
+  }
+  .spacer-xl { height: 26px; }
+  .spacer-lg { height: 18px; }
+  .select-inline {
+    vertical-align: middle;
+    height: 38px;
+    border: 3px solid var(--select-border);
+    border-radius: 5px;
+    background: #f4f4f4;
+    color: #111;
+    font-size: 24px;
+    padding: 0 42px 0 12px;
+    appearance: auto;
+  }
+  select option {
+    background: #444;
+    color: #fff;
+    font-size: 22px;
+  }
+  .w-s { width: 265px; }
+  .w-m { width: 305px; }
+  .w-l { width: 390px; }
+  .w-xl { width: 470px; }
+
+  .section {
+    margin-top: 24px;
+    font-size: 31px;
+    line-height: 1.75;
+  }
+  .rank-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 8px 0 42px;
+    font-size: 31px;
+  }
+  .rank-row .label {
+    font-size: 44px;
+    line-height: 1;
+  }
+  .rank-row select {
+    width: 262px;
+    height: 38px;
+  }
+  .statement {
+    font-size: 31px;
+    line-height: 1.8;
+    margin: 18px 0 8px;
+  }
+  .two-line {
+    margin-bottom: 46px;
+  }
+  .chem-title {
+    font-size: 31px;
+    margin: 34px 0 10px;
+  }
+  .chem-row {
+    font-size: 31px;
+    line-height: 1.95;
+    margin: 2px 0;
+  }
+  .chem-row .label {
+    display: inline-block;
+    width: 95px;
+  }
+  .chem-row select {
+    width: 265px;
+    height: 38px;
+  }
+  .actions {
+    text-align: center;
+    margin: 48px 0 2px;
+  }
+  .check-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  .check-btn img {
+    width: 170px;
+    height: auto;
+    display: inline-block;
+  }
+  .status {
+    text-align: center;
+    font-size: 24px;
+    min-height: 32px;
+    margin-top: 10px;
+  }
+  .correct { background: var(--correct) !important; }
+  .incorrect { background: var(--incorrect) !important; }
+
+  @media (max-width: 900px) {
+    .page {
+      width: 100%;
+      padding: 12px 8px 20px;
+    }
+    h1 {
+      font-size: 28px;
+      margin: 6px 0 18px;
+    }
+    h2 {
+      font-size: 24px;
+      margin: 0 0 20px;
+    }
+    .instruction,
+    .panel {
+      width: 100%;
+    }
+    .instruction {
+      font-size: 18px;
+      padding: 12px 8px;
+    }
+    .panel {
+      padding: 16px 10px 18px;
+    }
+    .line,
+    .statement,
+    .chem-title,
+    .chem-row {
+      font-size: 18px;
+      line-height: 1.6;
+    }
+    .line {
+      margin: 8px 0;
+    }
+    .select-inline,
+    .rank-row select,
+    .chem-row select {
+      width: 100% !important;
+      max-width: 100%;
+      margin: 6px 0;
+      height: 42px;
+      font-size: 18px;
+      display: block;
+    }
+    .rank-row {
+      display: block;
+      font-size: 18px;
+      margin: 8px 0 22px;
+    }
+    .rank-row .label {
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+    .chem-row .label {
+      width: auto;
+      display: inline;
+    }
+    .actions {
+      margin: 28px 0 2px;
+    }
+    .check-btn img {
+      width: 140px;
+    }
+    .status {
+      font-size: 18px;
+      line-height: 1.4;
+      padding: 0 6px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <h1>Check Your Understanding</h1>
+    <h2>Gap-fill exercise</h2>
+
+    <div class="instruction">Fill in all the gaps, then press "Check" to check your answers.</div>
+
+    <div class="panel">
+      <div class="line">
+        Salt can be defined as a class of
+        <select class="select-inline w-s answer" data-answer="ionic"><option value=""></option></select>
+        compounds that form during the reaction of an acid
+      </div>
+
+      <div class="line">
+        and a base. This type of reaction is called
+        <select class="select-inline w-s answer" data-answer="neutralization"><option value=""></option></select>.
+      </div>
+
+      <div class="spacer-xl"></div>
+
+      <div class="line">
+        <select class="select-inline w-s answer" data-answer="ACID"><option value=""></option></select>
+        + BASE --&gt; SALT +
+        <select class="select-inline w-s answer" data-answer="WATER"><option value=""></option></select>
+      </div>
+
+      <div class="spacer-xl"></div>
+
+      <div class="line">
+        When
+        <select class="select-inline w-s answer" data-answer="metal"><option value=""></option></select>
+        oxides react with water they form a base and when
+        <select class="select-inline w-s answer" data-answer="non-metal"><option value=""></option></select>
+        oxides
+      </div>
+
+      <div class="line">react with water they form an acid.</div>
+
+      <div class="section">
+        <div class="statement">
+          List the following metals in order from most reactive with acids to least reactive with acids: sodium, gold,
+        </div>
+        <div class="statement" style="margin-top:-8px;">zinc, copper</div>
+
+        <div class="rank-row">
+          <div class="label">A:</div>
+          <select class="select-inline answer" data-answer="sodium"><option value=""></option></select>,
+          <select class="select-inline answer" data-answer="zinc"><option value=""></option></select>,
+          <select class="select-inline answer" data-answer="copper"><option value=""></option></select>,
+          <select class="select-inline answer" data-answer="gold"><option value=""></option></select>
+        </div>
+
+        <div class="statement">
+          Acids reacting with metals produce
+          <select class="select-inline w-m answer" data-answer="hydrogen gas"><option value=""></option></select>
+          whereas acids reacting with carbonates produce
+        </div>
+        <div class="statement two-line">
+          <select class="select-inline w-m answer" data-answer="carbon dioxide gas"><option value=""></option></select>.
+        </div>
+
+        <div class="chem-title">State whether each of the following is an acid, a base, a salt or none of these.</div>
+
+        <div class="chem-row"><span class="label">a) HCl -</span><select class="select-inline answer" data-answer="ACID"><option value=""></option></select></div>
+        <div class="chem-row"><span class="label">b) NaOH -</span><select class="select-inline answer" data-answer="base"><option value=""></option></select></div>
+        <div class="chem-row"><span class="label">c) Al(OH)<sub>3</sub> -</span><select class="select-inline answer" data-answer="base"><option value=""></option></select></div>
+        <div class="chem-row"><span class="label">d) H<sub>2</sub>O -</span><select class="select-inline answer" data-answer="neither"><option value=""></option></select></div>
+        <div class="chem-row"><span class="label">e) MgCl<sub>2</sub> -</span><select class="select-inline answer" data-answer="salt"><option value=""></option></select></div>
+        <div class="chem-row"><span class="label">f) H<sub>3</sub>PO<sub>4</sub> -</span><select class="select-inline answer" data-answer="ACID"><option value=""></option></select></div>
+        <div class="chem-row"><span class="label">g) Na<sub>2</sub>SO<sub>4</sub> -</span><select class="select-inline answer" data-answer="salt"><option value=""></option></select></div>
+
+        <div class="actions">
+          <button class="check-btn" id="checkBtn"><img src="data:image/png;base64,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" alt="Check"></button>
+          <div class="status" id="status"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const options = [
+  "ACID",
+  "WATER",
+  "base",
+  "carbon dioxide gas",
+  "copper",
+  "gold",
+  "hydrogen gas",
+  "ionic",
+  "metal",
+  "neither",
+  "neutralization",
+  "non-metal",
+  "salt",
+  "sodium",
+  "zinc"
+];
+
+document.querySelectorAll("select.answer").forEach(sel => {
+  options.forEach(value => {
+    const opt = document.createElement("option");
+    opt.value = value;
+    opt.textContent = value;
+    sel.appendChild(opt);
+  });
+});
+
+document.getElementById("checkBtn").addEventListener("click", () => {
+  let total = 0;
+  let correct = 0;
+
+  document.querySelectorAll("select.answer").forEach(sel => {
+    total++;
+    const userValue = sel.value;
+    const answer = sel.dataset.answer;
+    sel.classList.remove("correct", "incorrect");
+
+    if (userValue === answer) {
+      sel.classList.add("correct");
+      correct++;
+    } else {
+      sel.classList.add("incorrect");
+    }
+
+    sel.value = answer;
+  });
+
+  document.getElementById("status").textContent = `Score: ${correct} / ${total} — correct answers are now shown.`;
+});
+</script>
+</body>
+</html>
