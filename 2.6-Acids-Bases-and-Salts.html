@@ -12,9 +12,7 @@
       --muted: #6e655a;
       --rule: #d6ccbe;
       --accent: #6a543b;
-      --accent-soft: #efe6d7;
       --callout: #f3ecdf;
-      --embed: #f8f4ec;
     }
 
     * {
@@ -33,9 +31,47 @@
       line-height: 1.7;
     }
 
+    .topbar-global {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(246, 241, 232, 0.96);
+      border-bottom: 1px solid var(--rule);
+      backdrop-filter: blur(8px);
+    }
+
+    .lang-controls {
+      width: min(960px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 12px 0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .lang-btn {
+      padding: 8px 14px;
+      border: 1px solid var(--accent);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 999px;
+      font: 600 14px/1 Calibri, Aptos, "Segoe UI", sans-serif;
+      cursor: pointer;
+    }
+
+    .lang-btn.is-active {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+
+    .wrapper {
+      padding: 24px 0 48px;
+    }
+
     .page {
       width: min(960px, calc(100% - 32px));
-      margin: 24px auto 48px;
+      margin: 0 auto;
       background: var(--sheet);
       border: 1px solid var(--rule);
       padding: 40px 48px 56px;
@@ -72,6 +108,13 @@
       margin-bottom: 10px;
     }
 
+    p,
+    li,
+    div,
+    summary {
+      font-size: 1rem;
+    }
+
     p {
       margin: 0 0 14px;
     }
@@ -84,6 +127,43 @@
 
     li {
       margin-bottom: 8px;
+    }
+
+    a {
+      color: #4a3723;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .i18n-wrap {
+      display: block;
+    }
+
+    .i18n-en,
+    .i18n-zh {
+      display: block;
+    }
+
+    .i18n-inline .i18n-en,
+    .i18n-inline .i18n-zh {
+      display: inline;
+    }
+
+    .lang-en .i18n-zh {
+      display: none;
+    }
+
+    .lang-bi .i18n-wrap:not(.i18n-inline) .i18n-zh {
+      margin-top: 4px;
+      color: var(--muted);
+    }
+
+    .lang-bi .i18n-inline .i18n-zh::before {
+      content: " / ";
+    }
+
+    .lang-zh .i18n-en {
+      display: none;
     }
 
     .lede {
@@ -182,13 +262,6 @@
       padding: 16px;
     }
 
-    .resource-block a,
-    .quiz-links a,
-    .inline-link {
-      color: #4a3723;
-      font-weight: 700;
-    }
-
     .resource-list {
       display: grid;
       gap: 12px;
@@ -229,6 +302,16 @@
     }
 
     @media (max-width: 760px) {
+      .lang-controls {
+        width: min(100vw - 20px, 960px);
+        padding: 10px 0;
+        flex-wrap: wrap;
+      }
+
+      .wrapper {
+        padding: 16px 0 32px;
+      }
+
       .page {
         width: min(100% - 20px, 960px);
         padding: 28px 18px 36px;
@@ -247,377 +330,388 @@
     }
   </style>
 </head>
-<body>
-  <article class="page">
-    <header>
-      <h1>2.6 Acids, Bases and Salts</h1>
-      <p class="lede">
-        A reading page for the key ideas, naming rules, ion behaviour, and common
-        reactions involving acids, bases, and salts.
-      </p>
-      <div class="summary-box">
-        <p>
-          This section explains how acids and bases are identified, how pH is used
-          to compare them, how indicators work, and how salts form in
-          neutralization and other reactions.
-        </p>
-      </div>
-    </header>
+<body class="lang-en">
+  <div class="topbar-global">
+    <div class="lang-controls" role="group" aria-label="Language controls">
+      <button aria-pressed="true" class="lang-btn is-active" data-lang="en" type="button">English</button>
+      <button aria-pressed="false" class="lang-btn" data-lang="bi" type="button">En + Zh</button>
+      <button aria-pressed="false" class="lang-btn" data-lang="zh" type="button">Zh only</button>
+    </div>
+  </div>
 
-    <main>
-      <section>
-        <h2>General Information</h2>
-        <p>Acids and bases are very common.</p>
-        <ul>
-          <li>Many familiar compounds are acids or bases.</li>
-          <li>Classification as acids or bases is based on chemical composition.</li>
-        </ul>
-        <p>Acids and bases can be very dangerous.</p>
-        <ul>
-          <li>Both can be very corrosive.</li>
-          <li>NEVER try to identify an acid or base by taste or touch.</li>
-        </ul>
-        <p>The strength of acids and bases in measured on the pH scale.</p>
-        <div class="ph-scale" aria-label="pH scale summary">
-          <div class="ph-band acidic">pH below 7 = acidic</div>
-          <div class="ph-band neutral">pH 7 = neutral</div>
-          <div class="ph-band basic">pH above 7 = basic</div>
+  <div class="wrapper">
+    <article class="page">
+      <header>
+        <h1><span class="i18n-wrap"><span class="i18n-en">2.6 Acids, Bases and Salts</span><span class="i18n-zh" lang="zh-Hans">2.6 酸、碱和盐</span></span></h1>
+        <p class="lede"><span class="i18n-wrap"><span class="i18n-en">A reading page for the key ideas, naming rules, ion behaviour, and common reactions involving acids, bases, and salts.</span><span class="i18n-zh" lang="zh-Hans">本阅读页整理了酸、碱和盐的重要概念、命名规则、离子行为，以及常见化学反应。</span></span></p>
+        <div class="summary-box">
+          <p><span class="i18n-wrap"><span class="i18n-en">This section explains how acids and bases are identified, how pH is used to compare them, how indicators work, and how salts form in neutralization and other reactions.</span><span class="i18n-zh" lang="zh-Hans">本节说明如何辨认酸和碱、如何用 pH 比较它们、指示剂如何发挥作用，以及盐如何在中和反应和其他反应中形成。</span></span></p>
         </div>
-        <ul>
-          <li>Each decrease of 1 on the pH scale indicates 10 times (10 x) more acidic.</li>
-          <li>For example, pH 4 is ten times more acidic than pH 5.</li>
-          <li>pH 3 is 1 000 times (1 000 x) more acidic than pH 6.</li>
-        </ul>
+      </header>
 
-        <div class="embed-block">
-          <span class="embed-title">Simulation</span>
-          <p>
-            Check out the pH scale PhET simulation below. You can add different
-            solutions to the container, change the solution by using the drop-down
-            menu, drag the pH meter into the filled container, and test how adding
-            water changes pH.
-          </p>
-          <iframe
-            class="sim-frame"
-            src="https://phet.colorado.edu/sims/html/ph-scale-basics/1.3.2/ph-scale-basics_en.html"
-            title="PhET pH Scale Basics Simulation"
-            loading="lazy"
-            allowfullscreen
-          ></iframe>
-        </div>
-      </section>
+      <main>
+        <section>
+          <h2><span class="i18n-wrap"><span class="i18n-en">General Information</span><span class="i18n-zh" lang="zh-Hans">基本信息</span></span></h2>
+          <p><span class="i18n-wrap"><span class="i18n-en">Acids and bases are very common.</span><span class="i18n-zh" lang="zh-Hans">酸和碱非常常见。</span></span></p>
+          <ul>
+            <li><span class="i18n-wrap"><span class="i18n-en">Many familiar compounds are acids or bases.</span><span class="i18n-zh" lang="zh-Hans">许多我们熟悉的化合物都是酸或碱。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">Classification as acids or bases is based on chemical composition.</span><span class="i18n-zh" lang="zh-Hans">一种物质被归类为酸或碱，是依据它的化学组成。</span></span></li>
+          </ul>
+          <p><span class="i18n-wrap"><span class="i18n-en">Acids and bases can be very dangerous.</span><span class="i18n-zh" lang="zh-Hans">酸和碱可能非常危险。</span></span></p>
+          <ul>
+            <li><span class="i18n-wrap"><span class="i18n-en">Both can be very corrosive.</span><span class="i18n-zh" lang="zh-Hans">两者都可能具有很强的腐蚀性。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">NEVER try to identify an acid or base by taste or touch.</span><span class="i18n-zh" lang="zh-Hans">绝对不要用味觉或触摸来辨认酸或碱。</span></span></li>
+          </ul>
+          <p><span class="i18n-wrap"><span class="i18n-en">The strength of acids and bases in measured on the pH scale.</span><span class="i18n-zh" lang="zh-Hans">酸和碱的强弱是用 pH 标度来测量的。</span></span></p>
+          <div class="ph-scale" aria-label="pH scale summary">
+            <div class="ph-band acidic"><span class="i18n-wrap"><span class="i18n-en">pH below 7 = acidic</span><span class="i18n-zh" lang="zh-Hans">pH 小于 7 = 酸性</span></span></div>
+            <div class="ph-band neutral"><span class="i18n-wrap"><span class="i18n-en">pH 7 = neutral</span><span class="i18n-zh" lang="zh-Hans">pH 等于 7 = 中性</span></span></div>
+            <div class="ph-band basic"><span class="i18n-wrap"><span class="i18n-en">pH above 7 = basic</span><span class="i18n-zh" lang="zh-Hans">pH 大于 7 = 碱性</span></span></div>
+          </div>
+          <ul>
+            <li><span class="i18n-wrap"><span class="i18n-en">Each decrease of 1 on the pH scale indicates 10 times (10 x) more acidic.</span><span class="i18n-zh" lang="zh-Hans">pH 每降低 1，表示酸性增强 10 倍（10 x）。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">For example, pH 4 is ten times more acidic than pH 5.</span><span class="i18n-zh" lang="zh-Hans">例如，pH 4 的酸性是 pH 5 的 10 倍。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">pH 3 is 1 000 times (1 000 x) more acidic than pH 6.</span><span class="i18n-zh" lang="zh-Hans">pH 3 的酸性是 pH 6 的 1 000 倍（1 000 x）。</span></span></li>
+          </ul>
 
-      <section>
-        <h2>pH Indicators</h2>
-        <p>The pH of acids and bases cannot be determined by sight.</p>
-        <ul>
-          <li>
-            Instead, pH is measured by other chemicals, called indicators, or by a
-            pH meter that measures the electrical conductivity of the solution.
-          </li>
-        </ul>
-        <p>pH indicators change colour based on the pH of the solution they are placed in.</p>
-        <ul>
-          <li>Litmus is the most common indicator, used on litmus paper.</li>
-          <li>Two colours of litmus paper: Blue = basic and Red = acidic.</li>
-          <li>Blue = pH above 7, Red = pH below 7.</li>
-          <li>
-            A universal indicator contains many indicators that turn different colours
-            at different pH values and can be in liquid form or on paper strips.
-          </li>
-          <li>A pH meter uses electrical probes to measure how solutions conduct electricity.</li>
-          <li>Indicators change colour at different pH values, so different indicators are used to identify different pH values.</li>
-          <li>Bromothymol blue for pH 6 - 7.6, phenolphthalein for pH 8.2 - 10.</li>
-          <li>Many natural sources, such as beets and cabbage, can also act as indicators.</li>
-        </ul>
-        <div class="embed-block">
-          <span class="embed-title">Video</span>
-          <iframe
-            class="video-frame"
-            src="https://www.youtube.com/embed/jjXslhmu2CE"
-            title="pH indicators video"
-            loading="lazy"
-            allowfullscreen
-          ></iframe>
-        </div>
-      </section>
-
-      <section>
-        <h2>Acids</h2>
-        <p>If you know a compound's chemical formula, you may be able to identify it as an acid.</p>
-        <ul>
-          <li>Acids often behave like acids only when dissolved in water.</li>
-          <li>Therefore, acids are often written with the subscript (aq) = aquatic = in water.</li>
-        </ul>
-        <p>The chemical formula of an acid usually starts with hydrogen (H).</p>
-        <ul>
-          <li>Acids with a carbon usually have the C written first.</li>
-          <li>HCl(aq) hydrochloric acid</li>
-          <li>HNO3(aq) nitric acid</li>
-          <li>CH3COOH(aq) acetic acid</li>
-        </ul>
-
-        <div class="callout">
-          <span class="callout-title">Naming Acids</span>
-          <p><strong>For binary acids formed from hydrogen + a single element from the periodic table</strong></p>
-          <p>Hydrogen + ...-ide = Hydro...ic acid</p>
-          <p>HF(aq) = hydrogen fluoride = hydrofluoric acid</p>
-          <p><strong>For acids formed from hydrogen plus a polyatomic ion ending in -ate</strong></p>
-          <p>Hydrogen + ...-ate = ...ic acid</p>
-          <p>H2CO3(aq) = hydrogen carbonate = carbonic acid</p>
-          <p><strong>For acids formed from hydrogen plus a polyatomic ion ending in -ite</strong></p>
-          <p>Hydrogen + ...-ite = ...ous acid</p>
-          <p>H2SO3(aq) = hydrogen sulphite = sulphurous acid</p>
-        </div>
-
-        <div class="resource-list">
           <div class="embed-block">
-            <span class="embed-title">Video</span>
+            <span class="embed-title"><span class="i18n-wrap i18n-inline"><span class="i18n-en">Simulation</span><span class="i18n-zh" lang="zh-Hans">模拟</span></span></span>
+            <p><span class="i18n-wrap"><span class="i18n-en">Check out the pH scale PhET simulation below. You can add different solutions to the container, change the solution by using the drop-down menu, drag the pH meter into the filled container, and test how adding water changes pH.</span><span class="i18n-zh" lang="zh-Hans">请试试下面的 pH 标度 PhET 模拟。你可以把不同溶液加入容器，用下拉菜单切换溶液，把 pH 计拖进已装满的容器中，并观察加入水后 pH 会怎样变化。</span></span></p>
             <iframe
-              class="video-frame"
-              src="https://www.youtube.com/embed/nZF1lk64M-c"
-              title="Acids video"
+              class="sim-frame"
+              src="https://phet.colorado.edu/sims/html/ph-scale-basics/1.3.2/ph-scale-basics_en.html"
+              title="PhET pH Scale Basics Simulation"
               loading="lazy"
               allowfullscreen
             ></iframe>
           </div>
+        </section>
+
+        <section>
+          <h2><span class="i18n-wrap"><span class="i18n-en">pH Indicators</span><span class="i18n-zh" lang="zh-Hans">pH 指示剂</span></span></h2>
+          <p><span class="i18n-wrap"><span class="i18n-en">The pH of acids and bases cannot be determined by sight.</span><span class="i18n-zh" lang="zh-Hans">酸和碱的 pH 不能靠肉眼直接判断。</span></span></p>
+          <ul>
+            <li><span class="i18n-wrap"><span class="i18n-en">Instead, pH is measured by other chemicals, called indicators, or by a pH meter that measures the electrical conductivity of the solution.</span><span class="i18n-zh" lang="zh-Hans">相反，pH 要靠其他化学物质来测量，这些物质叫做指示剂；也可以用 pH 计，通过测量溶液的导电性来判断。</span></span></li>
+          </ul>
+          <p><span class="i18n-wrap"><span class="i18n-en">pH indicators change colour based on the pH of the solution they are placed in.</span><span class="i18n-zh" lang="zh-Hans">pH 指示剂会根据所放入溶液的 pH 改变颜色。</span></span></p>
+          <ul>
+            <li><span class="i18n-wrap"><span class="i18n-en">Litmus is the most common indicator, used on litmus paper.</span><span class="i18n-zh" lang="zh-Hans">石蕊是最常见的指示剂，通常用在石蕊试纸上。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">Two colours of litmus paper: Blue = basic and Red = acidic.</span><span class="i18n-zh" lang="zh-Hans">石蕊试纸有两种颜色：蓝色表示碱性，红色表示酸性。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">Blue = pH above 7, Red = pH below 7.</span><span class="i18n-zh" lang="zh-Hans">蓝色 = pH 大于 7，红色 = pH 小于 7。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">A universal indicator contains many indicators that turn different colours at different pH values and can be in liquid form or on paper strips.</span><span class="i18n-zh" lang="zh-Hans">通用指示剂由多种在不同 pH 下会变不同颜色的指示剂组成，可以是液体，也可以涂在试纸条上。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">A pH meter uses electrical probes to measure how solutions conduct electricity.</span><span class="i18n-zh" lang="zh-Hans">pH 计使用电极来测量溶液导电的情况。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">Indicators change colour at different pH values, so different indicators are used to identify different pH values.</span><span class="i18n-zh" lang="zh-Hans">不同指示剂会在不同 pH 范围内变色，所以要用不同指示剂来判断不同的 pH。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">Bromothymol blue for pH 6 - 7.6, phenolphthalein for pH 8.2 - 10.</span><span class="i18n-zh" lang="zh-Hans">溴麝香草酚蓝适用于 pH 6 - 7.6，酚酞适用于 pH 8.2 - 10。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">Many natural sources, such as beets and cabbage, can also act as indicators.</span><span class="i18n-zh" lang="zh-Hans">许多天然物质，如甜菜和卷心菜，也可以充当指示剂。</span></span></li>
+          </ul>
           <div class="embed-block">
-            <span class="embed-title">Naming Acids</span>
+            <span class="embed-title"><span class="i18n-wrap i18n-inline"><span class="i18n-en">Video</span><span class="i18n-zh" lang="zh-Hans">视频</span></span></span>
             <iframe
               class="video-frame"
-              src="https://www.youtube.com/embed/lrknGzQgYiM"
-              title="Naming acids video"
+              src="https://www.youtube.com/embed/jjXslhmu2CE"
+              title="pH indicators video"
               loading="lazy"
               allowfullscreen
             ></iframe>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section>
-        <h2>Bases</h2>
-        <p>If you know a compound's chemical formula, you may be able to identify it as a base.</p>
-        <ul>
-          <li>Bases, like acids, often behave like bases only when dissolved in water.</li>
-          <li>Therefore, bases are often written with the subscript (aq) = aquatic = in water.</li>
-        </ul>
-        <p>The chemical formula of a base usually ends with hydroxide (OH).</p>
+        <section>
+          <h2><span class="i18n-wrap"><span class="i18n-en">Acids</span><span class="i18n-zh" lang="zh-Hans">酸</span></span></h2>
+          <p><span class="i18n-wrap"><span class="i18n-en">If you know a compound's chemical formula, you may be able to identify it as an acid.</span><span class="i18n-zh" lang="zh-Hans">如果你知道某种化合物的化学式，你可能就能判断它是不是酸。</span></span></p>
+          <ul>
+            <li><span class="i18n-wrap"><span class="i18n-en">Acids often behave like acids only when dissolved in water.</span><span class="i18n-zh" lang="zh-Hans">酸通常只有在溶于水时才表现出酸性。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">Therefore, acids are often written with the subscript (aq) = aquatic = in water.</span><span class="i18n-zh" lang="zh-Hans">因此，酸常常写成带有下标 (aq)，表示 aqueous，也就是在水中。</span></span></li>
+          </ul>
+          <p><span class="i18n-wrap"><span class="i18n-en">The chemical formula of an acid usually starts with hydrogen (H).</span><span class="i18n-zh" lang="zh-Hans">酸的化学式通常以氢（H）开头。</span></span></p>
+          <ul>
+            <li><span class="i18n-wrap"><span class="i18n-en">Acids with a carbon usually have the C written first.</span><span class="i18n-zh" lang="zh-Hans">含有碳的酸通常把 C 写在最前面。</span></span></li>
+            <li><span class="i18n-wrap i18n-inline"><span class="i18n-en">HCl(aq) hydrochloric acid</span><span class="i18n-zh" lang="zh-Hans">HCl(aq) 盐酸</span></span></li>
+            <li><span class="i18n-wrap i18n-inline"><span class="i18n-en">HNO3(aq) nitric acid</span><span class="i18n-zh" lang="zh-Hans">HNO3(aq) 硝酸</span></span></li>
+            <li><span class="i18n-wrap i18n-inline"><span class="i18n-en">CH3COOH(aq) acetic acid</span><span class="i18n-zh" lang="zh-Hans">CH3COOH(aq) 乙酸</span></span></li>
+          </ul>
 
-        <div class="two-column">
-          <div class="panel">
-            <h3>Examples of common bases</h3>
-            <ul>
-              <li>NaOH(aq)</li>
-              <li>Mg(OH)2(aq)</li>
-              <li>Ca(OH)2(aq)</li>
-              <li>NH4OH(aq)</li>
-            </ul>
+          <div class="callout">
+            <span class="callout-title"><span class="i18n-wrap i18n-inline"><span class="i18n-en">Naming Acids</span><span class="i18n-zh" lang="zh-Hans">酸的命名</span></span></span>
+            <p><strong><span class="i18n-wrap"><span class="i18n-en">For binary acids formed from hydrogen + a single element from the periodic table</span><span class="i18n-zh" lang="zh-Hans">对于由氢和元素周期表中的单一元素组成的二元酸</span></span></strong></p>
+            <p><span class="i18n-wrap i18n-inline"><span class="i18n-en">Hydrogen + ...-ide = Hydro...ic acid</span><span class="i18n-zh" lang="zh-Hans">Hydrogen + ...-ide = Hydro...ic acid（命名规律）</span></span></p>
+            <p><span class="i18n-wrap i18n-inline"><span class="i18n-en">HF(aq) = hydrogen fluoride = hydrofluoric acid</span><span class="i18n-zh" lang="zh-Hans">HF(aq) = hydrogen fluoride = hydrofluoric acid（氢氟酸）</span></span></p>
+            <p><strong><span class="i18n-wrap"><span class="i18n-en">For acids formed from hydrogen plus a polyatomic ion ending in -ate</span><span class="i18n-zh" lang="zh-Hans">对于由氢和以 -ate 结尾的多原子离子组成的酸</span></span></strong></p>
+            <p><span class="i18n-wrap i18n-inline"><span class="i18n-en">Hydrogen + ...-ate = ...ic acid</span><span class="i18n-zh" lang="zh-Hans">Hydrogen + ...-ate = ...ic acid（命名规律）</span></span></p>
+            <p><span class="i18n-wrap i18n-inline"><span class="i18n-en">H2CO3(aq) = hydrogen carbonate = carbonic acid</span><span class="i18n-zh" lang="zh-Hans">H2CO3(aq) = hydrogen carbonate = carbonic acid（碳酸）</span></span></p>
+            <p><strong><span class="i18n-wrap"><span class="i18n-en">For acids formed from hydrogen plus a polyatomic ion ending in -ite</span><span class="i18n-zh" lang="zh-Hans">对于由氢和以 -ite 结尾的多原子离子组成的酸</span></span></strong></p>
+            <p><span class="i18n-wrap i18n-inline"><span class="i18n-en">Hydrogen + ...-ite = ...ous acid</span><span class="i18n-zh" lang="zh-Hans">Hydrogen + ...-ite = ...ous acid（命名规律）</span></span></p>
+            <p><span class="i18n-wrap i18n-inline"><span class="i18n-en">H2SO3(aq) = hydrogen sulphite = sulphurous acid</span><span class="i18n-zh" lang="zh-Hans">H2SO3(aq) = hydrogen sulphite = sulphurous acid（亚硫酸）</span></span></p>
           </div>
-          <div class="panel">
-            <h3>Naming Bases</h3>
-            <p>To name a base you simply name the cation (metal) and then add hydroxide.</p>
-            <ul>
-              <li>NaOH(aq) - Sodium hydroxide</li>
-              <li>Mg(OH)2(aq) - Magnesium hydroxide</li>
-            </ul>
-          </div>
-        </div>
-      </section>
 
-      <section>
-        <h2>Production of Ions</h2>
-        <p>Acids and bases can conduct electricity because they release ions in solution.</p>
-        <ul>
-          <li>Acids release hydrogen ions, H+(aq).</li>
-          <li>Bases release hydroxide ions, OH-(aq).</li>
-        </ul>
-        <p>The pH of a solution refers to the concentration of ions it has.</p>
-
-        <div class="equation-block">
-          <p>Square brackets are used to signify concentration: [H⁺(aq)], [OH⁻(aq)]</p>
-          <p>High [H⁺(aq)] = low pH, very acidic</p>
-          <p>High [OH⁻(aq)] = high pH, very basic</p>
-          <p>
-            A solution cannot have BOTH high [H⁺(aq)] and [OH⁻(aq)]; they cancel
-            each other out and form water. This process is called neutralization.
-          </p>
-          <p>[H⁺(aq)] + [OH⁻(aq)] → H₂O(l)</p>
-        </div>
-      </section>
-
-      <section>
-        <h2>Properties of Acids &amp; Bases</h2>
-        <div class="callout">
-          <span class="callout-title">Study Note</span>
-          <p>
-            Acids and bases differ in pH, indicators, ion production, and reaction
-            behaviour. Review each section above and compare the examples before
-            moving on to the practice activities below.
-          </p>
-        </div>
-      </section>
-
-      <section>
-        <h2>Practice on Acid Formulas</h2>
-        <div class="resource-block">
-          <span class="resource-title">Practice Link</span>
-          <p><a href="https://cghuisunshine.github.io/Science/acid_formula.html" target="_blank" rel="noreferrer">Open the acid formulas practice page</a></p>
-        </div>
-      </section>
-
-      <section>
-        <h2>Acid/Base Review</h2>
-        <p>Check your understanding of acids and bases.</p>
-        <div class="embed-block">
-          <span class="embed-title">Embedded Review</span>
-          <iframe
-            class="practice-frame"
-            src="acid_base_exercise.html"
-            title="Acid and base review exercise"
-            loading="lazy"
-            data-autosize="true"
-          ></iframe>
-        </div>
-      </section>
-
-      <section>
-        <h2>Acids and Bases Practice Quiz</h2>
-        <p>Here are a number of practice quizzes. Complete as many as you need to prepare for your test.</p>
-        <ol class="quiz-links">
-          <li><a href="https://www.visionlearning.com/en/library/Chemistry/1/Acids-and-Bases/58/quiz/submit" target="_blank" rel="noreferrer">Quiz 1</a></li>
-          <li><a href="https://www.thoughtco.com/acids-and-bases-quiz-4045347" target="_blank" rel="noreferrer">Quiz 2</a></li>
-          <li><a href="https://www.quia.com/quiz/264207.html?AP_rand=257402189" target="_blank" rel="noreferrer">Quiz 3</a></li>
-          <li><a href="https://www.qldscienceteachers.com/junior-science/chemistry/quizzes/acids-and-bases" target="_blank" rel="noreferrer">Quiz 4</a></li>
-          <li><a href="https://www.ducksters.com/science/quiz/acids_and_bases_questions.php" target="_blank" rel="noreferrer">Quiz 5</a></li>
-        </ol>
-      </section>
-
-      <section>
-        <h2>Salts</h2>
-        <p>Salts are ionic compounds formed when acids and bases react.</p>
-        <ul>
-          <li>Salts are also produced when oxides or carbonates react with acids, or when metals react with acids.</li>
-        </ul>
-        <p>Table salt, NaCl, is found in seawater, salt lakes, or rock deposits.</p>
-        <ul>
-          <li>Salt was once very valuable as a commodity.</li>
-          <li>Iodine is now added to salt to minimize goiter (a disease of the thyroid).</li>
-        </ul>
-        <p>NaCl is only one kind of salt.</p>
-        <ul>
-          <li>A salt is made up of a positive ion from a base and negative ion from an acid.</li>
-          <li>Salts are found in many things.</li>
-          <li>In batteries, explosives, and fertilizers.</li>
-          <li>In multivitamins.</li>
-          <li>In many living cells.</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>Neutralization</h2>
-        <p>Neutralization reactions occur when an acid and a base react to produce a salt and water.</p>
-        <div class="embed-block">
-          <span class="embed-title">Video</span>
-          <iframe
-            class="video-frame"
-            src="https://www.youtube.com/embed/gtcE8TosEq4"
-            title="Neutralization video"
-            loading="lazy"
-            allowfullscreen
-          ></iframe>
-        </div>
-      </section>
-
-      <section>
-        <h2>Metal and Non-metal Oxides</h2>
-        <div class="equation-block">
-          <p><strong>Metal oxides react with water to form bases.</strong></p>
-          <p>Na₂O(s) + H₂O(l) → 2 NaOH(aq)</p>
-          <p><strong>Non-metal oxides react with water to form acids.</strong></p>
-          <p>SO₂(g) + H₂O(l) → H₂SO₃(aq)</p>
-          <p>Non-metal oxides are formed from the burning of fossil fuels.</p>
-          <p>Add water in the atmosphere = acid precipitation.</p>
-        </div>
-        <div class="resource-list">
-          <div class="embed-block">
-            <span class="embed-title">Video</span>
-            <iframe
-              class="video-frame"
-              src="https://www.youtube.com/embed/yCMchx6Q9Is"
-              title="Metal oxides and non-metal oxides video"
-              loading="lazy"
-              allowfullscreen
-            ></iframe>
-          </div>
-          <div class="embed-block">
-            <span class="embed-title">Video</span>
-            <iframe
-              class="video-frame"
-              src="https://www.youtube.com/embed/MtL64hRoTzQ"
-              title="Acid precipitation video"
-              loading="lazy"
-              allowfullscreen
-            ></iframe>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <h2>Acid Reactions with Metals and Carbonates</h2>
-        <div class="two-column">
-          <div class="panel">
-            <h3>Acids and Metals</h3>
-            <ul>
-              <li>The most reactive metals, at the bottom of groups 1 and 2, react vigorously with water and acids.</li>
-              <li>All other metals are less reactive than those in groups 1 and 2.</li>
-              <li>When metals do react with acids, H₂ gas is usually released.</li>
-            </ul>
-            <div class="equation-block">
-              <p>2 HCl(aq) + Mg(s) → MgCl₂(s) + H₂(g)</p>
+          <div class="resource-list">
+            <div class="embed-block">
+              <span class="embed-title"><span class="i18n-wrap i18n-inline"><span class="i18n-en">Video</span><span class="i18n-zh" lang="zh-Hans">视频</span></span></span>
+              <iframe
+                class="video-frame"
+                src="https://www.youtube.com/embed/nZF1lk64M-c"
+                title="Acids video"
+                loading="lazy"
+                allowfullscreen
+              ></iframe>
+            </div>
+            <div class="embed-block">
+              <span class="embed-title"><span class="i18n-wrap i18n-inline"><span class="i18n-en">Naming Acids</span><span class="i18n-zh" lang="zh-Hans">酸的命名</span></span></span>
+              <iframe
+                class="video-frame"
+                src="https://www.youtube.com/embed/lrknGzQgYiM"
+                title="Naming acids video"
+                loading="lazy"
+                allowfullscreen
+              ></iframe>
             </div>
           </div>
-          <div class="panel">
-            <h3>Acids and Carbonates</h3>
-            <ul>
-              <li>Carbonates (CO₃²⁻) neutralize acids, protecting locations with natural carbonate supplies from acid precipitation.</li>
-            </ul>
-            <div class="equation-block">
-              <p>H₂SO₄(aq) + CaCO₃(s) → CaSO₄(s) + H₂O(aq) + CO₂(g)</p>
-              <p>sulphuric acid + calcium carbonate ➝ calcium sulfate + water + carbon dioxide</p>
+        </section>
+
+        <section>
+          <h2><span class="i18n-wrap"><span class="i18n-en">Bases</span><span class="i18n-zh" lang="zh-Hans">碱</span></span></h2>
+          <p><span class="i18n-wrap"><span class="i18n-en">If you know a compound's chemical formula, you may be able to identify it as a base.</span><span class="i18n-zh" lang="zh-Hans">如果你知道某种化合物的化学式，你可能就能判断它是不是碱。</span></span></p>
+          <ul>
+            <li><span class="i18n-wrap"><span class="i18n-en">Bases, like acids, often behave like bases only when dissolved in water.</span><span class="i18n-zh" lang="zh-Hans">碱和酸一样，通常只有在溶于水时才表现出碱性。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">Therefore, bases are often written with the subscript (aq) = aquatic = in water.</span><span class="i18n-zh" lang="zh-Hans">因此，碱也常写成带有下标 (aq)，表示在水中。</span></span></li>
+          </ul>
+          <p><span class="i18n-wrap"><span class="i18n-en">The chemical formula of a base usually ends with hydroxide (OH).</span><span class="i18n-zh" lang="zh-Hans">碱的化学式通常以 hydroxide（OH）结尾。</span></span></p>
+
+          <div class="two-column">
+            <div class="panel">
+              <h3><span class="i18n-wrap"><span class="i18n-en">Examples of common bases</span><span class="i18n-zh" lang="zh-Hans">常见碱的例子</span></span></h3>
+              <ul>
+                <li>NaOH(aq)</li>
+                <li>Mg(OH)2(aq)</li>
+                <li>Ca(OH)2(aq)</li>
+                <li>NH4OH(aq)</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3><span class="i18n-wrap"><span class="i18n-en">Naming Bases</span><span class="i18n-zh" lang="zh-Hans">碱的命名</span></span></h3>
+              <p><span class="i18n-wrap"><span class="i18n-en">To name a base you simply name the cation (metal) and then add hydroxide.</span><span class="i18n-zh" lang="zh-Hans">给碱命名时，只要先写出阳离子（金属）名称，再加上 hydroxide。</span></span></p>
+              <ul>
+                <li><span class="i18n-wrap i18n-inline"><span class="i18n-en">NaOH(aq) - Sodium hydroxide</span><span class="i18n-zh" lang="zh-Hans">NaOH(aq) - 氢氧化钠</span></span></li>
+                <li><span class="i18n-wrap i18n-inline"><span class="i18n-en">Mg(OH)2(aq) - Magnesium hydroxide</span><span class="i18n-zh" lang="zh-Hans">Mg(OH)2(aq) - 氢氧化镁</span></span></li>
+              </ul>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section>
-        <h2>Salts Review</h2>
-        <p>Check your understanding of Salts below.</p>
-        <div class="embed-block">
-          <span class="embed-title">Embedded Review</span>
-          <iframe
-            class="practice-frame"
-            src="https://cghuisunshine.github.io/Science/acid_reactions_gap_fill.html"
-            title="Salts review exercise"
-            loading="lazy"
-          ></iframe>
-        </div>
-      </section>
+        <section>
+          <h2><span class="i18n-wrap"><span class="i18n-en">Production of Ions</span><span class="i18n-zh" lang="zh-Hans">离子的产生</span></span></h2>
+          <p><span class="i18n-wrap"><span class="i18n-en">Acids and bases can conduct electricity because they release ions in solution.</span><span class="i18n-zh" lang="zh-Hans">酸和碱能导电，因为它们在溶液中会释放离子。</span></span></p>
+          <ul>
+            <li><span class="i18n-wrap i18n-inline"><span class="i18n-en">Acids release hydrogen ions, H+(aq).</span><span class="i18n-zh" lang="zh-Hans">酸会释放氢离子，H+(aq)。</span></span></li>
+            <li><span class="i18n-wrap i18n-inline"><span class="i18n-en">Bases release hydroxide ions, OH-(aq).</span><span class="i18n-zh" lang="zh-Hans">碱会释放氢氧根离子，OH-(aq)。</span></span></li>
+          </ul>
+          <p><span class="i18n-wrap"><span class="i18n-en">The pH of a solution refers to the concentration of ions it has.</span><span class="i18n-zh" lang="zh-Hans">溶液的 pH 与其中离子的浓度有关。</span></span></p>
 
-      <section>
-        <h2>Acid, Base, Salt Practice Quiz</h2>
-        <div class="resource-block">
-          <span class="resource-title">Practice Link</span>
-          <p><a href="https://cghuisunshine.github.io/Science/acid_base_salt_reflecting.html" target="_blank" rel="noreferrer">Open the acid, base, salt practice quiz</a></p>
-        </div>
-      </section>
-    </main>
+          <div class="equation-block">
+            <p><span class="i18n-wrap i18n-inline"><span class="i18n-en">Square brackets are used to signify concentration: [H⁺(aq)], [OH⁻(aq)]</span><span class="i18n-zh" lang="zh-Hans">方括号表示浓度：[H⁺(aq)]、[OH⁻(aq)]。</span></span></p>
+            <p><span class="i18n-wrap i18n-inline"><span class="i18n-en">High [H⁺(aq)] = low pH, very acidic</span><span class="i18n-zh" lang="zh-Hans">高 [H⁺(aq)] = 低 pH，酸性很强。</span></span></p>
+            <p><span class="i18n-wrap i18n-inline"><span class="i18n-en">High [OH⁻(aq)] = high pH, very basic</span><span class="i18n-zh" lang="zh-Hans">高 [OH⁻(aq)] = 高 pH，碱性很强。</span></span></p>
+            <p><span class="i18n-wrap"><span class="i18n-en">A solution cannot have BOTH high [H⁺(aq)] and [OH⁻(aq)]; they cancel each other out and form water. This process is called neutralization.</span><span class="i18n-zh" lang="zh-Hans">一种溶液不可能同时具有很高的 [H⁺(aq)] 和 [OH⁻(aq)]；它们会彼此中和并形成水。这个过程叫做中和。</span></span></p>
+            <p><span class="i18n-wrap i18n-inline"><span class="i18n-en">[H⁺(aq)] + [OH⁻(aq)] → H₂O(l)</span><span class="i18n-zh" lang="zh-Hans">[H⁺(aq)] + [OH⁻(aq)] → H₂O(l)</span></span></p>
+          </div>
+        </section>
 
-    <footer class="footer-note">
-      Review the naming patterns, pH rules, and reaction equations before moving on to
-      the embedded practice activities and quiz links.
-    </footer>
-  </article>
+        <section>
+          <h2><span class="i18n-wrap"><span class="i18n-en">Properties of Acids &amp; Bases</span><span class="i18n-zh" lang="zh-Hans">酸和碱的性质</span></span></h2>
+          <div class="callout">
+            <span class="callout-title"><span class="i18n-wrap i18n-inline"><span class="i18n-en">Study Note</span><span class="i18n-zh" lang="zh-Hans">学习提示</span></span></span>
+            <p><span class="i18n-wrap"><span class="i18n-en">Acids and bases differ in pH, indicators, ion production, and reaction behaviour. Review each section above and compare the examples before moving on to the practice activities below.</span><span class="i18n-zh" lang="zh-Hans">酸和碱在 pH、指示剂、离子产生方式以及反应行为上都不同。继续下面的练习之前，请先复习上面的各个部分并比较例子。</span></span></p>
+          </div>
+        </section>
+
+        <section>
+          <h2><span class="i18n-wrap"><span class="i18n-en">Practice on Acid Formulas</span><span class="i18n-zh" lang="zh-Hans">酸的化学式练习</span></span></h2>
+          <div class="resource-block">
+            <span class="resource-title"><span class="i18n-wrap i18n-inline"><span class="i18n-en">Practice Link</span><span class="i18n-zh" lang="zh-Hans">练习链接</span></span></span>
+            <p><span class="i18n-wrap"><span class="i18n-en"><a href="https://cghuisunshine.github.io/Science/acid_formula.html" target="_blank" rel="noreferrer">Open the acid formulas practice page</a></span><span class="i18n-zh" lang="zh-Hans"><a href="https://cghuisunshine.github.io/Science/acid_formula.html" target="_blank" rel="noreferrer">打开酸的化学式练习页面</a></span></span></p>
+          </div>
+        </section>
+
+        <section>
+          <h2><span class="i18n-wrap"><span class="i18n-en">Acid/Base Review</span><span class="i18n-zh" lang="zh-Hans">酸碱复习</span></span></h2>
+          <p><span class="i18n-wrap"><span class="i18n-en">Check your understanding of acids and bases.</span><span class="i18n-zh" lang="zh-Hans">检查你对酸和碱的理解。</span></span></p>
+          <div class="embed-block">
+            <span class="embed-title"><span class="i18n-wrap i18n-inline"><span class="i18n-en">Embedded Review</span><span class="i18n-zh" lang="zh-Hans">嵌入式复习</span></span></span>
+            <p><span class="i18n-wrap"><span class="i18n-en"><a href="acid_base_exercise.html" target="_blank" rel="noreferrer">Open in a new window</a></span><span class="i18n-zh" lang="zh-Hans"><a href="acid_base_exercise.html" target="_blank" rel="noreferrer">在新窗口中打开</a></span></span></p>
+            <iframe
+              class="practice-frame"
+              src="acid_base_exercise.html"
+              title="Acid and base review exercise"
+              loading="lazy"
+              data-autosize="true"
+            ></iframe>
+          </div>
+        </section>
+
+        <section>
+          <h2><span class="i18n-wrap"><span class="i18n-en">Acids and Bases Practice Quiz</span><span class="i18n-zh" lang="zh-Hans">酸和碱练习测验</span></span></h2>
+          <p><span class="i18n-wrap"><span class="i18n-en">Here are a number of practice quizzes. Complete as many as you need to prepare for your test.</span><span class="i18n-zh" lang="zh-Hans">下面有一些练习测验。为了准备考试，你可以按需要完成尽可能多的练习。</span></span></p>
+          <ol class="quiz-links">
+            <li><span class="i18n-wrap"><span class="i18n-en"><a href="https://www.visionlearning.com/en/library/Chemistry/1/Acids-and-Bases/58/quiz/submit" target="_blank" rel="noreferrer">Quiz 1</a></span><span class="i18n-zh" lang="zh-Hans"><a href="https://www.visionlearning.com/en/library/Chemistry/1/Acids-and-Bases/58/quiz/submit" target="_blank" rel="noreferrer">测验 1</a></span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en"><a href="https://www.thoughtco.com/acids-and-bases-quiz-4045347" target="_blank" rel="noreferrer">Quiz 2</a></span><span class="i18n-zh" lang="zh-Hans"><a href="https://www.thoughtco.com/acids-and-bases-quiz-4045347" target="_blank" rel="noreferrer">测验 2</a></span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en"><a href="https://www.quia.com/quiz/264207.html?AP_rand=257402189" target="_blank" rel="noreferrer">Quiz 3</a></span><span class="i18n-zh" lang="zh-Hans"><a href="https://www.quia.com/quiz/264207.html?AP_rand=257402189" target="_blank" rel="noreferrer">测验 3</a></span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en"><a href="https://www.qldscienceteachers.com/junior-science/chemistry/quizzes/acids-and-bases" target="_blank" rel="noreferrer">Quiz 4</a></span><span class="i18n-zh" lang="zh-Hans"><a href="https://www.qldscienceteachers.com/junior-science/chemistry/quizzes/acids-and-bases" target="_blank" rel="noreferrer">测验 4</a></span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en"><a href="https://www.ducksters.com/science/quiz/acids_and_bases_questions.php" target="_blank" rel="noreferrer">Quiz 5</a></span><span class="i18n-zh" lang="zh-Hans"><a href="https://www.ducksters.com/science/quiz/acids_and_bases_questions.php" target="_blank" rel="noreferrer">测验 5</a></span></span></li>
+          </ol>
+        </section>
+
+        <section>
+          <h2><span class="i18n-wrap"><span class="i18n-en">Salts</span><span class="i18n-zh" lang="zh-Hans">盐</span></span></h2>
+          <p><span class="i18n-wrap"><span class="i18n-en">Salts are ionic compounds formed when acids and bases react.</span><span class="i18n-zh" lang="zh-Hans">盐是酸和碱反应时形成的离子化合物。</span></span></p>
+          <ul>
+            <li><span class="i18n-wrap"><span class="i18n-en">Salts are also produced when oxides or carbonates react with acids, or when metals react with acids.</span><span class="i18n-zh" lang="zh-Hans">当氧化物或碳酸盐与酸反应，或金属与酸反应时，也会生成盐。</span></span></li>
+          </ul>
+          <p><span class="i18n-wrap"><span class="i18n-en">Table salt, NaCl, is found in seawater, salt lakes, or rock deposits.</span><span class="i18n-zh" lang="zh-Hans">食盐 NaCl 存在于海水、盐湖或岩盐矿床中。</span></span></p>
+          <ul>
+            <li><span class="i18n-wrap"><span class="i18n-en">Salt was once very valuable as a commodity.</span><span class="i18n-zh" lang="zh-Hans">盐曾经是一种非常有价值的商品。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">Iodine is now added to salt to minimize goiter (a disease of the thyroid).</span><span class="i18n-zh" lang="zh-Hans">现在人们会在盐中加入碘，以减少甲状腺肿（甲状腺疾病）的发生。</span></span></li>
+          </ul>
+          <p><span class="i18n-wrap"><span class="i18n-en">NaCl is only one kind of salt.</span><span class="i18n-zh" lang="zh-Hans">NaCl 只是盐的一种。</span></span></p>
+          <ul>
+            <li><span class="i18n-wrap"><span class="i18n-en">A salt is made up of a positive ion from a base and negative ion from an acid.</span><span class="i18n-zh" lang="zh-Hans">盐由来自碱的阳离子和来自酸的阴离子组成。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">Salts are found in many things.</span><span class="i18n-zh" lang="zh-Hans">许多东西中都含有盐。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">In batteries, explosives, and fertilizers.</span><span class="i18n-zh" lang="zh-Hans">例如电池、炸药和肥料中。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">In multivitamins.</span><span class="i18n-zh" lang="zh-Hans">例如复合维生素中。</span></span></li>
+            <li><span class="i18n-wrap"><span class="i18n-en">In many living cells.</span><span class="i18n-zh" lang="zh-Hans">例如许多生物细胞中。</span></span></li>
+          </ul>
+        </section>
+
+        <section>
+          <h2><span class="i18n-wrap"><span class="i18n-en">Neutralization</span><span class="i18n-zh" lang="zh-Hans">中和反应</span></span></h2>
+          <p><span class="i18n-wrap"><span class="i18n-en">Neutralization reactions occur when an acid and a base react to produce a salt and water.</span><span class="i18n-zh" lang="zh-Hans">中和反应发生在酸和碱反应并生成盐和水的时候。</span></span></p>
+          <div class="embed-block">
+            <span class="embed-title"><span class="i18n-wrap i18n-inline"><span class="i18n-en">Video</span><span class="i18n-zh" lang="zh-Hans">视频</span></span></span>
+            <iframe
+              class="video-frame"
+              src="https://www.youtube.com/embed/gtcE8TosEq4"
+              title="Neutralization video"
+              loading="lazy"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </section>
+
+        <section>
+          <h2><span class="i18n-wrap"><span class="i18n-en">Metal and Non-metal Oxides</span><span class="i18n-zh" lang="zh-Hans">金属氧化物和非金属氧化物</span></span></h2>
+          <div class="equation-block">
+            <p><strong><span class="i18n-wrap"><span class="i18n-en">Metal oxides react with water to form bases.</span><span class="i18n-zh" lang="zh-Hans">金属氧化物与水反应会形成碱。</span></span></strong></p>
+            <p>Na₂O(s) + H₂O(l) → 2 NaOH(aq)</p>
+            <p><strong><span class="i18n-wrap"><span class="i18n-en">Non-metal oxides react with water to form acids.</span><span class="i18n-zh" lang="zh-Hans">非金属氧化物与水反应会形成酸。</span></span></strong></p>
+            <p>SO₂(g) + H₂O(l) → H₂SO₃(aq)</p>
+            <p><span class="i18n-wrap"><span class="i18n-en">Non-metal oxides are formed from the burning of fossil fuels.</span><span class="i18n-zh" lang="zh-Hans">非金属氧化物会在化石燃料燃烧时产生。</span></span></p>
+            <p><span class="i18n-wrap"><span class="i18n-en">Add water in the atmosphere = acid precipitation.</span><span class="i18n-zh" lang="zh-Hans">再与大气中的水结合，就会形成酸性降水。</span></span></p>
+          </div>
+          <div class="resource-list">
+            <div class="embed-block">
+              <span class="embed-title"><span class="i18n-wrap i18n-inline"><span class="i18n-en">Video</span><span class="i18n-zh" lang="zh-Hans">视频</span></span></span>
+              <iframe
+                class="video-frame"
+                src="https://www.youtube.com/embed/yCMchx6Q9Is"
+                title="Metal oxides and non-metal oxides video"
+                loading="lazy"
+                allowfullscreen
+              ></iframe>
+            </div>
+            <div class="embed-block">
+              <span class="embed-title"><span class="i18n-wrap i18n-inline"><span class="i18n-en">Video</span><span class="i18n-zh" lang="zh-Hans">视频</span></span></span>
+              <iframe
+                class="video-frame"
+                src="https://www.youtube.com/embed/MtL64hRoTzQ"
+                title="Acid precipitation video"
+                loading="lazy"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2><span class="i18n-wrap"><span class="i18n-en">Acid Reactions with Metals and Carbonates</span><span class="i18n-zh" lang="zh-Hans">酸与金属和碳酸盐的反应</span></span></h2>
+          <div class="two-column">
+            <div class="panel">
+              <h3><span class="i18n-wrap"><span class="i18n-en">Acids and Metals</span><span class="i18n-zh" lang="zh-Hans">酸与金属</span></span></h3>
+              <ul>
+                <li><span class="i18n-wrap"><span class="i18n-en">The most reactive metals, at the bottom of groups 1 and 2, react vigorously with water and acids.</span><span class="i18n-zh" lang="zh-Hans">第 1 族和第 2 族底部最活泼的金属，会与水和酸发生剧烈反应。</span></span></li>
+                <li><span class="i18n-wrap"><span class="i18n-en">All other metals are less reactive than those in groups 1 and 2.</span><span class="i18n-zh" lang="zh-Hans">其他金属的活泼性都低于第 1 族和第 2 族中的这些金属。</span></span></li>
+                <li><span class="i18n-wrap"><span class="i18n-en">When metals do react with acids, H₂ gas is usually released.</span><span class="i18n-zh" lang="zh-Hans">金属与酸反应时，通常会放出 H₂ 气体。</span></span></li>
+              </ul>
+              <div class="equation-block">
+                <p>2 HCl(aq) + Mg(s) → MgCl₂(s) + H₂(g)</p>
+              </div>
+            </div>
+            <div class="panel">
+              <h3><span class="i18n-wrap"><span class="i18n-en">Acids and Carbonates</span><span class="i18n-zh" lang="zh-Hans">酸与碳酸盐</span></span></h3>
+              <ul>
+                <li><span class="i18n-wrap"><span class="i18n-en">Carbonates (CO₃²⁻) neutralize acids, protecting locations with natural carbonate supplies from acid precipitation.</span><span class="i18n-zh" lang="zh-Hans">碳酸盐（CO₃²⁻）能中和酸，因此天然富含碳酸盐的地区更能抵御酸性降水。</span></span></li>
+              </ul>
+              <div class="equation-block">
+                <p>H₂SO₄(aq) + CaCO₃(s) → CaSO₄(s) + H₂O(aq) + CO₂(g)</p>
+                <p><span class="i18n-wrap i18n-inline"><span class="i18n-en">sulphuric acid + calcium carbonate ➝ calcium sulfate + water + carbon dioxide</span><span class="i18n-zh" lang="zh-Hans">硫酸 + 碳酸钙 ➝ 硫酸钙 + 水 + 二氧化碳</span></span></p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2><span class="i18n-wrap"><span class="i18n-en">Salts Review</span><span class="i18n-zh" lang="zh-Hans">盐的复习</span></span></h2>
+          <p><span class="i18n-wrap"><span class="i18n-en">Check your understanding of Salts below.</span><span class="i18n-zh" lang="zh-Hans">请在下面检查你对盐的理解。</span></span></p>
+          <div class="embed-block">
+            <span class="embed-title"><span class="i18n-wrap i18n-inline"><span class="i18n-en">Embedded Review</span><span class="i18n-zh" lang="zh-Hans">嵌入式复习</span></span></span>
+            <p><span class="i18n-wrap"><span class="i18n-en"><a href="https://cghuisunshine.github.io/Science/acid_reactions_gap_fill.html" target="_blank" rel="noreferrer">Open in a new window</a></span><span class="i18n-zh" lang="zh-Hans"><a href="https://cghuisunshine.github.io/Science/acid_reactions_gap_fill.html" target="_blank" rel="noreferrer">在新窗口中打开</a></span></span></p>
+            <iframe
+              class="practice-frame"
+              src="https://cghuisunshine.github.io/Science/acid_reactions_gap_fill.html"
+              title="Salts review exercise"
+              loading="lazy"
+            ></iframe>
+          </div>
+        </section>
+
+        <section>
+          <h2><span class="i18n-wrap"><span class="i18n-en">Acid, Base, Salt Practice Quiz</span><span class="i18n-zh" lang="zh-Hans">酸、碱、盐练习测验</span></span></h2>
+          <div class="resource-block">
+            <span class="resource-title"><span class="i18n-wrap i18n-inline"><span class="i18n-en">Practice Link</span><span class="i18n-zh" lang="zh-Hans">练习链接</span></span></span>
+            <p><span class="i18n-wrap"><span class="i18n-en"><a href="https://cghuisunshine.github.io/Science/acid_base_salt_reflecting.html" target="_blank" rel="noreferrer">Open the acid, base, salt practice quiz</a></span><span class="i18n-zh" lang="zh-Hans"><a href="https://cghuisunshine.github.io/Science/acid_base_salt_reflecting.html" target="_blank" rel="noreferrer">打开酸、碱、盐练习测验</a></span></span></p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer-note"><span class="i18n-wrap"><span class="i18n-en">Review the naming patterns, pH rules, and reaction equations before moving on to the embedded practice activities and quiz links.</span><span class="i18n-zh" lang="zh-Hans">在继续完成嵌入式练习和外部测验链接之前，请先复习命名规律、pH 规则和反应方程式。</span></span></footer>
+    </article>
+  </div>
+
   <script>
+    const langButtons = Array.from(document.querySelectorAll('.lang-btn'));
+
+    function applyLanguageMode(mode) {
+      document.body.classList.toggle('lang-en', mode === 'en');
+      document.body.classList.toggle('lang-bi', mode === 'bi');
+      document.body.classList.toggle('lang-zh', mode === 'zh');
+
+      langButtons.forEach((button) => {
+        const isActive = button.dataset.lang === mode;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+
+      try {
+        localStorage.setItem('science10-acids-bases-salts-lang', mode);
+      } catch (_error) {
+        // Ignore storage issues.
+      }
+    }
+
+    langButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        applyLanguageMode(button.dataset.lang);
+      });
+    });
+
     function autoSizeEmbed(iframe) {
       try {
         const doc = iframe.contentWindow?.document;
@@ -631,7 +725,6 @@
           html?.scrollHeight || 0,
           html?.offsetHeight || 0
         );
-
         if (nextHeight > 0) {
           iframe.style.height = `${nextHeight}px`;
         }
@@ -655,6 +748,14 @@
     window.addEventListener('resize', () => {
       autoSizeEmbeds.forEach(autoSizeEmbed);
     });
+
+    let currentLang = 'en';
+    try {
+      currentLang = localStorage.getItem('science10-acids-bases-salts-lang') || 'en';
+    } catch (_error) {
+      currentLang = 'en';
+    }
+    applyLanguageMode(['en', 'bi', 'zh'].includes(currentLang) ? currentLang : 'en');
   </script>
 </body>
 </html>
