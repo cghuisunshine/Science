@@ -321,8 +321,8 @@
     .progress-bars {
       width: 86px;
       height: 268px;
-      display: grid;
-      grid-template-rows: repeat(11, 1fr);
+      display: flex;
+      flex-direction: column;
       gap: 8px;
     }
 
@@ -330,6 +330,7 @@
       background: #ededed;
       border: 2px solid #d3d3d3;
       border-radius: 1px;
+      flex: 1 1 0;
     }
 
     .bar.done { background: #efbf00; }
@@ -772,8 +773,7 @@
       .progress-bars {
         width: min(44vw, 220px);
         height: 22px;
-        grid-template-rows: none;
-        grid-template-columns: repeat(11, 1fr);
+        flex-direction: row;
         gap: 4px;
       }
 
