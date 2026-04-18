@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acids and Bases Quiz | 酸和碱测验</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #667085;
+      --border: #e6eaf0;
+      --primary: #2563eb;
+      --primary-soft: #e9f1ff;
+      --ok: #15803d;
+      --ok-soft: #dcfce7;
+      --bad: #b42318;
+      --bad-soft: #fee4e2;
+      --neutral-soft: #f2f4f7;
+      --shadow: 0 10px 30px rgba(16, 24, 40, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f8fbff 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .topbar-global {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(244, 247, 251, 0.92);
+      border-bottom: 1px solid rgba(230, 234, 240, 0.95);
+      backdrop-filter: blur(12px);
+    }
+
+    .lang-controls {
+      width: min(980px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 10px 0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .lang-btn {
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      border-radius: 999px;
+      font: 700 14px/1 Inter, system-ui, sans-serif;
+      cursor: pointer;
+    }
+
+    .lang-btn.is-active {
+      background: var(--text);
+      color: #fff;
+    }
+
+    .i18n-wrap {
+      display: block;
+    }
+
+    .i18n-en,
+    .i18n-zh {
+      display: block;
+    }
+
+    .i18n-inline .i18n-en,
+    .i18n-inline .i18n-zh {
+      display: inline;
+    }
+
+    .lang-en .i18n-zh {
+      display: none;
+    }
+
+    .lang-bi .i18n-wrap:not(.i18n-inline) .i18n-zh {
+      margin-top: 4px;
+      color: var(--muted);
+    }
+
+    .lang-bi .i18n-inline .i18n-zh::before {
+      content: " / ";
+    }
+
+    .lang-zh .i18n-en {
+      display: none;
+    }
+
+    .page {
+      width: min(980px, calc(100% - 24px));
+      margin: 24px auto 56px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #edf4ff, #ffffff 60%);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 6px 10px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.95rem, 3vw, 2.8rem);
+      line-height: 1.08;
+    }
+
+    .hero p { margin: 0; color: var(--muted); max-width: 72ch; }
+
+    .panel {
+      position: sticky;
+      top: 10px;
+      z-index: 20;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(230,234,240,0.95);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .meta { display: grid; gap: 8px; }
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      font-size: 0.96rem;
+    }
+
+    .track {
+      width: 100%;
+      height: 12px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .track > span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #60a5fa, #2563eb);
+      transition: width .25s ease;
+    }
+
+    .btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+    .btn-primary { background: var(--primary); color: white; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22); }
+    .btn-secondary { background: white; color: var(--text); border: 1px solid var(--border); }
+
+    .summary {
+      display: none;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 18px 20px;
+      margin-bottom: 18px;
+    }
+
+    .summary.show { display: block; }
+    .summary h2 { margin: 0 0 6px; font-size: 1.2rem; }
+    .summary p { margin: 0; color: var(--muted); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .head {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      font-weight: 800;
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .question {
+      margin: 2px 0 0;
+      font-size: 1.02rem;
+      font-weight: 700;
+    }
+
+    .answer {
+      width: 100%;
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px 14px;
+      font: inherit;
+      color: var(--text);
+      background: #fcfdff;
+      outline: none;
+      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+
+    .answer:focus {
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+      background: #fff;
+    }
+
+    .answer.correct {
+      background: var(--ok-soft);
+      border-color: #86efac;
+    }
+
+    .answer.incorrect {
+      background: var(--bad-soft);
+      border-color: #fda29b;
+    }
+
+    .feedback {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 0.94rem;
+      display: none;
+    }
+
+    .feedback.show { display: block; }
+    .feedback.ok { background: var(--ok-soft); color: var(--ok); }
+    .feedback.bad { background: var(--bad-soft); color: var(--bad); }
+    .feedback.neutral { background: var(--neutral-soft); color: #344054; }
+
+    .note {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 820px) {
+      .grid { grid-template-columns: 1fr; }
+      .panel { grid-template-columns: 1fr; top: 8px; }
+      .btns { justify-content: stretch; }
+      .btns button { flex: 1 1 100%; }
+    }
+
+    @media (max-width: 760px) {
+      .lang-controls {
+        width: min(100% - 16px, 980px);
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .page { width: min(100% - 16px, 980px); margin-top: 16px; }
+      .hero { padding: 20px; border-radius: 22px; }
+      .card { padding: 16px; }
+      .question { font-size: 0.98rem; }
+    }
+  </style>
+</head>
+<body class="lang-en">
+  <div class="topbar-global">
+    <div class="lang-controls" aria-label="Language controls">
+      <button class="lang-btn is-active" data-lang="en">English</button>
+      <button class="lang-btn" data-lang="bi">En + Zh</button>
+      <button class="lang-btn" data-lang="zh">Zh only</button>
+    </div>
+  </div>
+  <div class="page">
+    <section class="hero">
+      <div class="badge"><span class="i18n-wrap"><span class="i18n-en">Chemistry Practice</span><span class="i18n-zh">化学练习</span></span></div>
+      <h1><span class="i18n-wrap"><span class="i18n-en">Acids and Bases Quiz</span><span class="i18n-zh">酸和碱测验</span></span></h1>
+      <p><span class="i18n-wrap"><span class="i18n-en">Answer the short-response questions about acids, bases, pH, ionization, conductivity, indicators, and neutralization. This page accepts common spelling and chemistry variants for many answers.</span><span class="i18n-zh">回答关于酸、碱、pH、电离、导电性、指示剂和中和反应的简答题。本页对许多答案接受常见拼写和化学术语变体。</span></span></p>
+    </section>
+
+    <section class="panel" aria-label="Quiz controls">
+      <div class="meta">
+        <div class="meta-row">
+          <strong id="answered">0 / 22 answered</strong>
+          <span id="scoreLive">Score: —</span>
+        </div>
+        <div class="track" aria-hidden="true"><span id="progress"></span></div>
+      </div>
+      <div class="btns">
+        <button type="button" class="btn-secondary" id="showBtn">Show Answers</button>
+        <button type="button" class="btn-secondary" id="resetBtn">Reset</button>
+        <button type="button" class="btn-primary" id="checkBtn">Check Answers</button>
+      </div>
+    </section>
+
+    <section class="summary" id="summary" aria-live="polite">
+      <h2 id="summaryTitle">Your score</h2>
+      <p id="summaryText"></p>
+    </section>
+
+    <form class="grid" id="quizForm"></form>
+
+    <p class="note"><span class="i18n-wrap"><span class="i18n-en">Built from the publicly visible printable worksheet version of the quiz.</span><span class="i18n-zh">根据该测验公开可见的可打印练习单版本制作。</span></span></p>
+  </div>
+
+  <script>
+    const quizData = [
+      { question: 'Solutions with a pH greater than 7 are ____.', questionZh: 'pH 大于 7 的溶液是 ____。', answers: ['basic', 'bases', 'alkaline'] },
+      { question: 'acids taste ___.', questionZh: '酸尝起来是 ___。', answers: ['sour'] },
+      { question: 'Pure water has a pH of ___.', questionZh: '纯水的 pH 是 ___。', answers: ['7', 'seven'] },
+      { question: 'Acids react with metals to produce _ gas.', questionZh: '酸与金属反应会产生 _ 气体。', answers: ['hydrogen', 'hydrogen gas'] },
+      { question: 'Acids _______ electricity.', questionZh: '酸能够_______电。', answers: ['conduct', 'carry', 'conduct electricity'] },
+      { question: 'Bases feel _________.', questionZh: '碱摸起来是_________。', answers: ['slippery', 'soapy'] },
+      { question: 'An acid that only partly ionizes in solution is a _______ acid.', questionZh: '在溶液中只部分电离的酸是_______酸。', answers: ['weak', 'weak acid'] },
+      { question: 'A base produces _____ ions in solution.', questionZh: '碱在溶液中会产生_____离子。', answers: ['hydroxide', 'hydroxide ions', 'oh-', 'oh'] },
+      { question: 'An acid that ionizes almost completely in solution is called a ______ acid.', questionZh: '在溶液中几乎完全电离的酸称为______酸。', answers: ['strong', 'strong acid'] },
+      { question: 'Acids produce _____ ions, when dissolved in water.', questionZh: '酸溶于水时会产生_____离子。', answers: ['hydrogen', 'hydrogen ions', 'h+', 'h ions'] },
+      { question: 'The acid in our stomach that helps to break down food during digestion is _______.', questionZh: '我们胃中帮助分解食物的酸是_______。', answers: ['hydrochloric acid', 'hcl'] },
+      { question: 'The process of making soap is called _______.', questionZh: '制皂的过程叫作_______。', answers: ['saponification'] },
+      { question: 'The acid in the car battery is ______.', questionZh: '汽车电池中的酸是______。', answers: ['sulfuric acid', 'sulphuric acid', 'h2so4'] },
+      { question: 'The chemical reaction between an acid and a base is called a ________ reaction.', questionZh: '酸和碱之间的化学反应叫作________反应。', answers: ['neutralization', 'neutralisation', 'neutralization reaction', 'neutralisation reaction'] },
+      { question: 'Solutions with a pH lower than 7 are _______.', questionZh: 'pH 小于 7 的溶液是_______。', answers: ['acidic', 'acids'] },
+      { question: 'Litmus paper turns ______ in the presence of a base.', questionZh: '石蕊试纸遇到碱会变成______。', answers: ['blue'] },
+      { question: 'You should never use ______ to test for an acid or a base.', questionZh: '你绝不能用______来测试酸或碱。', answers: ['taste', 'your tongue', 'your mouth'] },
+      { question: 'Bases ________ electricity.', questionZh: '碱能够________电。', answers: ['conduct', 'carry', 'conduct electricity'] },
+      { question: 'The 2 products formed from a neutralization reaction between an acid and a base are salt and ________.', questionZh: '酸碱中和反应形成的两种产物是盐和________。', answers: ['water'] },
+      { question: 'The acid in vinegar is ________.', questionZh: '醋中的酸是________。', answers: ['acetic acid', 'ethanoic acid'] },
+      { question: 'Bases taste ________.', questionZh: '碱尝起来是________。', answers: ['bitter'] },
+      { question: 'Litmus paper is ___ in the presence of an acid.', questionZh: '石蕊试纸遇到酸时是___。', answers: ['red'] }
+    ];
+
+    const quizForm = document.getElementById('quizForm');
+    const answeredEl = document.getElementById('answered');
+    const scoreLive = document.getElementById('scoreLive');
+    const progress = document.getElementById('progress');
+    const summary = document.getElementById('summary');
+    const summaryTitle = document.getElementById('summaryTitle');
+    const summaryText = document.getElementById('summaryText');
+    const body = document.body;
+    const showBtn = document.getElementById('showBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const checkBtn = document.getElementById('checkBtn');
+    const langButtons = document.querySelectorAll('.lang-btn');
+
+    const uiStrings = {
+      answered: { en: 'answered', zh: '已作答' },
+      scoreDash: { en: 'Score: —', zh: '得分：—' },
+      showAnswers: { en: 'Show Answers', zh: '显示答案' },
+      reset: { en: 'Reset', zh: '重置' },
+      checkAnswers: { en: 'Check Answers', zh: '检查答案' },
+      yourScore: { en: 'Your score', zh: '你的得分' },
+      answerKeyShown: { en: 'Answer key shown', zh: '已显示答案' },
+      placeholder: { en: 'Type your answer', zh: '输入你的答案' },
+      noAnswerEntered: { en: 'No answer entered. Accepted answer:', zh: '未输入答案。接受答案：' },
+      acceptedAnswer: { en: 'Accepted answer:', zh: '接受答案：' },
+      correct: { en: 'Correct.', zh: '正确。' },
+      yourAnswer: { en: 'Your answer:', zh: '你的答案：' },
+      scoreSummaryTail: { en: 'Answers shown below use standard chemistry terms and common variants.', zh: '下方显示的答案使用标准化学术语和常见变体。' },
+      answerKeySummary: { en: 'These accepted answers are based on standard acids-and-bases terminology.', zh: '这些接受答案基于标准酸碱术语。' }
+    };
+
+    function currentMode() {
+      if (body.classList.contains('lang-zh')) return 'zh';
+      if (body.classList.contains('lang-bi')) return 'bi';
+      return 'en';
+    }
+
+    function uiText(key) {
+      const mode = currentMode();
+      const item = uiStrings[key];
+      if (mode === 'zh') return item.zh;
+      if (mode === 'bi') return `${item.en} / ${item.zh}`;
+      return item.en;
+    }
+
+    function questionLabel(item, mode) {
+      if (mode === 'zh') return item.questionZh;
+      if (mode === 'bi') return `${item.question} / ${item.questionZh}`;
+      return item.question;
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function normalize(text) {
+      return text
+        .toLowerCase()
+        .trim()
+        .replace(/[._,;:!?()]/g, '')
+        .replace(/\s+/g, ' ')
+        .replace(/\bions?\b/g, 'ions')
+        .replace(/\bconducts\b/g, 'conduct')
+        .replace(/\bcarries\b/g, 'carry');
+    }
+
+    function isCorrect(input, acceptedAnswers) {
+      const value = normalize(input);
+      return acceptedAnswers.some(ans => value === normalize(ans));
+    }
+
+    function renderQuiz() {
+      const mode = currentMode();
+      quizForm.innerHTML = quizData.map((q, index) => `
+        <article class="card" data-index="${index}">
+          <div class="head">
+            <div class="num">${index + 1}</div>
+            <p class="question">${escapeHtml(questionLabel(q, mode))}</p>
+          </div>
+          <input class="answer" type="text" name="q${index}" placeholder="${escapeHtml(uiText('placeholder'))}" autocomplete="off" />
+          <div class="feedback" id="feedback-${index}"></div>
+        </article>
+      `).join('');
+
+      quizForm.querySelectorAll('.answer').forEach(input => input.addEventListener('input', updateProgress));
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const inputs = [...quizForm.querySelectorAll('.answer')];
+      const answered = inputs.filter(input => input.value.trim() !== '').length;
+      answeredEl.textContent = `${answered} / ${quizData.length} ${uiText('answered')}`;
+      progress.style.width = `${(answered / quizData.length) * 100}%`;
+    }
+
+    function checkAnswers(showOnly = false) {
+      let score = 0;
+
+      quizData.forEach((q, index) => {
+        const input = quizForm.querySelector(`input[name="q${index}"]`);
+        const feedback = document.getElementById(`feedback-${index}`);
+        const value = input.value.trim();
+        const correct = isCorrect(value, q.answers);
+        const preferred = q.answers[0];
+
+        input.classList.remove('correct', 'incorrect');
+        feedback.className = 'feedback show';
+
+        if (showOnly) {
+          feedback.classList.add('neutral');
+          feedback.innerHTML = `${uiText('acceptedAnswer')} <strong>${preferred}</strong>`;
+          return;
+        }
+
+        if (!value) {
+          feedback.classList.add('neutral');
+          feedback.innerHTML = `${uiText('noAnswerEntered')} <strong>${preferred}</strong>`;
+          return;
+        }
+
+        if (correct) {
+          score++;
+          input.classList.add('correct');
+          feedback.classList.add('ok');
+          feedback.textContent = 'Correct.';
+          feedback.textContent = uiText('correct');
+        } else {
+          input.classList.add('incorrect');
+          feedback.classList.add('bad');
+          feedback.innerHTML = `${uiText('yourAnswer')} <strong>${escapeHtml(value)}</strong>. ${uiText('acceptedAnswer')} <strong>${preferred}</strong>`;
+        }
+      });
+
+      if (!showOnly) {
+        const pct = Math.round((score / quizData.length) * 100);
+        const mode = currentMode();
+        scoreLive.textContent = mode === 'zh' ? `得分：${score}/${quizData.length}` : `Score: ${score}/${quizData.length}`;
+        summaryTitle.textContent = mode === 'zh' ? `你的得分：${score} / ${quizData.length}` : `Your score: ${score} / ${quizData.length}`;
+        summaryText.textContent = mode === 'zh' ? `这相当于 ${pct}%。下方显示的答案使用标准化学术语和常见变体。` : `That is ${pct}%. Answers shown below use standard chemistry terms and common variants.`;
+        summary.classList.add('show');
+      }
+    }
+
+    function showAnswers() {
+      const mode = currentMode();
+      scoreLive.textContent = mode === 'zh' ? '得分：—' : 'Score: —';
+      summaryTitle.textContent = mode === 'zh' ? '已显示答案' : 'Answer key shown';
+      summaryText.textContent = mode === 'zh' ? '这些接受答案基于标准酸碱术语。' : 'These accepted answers are based on standard acids-and-bases terminology.';
+      summary.classList.add('show');
+      quizForm.querySelectorAll('.answer').forEach(el => el.classList.remove('correct', 'incorrect'));
+      checkAnswers(true);
+    }
+
+    function resetQuiz() {
+      quizForm.reset();
+      quizForm.querySelectorAll('.answer').forEach(el => el.classList.remove('correct', 'incorrect'));
+      quizForm.querySelectorAll('.feedback').forEach(el => {
+        el.className = 'feedback';
+        el.textContent = '';
+      });
+      scoreLive.textContent = currentMode() === 'zh' ? '得分：—' : 'Score: —';
+      summary.classList.remove('show');
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function applyLanguageMode(mode) {
+      body.classList.remove('lang-en', 'lang-bi', 'lang-zh');
+      body.classList.add(`lang-${mode}`);
+      langButtons.forEach(btn => {
+        btn.classList.toggle('is-active', btn.dataset.lang === mode);
+      });
+      showBtn.textContent = mode === 'zh' ? '显示答案' : 'Show Answers';
+      resetBtn.textContent = mode === 'zh' ? '重置' : 'Reset';
+      checkBtn.textContent = mode === 'zh' ? '检查答案' : 'Check Answers';
+      if (!summary.classList.contains('show')) {
+        summaryTitle.textContent = mode === 'zh' ? '你的得分' : 'Your score';
+      }
+      renderQuiz();
+    }
+
+    langButtons.forEach(btn => {
+      btn.addEventListener('click', () => applyLanguageMode(btn.dataset.lang));
+    });
+
+    checkBtn.addEventListener('click', () => checkAnswers(false));
+    showBtn.addEventListener('click', showAnswers);
+    resetBtn.addEventListener('click', resetQuiz);
+
+    renderQuiz();
+  </script>
+</body>
+</html>

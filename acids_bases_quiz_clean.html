@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Acids and Bases Quiz</title>
+  <title>Acids and Bases Quiz | 酸和碱测验</title>
   <style>
     :root {
       --bg: #f6f8fb;
@@ -29,6 +29,70 @@
       background: linear-gradient(180deg, #f8fbff 0%, #f4f7fb 100%);
       color: var(--text);
       line-height: 1.55;
+    }
+
+    .topbar-global {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(246, 248, 251, 0.92);
+      border-bottom: 1px solid rgba(229, 231, 235, 0.95);
+      backdrop-filter: blur(12px);
+    }
+
+    .lang-controls {
+      width: min(920px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 10px 0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .lang-btn {
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      border-radius: 999px;
+      font: 700 14px/1 Inter, ui-sans-serif, system-ui, sans-serif;
+      cursor: pointer;
+    }
+
+    .lang-btn.is-active {
+      background: var(--text);
+      color: #fff;
+    }
+
+    .i18n-wrap {
+      display: block;
+    }
+
+    .i18n-en,
+    .i18n-zh {
+      display: block;
+    }
+
+    .i18n-inline .i18n-en,
+    .i18n-inline .i18n-zh {
+      display: inline;
+    }
+
+    .lang-en .i18n-zh {
+      display: none;
+    }
+
+    .lang-bi .i18n-wrap:not(.i18n-inline) .i18n-zh {
+      margin-top: 4px;
+      color: var(--muted);
+    }
+
+    .lang-bi .i18n-inline .i18n-zh::before {
+      content: " / ";
+    }
+
+    .lang-zh .i18n-en {
+      display: none;
     }
 
     .wrap {
@@ -255,6 +319,11 @@
     }
 
     @media (max-width: 760px) {
+      .lang-controls {
+        width: min(100% - 16px, 920px);
+        justify-content: center;
+        flex-wrap: wrap;
+      }
       .wrap { width: min(100% - 16px, 920px); margin-top: 16px; }
       .hero { padding: 20px; border-radius: 22px; }
       .toolbar {
@@ -269,12 +338,19 @@
     }
   </style>
 </head>
-<body>
+<body class="lang-en">
+  <div class="topbar-global">
+    <div class="lang-controls" aria-label="Language controls">
+      <button class="lang-btn is-active" data-lang="en">English</button>
+      <button class="lang-btn" data-lang="bi">En + Zh</button>
+      <button class="lang-btn" data-lang="zh">Zh only</button>
+    </div>
+  </div>
   <div class="wrap">
     <section class="hero">
-      <div class="eyebrow">Chemistry Quiz</div>
-      <h1>Acids and Bases</h1>
-      <p>Test your understanding of acids, bases, pH, hydrogen ions, and common chemical properties. Choose one answer for each question, then score your quiz and review the correct answers.</p>
+      <div class="eyebrow"><span class="i18n-wrap"><span class="i18n-en">Chemistry Quiz</span><span class="i18n-zh">化学测验</span></span></div>
+      <h1><span class="i18n-wrap"><span class="i18n-en">Acids and Bases</span><span class="i18n-zh">酸和碱</span></span></h1>
+      <p><span class="i18n-wrap"><span class="i18n-en">Test your understanding of acids, bases, pH, hydrogen ions, and common chemical properties. Choose one answer for each question, then score your quiz and review the correct answers.</span><span class="i18n-zh">测试你对酸、碱、pH、氢离子和常见化学性质的理解。每题选择一个答案，然后检查分数并查看正确答案。</span></span></p>
     </section>
 
     <section class="toolbar" aria-label="Quiz controls">
@@ -298,62 +374,137 @@
 
     <form class="quiz" id="quizForm"></form>
 
-    <p class="footer-note">Standalone practice page for study use.</p>
+    <p class="footer-note"><span class="i18n-wrap"><span class="i18n-en">Standalone practice page for study use.</span><span class="i18n-zh">供学习使用的独立练习页面。</span></span></p>
   </div>
 
   <script>
     const quizData = [
       {
         question: 'A hydrogen ion, H+, is the same as a(n):',
-        options: ['neutron', 'electron', 'proton', 'hydroxide ion'],
+        questionZh: '氢离子 H+ 与下列哪一项相同？',
+        options: [
+          { en: 'neutron', zh: '中子' },
+          { en: 'electron', zh: '电子' },
+          { en: 'proton', zh: '质子' },
+          { en: 'hydroxide ion', zh: '氢氧根离子' }
+        ],
         answer: 'proton'
       },
       {
         question: 'Acidic foods can be identified by what taste?',
-        options: ['salty', 'sour', 'bitter', 'sweet'],
+        questionZh: '酸性食物通常有什么味道？',
+        options: [
+          { en: 'salty', zh: '咸' },
+          { en: 'sour', zh: '酸' },
+          { en: 'bitter', zh: '苦' },
+          { en: 'sweet', zh: '甜' }
+        ],
         answer: 'sour'
       },
       {
         question: 'OH− is called the:',
-        options: ['hydrate ion', 'hydrogen ion', 'hydronium ion', 'hydroxide ion'],
+        questionZh: 'OH− 被称为：',
+        options: [
+          { en: 'hydrate ion', zh: '水合离子' },
+          { en: 'hydrogen ion', zh: '氢离子' },
+          { en: 'hydronium ion', zh: '水合氢离子' },
+          { en: 'hydroxide ion', zh: '氢氧根离子' }
+        ],
         answer: 'hydroxide ion'
       },
       {
         question: 'Acids increase the concentration of what in water?',
-        options: ['H+ ions', 'hydrate ions', 'hydroxide ions', 'OH− ions'],
+        questionZh: '酸会增加水中哪一种离子的浓度？',
+        options: [
+          { en: 'H+ ions', zh: 'H+ 离子' },
+          { en: 'hydrate ions', zh: '水合离子' },
+          { en: 'hydroxide ions', zh: '氢氧根离子' },
+          { en: 'OH− ions', zh: 'OH− 离子' }
+        ],
         answer: 'H+ ions'
       },
       {
         question: 'A beaker full of acid is added to a beaker full of base. The pH of the base will:',
-        options: ['change constantly', 'decrease', 'increase', 'stay the same'],
+        questionZh: '把一烧杯酸加入一烧杯碱中，碱的 pH 将会：',
+        options: [
+          { en: 'change constantly', zh: '不断变化' },
+          { en: 'decrease', zh: '降低' },
+          { en: 'increase', zh: '升高' },
+          { en: 'stay the same', zh: '保持不变' }
+        ],
         answer: 'decrease'
       },
       {
         question: 'A solution with a pH of 11 has a H+ concentration of:',
-        options: ['1 × 10^-11 moles/liter', '1 × 10^-3 moles/liter', '1 × 10^11 moles/liter', '1 × 10^3 moles/liter'],
+        questionZh: 'pH 为 11 的溶液，其 H+ 浓度是：',
+        options: [
+          { en: '1 × 10^-11 moles/liter', zh: '1 × 10^-11 摩尔/升' },
+          { en: '1 × 10^-3 moles/liter', zh: '1 × 10^-3 摩尔/升' },
+          { en: '1 × 10^11 moles/liter', zh: '1 × 10^11 摩尔/升' },
+          { en: '1 × 10^3 moles/liter', zh: '1 × 10^3 摩尔/升' }
+        ],
         answer: '1 × 10^-11 moles/liter'
       },
       {
         question: 'Which substance has the lowest pH?',
-        options: ['milk', 'NaOH', 'pure water', 'lemon juice'],
+        questionZh: '哪一种物质的 pH 最低？',
+        options: [
+          { en: 'milk', zh: '牛奶' },
+          { en: 'NaOH', zh: 'NaOH' },
+          { en: 'pure water', zh: '纯水' },
+          { en: 'lemon juice', zh: '柠檬汁' }
+        ],
         answer: 'lemon juice'
       },
       {
         question: 'An unknown substance is added to a solution and the pH increases. The substance is:',
-        options: ['acidic', 'basic', 'solvent', 'sweet'],
+        questionZh: '向一种溶液中加入未知物质后 pH 升高，该物质是：',
+        options: [
+          { en: 'acidic', zh: '酸性的' },
+          { en: 'basic', zh: '碱性的' },
+          { en: 'solvent', zh: '溶剂' },
+          { en: 'sweet', zh: '甜的' }
+        ],
         answer: 'basic'
       },
       {
         question: 'What is the concentration of H+ in pure water?',
-        options: ['1 × 10^-13 moles/liter', '1 × 10^-14 moles/liter', '1 × 10^-7 moles/liter', '1 × 10^7 moles/liter'],
+        questionZh: '纯水中 H+ 的浓度是多少？',
+        options: [
+          { en: '1 × 10^-13 moles/liter', zh: '1 × 10^-13 摩尔/升' },
+          { en: '1 × 10^-14 moles/liter', zh: '1 × 10^-14 摩尔/升' },
+          { en: '1 × 10^-7 moles/liter', zh: '1 × 10^-7 摩尔/升' },
+          { en: '1 × 10^7 moles/liter', zh: '1 × 10^7 摩尔/升' }
+        ],
         answer: '1 × 10^-7 moles/liter'
       },
       {
         question: 'Bases can be referred to as:',
-        options: ['none of the choices', 'proton acceptors', 'proton donors', 'protons'],
+        questionZh: '碱也可以称为：',
+        options: [
+          { en: 'none of the choices', zh: '以上都不是' },
+          { en: 'proton acceptors', zh: '质子受体' },
+          { en: 'proton donors', zh: '质子供体' },
+          { en: 'protons', zh: '质子' }
+        ],
         answer: 'proton acceptors'
       }
     ];
+
+    const uiStrings = {
+      answered: { en: 'answered', zh: '已作答' },
+      scoreLabel: { en: 'Score', zh: '得分' },
+      scoreDash: { en: 'Score: —', zh: '得分：—' },
+      reset: { en: 'Reset', zh: '重置' },
+      check: { en: 'Check Answers', zh: '检查答案' },
+      yourScore: { en: 'Your score', zh: '你的得分' },
+      noAnswer: { en: 'No answer selected. Correct answer:', zh: '未选择答案。正确答案：' },
+      correct: { en: 'Correct.', zh: '正确。' },
+      yourAnswer: { en: 'Your answer:', zh: '你的答案：' },
+      correctAnswer: { en: 'Correct answer:', zh: '正确答案：' },
+      reviewNote: { en: 'Review the highlighted answers below.', zh: '请查看下方高亮显示的正确答案。' },
+      questionAria: { en: 'Question', zh: '题目' }
+    };
 
     const quizForm = document.getElementById('quizForm');
     const progressBar = document.getElementById('progressBar');
@@ -364,19 +515,48 @@
     const resultsBox = document.getElementById('resultsBox');
     const scoreHeadline = document.getElementById('scoreHeadline');
     const scoreText = document.getElementById('scoreText');
+    const body = document.body;
+    const langButtons = document.querySelectorAll('.lang-btn');
+
+    function currentMode() {
+      if (body.classList.contains('lang-zh')) return 'zh';
+      if (body.classList.contains('lang-bi')) return 'bi';
+      return 'en';
+    }
+
+    function uiText(key) {
+      const mode = currentMode();
+      const item = uiStrings[key];
+      if (mode === 'zh') return item.zh;
+      if (mode === 'bi') return `${item.en} / ${item.zh}`;
+      return item.en;
+    }
+
+    function optionLabel(option, mode) {
+      if (mode === 'zh') return option.zh;
+      if (mode === 'bi') return `${option.en} / ${option.zh}`;
+      return option.en;
+    }
+
+    function questionLabel(item, mode) {
+      if (mode === 'zh') return item.questionZh;
+      if (mode === 'bi') return `${item.question} / ${item.questionZh}`;
+      return item.question;
+    }
 
     function renderQuiz() {
+      const mode = currentMode();
       quizForm.innerHTML = quizData.map((item, index) => `
         <article class="card" data-index="${index}">
           <div class="q-top">
             <div class="q-num">${index + 1}</div>
-            <p class="q-text">${item.question}</p>
+            <p class="q-text">${escapeHtml(questionLabel(item, mode))}</p>
           </div>
-          <div class="options" role="radiogroup" aria-label="Question ${index + 1}">
-            ${item.options.map((option, optIndex) => `
+          <div class="options" role="radiogroup" aria-label="${escapeHtml(uiText('questionAria'))} ${index + 1}">
+            ${item.options.map(option => `
               <label class="option">
-                <input type="radio" name="q${index}" value="${escapeHtml(option)}" aria-label="${escapeHtml(option)}" />
-                <span>${escapeHtml(option)}</span>
+                <input type="radio" name="q${index}" value="${escapeHtml(option.en)}" aria-label="${escapeHtml(optionLabel(option, mode))}" />
+                <span>${escapeHtml(optionLabel(option, mode))}</span>
               </label>
             `).join('')}
           </div>
@@ -406,7 +586,7 @@
         if (quizForm.querySelector(`input[name="q${index}"]:checked`)) answered++;
       });
       const pct = (answered / quizData.length) * 100;
-      answeredCount.textContent = `${answered} / ${quizData.length} answered`;
+      answeredCount.textContent = `${answered} / ${quizData.length} ${uiText('answered')}`;
       progressBar.style.width = `${pct}%`;
     }
 
@@ -429,25 +609,26 @@
 
         if (!selected) {
           feedback.classList.add('neutral');
-          feedback.innerHTML = `No answer selected. Correct answer: <strong>${item.answer}</strong>`;
+          feedback.innerHTML = `${uiText('noAnswer')} <strong>${item.answer}</strong>`;
           return;
         }
 
         if (selected.value === item.answer) {
           score++;
           feedback.classList.add('correct');
-          feedback.innerHTML = `Correct.`;
+          feedback.innerHTML = uiText('correct');
         } else {
           selected.closest('.option').classList.add('incorrect');
           feedback.classList.add('incorrect');
-          feedback.innerHTML = `Your answer: <strong>${selected.value}</strong>. Correct answer: <strong>${item.answer}</strong>`;
+          feedback.innerHTML = `${uiText('yourAnswer')} <strong>${selected.value}</strong>. ${uiText('correctAnswer')} <strong>${item.answer}</strong>`;
         }
       });
 
       const percent = Math.round((score / quizData.length) * 100);
-      liveScore.textContent = `Score: ${score}/${quizData.length}`;
-      scoreHeadline.textContent = `Your score: ${score} / ${quizData.length}`;
-      scoreText.textContent = `That is ${percent}%. Review the highlighted answers below.`;
+      const mode = currentMode();
+      liveScore.textContent = mode === 'zh' ? `得分：${score}/${quizData.length}` : `Score: ${score}/${quizData.length}`;
+      scoreHeadline.textContent = mode === 'zh' ? `你的得分：${score} / ${quizData.length}` : `Your score: ${score} / ${quizData.length}`;
+      scoreText.textContent = mode === 'zh' ? `这相当于 ${percent}%。请查看下方高亮显示的正确答案。` : `That is ${percent}%. Review the highlighted answers below.`;
       resultsBox.classList.add('show');
       resultsBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
@@ -460,10 +641,28 @@
         el.textContent = '';
       });
       resultsBox.classList.remove('show');
-      liveScore.textContent = 'Score: —';
+      liveScore.textContent = currentMode() === 'zh' ? '得分：—' : 'Score: —';
       updateProgress();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
+    function applyLanguageMode(mode) {
+      body.classList.remove('lang-en', 'lang-bi', 'lang-zh');
+      body.classList.add(`lang-${mode}`);
+      langButtons.forEach(btn => {
+        btn.classList.toggle('is-active', btn.dataset.lang === mode);
+      });
+      resetBtn.textContent = mode === 'zh' ? '重置' : 'Reset';
+      checkBtn.textContent = mode === 'zh' ? '检查答案' : 'Check Answers';
+      if (!resultsBox.classList.contains('show')) {
+        scoreHeadline.textContent = mode === 'zh' ? '你的得分' : 'Your score';
+      }
+      renderQuiz();
+    }
+
+    langButtons.forEach(btn => {
+      btn.addEventListener('click', () => applyLanguageMode(btn.dataset.lang));
+    });
 
     checkBtn.addEventListener('click', checkAnswers);
     resetBtn.addEventListener('click', resetQuiz);
