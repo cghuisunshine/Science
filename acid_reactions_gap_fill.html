@@ -10,6 +10,7 @@
     --panel: #e1e1e1;
     --border: #222;
     --text: #111;
+    --muted: #555;
     --select-border: #888;
     --correct: #dff5df;
     --incorrect: #ffdada;
@@ -21,10 +22,63 @@
     font-family: Arial, Helvetica, sans-serif;
     color: var(--text);
   }
-  .page {
-    width: 1560px;
+  .topbar-global {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(217, 217, 217, 0.96);
+    border-bottom: 1px solid #aaa;
+    backdrop-filter: blur(8px);
+  }
+  .lang-controls {
+    width: min(1560px, calc(100vw - 16px));
     margin: 0 auto;
-    padding: 12px 0 20px;
+    padding: 10px 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  .lang-btn {
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text);
+    border-radius: 999px;
+    font: 600 14px/1 Arial, Helvetica, sans-serif;
+    cursor: pointer;
+  }
+  .lang-btn.is-active {
+    background: var(--text);
+    color: #fff;
+  }
+  .i18n-wrap {
+    display: block;
+  }
+  .i18n-en,
+  .i18n-zh {
+    display: block;
+  }
+  .i18n-inline .i18n-en,
+  .i18n-inline .i18n-zh {
+    display: inline;
+  }
+  .lang-en .i18n-zh {
+    display: none;
+  }
+  .lang-bi .i18n-wrap:not(.i18n-inline) .i18n-zh {
+    margin-top: 4px;
+    color: var(--muted);
+  }
+  .lang-bi .i18n-inline .i18n-zh::before {
+    content: " / ";
+  }
+  .lang-zh .i18n-en {
+    display: none;
+  }
+  .page {
+    width: min(100%, 1560px);
+    margin: 0 auto;
+    padding: 12px 12px 20px;
     background: var(--bg);
   }
   h1 {
@@ -40,7 +94,8 @@
     margin: 0 0 46px;
   }
   .instruction {
-    width: 1414px;
+    width: 100%;
+    max-width: 1414px;
     margin: 0 auto 2px;
     background: #ededed;
     border: 2px solid var(--border);
@@ -49,7 +104,8 @@
     padding: 14px 10px 12px;
   }
   .panel {
-    width: 1414px;
+    width: 100%;
+    max-width: 1414px;
     margin: 0 auto;
     background: var(--panel);
     border: 2px solid var(--border);
@@ -82,7 +138,6 @@
   .w-m { width: 305px; }
   .w-l { width: 390px; }
   .w-xl { width: 470px; }
-
   .section {
     margin-top: 24px;
     font-size: 31px;
@@ -153,6 +208,10 @@
   .incorrect { background: var(--incorrect) !important; }
 
   @media (max-width: 900px) {
+    .lang-controls {
+      width: calc(100vw - 16px);
+      flex-wrap: wrap;
+    }
     .page {
       width: 100%;
       padding: 12px 8px 20px;
@@ -223,22 +282,30 @@
   }
 </style>
 </head>
-<body>
-  <div class="page">
-    <h1>Check Your Understanding</h1>
-    <h2>Gap-fill exercise</h2>
+<body class="lang-en">
+  <div class="topbar-global">
+    <div class="lang-controls" role="group" aria-label="Language controls">
+      <button aria-pressed="true" class="lang-btn is-active" data-lang="en" type="button">English</button>
+      <button aria-pressed="false" class="lang-btn" data-lang="bi" type="button">En + Zh</button>
+      <button aria-pressed="false" class="lang-btn" data-lang="zh" type="button">Zh only</button>
+    </div>
+  </div>
 
-    <div class="instruction">Fill in all the gaps, then press "Check" to check your answers.</div>
+  <div class="page">
+    <h1><span class="i18n-wrap"><span class="i18n-en">Check Your Understanding - Acids, Metals, and Salts</span><span class="i18n-zh" lang="zh-Hans">检查你的理解：酸、金属和盐</span></span></h1>
+    <h2><span class="i18n-wrap"><span class="i18n-en">Gap-fill exercise</span><span class="i18n-zh" lang="zh-Hans">填空练习</span></span></h2>
+
+    <div class="instruction"><span class="i18n-wrap"><span class="i18n-en">Fill in all the gaps, then press "Check" to check your answers.</span><span class="i18n-zh" lang="zh-Hans">请完成所有填空，然后按 “Check” 检查你的答案。</span></span></div>
 
     <div class="panel">
       <div class="line">
-        Salt can be defined as a class of
+        <span class="i18n-wrap i18n-inline"><span class="i18n-en">Salt can be defined as a class of</span><span class="i18n-zh" lang="zh-Hans">盐可以定义为一类</span></span>
         <select class="select-inline w-s answer" data-answer="ionic"><option value=""></option></select>
-        compounds that form during the reaction of an acid
+        <span class="i18n-wrap i18n-inline"><span class="i18n-en">compounds that form during the reaction of an acid</span><span class="i18n-zh" lang="zh-Hans">化合物，它们在酸的反应过程中形成</span></span>
       </div>
 
       <div class="line">
-        and a base. This type of reaction is called
+        <span class="i18n-wrap i18n-inline"><span class="i18n-en">and a base. This type of reaction is called</span><span class="i18n-zh" lang="zh-Hans">和碱的反应中形成。这种类型的反应叫做</span></span>
         <select class="select-inline w-s answer" data-answer="neutralization"><option value=""></option></select>.
       </div>
 
@@ -246,27 +313,27 @@
 
       <div class="line">
         <select class="select-inline w-s answer" data-answer="ACID"><option value=""></option></select>
-        + BASE --&gt; SALT +
+        <span class="i18n-wrap i18n-inline"><span class="i18n-en">+ BASE --&gt; SALT +</span><span class="i18n-zh" lang="zh-Hans">+ 碱 --&gt; 盐 +</span></span>
         <select class="select-inline w-s answer" data-answer="WATER"><option value=""></option></select>
       </div>
 
       <div class="spacer-xl"></div>
 
       <div class="line">
-        When
+        <span class="i18n-wrap i18n-inline"><span class="i18n-en">When</span><span class="i18n-zh" lang="zh-Hans">当</span></span>
         <select class="select-inline w-s answer" data-answer="metal"><option value=""></option></select>
-        oxides react with water they form a base and when
+        <span class="i18n-wrap i18n-inline"><span class="i18n-en">oxides react with water they form a base and when</span><span class="i18n-zh" lang="zh-Hans">氧化物与水反应时，会形成碱；而当</span></span>
         <select class="select-inline w-s answer" data-answer="non-metal"><option value=""></option></select>
-        oxides
+        <span class="i18n-wrap i18n-inline"><span class="i18n-en">oxides</span><span class="i18n-zh" lang="zh-Hans">氧化物</span></span>
       </div>
 
-      <div class="line">react with water they form an acid.</div>
+      <div class="line"><span class="i18n-wrap"><span class="i18n-en">react with water they form an acid.</span><span class="i18n-zh" lang="zh-Hans">与水反应时，会形成酸。</span></span></div>
 
       <div class="section">
         <div class="statement">
-          List the following metals in order from most reactive with acids to least reactive with acids: sodium, gold,
+          <span class="i18n-wrap"><span class="i18n-en">List the following metals in order from most reactive with acids to least reactive with acids: sodium, gold,</span><span class="i18n-zh" lang="zh-Hans">请将下列金属按与酸反应活性从高到低排序：钠、金、</span></span>
         </div>
-        <div class="statement" style="margin-top:-8px;">zinc, copper</div>
+        <div class="statement" style="margin-top:-8px;"><span class="i18n-wrap"><span class="i18n-en">zinc, copper</span><span class="i18n-zh" lang="zh-Hans">锌、铜</span></span></div>
 
         <div class="rank-row">
           <div class="label">A:</div>
@@ -277,15 +344,15 @@
         </div>
 
         <div class="statement">
-          Acids reacting with metals produce
+          <span class="i18n-wrap i18n-inline"><span class="i18n-en">Acids reacting with metals produce</span><span class="i18n-zh" lang="zh-Hans">酸与金属反应会产生</span></span>
           <select class="select-inline w-m answer" data-answer="hydrogen gas"><option value=""></option></select>
-          whereas acids reacting with carbonates produce
+          <span class="i18n-wrap i18n-inline"><span class="i18n-en">whereas acids reacting with carbonates produce</span><span class="i18n-zh" lang="zh-Hans">而酸与碳酸盐反应会产生</span></span>
         </div>
         <div class="statement two-line">
           <select class="select-inline w-m answer" data-answer="carbon dioxide gas"><option value=""></option></select>.
         </div>
 
-        <div class="chem-title">State whether each of the following is an acid, a base, a salt or none of these.</div>
+        <div class="chem-title"><span class="i18n-wrap"><span class="i18n-en">State whether each of the following is an acid, a base, a salt or none of these.</span><span class="i18n-zh" lang="zh-Hans">判断下列各项分别是酸、碱、盐，还是都不是。</span></span></div>
 
         <div class="chem-row"><span class="label">a) HCl -</span><select class="select-inline answer" data-answer="ACID"><option value=""></option></select></div>
         <div class="chem-row"><span class="label">b) NaOH -</span><select class="select-inline answer" data-answer="base"><option value=""></option></select></div>
@@ -304,30 +371,69 @@
   </div>
 
 <script>
-const options = [
-  "ACID",
-  "WATER",
-  "base",
-  "carbon dioxide gas",
-  "copper",
-  "gold",
-  "hydrogen gas",
-  "ionic",
-  "metal",
-  "neither",
-  "neutralization",
-  "non-metal",
-  "salt",
-  "sodium",
-  "zinc"
+const optionItems = [
+  { value: "ACID", en: "ACID", zh: "酸" },
+  { value: "WATER", en: "WATER", zh: "水" },
+  { value: "base", en: "base", zh: "碱" },
+  { value: "carbon dioxide gas", en: "carbon dioxide gas", zh: "二氧化碳气体" },
+  { value: "copper", en: "copper", zh: "铜" },
+  { value: "gold", en: "gold", zh: "金" },
+  { value: "hydrogen gas", en: "hydrogen gas", zh: "氢气" },
+  { value: "ionic", en: "ionic", zh: "离子的" },
+  { value: "metal", en: "metal", zh: "金属" },
+  { value: "neither", en: "neither", zh: "都不是" },
+  { value: "neutralization", en: "neutralization", zh: "中和反应" },
+  { value: "non-metal", en: "non-metal", zh: "非金属" },
+  { value: "salt", en: "salt", zh: "盐" },
+  { value: "sodium", en: "sodium", zh: "钠" },
+  { value: "zinc", en: "zinc", zh: "锌" }
 ];
 
-document.querySelectorAll("select.answer").forEach(sel => {
-  options.forEach(value => {
-    const opt = document.createElement("option");
-    opt.value = value;
-    opt.textContent = value;
-    sel.appendChild(opt);
+const langButtons = Array.from(document.querySelectorAll('.lang-btn'));
+
+function optionLabel(item, mode) {
+  if (mode === 'zh') return item.zh;
+  if (mode === 'bi') return `${item.en} / ${item.zh}`;
+  return item.en;
+}
+
+function populateSelects(mode) {
+  document.querySelectorAll("select.answer").forEach((sel) => {
+    const currentValue = sel.value;
+    sel.innerHTML = '<option value=""></option>';
+    optionItems.forEach((item) => {
+      const opt = document.createElement("option");
+      opt.value = item.value;
+      opt.textContent = optionLabel(item, mode);
+      sel.appendChild(opt);
+    });
+    sel.value = currentValue;
+  });
+}
+
+function applyLanguageMode(mode) {
+  document.body.classList.toggle('lang-en', mode === 'en');
+  document.body.classList.toggle('lang-bi', mode === 'bi');
+  document.body.classList.toggle('lang-zh', mode === 'zh');
+
+  langButtons.forEach((button) => {
+    const isActive = button.dataset.lang === mode;
+    button.classList.toggle('is-active', isActive);
+    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+  });
+
+  populateSelects(mode);
+
+  try {
+    localStorage.setItem('science10-acid-reactions-gap-fill-lang', mode);
+  } catch (_error) {
+    // Ignore storage errors.
+  }
+}
+
+langButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    applyLanguageMode(button.dataset.lang);
   });
 });
 
@@ -353,6 +459,14 @@ document.getElementById("checkBtn").addEventListener("click", () => {
 
   document.getElementById("status").textContent = `Score: ${correct} / ${total} — correct answers are now shown.`;
 });
+
+let currentLang = 'en';
+try {
+  currentLang = localStorage.getItem('science10-acid-reactions-gap-fill-lang') || 'en';
+} catch (_error) {
+  currentLang = 'en';
+}
+applyLanguageMode(['en', 'bi', 'zh'].includes(currentLang) ? currentLang : 'en');
 </script>
 </body>
 </html>
