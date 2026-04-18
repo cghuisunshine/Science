@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2.5 Types of Chemical Reactions</title>
+  <style>
+    :root{
+      --bg:#ece7df;
+      --page:#ffffff;
+      --ink:#1f2328;
+      --muted:#5f6368;
+      --line:#b9b1a4;
+      --line-strong:#7a7267;
+      --surface:#f7f4ef;
+      --accent:#7c2d12;
+      --accent-soft:#efe3d5;
+      --shadow:0 3px 14px rgba(0,0,0,.08);
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:Calibri, Aptos, "Segoe UI", sans-serif;
+      line-height:1.4;
+    }
+
+    a{
+      color:#0b5cad;
+      word-break:break-word;
+    }
+
+    .topbar-global{
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:rgba(236, 231, 223, 0.96);
+      border-bottom:1px solid var(--line);
+      backdrop-filter:blur(8px);
+    }
+
+    .lang-controls{
+      width:min(1200px, calc(100vw - 40px));
+      margin:0 auto;
+      padding:12px 0;
+      display:flex;
+      justify-content:flex-end;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .lang-btn{
+      padding:8px 14px;
+      border:1px solid var(--line-strong);
+      background:#fff;
+      color:var(--ink);
+      border-radius:999px;
+      font:600 14px/1 Calibri, Aptos, "Segoe UI", sans-serif;
+      cursor:pointer;
+    }
+
+    .lang-btn.is-active{
+      background:var(--ink);
+      color:#fff;
+      border-color:var(--ink);
+    }
+
+    .wrapper{
+      padding:24px 0 40px;
+    }
+
+    .page{
+      width:min(1200px, calc(100vw - 40px));
+      margin:0 auto;
+      background:var(--page);
+      box-shadow:var(--shadow);
+      padding:0.72in;
+    }
+
+    h1{
+      margin:0 0 18px;
+      font-size:30px;
+      line-height:1.15;
+    }
+
+    h2{
+      margin:28px 0 10px;
+      font-size:22px;
+      line-height:1.2;
+    }
+
+    h3{
+      margin:18px 0 8px;
+      font-size:17px;
+      line-height:1.2;
+    }
+
+    p, li, div, summary{
+      font-size:15px;
+    }
+
+    p{
+      margin:8px 0;
+    }
+
+    ul, ol{
+      margin:8px 0 12px 22px;
+      padding:0;
+    }
+
+    li{
+      margin:5px 0;
+    }
+
+    .i18n-wrap{
+      display:block;
+    }
+
+    .i18n-en,
+    .i18n-zh{
+      display:block;
+    }
+
+    .i18n-inline .i18n-en,
+    .i18n-inline .i18n-zh{
+      display:inline;
+    }
+
+    .lang-en .i18n-zh{
+      display:none;
+    }
+
+    .lang-bi .i18n-wrap:not(.i18n-inline) .i18n-zh{
+      margin-top:4px;
+      color:var(--muted);
+    }
+
+    .lang-bi .i18n-inline .i18n-zh::before{
+      content:" / ";
+    }
+
+    .lang-zh .i18n-en{
+      display:none;
+    }
+
+    .intro-box,
+    .section-box,
+    .note-box,
+    .placeholder,
+    details{
+      border:1px solid var(--line-strong);
+      background:var(--surface);
+      padding:14px 16px;
+      margin:12px 0 16px;
+    }
+
+    .section-lead{
+      border-left:4px solid var(--accent);
+      background:var(--accent-soft);
+      padding:10px 12px;
+      margin:10px 0 16px;
+    }
+
+    .equation{
+      font-weight:700;
+      font-size:17px;
+      margin:8px 0;
+      letter-spacing:.01em;
+    }
+
+    .equation sub{
+      font-size:.58em;
+      vertical-align:baseline;
+      position:relative;
+      bottom:-0.28em;
+    }
+
+    .equation-block{
+      border-left:4px solid var(--line-strong);
+      padding:8px 0 8px 14px;
+      margin:10px 0 14px;
+    }
+
+    .video-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:14px;
+      margin:12px 0 18px;
+    }
+
+    .video-embed{
+      border:1px solid var(--line);
+      background:#fbfaf8;
+      padding:12px;
+    }
+
+    .video-frame{
+      position:relative;
+      width:100%;
+      padding-top:56.25%;
+      background:#000;
+    }
+
+    .video-frame iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+    }
+
+    .video-link{
+      margin:10px 0 0;
+      font-size:14px;
+    }
+
+    .resource-list,
+    .practice-list{
+      display:grid;
+      gap:10px;
+      margin:12px 0 18px;
+    }
+
+    .resource-item,
+    .practice-item{
+      border:1px solid var(--line);
+      background:#fff;
+      padding:12px 14px;
+    }
+
+    .practice-item p:last-child,
+    .resource-item p:last-child{
+      margin-bottom:0;
+    }
+
+    .answer-toggle{
+      margin-top:8px;
+      padding:8px 14px;
+      border:1px solid var(--line-strong);
+      background:#fff;
+      color:var(--ink);
+      font:600 14px/1.1 Calibri, Aptos, "Segoe UI", sans-serif;
+      cursor:pointer;
+    }
+
+    .answer-panel,
+    .mole-answer-panel{
+      margin-top:10px;
+      border-top:1px solid var(--line);
+      padding-top:10px;
+    }
+
+    .answer-panel[hidden],
+    .mole-answer-panel[hidden]{
+      display:none;
+    }
+
+    .subtle{
+      color:var(--muted);
+    }
+
+    .two-col{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:16px;
+    }
+
+    @media (max-width: 840px){
+      .lang-controls{
+        width:calc(100vw - 24px);
+        justify-content:flex-start;
+      }
+
+      .page{
+        width:calc(100vw - 24px);
+        padding:20px 18px 24px;
+      }
+
+      .video-grid,
+      .two-col{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body class="lang-en">
+  <div class="topbar-global">
+    <div aria-label="Language" class="lang-controls" role="group">
+      <button aria-pressed="true" class="lang-btn is-active" data-lang="en" type="button">English</button>
+      <button aria-pressed="false" class="lang-btn" data-lang="bi" type="button">En + Zh</button>
+      <button aria-pressed="false" class="lang-btn" data-lang="zh" type="button">Zh only</button>
+    </div>
+  </div>
+
+  <div class="wrapper">
+    <main class="page">
+      <h1><span class="i18n-wrap"><span class="i18n-en">2.5 Types of Chemical Reactions</span><span class="i18n-zh" lang="zh-Hans">2.5 化学反应的类型</span></span></h1>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Synthesis</span><span class="i18n-zh" lang="zh-Hans">化合反应</span></span></h2>
+      <p><span class="i18n-wrap"><span class="i18n-en">Synthesis reactions are also known as formation reactions.</span><span class="i18n-zh" lang="zh-Hans">Synthesis reactions 也叫 formation reactions。</span></span></p>
+      <div class="section-box">
+        <p><span class="i18n-wrap"><span class="i18n-en">Definition: A synthesis reaction is when two or more reactants (usually elements) join to form a compound.</span><span class="i18n-zh" lang="zh-Hans">定义：化合反应是指两个或更多反应物（通常是元素）结合形成一种化合物。</span></span></p>
+        <ul>
+          <li class="equation">A + B → AB, where A and B represent elements</li>
+        </ul>
+        <p><span class="i18n-wrap"><span class="i18n-en">The elements may form ionic compounds, like these:</span><span class="i18n-zh" lang="zh-Hans">这些元素可以形成离子化合物，例如：</span></span></p>
+        <ul>
+          <li>Sodium metal and chlorine gas combine to form sodium chloride.
+            <div class="equation-block">
+              <div class="equation">2 Na(s) + Cl<sub>2</sub>(g) → 2 NaCl(s)</div>
+            </div>
+          </li>
+          <li>Magnesium metal reacts with oxygen gas to form magnesium oxide.
+            <div class="equation-block">
+              <div class="equation">2 Mg(s) + O<sub>2</sub>(g) → 2 MgO(s)</div>
+            </div>
+          </li>
+        </ul>
+        <p><span class="i18n-wrap"><span class="i18n-en">Or the elements may form covalent compounds, like this:</span><span class="i18n-zh" lang="zh-Hans">或者这些元素也可以形成共价化合物，例如：</span></span></p>
+        <ul>
+          <li>Nitrogen gas and oxygen gas join to form dinitrogen monoxide.
+            <div class="equation-block">
+              <div class="equation">2 N<sub>2</sub>(s) + O<sub>2</sub>(g) → 2 N<sub>2</sub>O(g)</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="video-grid">
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/HIZoGe-CR5Q" title="Synthesis reaction video 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=HIZoGe-CR5Q">https://www.youtube.com/watch?v=HIZoGe-CR5Q</a></p>
+        </div>
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/JG121vFEle4" title="Synthesis reaction video 2" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=JG121vFEle4">https://www.youtube.com/watch?v=JG121vFEle4</a></p>
+        </div>
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/uSg9_C4D8oM" title="Synthesis reaction video 3" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=uSg9_C4D8oM">https://www.youtube.com/watch?v=uSg9_C4D8oM</a></p>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Decomposition</span><span class="i18n-zh" lang="zh-Hans">分解反应</span></span></h2>
+      <p><span class="i18n-wrap"><span class="i18n-en">Decomposition reactions are the opposite of synthesis reactions.</span><span class="i18n-zh" lang="zh-Hans">分解反应与化合反应相反。</span></span></p>
+      <div class="section-box">
+        <p><span class="i18n-wrap"><span class="i18n-en">Definition: A decomposition reaction is when compounds break down into two or more products (often elements).</span><span class="i18n-zh" lang="zh-Hans">定义：分解反应是指化合物分解成两种或更多生成物（通常是元素）。</span></span></p>
+        <ul>
+          <li class="equation">AB → A + B, where A and B represent elements</li>
+        </ul>
+        <p><span class="i18n-wrap"><span class="i18n-en">Ionic compounds may decompose to produce elements, like this:</span><span class="i18n-zh" lang="zh-Hans">离子化合物可以分解生成元素，例如：</span></span></p>
+        <ul>
+          <li>Table salt, sodium chloride, can be broken down into sodium metal and chlorine gas by melting salt at 800ºC and running electricity through it.
+            <div class="equation-block">
+              <div class="equation">2 NaCl(s) → 2Na(s) + Cl<sub>2</sub>(g)</div>
+            </div>
+          </li>
+        </ul>
+        <p><span class="i18n-wrap"><span class="i18n-en">Covalent compounds may decompose into elements, like this:</span><span class="i18n-zh" lang="zh-Hans">共价化合物也可以分解成元素，例如：</span></span></p>
+        <ul>
+          <li>By running electricity through water, the water molecules decompose into hydrogen and oxygen gases.
+            <div class="equation-block">
+              <div class="equation">2 H<sub>2</sub>O(l) → 2 H<sub>2</sub>(g) + O<sub>2</sub>(g)</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="video-embed">
+        <img src="assets/decomprxn.png" alt="Electrolysis apparatus decomposing water into gases." style="display:block; max-width:100%; height:auto; margin:0 auto;" />
+      </div>
+      <p><span class="i18n-wrap"><span class="i18n-en">Watch this video on decomposition reactions.</span><span class="i18n-zh" lang="zh-Hans">观看这个关于分解反应的视频。</span></span></p>
+      <div class="video-grid">
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/bQJvbmHD1Lg" title="Decomposition reaction video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=bQJvbmHD1Lg">https://www.youtube.com/watch?v=bQJvbmHD1Lg</a></p>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Single Replacement</span><span class="i18n-zh" lang="zh-Hans">单取代反应</span></span></h2>
+      <p><span class="i18n-wrap"><span class="i18n-en">Single replacement reactions replace one element from a compound with a separate element, added as a reactant.</span><span class="i18n-zh" lang="zh-Hans">单取代反应会让一个单独加入的元素取代化合物中的某个元素。</span></span></p>
+      <div class="section-box">
+        <p><span class="i18n-wrap"><span class="i18n-en">Definition: A single replacement reaction is when a compound and an element react, and the element switches places with part of the original compound. Positive ions will only replace a positive ion and negative ions will only replace a negative ion.</span><span class="i18n-zh" lang="zh-Hans">定义：单取代反应是指一种化合物和一种元素发生反应，这个元素与原化合物中的一部分交换位置。正离子只会取代正离子，负离子只会取代负离子。</span></span></p>
+        <ul>
+          <li class="equation">A + BC → B + AC where A is a metal</li>
+          <li class="equation">A + BC → C + BA where A is a non-metal</li>
+        </ul>
+        <h3><span class="i18n-wrap"><span class="i18n-en">When A is a metal:</span><span class="i18n-zh" lang="zh-Hans">当 A 是金属时：</span></span></h3>
+        <ul>
+          <li>Aluminum foil in a solution of copper (II) chloride produces solid copper and aluminum chloride.
+            <div class="equation-block">
+              <div class="equation">2 Al(s) + 3 CuCl<sub>2</sub>(aq) → 3 Cu(s) + 2 AlCl<sub>3</sub>(aq)</div>
+            </div>
+          </li>
+        </ul>
+        <h3><span class="i18n-wrap"><span class="i18n-en">When A is a non-metal:</span><span class="i18n-zh" lang="zh-Hans">当 A 是非金属时：</span></span></h3>
+        <ul>
+          <li>When fluorine is bubbled through a sodium iodide solution, iodine and sodium fluoride are produced.
+            <div class="equation-block">
+              <div class="equation">F<sub>2</sub>(g) + 2 NaI(aq) → I<sub>2</sub>(s) + 2 NaF(aq)</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <p><span class="i18n-wrap"><span class="i18n-en">Here is a video to further explain single displacement reactions, it is a two part video.</span><span class="i18n-zh" lang="zh-Hans">下面的视频进一步解释单置换反应，这是一个两部分的视频。</span></span></p>
+      <div class="video-grid">
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/Ph6xowy5fNc" title="Single replacement video 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=Ph6xowy5fNc">https://www.youtube.com/watch?v=Ph6xowy5fNc</a></p>
+        </div>
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/1bE_NkAYGnQ" title="Single replacement video 2" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=1bE_NkAYGnQ">https://www.youtube.com/watch?v=1bE_NkAYGnQ</a></p>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Double Replacement</span><span class="i18n-zh" lang="zh-Hans">双取代反应</span></span></h2>
+      <p><span class="i18n-wrap"><span class="i18n-en">Double replacement reactions swap elements between two compounds reacting together to form two new compounds.</span><span class="i18n-zh" lang="zh-Hans">双取代反应是两个化合物互相交换组成部分，从而形成两个新化合物。</span></span></p>
+      <div class="section-box">
+        <p><span class="i18n-wrap"><span class="i18n-en">Definition: Double Replacement is when two compounds react, with elements switching places between the original compounds.</span><span class="i18n-zh" lang="zh-Hans">定义：双取代反应是指两个化合物反应时，原来化合物中的元素互相交换位置。</span></span></p>
+        <ul>
+          <li>Two elements switch partner</li>
+          <li class="equation">AB + CD → AD + CB</li>
+          <li>When potassium chromate and silver nitrate react they switch partners to form silver chromate and potassium nitrate.
+            <div class="equation-block">
+              <div class="equation">K<sub>2</sub>CrO<sub>4</sub>(aq) + 2 AgNO<sub>3</sub>(aq) → Ag<sub>2</sub>CrO<sub>4</sub>(s) + 2 KNO<sub>3</sub>(aq)</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="video-embed">
+        <img src="assets/dbrxn.png" alt="Double replacement reaction example image." style="display:block; max-width:100%; height:auto; margin:0 auto;" />
+      </div>
+      <p><span class="i18n-wrap"><span class="i18n-en">Watch this video to learn more about double displacement.</span><span class="i18n-zh" lang="zh-Hans">观看这个视频来进一步学习双置换反应。</span></span></p>
+      <div class="video-grid">
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/y-xLlY18_Mk" title="Double replacement video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=y-xLlY18_Mk">https://www.youtube.com/watch?v=y-xLlY18_Mk</a></p>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Neutralization</span><span class="i18n-zh" lang="zh-Hans">中和反应</span></span></h2>
+      <p><span class="i18n-wrap"><span class="i18n-en">Neutralization reactions occur when an acid and a base react to form a salt and water.</span><span class="i18n-zh" lang="zh-Hans">中和反应发生在酸和碱反应生成盐和水时。</span></span></p>
+      <div class="section-box">
+        <p><span class="i18n-wrap"><span class="i18n-en">Definition: Neutralization is when an acid (most compounds starting with H) and a base (most compounds ending in OH) react.</span><span class="i18n-zh" lang="zh-Hans">定义：中和反应是酸（多数以 H 开头的化合物）与碱（多数以 OH 结尾的化合物）发生反应。</span></span></p>
+        <ul>
+          <li class="equation">acid + base → salt + water</li>
+          <li class="equation">HX + MOH → MX + H<sub>2</sub>O where X and M are elements or polyatomic ions</li>
+          <li>Sulphuric acid is used to neutralize calcium hydroxide:
+            <div class="equation-block">
+              <div class="equation">H<sub>2</sub>SO<sub>4</sub>(aq) + Ca(OH)<sub>2</sub>(aq) → CaSO<sub>4</sub>(aq) + 2 H<sub>2</sub>O(l)</div>
+            </div>
+          </li>
+          <li>Phosphoric acid helps to neutralize the compounds that cause rust, such as iron (II) hydroxide.
+            <div class="equation-block">
+              <div class="equation">H<sub>3</sub>PO<sub>4</sub>(aq) + 3 Fe(OH)<sub>2</sub>(aq) → Fe<sub>3</sub>(PO<sub>4</sub>)<sub>2</sub>(s) + 6H<sub>2</sub>O(l)</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <p><span class="i18n-wrap"><span class="i18n-en">Watch this video on neutralization reactions.</span><span class="i18n-zh" lang="zh-Hans">观看这个关于中和反应的视频。</span></span></p>
+      <div class="video-grid">
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/gRKS4BkuYEA" title="Neutralization reaction video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=gRKS4BkuYEA">https://www.youtube.com/watch?v=gRKS4BkuYEA</a></p>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Combustion</span><span class="i18n-zh" lang="zh-Hans">燃烧反应</span></span></h2>
+      <p><span class="i18n-wrap"><span class="i18n-en">Combustion reactions occur when a compound or element reacts with oxygen to release energy and produce an oxide.</span><span class="i18n-zh" lang="zh-Hans">燃烧反应发生在一种化合物或元素与氧气反应，释放能量并生成氧化物时。</span></span></p>
+      <p><span class="i18n-wrap"><span class="i18n-en">This reaction is also sometimes referred to as hydrocarbon combustion.</span><span class="i18n-zh" lang="zh-Hans">这种反应有时也叫做 hydrocarbon combustion。</span></span></p>
+      <div class="section-box">
+        <p><span class="i18n-wrap"><span class="i18n-en">Definition: A combustion reaction is when a hydrocarbon reacts with oxygen to produce water and carbon dioxide</span><span class="i18n-zh" lang="zh-Hans">定义：燃烧反应是指一种烃和氧气反应，生成水和二氧化碳。</span></span></p>
+        <div class="equation-block">
+          <div class="equation">C<sub>x</sub>H<sub>y</sub> + O<sub>2</sub> → CO<sub>2</sub> + H<sub>2</sub>O</div>
+        </div>
+        <p><span class="i18n-wrap"><span class="i18n-en">where X and Y represent integers</span><span class="i18n-zh" lang="zh-Hans">其中 X 和 Y 代表整数。</span></span></p>
+        <h3><span class="i18n-wrap"><span class="i18n-en">Examples</span><span class="i18n-zh" lang="zh-Hans">例子</span></span></h3>
+        <ul>
+          <li>Natural gas (methane) is burned in furnaces to heat homes.</li>
+        </ul>
+        <div class="equation-block">
+          <div class="equation">CH<sub>4</sub> + 2 O<sub>2</sub> → CO<sub>2</sub> + 2 H<sub>2</sub>O</div>
+        </div>
+        <ul>
+          <li>An acetylene torch is used to weld metals together</li>
+        </ul>
+        <div class="equation-block">
+          <div class="equation">2 C<sub>2</sub>H<sub>2</sub> + 5 O<sub>2</sub> → 4CO<sub>2</sub> + 2 H<sub>2</sub>O</div>
+        </div>
+        <ul>
+          <li>Carbohydrates like glucose combine with oxygen in our body to release energy.</li>
+        </ul>
+        <div class="equation-block">
+          <div class="equation">C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6 O<sub>2</sub> → 6 CO<sub>2</sub> + 6 H<sub>2</sub>O</div>
+        </div>
+      </div>
+      <div class="placeholder">
+        <span class="i18n-wrap"><span class="i18n-en">Image placeholder from the original lesson.</span><span class="i18n-zh" lang="zh-Hans">原始讲义中的图片占位符。</span></span>
+      </div>
+      <div class="video-grid">
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/oeQTFpuC5Jc" title="Combustion reaction video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=oeQTFpuC5Jc">https://www.youtube.com/watch?v=oeQTFpuC5Jc</a></p>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Balancing Combustion Reactions</span><span class="i18n-zh" lang="zh-Hans">配平燃烧反应</span></span></h2>
+      <div class="video-grid">
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/iEoww07yla0" title="Balancing combustion reactions video 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=iEoww07yla0">https://www.youtube.com/watch?v=iEoww07yla0</a></p>
+        </div>
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/jY6PBWeN74U" title="Balancing combustion reactions video 2" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=jY6PBWeN74U">https://www.youtube.com/watch?v=jY6PBWeN74U</a></p>
+        </div>
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/cp4gcFNLuNw" title="Balancing combustion reactions video 3" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=cp4gcFNLuNw">https://www.youtube.com/watch?v=cp4gcFNLuNw</a></p>
+        </div>
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/Az20UP2Delc" title="Balancing combustion reactions video 4" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=Az20UP2Delc">https://www.youtube.com/watch?v=Az20UP2Delc</a></p>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Video Summary</span><span class="i18n-zh" lang="zh-Hans">视频总结</span></span></h2>
+      <div class="video-grid">
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/RdI1HyjRyF4" title="Video summary 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=RdI1HyjRyF4">https://www.youtube.com/watch?v=RdI1HyjRyF4</a></p>
+        </div>
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/7RmvwQtGCbE" title="Video summary 2" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=7RmvwQtGCbE">https://www.youtube.com/watch?v=7RmvwQtGCbE</a></p>
+        </div>
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/RVCed5znDrI" title="Video summary 3" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=RVCed5znDrI">https://www.youtube.com/watch?v=RVCed5znDrI</a></p>
+        </div>
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/Z_3aSVn1YDg" title="Video summary 4" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=Z_3aSVn1YDg">https://www.youtube.com/watch?v=Z_3aSVn1YDg</a></p>
+        </div>
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/ffcA_yH-1Zo" title="Video summary 5" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=ffcA_yH-1Zo">https://www.youtube.com/watch?v=ffcA_yH-1Zo</a></p>
+        </div>
+        <div class="video-embed">
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/EcwY-9-EmJ8" title="Video summary 6" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p class="video-link"><a href="https://www.youtube.com/watch?v=EcwY-9-EmJ8">https://www.youtube.com/watch?v=EcwY-9-EmJ8</a></p>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Summary of Reactions</span><span class="i18n-zh" lang="zh-Hans">反应总结</span></span></h2>
+      <div class="resource-list">
+        <div class="resource-item">
+          <p><span class="i18n-wrap"><span class="i18n-en"><a href="Balancing-Chemical-Equations.html">Click here</a> for a review sheet on chemical reactions.</span><span class="i18n-zh" lang="zh-Hans"><a href="Balancing-Chemical-Equations.html">Click here</a> 查看关于化学反应的复习讲义。</span></span></p>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Chemical Reactions Review</span><span class="i18n-zh" lang="zh-Hans">化学反应复习</span></span></h2>
+      <div class="resource-list">
+        <div class="resource-item">
+          <p><span class="i18n-wrap"><span class="i18n-en">Check your understanding of chemical reactions below.</span><span class="i18n-zh" lang="zh-Hans">用下面的链接检查你对化学反应的理解。</span></span></p>
+          <p><a href="https://cghuisunshine.github.io/Science/wcln_reaction_types_quiz.html">https://cghuisunshine.github.io/Science/wcln_reaction_types_quiz.html</a></p>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Practice Quiz</span><span class="i18n-zh" lang="zh-Hans">练习测验</span></span></h2>
+      <div class="resource-list">
+        <div class="resource-item">
+          <p>* Try Balancing Equations Here</p>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Mole Ratios</span><span class="i18n-zh" lang="zh-Hans">摩尔比</span></span></h2>
+      <div class="section-box">
+        <p><span class="i18n-wrap"><span class="i18n-en">The numbers of moles of substances involved in a reaction, when compared and reduced to lowest terms, yield a mole ratio.</span><span class="i18n-zh" lang="zh-Hans">反应中各种物质的摩尔数相互比较并化为最简后，就得到摩尔比。</span></span></p>
+        <p>For example, given the equation, 4H2 + 2O2 ---&gt; 4H20 the mole ratio of H2 to O2 to H2O is 4 to 2 to 4, which reduces to 2 to 1 to 2 or 2:1:2.</p>
+        <p>Given the following equations, indicate the mole ratios involved.</p>
+      </div>
+      <div class="practice-list mole-ratios-list">
+        <div class="practice-item">
+          <p>1. H2 + S ----> H2</p>
+          <button class="answer-toggle mole-answer-toggle" type="button" aria-expanded="false" data-target="mole-answer-1">Answer</button>
+          <div id="mole-answer-1" class="mole-answer-panel" hidden><p>1:1:1</p></div>
+        </div>
+        <div class="practice-item">
+          <p>2. 4Al + 3O2 ---->2AL2O3</p>
+          <button class="answer-toggle mole-answer-toggle" type="button" aria-expanded="false" data-target="mole-answer-2">Answer</button>
+          <div id="mole-answer-2" class="mole-answer-panel" hidden><p>4:3:2</p></div>
+        </div>
+        <div class="practice-item">
+          <p>3. 3Zn + 6HCl -----> 3ZnCl2 + 3H2</p>
+          <button class="answer-toggle mole-answer-toggle" type="button" aria-expanded="false" data-target="mole-answer-3">Answer</button>
+          <div id="mole-answer-3" class="mole-answer-panel" hidden><p>1:2:1:1</p></div>
+        </div>
+        <div class="practice-item">
+          <p>4. SO+1/2O2 ----->S0</p>
+          <button class="answer-toggle mole-answer-toggle" type="button" aria-expanded="false" data-target="mole-answer-4">Answer</button>
+          <div id="mole-answer-4" class="mole-answer-panel" hidden><p>2:1:2</p></div>
+        </div>
+        <div class="practice-item">
+          <p>5. 6H2 + 3C -----> 3CH4</p>
+          <button class="answer-toggle mole-answer-toggle" type="button" aria-expanded="false" data-target="mole-answer-5">Answer</button>
+          <div id="mole-answer-5" class="mole-answer-panel" hidden><p>2:1:1</p></div>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Balancing Equations</span><span class="i18n-zh" lang="zh-Hans">配平方程式</span></span></h2>
+      <div class="section-box">
+        <p><span class="i18n-wrap"><span class="i18n-en">Balance the equations below:</span><span class="i18n-zh" lang="zh-Hans">配平下面的方程式：</span></span></p>
+      </div>
+      <div class="practice-list balancing-equations-list">
+        <div class="practice-item">
+          <p>1. _____ S + _____ O2 --> _____ SO2</p>
+          <button class="answer-toggle" type="button" aria-expanded="false" data-target="balance-answer-1">Answer</button>
+          <div id="balance-answer-1" class="answer-panel" hidden><p>S + O<sub>2</sub> --> SO<sub>2</sub></p></div>
+        </div>
+        <div class="practice-item">
+          <p>2. _____ Na + _____ O2 --> _____ Na2O2</p>
+          <button class="answer-toggle" type="button" aria-expanded="false" data-target="balance-answer-2">Answer</button>
+          <div id="balance-answer-2" class="answer-panel" hidden><p>2 Na + O<sub>2</sub> --> Na<sub>2</sub>O<sub>2</sub></p></div>
+        </div>
+        <div class="practice-item">
+          <p>3. _____ Hg + _____ O2 --> _____ HgO</p>
+          <button class="answer-toggle" type="button" aria-expanded="false" data-target="balance-answer-3">Answer</button>
+          <div id="balance-answer-3" class="answer-panel" hidden><p>2Hg + O<sub>2</sub> --> 2HgO</p></div>
+        </div>
+        <div class="practice-item">
+          <p>4. _____ Ag2O --> _____ Ag + _____ O2</p>
+          <button class="answer-toggle" type="button" aria-expanded="false" data-target="balance-answer-4">Answer</button>
+          <div id="balance-answer-4" class="answer-panel" hidden><p>2Ag<sub>2</sub>O --> 4Ag + O<sub>2</sub></p></div>
+        </div>
+        <div class="practice-item">
+          <p>5. _____ Ba(OH)2 + _____ H3PO4 --> _____ BaHPO4 + _____ H2O</p>
+          <button class="answer-toggle" type="button" aria-expanded="false" data-target="balance-answer-5">Answer</button>
+          <div id="balance-answer-5" class="answer-panel" hidden><p>Ba(OH)<sub>2</sub> + H<sub>3</sub>PO<sub>4</sub> --> BaHPO<sub>4</sub> + 2H<sub>2</sub>O</p></div>
+        </div>
+        <div class="practice-item">
+          <p>6. _____ NaOH + _____ H3PO4 --> _____ Na2HPO4 + _____ H2O</p>
+          <button class="answer-toggle" type="button" aria-expanded="false" data-target="balance-answer-6">Answer</button>
+          <div id="balance-answer-6" class="answer-panel" hidden><p>2NaOH + H<sub>3</sub>PO<sub>4</sub> --> Na<sub>2</sub>HPO<sub>4</sub> +2H<sub>2</sub>O</p></div>
+        </div>
+        <div class="practice-item">
+          <p>7. _____ C4H8 + _____ O2 --> _____ CO2 + H2O</p>
+          <button class="answer-toggle" type="button" aria-expanded="false" data-target="balance-answer-7">Answer</button>
+          <div id="balance-answer-7" class="answer-panel" hidden><p>C<sub>4</sub>H<sub>8</sub> + 6O<sub>2</sub> --> 4CO<sub>2</sub> + 4H<sub>2</sub>O</p></div>
+        </div>
+        <div class="practice-item">
+          <p>8. _____ C3H8 + _____ O2 --> _____ CO2 + H2</p>
+          <button class="answer-toggle" type="button" aria-expanded="false" data-target="balance-answer-8">Answer</button>
+          <div id="balance-answer-8" class="answer-panel" hidden><p>C<sub>3</sub>H<sub>8</sub> + 5O<sub>2</sub> --> 3CO<sub>2</sub> + 4H<sub>2</sub>O</p></div>
+        </div>
+        <div class="practice-item">
+          <p>9. ____ Fe + _____ Cl2 --> _____ FeCl3</p>
+          <button class="answer-toggle" type="button" aria-expanded="false" data-target="balance-answer-9">Answer</button>
+          <div id="balance-answer-9" class="answer-panel" hidden><p>2Fe + 3Cl<sub>2</sub> --> 2FeCl<sub>3</sub></p></div>
+        </div>
+        <div class="practice-item">
+          <p>10. _____ Al + _____ HCl --> _____ AlCl3 + _____ H2</p>
+          <button class="answer-toggle" type="button" aria-expanded="false" data-target="balance-answer-10">Answer</button>
+          <div id="balance-answer-10" class="answer-panel" hidden><p>2Al + 6HCl --> 2AlCl<sub>3</sub> + 3H<sub>2</sub></p></div>
+        </div>
+      </div>
+
+      <h2><span class="i18n-wrap"><span class="i18n-en">Practice Quiz - Multiple Choice</span><span class="i18n-zh" lang="zh-Hans">练习测验 - 选择题</span></span></h2>
+      <div class="note-box">
+        <p><a href="https://www.thoughtco.com/chemical-reaction-classification-quiz-4084745">Complete this quiz</a> to help you prepare for your assignments and the Chemistry Test.</p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const body = document.body;
+      const langButtons = Array.from(document.querySelectorAll('.lang-btn'));
+
+      function applyLanguageMode(mode) {
+        body.classList.remove('lang-en', 'lang-bi', 'lang-zh');
+        body.classList.add(`lang-${mode}`);
+
+        langButtons.forEach((button) => {
+          const isActive = button.dataset.lang === mode;
+          button.classList.toggle('is-active', isActive);
+          button.setAttribute('aria-pressed', String(isActive));
+        });
+      }
+
+      langButtons.forEach((button) => {
+        button.addEventListener('click', function () {
+          applyLanguageMode(button.dataset.lang);
+        });
+      });
+
+      Array.from(document.querySelectorAll('.answer-toggle')).forEach((button) => {
+        button.addEventListener('click', function () {
+          const panel = document.getElementById(button.dataset.target);
+          if (!panel) {
+            return;
+          }
+
+          const willExpand = panel.hidden;
+          panel.hidden = !willExpand;
+          button.setAttribute('aria-expanded', String(willExpand));
+        });
+      });
+
+      applyLanguageMode('en');
+    }());
+  </script>
+</body>
+</html>

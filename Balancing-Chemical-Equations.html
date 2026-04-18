@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Worksheet - Balancing Chemical Equations</title>
+  <style>
+    :root{
+      --bg:#ece7df;
+      --page:#ffffff;
+      --ink:#1f2328;
+      --muted:#5f6368;
+      --line:#b9b1a4;
+      --line-strong:#7a7267;
+      --surface:#f7f4ef;
+      --shadow:0 3px 14px rgba(0,0,0,.08);
+      --accent:#d9cfbe;
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:Calibri, Aptos, "Segoe UI", sans-serif;
+      line-height:1.45;
+    }
+
+    .wrapper{
+      padding:24px 0 40px;
+    }
+
+    .sheet{
+      width:min(1200px, calc(100vw - 40px));
+      margin:0 auto 24px;
+      background:var(--page);
+      box-shadow:var(--shadow);
+      padding:0.72in;
+    }
+
+    h1{
+      margin:0 0 10px;
+      font-size:30px;
+      line-height:1.15;
+    }
+
+    h2{
+      margin:24px 0 10px;
+      font-size:22px;
+      line-height:1.2;
+    }
+
+    p, li, div, label, textarea, input{
+      font-size:15px;
+    }
+
+    .lead{
+      margin:0 0 14px;
+      font-size:16px;
+    }
+
+    .input-note{
+      margin:0 0 14px;
+      color:var(--muted);
+    }
+
+    .instruction-box{
+      border:1px solid var(--line-strong);
+      background:var(--surface);
+      padding:14px 16px;
+      margin:14px 0 18px;
+    }
+
+    .question-list,
+    .answer-list{
+      margin:0 0 0 22px;
+      padding:0;
+    }
+
+    .question-list li,
+    .answer-list li{
+      margin:8px 0;
+      padding-left:6px;
+    }
+
+    .equation{
+      display:block;
+      font-weight:700;
+      letter-spacing:.01em;
+      line-height:1.9;
+    }
+
+    .coefficient-blank{
+      width:3.2em;
+      min-width:3.2em;
+      padding:2px 3px 3px;
+      margin:0 3px 0 0;
+      border:0;
+      border-bottom:2px solid var(--line-strong);
+      border-radius:0;
+      background:transparent;
+      color:inherit;
+      font:inherit;
+      font-weight:700;
+      text-align:center;
+      appearance:textfield;
+    }
+
+    .coefficient-blank::placeholder{
+      color:#7f776c;
+      opacity:1;
+    }
+
+    .coefficient-blank:focus-visible,
+    .latex-answer:focus-visible{
+      outline:2px solid #8d7e63;
+      outline-offset:2px;
+    }
+
+    .predict-item{
+      margin:14px 0 18px;
+    }
+
+    .predict-prompt{
+      margin-bottom:8px;
+    }
+
+    .entry-label{
+      display:block;
+      margin-bottom:6px;
+      font-weight:600;
+    }
+
+    .answer-toolbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:6px;
+      flex-wrap:wrap;
+    }
+
+    .solve-button{
+      border:1px solid var(--line-strong);
+      border-radius:999px;
+      background:var(--accent);
+      color:var(--ink);
+      padding:7px 14px;
+      font:inherit;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .solve-button:hover{
+      background:#d0c4b0;
+    }
+
+    .solve-button:focus-visible{
+      outline:2px solid #8d7e63;
+      outline-offset:2px;
+    }
+
+    .check-row{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .check-button{
+      border:1px solid var(--line-strong);
+      border-radius:999px;
+      background:#efe5d5;
+      color:var(--ink);
+      padding:7px 14px;
+      font:inherit;
+      font-weight:700;
+      cursor:pointer;
+      flex:0 0 auto;
+    }
+
+    .check-button:hover{
+      background:#e4d7c3;
+    }
+
+    .check-button:focus-visible{
+      outline:2px solid #8d7e63;
+      outline-offset:2px;
+    }
+
+    .check-feedback{
+      display:none;
+      margin-top:8px;
+      padding:10px 12px;
+      border-radius:10px;
+      background:#fff;
+      border:1px solid var(--line);
+    }
+
+    .check-feedback.is-visible{
+      display:block;
+    }
+
+    .check-feedback.is-correct{
+      border-color:#7ca276;
+      background:#f3faf1;
+    }
+
+    .check-feedback.is-incorrect{
+      border-color:#b78b6d;
+      background:#fff8f3;
+    }
+
+    .feedback-title{
+      margin:0 0 4px;
+      font-weight:700;
+    }
+
+    .feedback-equation{
+      display:block;
+      font-weight:700;
+    }
+
+    .latex-answer{
+      width:100%;
+      min-height:82px;
+      padding:10px 12px;
+      border:1px solid var(--line-strong);
+      border-radius:8px;
+      background:#fffdf9;
+      color:inherit;
+      resize:vertical;
+      font-family:"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      line-height:1.45;
+    }
+
+    .latex-preview-card{
+      margin-top:10px;
+      padding:10px 12px 12px;
+      border:1px dashed var(--line-strong);
+      border-radius:10px;
+      background:#fff;
+    }
+
+    .preview-label{
+      margin-bottom:8px;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .latex-preview{
+      min-height:54px;
+      overflow-x:auto;
+    }
+
+    .preview-empty,
+    .preview-fallback{
+      margin:0;
+      color:var(--muted);
+    }
+
+    .preview-fallback{
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-family:"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    .answers-note{
+      color:var(--muted);
+      margin-bottom:12px;
+    }
+
+    .sr-only{
+      position:absolute;
+      width:1px;
+      height:1px;
+      padding:0;
+      margin:-1px;
+      overflow:hidden;
+      clip:rect(0, 0, 0, 0);
+      white-space:nowrap;
+      border:0;
+    }
+
+    sub{
+      font-size:.7em;
+      line-height:0;
+      vertical-align:baseline;
+      position:relative;
+      bottom:-0.28em;
+    }
+
+    @media (max-width: 900px){
+      .wrapper{
+        padding:12px 0 24px;
+      }
+
+      .sheet{
+        width:calc(100vw - 24px);
+        padding:20px 18px 24px;
+      }
+
+      h1{
+        font-size:26px;
+      }
+
+      h2{
+        font-size:20px;
+      }
+
+      .coefficient-blank{
+        width:2.8em;
+        min-width:2.8em;
+      }
+
+      .latex-answer{
+        min-height:96px;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <div class="wrapper">
+    <main class="sheet">
+      <h1>Worksheet: Writing and Balancing Chemical Reactions</h1>
+
+      <div class="instruction-box">
+        <p class="lead">1. Balance the following equations and indicate the type of reaction as formation, decomposition, single replacement, double replacement, hydrocarbon combustion, or other.</p>
+        <ol class="question-list" type="a">
+          <li class="check-item" data-answer="2|1|2" data-correct-html="2 Cu (s) + O<sub>2</sub> (g) → 2 CuO (s) (formation)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1a coefficient 1" /> Cu (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1a coefficient 2" /> O<sub>2</sub> (g) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1a coefficient 3" /> CuO (s)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="2|2|1" data-correct-html="2 H<sub>2</sub>O (l) → 2 H<sub>2</sub> (g) + O<sub>2</sub> (g) (decomposition)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1b coefficient 1" /> H<sub>2</sub>O (l) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1b coefficient 2" /> H<sub>2</sub> (g) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1b coefficient 3" /> O<sub>2</sub> (g)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="3|4|4|1" data-correct-html="3 Fe (s) + 4 H<sub>2</sub>O (g) → 4 H<sub>2</sub> (g) + Fe<sub>3</sub>O<sub>4</sub> (s) (single replacement)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1c coefficient 1" /> Fe (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1c coefficient 2" /> H<sub>2</sub>O (g) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1c coefficient 3" /> H<sub>2</sub> (g) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1c coefficient 4" /> Fe<sub>3</sub>O<sub>4</sub> (s)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="2|3|1|6" data-correct-html="2 AsCl<sub>3</sub> (aq) + 3 H<sub>2</sub>S (aq) → As<sub>2</sub>S<sub>3</sub> (s) + 6 HCl (aq) (double replacement)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1d coefficient 1" /> AsCl<sub>3</sub> (aq) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1d coefficient 2" /> H<sub>2</sub>S (aq) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1d coefficient 3" /> As<sub>2</sub>S<sub>3</sub> (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1d coefficient 4" /> HCl (aq)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="1|1|5" data-correct-html="CuSO<sub>4</sub> x 5 H<sub>2</sub>O (s) → CuSO<sub>4</sub> (s) + 5 H<sub>2</sub>O (g) (other – dehydration or decomposition)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1e coefficient 1" /> CuSO<sub>4</sub> x 5 H<sub>2</sub>O (s) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1e coefficient 2" /> CuSO<sub>4</sub> (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1e coefficient 3" /> H<sub>2</sub>O (g)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="1|3|2|3" data-correct-html="Fe<sub>2</sub>O<sub>3</sub> (s) + 3 H<sub>2</sub> (g) → 2 Fe (s) + 3 H<sub>2</sub>O (l) (single replacement)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1f coefficient 1" /> Fe<sub>2</sub>O<sub>3</sub> (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1f coefficient 2" /> H<sub>2</sub> (g) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1f coefficient 3" /> Fe (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1f coefficient 4" /> H<sub>2</sub>O (l)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="1|1|1" data-correct-html="CaCO<sub>3</sub> (s) → CaO (s) + CO<sub>2</sub> (g) (other or decomposition)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1g coefficient 1" /> CaCO<sub>3</sub> (s) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1g coefficient 2" /> CaO (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1g coefficient 3" /> CO<sub>2</sub> (g)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="8|1|8" data-correct-html="8 Fe (s) + S<sub>8</sub> (s) → 8 FeS (s) (formation)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1h coefficient 1" /> Fe (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1h coefficient 2" /> S<sub>8</sub> (s) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1h coefficient 3" /> FeS (s)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="1|2|2|1" data-correct-html="H<sub>2</sub>S (aq) + 2 KOH (aq) → 2 H<sub>2</sub>O (l) + K<sub>2</sub>S (aq) (double replacement)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1i coefficient 1" /> H<sub>2</sub>S (aq) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1i coefficient 2" /> KOH (aq) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1i coefficient 3" /> H<sub>2</sub>O (l) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1i coefficient 4" /> K<sub>2</sub>S (aq)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="2|2|1" data-correct-html="2 NaCl (l) → 2 Na (l) + Cl<sub>2</sub> (g) (decomposition)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1j coefficient 1" /> NaCl (l) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1j coefficient 2" /> Na (l) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1j coefficient 3" /> Cl<sub>2</sub> (g)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="2|3|3|1" data-correct-html="2 Al (s) + 3 H<sub>2</sub>SO<sub>4</sub> (aq) → 3 H<sub>2</sub> (g) + Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub> (aq) (single replacement)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1k coefficient 1" /> Al (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1k coefficient 2" /> H<sub>2</sub>SO<sub>4</sub> (aq) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1k coefficient 3" /> H<sub>2</sub> (g) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1k coefficient 4" /> Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub> (aq)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="1|3|3|1" data-correct-html="H<sub>3</sub>PO<sub>4</sub> (aq) + 3 NH<sub>4</sub>OH (aq) → 3 H<sub>2</sub>O (l) + (NH<sub>4</sub>)<sub>3</sub>PO<sub>4</sub> (aq) (double replacement)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1l coefficient 1" /> H<sub>3</sub>PO<sub>4</sub> (aq) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1l coefficient 2" /> NH<sub>4</sub>OH (aq) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1l coefficient 3" /> H<sub>2</sub>O (l) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1l coefficient 4" /> (NH<sub>4</sub>)<sub>3</sub>PO<sub>4</sub> (aq)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="1|5|3|4" data-correct-html="C<sub>3</sub>H<sub>8</sub> (g) + 5 O<sub>2</sub> (g) → 3 CO<sub>2</sub> (g) + 4 H<sub>2</sub>O (l) (hydrocarbon combustion)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1m coefficient 1" /> C<sub>3</sub>H<sub>8</sub> (g) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1m coefficient 2" /> O<sub>2</sub> (g) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1m coefficient 3" /> CO<sub>2</sub> (g) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1m coefficient 4" /> H<sub>2</sub>O (l)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="4|3|2" data-correct-html="4 Al (s) + 3 O<sub>2</sub> (g) → 2 Al<sub>2</sub>O<sub>3</sub> (s) (formation)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1n coefficient 1" /> Al (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1n coefficient 2" /> O<sub>2</sub> (g) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1n coefficient 3" /> Al<sub>2</sub>O<sub>3</sub> (s)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="1|2|1|2" data-correct-html="CH<sub>4</sub> (g) + 2 O<sub>2</sub> (g) → CO<sub>2</sub> (g) + 2 H<sub>2</sub>O (l) (hydrocarbon combustion)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1o coefficient 1" /> CH<sub>4</sub> (g) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1o coefficient 2" /> O<sub>2</sub> (g) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1o coefficient 3" /> CO<sub>2</sub> (g) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1o coefficient 4" /> H<sub>2</sub>O (l)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="1|1|2|1" data-correct-html="K<sub>2</sub>SO<sub>4</sub> (aq) + BaCl<sub>2</sub> (aq) → 2 KCl (aq) + BaSO<sub>4</sub> (s) (double replacement)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1p coefficient 1" /> K<sub>2</sub>SO<sub>4</sub> (aq) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1p coefficient 2" /> BaCl<sub>2</sub> (aq) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1p coefficient 3" /> KCl (aq) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1p coefficient 4" /> BaSO<sub>4</sub> (s)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="1|8|5|6" data-correct-html="C<sub>5</sub>H<sub>12</sub> (l) + 8 O<sub>2</sub> (g) → 5 CO<sub>2</sub> (g) + 6 H<sub>2</sub>O (g) (hydrocarbon combustion)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1q coefficient 1" /> C<sub>5</sub>H<sub>12</sub> (l) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1q coefficient 2" /> O<sub>2</sub> (g) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1q coefficient 3" /> CO<sub>2</sub> (g) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1q coefficient 4" /> H<sub>2</sub>O (g)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="1|2|2|1" data-correct-html="Ca(OH)<sub>2</sub> (aq) + 2 NH<sub>4</sub>Cl (aq) → 2 NH<sub>4</sub>OH (aq) + CaCl<sub>2</sub> (aq) (double replacement)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1r coefficient 1" /> Ca(OH)<sub>2</sub> (aq) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1r coefficient 2" /> NH<sub>4</sub>Cl (aq) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1r coefficient 3" /> NH<sub>4</sub>OH (aq) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1r coefficient 4" /> CaCl<sub>2</sub> (aq)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="1|5|5|2" data-correct-html="V<sub>2</sub>O<sub>5</sub> (s) + 5 Ca (s) → 5 CaO (s) + 2 V (s) (single replacement)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1s coefficient 1" /> V<sub>2</sub>O<sub>5</sub> (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1s coefficient 2" /> Ca (s) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1s coefficient 3" /> CaO (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1s coefficient 4" /> V (s)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="2|1|2|1" data-correct-html="2 Na (s) + ZnI<sub>2</sub> (aq) → 2 NaI (aq) + Zn (s) (single replacement)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1t coefficient 1" /> Na (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1t coefficient 2" /> ZnI<sub>2</sub> (aq) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1t coefficient 3" /> NaI (aq) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1t coefficient 4" /> Zn (s)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="1|7|7|3" data-correct-html="C<sub>7</sub>H<sub>6</sub>O<sub>3</sub> (l) + 7 O<sub>2</sub> (g) → 7 CO<sub>2</sub> (g) + 3 H<sub>2</sub>O (l) (hydrocarbon combustion)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1u coefficient 1" /> C<sub>7</sub>H<sub>6</sub>O<sub>3</sub> (l) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1u coefficient 2" /> O<sub>2</sub> (g) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1u coefficient 3" /> CO<sub>2</sub> (g) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1u coefficient 4" /> H<sub>2</sub>O (l)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="3|1|1" data-correct-html="3 Ca (s) + N<sub>2</sub> (g) → Ca<sub>3</sub>N<sub>2</sub> (s) (formation)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1v coefficient 1" /> Ca (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1v coefficient 2" /> N<sub>2</sub> (g) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1v coefficient 3" /> Ca<sub>3</sub>N<sub>2</sub> (s)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="1|3|2|3" data-correct-html="Fe<sub>2</sub>O<sub>3</sub> (s) + 3 H<sub>2</sub> (g) → 2 Fe (s) + 3 H<sub>2</sub>O (l) (single replacement)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1w coefficient 1" /> Fe<sub>2</sub>O<sub>3</sub> (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1w coefficient 2" /> H<sub>2</sub> (g) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1w coefficient 3" /> Fe (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1w coefficient 4" /> H<sub>2</sub>O (l)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="2|45|30|30" data-correct-html="2 C<sub>15</sub>H<sub>30</sub> (l) + 45 O<sub>2</sub> (g) → 30 CO<sub>2</sub> (g) + 30 H<sub>2</sub>O (g) (hydrocarbon combustion)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1x coefficient 1" /> C<sub>15</sub>H<sub>30</sub> (l) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1x coefficient 2" /> O<sub>2</sub> (g) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1x coefficient 3" /> CO<sub>2</sub> (g) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1x coefficient 4" /> H<sub>2</sub>O (g)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="2|3|2|1" data-correct-html="2 BN (s) + 3 F<sub>2</sub> (g) → 2 BF<sub>3</sub> (s) + N<sub>2</sub> (g) (single replacement)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1y coefficient 1" /> BN (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1y coefficient 2" /> F<sub>2</sub> (g) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1y coefficient 3" /> BF<sub>3</sub> (s) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1y coefficient 4" /> N<sub>2</sub> (g)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+          <li class="check-item" data-answer="2|37|24|26" data-correct-html="2 C<sub>12</sub>H<sub>26</sub> (l) + 37 O<sub>2</sub> (g) → 24 CO<sub>2</sub> (g) + 26 H<sub>2</sub>O (g) (hydrocarbon combustion)"><div class="check-row"><span class="equation"><input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1z coefficient 1" /> C<sub>12</sub>H<sub>26</sub> (l) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1z coefficient 2" /> O<sub>2</sub> (g) → <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1z coefficient 3" /> CO<sub>2</sub> (g) + <input class="coefficient-blank" type="text" inputmode="numeric" placeholder="____" aria-label="Question 1z coefficient 4" /> H<sub>2</sub>O (g)</span><button class="check-button" type="button">Check</button></div><div class="check-feedback"><p class="feedback-title">Correct answer appears here after you click Check.</p><span class="feedback-equation"></span></div></li>
+        </ol>
+      </div>
+
+      <div class="instruction-box">
+        <p class="lead">2. Predict the product(s) along with the states, indicate the type of reaction, and balance the following chemical reactions.</p>
+        <p class="input-note">Type your response in LaTeX. The preview updates live as you type.</p>
+        <ol class="question-list" type="a">
+          <li class="predict-item">
+            <div class="predict-prompt">A solution of lead (II) nitrate is mixed with a solution of sodium iodide.</div>
+            <div class="answer-toolbar">
+              <label class="entry-label" for="latex-q2-a">Write your balanced equation in LaTeX.</label>
+              <button class="solve-button" type="button" data-target="latex-q2-a" data-solution="\mathrm{Pb(NO_3)_2(aq) + 2NaI(aq) \to PbI_2(s) + 2NaNO_3(aq)}">Solve</button>
+            </div>
+            <textarea class="latex-answer" id="latex-q2-a" name="latex-q2-a" rows="2" spellcheck="false" placeholder="\mathrm{Pb(NO_3)_2(aq) + 2NaI(aq) \to PbI_2(s) + 2NaNO_3(aq)}"></textarea>
+            <div class="latex-preview-card">
+              <div class="preview-label">Live preview</div>
+              <div class="latex-preview" data-preview-for="latex-q2-a"><p class="preview-empty">LaTeX preview appears here.</p></div>
+            </div>
+          </li>
+          <li class="predict-item">
+            <div class="predict-prompt">Solid zinc sulfide reacts with oxygen in the air.</div>
+            <div class="answer-toolbar">
+              <label class="entry-label" for="latex-q2-b">Write your balanced equation in LaTeX.</label>
+              <button class="solve-button" type="button" data-target="latex-q2-b" data-solution="\mathrm{8ZnS(s) + 4O_2(g) \to 8ZnO(s) + S_8(s)}">Solve</button>
+            </div>
+            <textarea class="latex-answer" id="latex-q2-b" name="latex-q2-b" rows="2" spellcheck="false" placeholder="\mathrm{8ZnS(s) + 4O_2(g) \to 8ZnO(s) + S_8(s)}"></textarea>
+            <div class="latex-preview-card">
+              <div class="preview-label">Live preview</div>
+              <div class="latex-preview" data-preview-for="latex-q2-b"><p class="preview-empty">LaTeX preview appears here.</p></div>
+            </div>
+          </li>
+          <li class="predict-item">
+            <div class="predict-prompt">Liquid butane (C<sub>4</sub>H<sub>10</sub> (l)) is used as a fuel to ignite a lighter.</div>
+            <div class="answer-toolbar">
+              <label class="entry-label" for="latex-q2-c">Write your balanced equation in LaTeX.</label>
+              <button class="solve-button" type="button" data-target="latex-q2-c" data-solution="\mathrm{2C_4H_{10}(l) + 13O_2(g) \to 8CO_2(g) + 10H_2O(g)}">Solve</button>
+            </div>
+            <textarea class="latex-answer" id="latex-q2-c" name="latex-q2-c" rows="2" spellcheck="false" placeholder="\mathrm{2C_4H_{10}(l) + 13O_2(g) \to 8CO_2(g) + 10H_2O(g)}"></textarea>
+            <div class="latex-preview-card">
+              <div class="preview-label">Live preview</div>
+              <div class="latex-preview" data-preview-for="latex-q2-c"><p class="preview-empty">LaTeX preview appears here.</p></div>
+            </div>
+          </li>
+          <li class="predict-item">
+            <div class="predict-prompt">Barium hydroxide solution is neutralized by adding hydrochloric acid (HCl (aq)).</div>
+            <div class="answer-toolbar">
+              <label class="entry-label" for="latex-q2-d">Write your balanced equation in LaTeX.</label>
+              <button class="solve-button" type="button" data-target="latex-q2-d" data-solution="\mathrm{Ba(OH)_2(aq) + 2HCl(aq) \to BaCl_2(aq) + 2H_2O(l)}">Solve</button>
+            </div>
+            <textarea class="latex-answer" id="latex-q2-d" name="latex-q2-d" rows="2" spellcheck="false" placeholder="\mathrm{Ba(OH)_2(aq) + 2HCl(aq) \to BaCl_2(aq) + 2H_2O(l)}"></textarea>
+            <div class="latex-preview-card">
+              <div class="preview-label">Live preview</div>
+              <div class="latex-preview" data-preview-for="latex-q2-d"><p class="preview-empty">LaTeX preview appears here.</p></div>
+            </div>
+          </li>
+          <li class="predict-item">
+            <div class="predict-prompt">Copper metal is placed in a solution of silver nitrate.</div>
+            <div class="answer-toolbar">
+              <label class="entry-label" for="latex-q2-e">Write your balanced equation in LaTeX.</label>
+              <button class="solve-button" type="button" data-target="latex-q2-e" data-solution="\mathrm{Cu(s) + 2AgNO_3(aq) \to Cu(NO_3)_2(aq) + 2Ag(s)}">Solve</button>
+            </div>
+            <textarea class="latex-answer" id="latex-q2-e" name="latex-q2-e" rows="2" spellcheck="false" placeholder="\mathrm{Cu(s) + 2AgNO_3(aq) \to Cu(NO_3)_2(aq) + 2Ag(s)}"></textarea>
+            <div class="latex-preview-card">
+              <div class="preview-label">Live preview</div>
+              <div class="latex-preview" data-preview-for="latex-q2-e"><p class="preview-empty">LaTeX preview appears here.</p></div>
+            </div>
+          </li>
+          <li class="predict-item">
+            <div class="predict-prompt">Sulfur burns in oxygen to make sulfur dioxide gas.</div>
+            <div class="answer-toolbar">
+              <label class="entry-label" for="latex-q2-f">Write your balanced equation in LaTeX.</label>
+              <button class="solve-button" type="button" data-target="latex-q2-f" data-solution="\mathrm{S_8(s) + 8O_2(g) \to 8SO_2(g)}">Solve</button>
+            </div>
+            <textarea class="latex-answer" id="latex-q2-f" name="latex-q2-f" rows="2" spellcheck="false" placeholder="\mathrm{S_8(s) + 8O_2(g) \to 8SO_2(g)}"></textarea>
+            <div class="latex-preview-card">
+              <div class="preview-label">Live preview</div>
+              <div class="latex-preview" data-preview-for="latex-q2-f"><p class="preview-empty">LaTeX preview appears here.</p></div>
+            </div>
+          </li>
+          <li class="predict-item">
+            <div class="predict-prompt">A solution of aluminum sulfate is mixed with a solution of calcium hydroxide.</div>
+            <div class="answer-toolbar">
+              <label class="entry-label" for="latex-q2-g">Write your balanced equation in LaTeX.</label>
+              <button class="solve-button" type="button" data-target="latex-q2-g" data-solution="\mathrm{Al_2(SO_4)_3(aq) + 3Ca(OH)_2(aq) \to 2Al(OH)_3(s) + 3CaSO_4(s)}">Solve</button>
+            </div>
+            <textarea class="latex-answer" id="latex-q2-g" name="latex-q2-g" rows="2" spellcheck="false" placeholder="\mathrm{Al_2(SO_4)_3(aq) + 3Ca(OH)_2(aq) \to 2Al(OH)_3(s) + 3CaSO_4(s)}"></textarea>
+            <div class="latex-preview-card">
+              <div class="preview-label">Live preview</div>
+              <div class="latex-preview" data-preview-for="latex-q2-g"><p class="preview-empty">LaTeX preview appears here.</p></div>
+            </div>
+          </li>
+          <li class="predict-item">
+            <div class="predict-prompt">Zinc metal is placed in sulfuric acid (H<sub>2</sub>SO<sub>4</sub> (aq)).</div>
+            <div class="answer-toolbar">
+              <label class="entry-label" for="latex-q2-h">Write your balanced equation in LaTeX.</label>
+              <button class="solve-button" type="button" data-target="latex-q2-h" data-solution="\mathrm{Zn(s) + H_2SO_4(aq) \to ZnSO_4(aq) + H_2(g)}">Solve</button>
+            </div>
+            <textarea class="latex-answer" id="latex-q2-h" name="latex-q2-h" rows="2" spellcheck="false" placeholder="\mathrm{Zn(s) + H_2SO_4(aq) \to ZnSO_4(aq) + H_2(g)}"></textarea>
+            <div class="latex-preview-card">
+              <div class="preview-label">Live preview</div>
+              <div class="latex-preview" data-preview-for="latex-q2-h"><p class="preview-empty">LaTeX preview appears here.</p></div>
+            </div>
+          </li>
+          <li class="predict-item">
+            <div class="predict-prompt">Aluminum powder is placed in a container filled with chlorine gas.</div>
+            <div class="answer-toolbar">
+              <label class="entry-label" for="latex-q2-i">Write your balanced equation in LaTeX.</label>
+              <button class="solve-button" type="button" data-target="latex-q2-i" data-solution="\mathrm{2Al(s) + 3Cl_2(g) \to 2AlCl_3(s)}">Solve</button>
+            </div>
+            <textarea class="latex-answer" id="latex-q2-i" name="latex-q2-i" rows="2" spellcheck="false" placeholder="\mathrm{2Al(s) + 3Cl_2(g) \to 2AlCl_3(s)}"></textarea>
+            <div class="latex-preview-card">
+              <div class="preview-label">Live preview</div>
+              <div class="latex-preview" data-preview-for="latex-q2-i"><p class="preview-empty">LaTeX preview appears here.</p></div>
+            </div>
+          </li>
+          <li class="predict-item">
+            <div class="predict-prompt">Sucrose undergoes cellular respiration.</div>
+            <div class="answer-toolbar">
+              <label class="entry-label" for="latex-q2-j">Write your balanced equation in LaTeX.</label>
+              <button class="solve-button" type="button" data-target="latex-q2-j" data-solution="\mathrm{C_{12}H_{22}O_{11}(s) + 12O_2(g) \to 12CO_2(g) + 11H_2O(l)}">Solve</button>
+            </div>
+            <textarea class="latex-answer" id="latex-q2-j" name="latex-q2-j" rows="2" spellcheck="false" placeholder="\mathrm{C_{12}H_{22}O_{11}(s) + 12O_2(g) \to 12CO_2(g) + 11H_2O(l)}"></textarea>
+            <div class="latex-preview-card">
+              <div class="preview-label">Live preview</div>
+              <div class="latex-preview" data-preview-for="latex-q2-j"><p class="preview-empty">LaTeX preview appears here.</p></div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </main>
+
+    <section class="sheet">
+      <h2>Answers</h2>
+      <p class="answers-note">Answer key transcribed from the worksheet PDF.</p>
+
+      <h2>Question 1</h2>
+      <ol class="answer-list" type="a">
+        <li><span class="equation">2 Cu (s) + O<sub>2</sub> (g) → 2 CuO (s) (formation)</span></li>
+        <li><span class="equation">2 H<sub>2</sub>O (l) → 2 H<sub>2</sub> (g) + O<sub>2</sub> (g) (decomposition)</span></li>
+        <li><span class="equation">3 Fe (s) + 4 H<sub>2</sub>O (g) → 4 H<sub>2</sub> (g) + Fe<sub>3</sub>O<sub>4</sub> (s) (single replacement)</span></li>
+        <li><span class="equation">2 AsCl<sub>3</sub> (aq) + 3 H<sub>2</sub>S (aq) → As<sub>2</sub>S<sub>3</sub> (s) + 6 HCl (aq) (double replacement)</span></li>
+        <li><span class="equation">CuSO<sub>4</sub> x 5 H<sub>2</sub>O (s) → CuSO<sub>4</sub> (s) + 5 H<sub>2</sub>O (g) (other – dehydration or decomposition)</span></li>
+        <li><span class="equation">Fe<sub>2</sub>O<sub>3</sub> (s) + 3 H<sub>2</sub> (g) → 2 Fe (s) + 3 H<sub>2</sub>O (l) (single replacement)</span></li>
+        <li><span class="equation">CaCO<sub>3</sub> (s) → CaO (s) + CO<sub>2</sub> (g) (other or decomposition)</span></li>
+        <li><span class="equation">8 Fe (s) + S<sub>8</sub> (s) → 8 FeS (s) (formation)</span></li>
+        <li><span class="equation">H<sub>2</sub>S (aq) + 2 KOH (aq) → 2 H<sub>2</sub>O (l) + K<sub>2</sub>S (aq) (double replacement)</span></li>
+        <li><span class="equation">2 NaCl (l) → 2 Na (l) + Cl<sub>2</sub> (g) (decomposition)</span></li>
+        <li><span class="equation">2 Al (s) + 3 H<sub>2</sub>SO<sub>4</sub> (aq) → 3 H<sub>2</sub> (g) + Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub> (aq) (single replacement)</span></li>
+        <li><span class="equation">H<sub>3</sub>PO<sub>4</sub> (aq) + 3 NH<sub>4</sub>OH (aq) → 3 H<sub>2</sub>O (l) + (NH<sub>4</sub>)<sub>3</sub>PO<sub>4</sub> (aq) (double replacement)</span></li>
+        <li><span class="equation">C<sub>3</sub>H<sub>8</sub> (g) + 5 O<sub>2</sub> (g) → 3 CO<sub>2</sub> (g) + 4 H<sub>2</sub>O (l) (hydrocarbon combustion)</span></li>
+        <li><span class="equation">4 Al (s) + 3 O<sub>2</sub> (g) → 2 Al<sub>2</sub>O<sub>3</sub> (s) (formation)</span></li>
+        <li><span class="equation">CH<sub>4</sub> (g) + 2 O<sub>2</sub> (g) → CO<sub>2</sub> (g) + 2 H<sub>2</sub>O (l) (hydrocarbon combustion)</span></li>
+        <li><span class="equation">K<sub>2</sub>SO<sub>4</sub> (aq) + BaCl<sub>2</sub> (aq) → 2 KCl (aq) + BaSO<sub>4</sub> (s) (double replacement)</span></li>
+        <li><span class="equation">C<sub>5</sub>H<sub>12</sub> (l) + 8 O<sub>2</sub> (g) → 5 CO<sub>2</sub> (g) + 6 H<sub>2</sub>O (g) (hydrocarbon combustion)</span></li>
+        <li><span class="equation">Ca(OH)<sub>2</sub> (aq) + 2 NH<sub>4</sub>Cl (aq) → 2 NH<sub>4</sub>OH (aq) + CaCl<sub>2</sub> (aq) (double replacement)</span></li>
+        <li><span class="equation">V<sub>2</sub>O<sub>5</sub> (s) + 5 Ca (s) → 5 CaO (s) + 2 V (s) (single replacement)</span></li>
+        <li><span class="equation">2 Na (s) + ZnI<sub>2</sub> (aq) → 2 NaI (aq) + Zn (s) (single replacement)</span></li>
+        <li><span class="equation">C<sub>7</sub>H<sub>6</sub>O<sub>3</sub> (l) + 7 O<sub>2</sub> (g) → 7 CO<sub>2</sub> (g) + 3 H<sub>2</sub>O (l) (hydrocarbon combustion)</span></li>
+        <li><span class="equation">3 Ca (s) + N<sub>2</sub> (g) → Ca<sub>3</sub>N<sub>2</sub> (s) (formation)</span></li>
+        <li><span class="equation">Fe<sub>2</sub>O<sub>3</sub> (s) + 3 H<sub>2</sub> (g) → 2 Fe (s) + 3 H<sub>2</sub>O (l) (single replacement)</span></li>
+        <li><span class="equation">2 C<sub>15</sub>H<sub>30</sub> (l) + 45 O<sub>2</sub> (g) → 30 CO<sub>2</sub> (g) + 30 H<sub>2</sub>O (g) (hydrocarbon combustion)</span></li>
+        <li><span class="equation">2 BN (s) + 3 F<sub>2</sub> (g) → 2 BF<sub>3</sub> (s) + N<sub>2</sub> (g) (single replacement)</span></li>
+        <li><span class="equation">2 C<sub>12</sub>H<sub>26</sub> (l) + 37 O<sub>2</sub> (g) → 24 CO<sub>2</sub> (g) + 26 H<sub>2</sub>O (g) (hydrocarbon combustion)</span></li>
+      </ol>
+
+      <h2>Question 2</h2>
+      <ol class="answer-list" type="a">
+        <li><span class="equation">Pb(NO<sub>3</sub>)<sub>2</sub> (aq) + 2 NaI (aq) → PbI<sub>2</sub> (s) + 2 NaNO<sub>3</sub> (aq) (double replacement)</span></li>
+        <li><span class="equation">8 ZnS (s) + 4 O<sub>2</sub> (g) → 8 ZnO (s) + S<sub>8</sub> (s) (single replacement)</span></li>
+        <li><span class="equation">2 C<sub>4</sub>H<sub>10</sub> (l) + 13 O<sub>2</sub> (g) → 8 CO<sub>2</sub> (g) + 10 H<sub>2</sub>O (g) (hydrocarbon combustion)</span></li>
+        <li><span class="equation">Ba(OH)<sub>2</sub> (aq) + 2 HCl (aq) → BaCl<sub>2</sub> (aq) + 2 H<sub>2</sub>O (l) (double replacement)</span></li>
+        <li><span class="equation">Cu (s) + 2 AgNO<sub>3</sub> (aq) → Cu(NO<sub>3</sub>)<sub>2</sub> (aq) + 2 Ag (s) (single replacement)</span></li>
+        <li><span class="equation">S<sub>8</sub> (s) + 8 O<sub>2</sub> (g) → 8 SO<sub>2</sub> (g) (formation)</span></li>
+        <li><span class="equation">Al<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub> (aq) + 3 Ca(OH)<sub>2</sub> (aq) → 2 Al(OH)<sub>3</sub> (s) + 3 CaSO<sub>4</sub> (s) (double replacement)</span></li>
+        <li><span class="equation">Zn (s) + H<sub>2</sub>SO<sub>4</sub> (aq) → ZnSO<sub>4</sub> (aq) + H<sub>2</sub> (g) (single replacement)</span></li>
+        <li><span class="equation">2 Al (s) + 3 Cl<sub>2</sub> (g) → 2 AlCl<sub>3</sub> (s) (formation)</span></li>
+        <li><span class="equation">C<sub>12</sub>H<sub>22</sub>O<sub>11</sub> (s) + 12 O<sub>2</sub> (g) → 12 CO<sub>2</sub> (g) + 11 H<sub>2</sub>O (l) (hydrocarbon combustion)</span></li>
+      </ol>
+    </section>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'balancing-chemical-equations-worksheet';
+
+    function formatLatexForPreview(value) {
+      const trimmed = String(value || '').trim();
+      if (!trimmed) {
+        return '';
+      }
+      if (/^(\\\[|\\\(|\$\$?)/.test(trimmed)) {
+        return trimmed;
+      }
+      return '\\(' + trimmed + '\\)';
+    }
+
+    function setPreviewState(preview, html, className) {
+      preview.innerHTML = html;
+      preview.className = 'latex-preview';
+      if (className) {
+        preview.classList.add(className);
+      }
+    }
+
+    function updateLatexPreview(field) {
+      const preview = document.querySelector('[data-preview-for="' + field.id + '"]');
+      if (!preview) {
+        return;
+      }
+
+      const value = String(field.value || '').trim();
+      if (!value) {
+        setPreviewState(preview, '<p class="preview-empty">LaTeX preview appears here.</p>');
+        return;
+      }
+
+      if (!window.MathJax || typeof window.MathJax.typesetPromise !== 'function') {
+        setPreviewState(preview, '<p class="preview-fallback"></p>', 'is-fallback');
+        preview.querySelector('.preview-fallback').textContent = value;
+        return;
+      }
+
+      preview.textContent = formatLatexForPreview(value);
+      window.MathJax.typesetPromise([preview]).catch(() => {
+        setPreviewState(preview, '<p class="preview-fallback"></p>', 'is-fallback');
+        preview.querySelector('.preview-fallback').textContent = value;
+      });
+    }
+
+    function solveQuestion(button) {
+      const targetId = button.getAttribute('data-target');
+      const solution = button.getAttribute('data-solution') || '';
+      const field = document.getElementById(targetId);
+      if (!field) {
+        return;
+      }
+      if (button.dataset.active === 'true' && field.value === solution) {
+        field.value = '';
+        button.dataset.active = 'false';
+      } else {
+        field.value = solution;
+        button.dataset.active = 'true';
+      }
+      saveWorksheetState();
+      updateLatexPreview(field);
+      field.focus();
+    }
+
+    function normalizeCoefficient(value, expected) {
+      const trimmed = String(value || '').trim();
+      if (!trimmed && expected === '1') {
+        return '1';
+      }
+      return trimmed;
+    }
+
+    function checkQuestionOne(button) {
+      const item = button.closest('.check-item');
+      if (!item) {
+        return;
+      }
+
+      const feedback = item.querySelector('.check-feedback');
+      if (!feedback) {
+        return;
+      }
+      if (button.dataset.active === 'true') {
+        feedback.className = 'check-feedback';
+        button.dataset.active = 'false';
+        return;
+      }
+
+      const expected = String(item.getAttribute('data-answer') || '').split('|');
+      const actual = Array.from(item.querySelectorAll('.coefficient-blank')).map((field, index) => {
+        return normalizeCoefficient(field.value, expected[index] || '');
+      });
+      const isCorrect = actual.length === expected.length && actual.every((value, index) => value === expected[index]);
+
+      feedback.className = 'check-feedback is-visible ' + (isCorrect ? 'is-correct' : 'is-incorrect');
+      button.dataset.active = 'true';
+      const title = feedback.querySelector('.feedback-title');
+      const equation = feedback.querySelector('.feedback-equation');
+      if (title) {
+        title.textContent = isCorrect ? 'Correct' : 'Not quite. Correct answer:';
+      }
+      if (equation) {
+        equation.innerHTML = item.getAttribute('data-correct-html') || '';
+      }
+    }
+
+    function loadWorksheetState() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      } catch {
+        return {};
+      }
+    }
+
+    function saveWorksheetState() {
+      const state = {};
+      document.querySelectorAll('.coefficient-blank, .latex-answer').forEach((field) => {
+        if (field.name) {
+          state[field.name] = field.value;
+        }
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function restoreWorksheetState() {
+      const state = loadWorksheetState();
+      document.querySelectorAll('.coefficient-blank, .latex-answer').forEach((field) => {
+        if (field.name && Object.prototype.hasOwnProperty.call(state, field.name)) {
+          field.value = state[field.name];
+        }
+      });
+    }
+
+    document.querySelectorAll('.coefficient-blank').forEach((field, index) => {
+      field.name = 'q1-' + index;
+      field.addEventListener('input', () => {
+        saveWorksheetState();
+        const item = field.closest('.check-item');
+        if (!item) {
+          return;
+        }
+        const button = item.querySelector('.check-button');
+        const feedback = item.querySelector('.check-feedback');
+        if (button) {
+          button.dataset.active = 'false';
+        }
+        if (feedback) {
+          feedback.className = 'check-feedback';
+        }
+      });
+    });
+
+    restoreWorksheetState();
+
+    document.querySelectorAll('.latex-answer').forEach((field) => {
+      field.addEventListener('input', () => {
+        saveWorksheetState();
+        const solveButton = document.querySelector('.solve-button[data-target="' + field.id + '"]');
+        if (solveButton) {
+          solveButton.dataset.active = solveButton.getAttribute('data-solution') === field.value ? 'true' : 'false';
+        }
+        updateLatexPreview(field);
+      });
+      updateLatexPreview(field);
+    });
+
+    document.querySelectorAll('.solve-button').forEach((button) => {
+      button.addEventListener('click', () => {
+        solveQuestion(button);
+      });
+    });
+
+    document.querySelectorAll('.check-button').forEach((button) => {
+      button.addEventListener('click', () => {
+        checkQuestionOne(button);
+      });
+    });
+
+    let previewRefreshAttempts = 0;
+    const previewRefreshTimer = window.setInterval(() => {
+      if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+        document.querySelectorAll('.latex-answer').forEach(updateLatexPreview);
+        window.clearInterval(previewRefreshTimer);
+        return;
+      }
+
+      previewRefreshAttempts += 1;
+      if (previewRefreshAttempts > 20) {
+        window.clearInterval(previewRefreshTimer);
+      }
+    }, 500);
+  </script>
+</body>
+</html>
