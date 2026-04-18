@@ -21,9 +21,9 @@
     font-family: Arial, Helvetica, sans-serif;
   }
   .page {
-    width: 1500px;
+    width: min(100%, 1500px);
     margin: 0 auto;
-    padding: 28px 0 40px;
+    padding: 28px 16px 40px;
     background: var(--bg);
   }
   h1 {
@@ -39,8 +39,16 @@
     margin: 42px 0 40px;
     font-size: 36px;
   }
+  .instruction,
+  .panel,
+  .section,
+  .actions {
+    width: 100%;
+    max-width: 1405px;
+    margin-left: auto;
+    margin-right: auto;
+  }
   .instruction {
-    width: 1405px;
     margin: 0 auto 6px;
     border: 3px solid var(--border);
     background: #ededed;
@@ -49,7 +57,6 @@
     padding: 14px 10px 12px;
   }
   .panel {
-    width: 1405px;
     margin: 0 auto;
     border: 3px solid var(--border);
     background: #dedede;
@@ -85,7 +92,7 @@
   }
 
   .section {
-    width: 1368px;
+    max-width: 1368px;
     margin: 10px auto 0;
     padding-top: 10px;
   }
@@ -95,10 +102,15 @@
     margin: 18px 0 8px 0;
   }
 
-  .table-header-img {
+  .table-header-img,
+  .indicator-img {
     display: block;
-    width: 1310px;
+    max-width: 100%;
     height: auto;
+  }
+
+  .table-header-img {
+    width: min(1310px, 100%);
     margin: 0 0 14px 6px;
   }
 
@@ -129,8 +141,7 @@
     height: 40px;
   }
   .indicator-img {
-    width: 885px;
-    display: block;
+    width: min(885px, 100%);
     margin: 18px 0 8px 190px;
   }
 
@@ -152,7 +163,7 @@
   }
 
   .actions {
-    width: 1368px;
+    max-width: 1368px;
     margin: 18px auto 0;
     padding-left: 6px;
   }
@@ -180,6 +191,116 @@
   }
   .incorrect {
     background: var(--wrong) !important;
+  }
+
+  @media (max-width: 768px) {
+    .page {
+      padding: 16px 12px 32px;
+    }
+
+    h1 {
+      margin: 12px 0 8px;
+      font-size: 32px;
+    }
+
+    h2 {
+      margin: 24px 0 20px;
+      font-size: 24px;
+    }
+
+    .instruction,
+    .panel {
+      border-width: 2px;
+    }
+
+    .instruction {
+      font-size: 18px;
+      padding: 12px 10px;
+    }
+
+    .panel {
+      padding: 16px 12px 12px;
+    }
+
+    .line,
+    .indicator-q,
+    .chem-q {
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    .select-inline,
+    .ab-list select,
+    .indicator-q select,
+    .chem-q select {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      min-height: 48px;
+      margin: 8px 0;
+      font-size: 18px;
+      padding: 8px 14px;
+    }
+
+    .w1,
+    .w2,
+    .w3,
+    .w4,
+    .w5,
+    .w6,
+    .chem-q select.name,
+    .chem-q select.formula {
+      width: 100%;
+    }
+
+    .table-title,
+    .ref-title {
+      font-size: 20px;
+      margin: 14px 0 10px;
+    }
+
+    .ab-list .row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 6px;
+      margin: 12px 0;
+      font-size: 18px;
+    }
+
+    .ab-list .lbl {
+      width: 100%;
+      font-size: 24px;
+    }
+
+    .indicator-img,
+    .table-header-img {
+      margin: 14px 0 10px;
+    }
+
+    .chem-block {
+      margin-top: 12px;
+    }
+
+    .chem-q {
+      margin: 16px 0;
+    }
+
+    .actions {
+      padding-left: 0;
+    }
+
+    .check-btn {
+      padding: 0;
+    }
+
+    .check-btn img {
+      width: 132px;
+    }
+
+    .status {
+      margin: 10px 0 0;
+      font-size: 18px;
+    }
   }
 </style>
 </head>

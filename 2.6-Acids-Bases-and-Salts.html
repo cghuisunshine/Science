@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2.6 Acids, Bases and Salts</title>
+  <style>
+    :root {
+      --paper: #f6f1e8;
+      --sheet: #fffdf9;
+      --ink: #221f1a;
+      --muted: #6e655a;
+      --rule: #d6ccbe;
+      --accent: #6a543b;
+      --accent-soft: #efe6d7;
+      --callout: #f3ecdf;
+      --embed: #f8f4ec;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.7;
+    }
+
+    .page {
+      width: min(960px, calc(100% - 32px));
+      margin: 24px auto 48px;
+      background: var(--sheet);
+      border: 1px solid var(--rule);
+      padding: 40px 48px 56px;
+    }
+
+    header {
+      border-bottom: 2px solid var(--rule);
+      padding-bottom: 20px;
+      margin-bottom: 28px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: #1f1912;
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.65rem;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin: 0 0 14px;
+    }
+
+    ul,
+    ol {
+      margin: 10px 0 16px 24px;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .lede {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .summary-box,
+    .callout,
+    .equation-block,
+    .resource-block,
+    .embed-block {
+      border: 1px solid var(--rule);
+      background: var(--callout);
+    }
+
+    .summary-box {
+      padding: 18px 20px;
+      margin: 20px 0 0;
+    }
+
+    main section {
+      margin-top: 34px;
+    }
+
+    .ph-scale {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 16px 0 18px;
+    }
+
+    .ph-band {
+      padding: 14px 16px;
+      border: 1px solid var(--rule);
+      background: #fbf8f2;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .acidic {
+      border-left: 4px solid #8f5a39;
+    }
+
+    .neutral {
+      border-left: 4px solid #94856b;
+    }
+
+    .basic {
+      border-left: 4px solid #5e6d59;
+    }
+
+    .callout,
+    .equation-block,
+    .resource-block,
+    .embed-block {
+      padding: 16px 18px;
+      margin: 18px 0;
+    }
+
+    .callout-title,
+    .resource-title,
+    .embed-title {
+      display: block;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: var(--accent);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .equation-block {
+      background: #faf7f0;
+      font-family: "Palatino Linotype", "Book Antiqua", serif;
+      overflow-x: auto;
+    }
+
+    .equation-block p:last-child,
+    .callout p:last-child,
+    .resource-block p:last-child {
+      margin-bottom: 0;
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin: 16px 0;
+    }
+
+    .panel {
+      border: 1px solid var(--rule);
+      background: #fbf8f2;
+      padding: 16px;
+    }
+
+    .resource-block a,
+    .quiz-links a,
+    .inline-link {
+      color: #4a3723;
+      font-weight: 700;
+    }
+
+    .resource-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    iframe {
+      width: 100%;
+      border: 1px solid var(--rule);
+      background: #fff;
+    }
+
+    .sim-frame {
+      min-height: 520px;
+    }
+
+    .video-frame {
+      min-height: 360px;
+    }
+
+    .practice-frame {
+      min-height: 640px;
+    }
+
+    .practice-frame[data-autosize="true"] {
+      overflow: hidden;
+    }
+
+    .quiz-links {
+      margin-top: 10px;
+    }
+
+    .footer-note {
+      margin-top: 34px;
+      padding-top: 18px;
+      border-top: 1px solid var(--rule);
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        width: min(100% - 20px, 960px);
+        padding: 28px 18px 36px;
+      }
+
+      .ph-scale,
+      .two-column {
+        grid-template-columns: 1fr;
+      }
+
+      .sim-frame,
+      .video-frame,
+      .practice-frame {
+        min-height: 320px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <article class="page">
+    <header>
+      <h1>2.6 Acids, Bases and Salts</h1>
+      <p class="lede">
+        A reading page for the key ideas, naming rules, ion behaviour, and common
+        reactions involving acids, bases, and salts.
+      </p>
+      <div class="summary-box">
+        <p>
+          This section explains how acids and bases are identified, how pH is used
+          to compare them, how indicators work, and how salts form in
+          neutralization and other reactions.
+        </p>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <h2>General Information</h2>
+        <p>Acids and bases are very common.</p>
+        <ul>
+          <li>Many familiar compounds are acids or bases.</li>
+          <li>Classification as acids or bases is based on chemical composition.</li>
+        </ul>
+        <p>Acids and bases can be very dangerous.</p>
+        <ul>
+          <li>Both can be very corrosive.</li>
+          <li>NEVER try to identify an acid or base by taste or touch.</li>
+        </ul>
+        <p>The strength of acids and bases in measured on the pH scale.</p>
+        <div class="ph-scale" aria-label="pH scale summary">
+          <div class="ph-band acidic">pH below 7 = acidic</div>
+          <div class="ph-band neutral">pH 7 = neutral</div>
+          <div class="ph-band basic">pH above 7 = basic</div>
+        </div>
+        <ul>
+          <li>Each decrease of 1 on the pH scale indicates 10 times (10 x) more acidic.</li>
+          <li>For example, pH 4 is ten times more acidic than pH 5.</li>
+          <li>pH 3 is 1 000 times (1 000 x) more acidic than pH 6.</li>
+        </ul>
+
+        <div class="embed-block">
+          <span class="embed-title">Simulation</span>
+          <p>
+            Check out the pH scale PhET simulation below. You can add different
+            solutions to the container, change the solution by using the drop-down
+            menu, drag the pH meter into the filled container, and test how adding
+            water changes pH.
+          </p>
+          <iframe
+            class="sim-frame"
+            src="https://phet.colorado.edu/sims/html/ph-scale-basics/1.3.2/ph-scale-basics_en.html"
+            title="PhET pH Scale Basics Simulation"
+            loading="lazy"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </section>
+
+      <section>
+        <h2>pH Indicators</h2>
+        <p>The pH of acids and bases cannot be determined by sight.</p>
+        <ul>
+          <li>
+            Instead, pH is measured by other chemicals, called indicators, or by a
+            pH meter that measures the electrical conductivity of the solution.
+          </li>
+        </ul>
+        <p>pH indicators change colour based on the pH of the solution they are placed in.</p>
+        <ul>
+          <li>Litmus is the most common indicator, used on litmus paper.</li>
+          <li>Two colours of litmus paper: Blue = basic and Red = acidic.</li>
+          <li>Blue = pH above 7, Red = pH below 7.</li>
+          <li>
+            A universal indicator contains many indicators that turn different colours
+            at different pH values and can be in liquid form or on paper strips.
+          </li>
+          <li>A pH meter uses electrical probes to measure how solutions conduct electricity.</li>
+          <li>Indicators change colour at different pH values, so different indicators are used to identify different pH values.</li>
+          <li>Bromothymol blue for pH 6 - 7.6, phenolphthalein for pH 8.2 - 10.</li>
+          <li>Many natural sources, such as beets and cabbage, can also act as indicators.</li>
+        </ul>
+        <div class="embed-block">
+          <span class="embed-title">Video</span>
+          <iframe
+            class="video-frame"
+            src="https://www.youtube.com/embed/jjXslhmu2CE"
+            title="pH indicators video"
+            loading="lazy"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </section>
+
+      <section>
+        <h2>Acids</h2>
+        <p>If you know a compound's chemical formula, you may be able to identify it as an acid.</p>
+        <ul>
+          <li>Acids often behave like acids only when dissolved in water.</li>
+          <li>Therefore, acids are often written with the subscript (aq) = aquatic = in water.</li>
+        </ul>
+        <p>The chemical formula of an acid usually starts with hydrogen (H).</p>
+        <ul>
+          <li>Acids with a carbon usually have the C written first.</li>
+          <li>HCl(aq) hydrochloric acid</li>
+          <li>HNO3(aq) nitric acid</li>
+          <li>CH3COOH(aq) acetic acid</li>
+        </ul>
+
+        <div class="callout">
+          <span class="callout-title">Naming Acids</span>
+          <p><strong>For binary acids formed from hydrogen + a single element from the periodic table</strong></p>
+          <p>Hydrogen + ...-ide = Hydro...ic acid</p>
+          <p>HF(aq) = hydrogen fluoride = hydrofluoric acid</p>
+          <p><strong>For acids formed from hydrogen plus a polyatomic ion ending in -ate</strong></p>
+          <p>Hydrogen + ...-ate = ...ic acid</p>
+          <p>H2CO3(aq) = hydrogen carbonate = carbonic acid</p>
+          <p><strong>For acids formed from hydrogen plus a polyatomic ion ending in -ite</strong></p>
+          <p>Hydrogen + ...-ite = ...ous acid</p>
+          <p>H2SO3(aq) = hydrogen sulphite = sulphurous acid</p>
+        </div>
+
+        <div class="resource-list">
+          <div class="embed-block">
+            <span class="embed-title">Video</span>
+            <iframe
+              class="video-frame"
+              src="https://www.youtube.com/embed/nZF1lk64M-c"
+              title="Acids video"
+              loading="lazy"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <div class="embed-block">
+            <span class="embed-title">Naming Acids</span>
+            <iframe
+              class="video-frame"
+              src="https://www.youtube.com/embed/lrknGzQgYiM"
+              title="Naming acids video"
+              loading="lazy"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Bases</h2>
+        <p>If you know a compound's chemical formula, you may be able to identify it as a base.</p>
+        <ul>
+          <li>Bases, like acids, often behave like bases only when dissolved in water.</li>
+          <li>Therefore, bases are often written with the subscript (aq) = aquatic = in water.</li>
+        </ul>
+        <p>The chemical formula of a base usually ends with hydroxide (OH).</p>
+
+        <div class="two-column">
+          <div class="panel">
+            <h3>Examples of common bases</h3>
+            <ul>
+              <li>NaOH(aq)</li>
+              <li>Mg(OH)2(aq)</li>
+              <li>Ca(OH)2(aq)</li>
+              <li>NH4OH(aq)</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3>Naming Bases</h3>
+            <p>To name a base you simply name the cation (metal) and then add hydroxide.</p>
+            <ul>
+              <li>NaOH(aq) - Sodium hydroxide</li>
+              <li>Mg(OH)2(aq) - Magnesium hydroxide</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Production of Ions</h2>
+        <p>Acids and bases can conduct electricity because they release ions in solution.</p>
+        <ul>
+          <li>Acids release hydrogen ions, H+(aq).</li>
+          <li>Bases release hydroxide ions, OH-(aq).</li>
+        </ul>
+        <p>The pH of a solution refers to the concentration of ions it has.</p>
+
+        <div class="equation-block">
+          <p>Square brackets are used to signify concentration: [H⁺(aq)], [OH⁻(aq)]</p>
+          <p>High [H⁺(aq)] = low pH, very acidic</p>
+          <p>High [OH⁻(aq)] = high pH, very basic</p>
+          <p>
+            A solution cannot have BOTH high [H⁺(aq)] and [OH⁻(aq)]; they cancel
+            each other out and form water. This process is called neutralization.
+          </p>
+          <p>[H⁺(aq)] + [OH⁻(aq)] → H₂O(l)</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Properties of Acids &amp; Bases</h2>
+        <div class="callout">
+          <span class="callout-title">Study Note</span>
+          <p>
+            Acids and bases differ in pH, indicators, ion production, and reaction
+            behaviour. Review each section above and compare the examples before
+            moving on to the practice activities below.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Practice on Acid Formulas</h2>
+        <div class="resource-block">
+          <span class="resource-title">Practice Link</span>
+          <p><a href="https://cghuisunshine.github.io/Science/acid_formula.html" target="_blank" rel="noreferrer">Open the acid formulas practice page</a></p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Acid/Base Review</h2>
+        <p>Check your understanding of acids and bases.</p>
+        <div class="embed-block">
+          <span class="embed-title">Embedded Review</span>
+          <iframe
+            class="practice-frame"
+            src="acid_base_exercise.html"
+            title="Acid and base review exercise"
+            loading="lazy"
+            data-autosize="true"
+          ></iframe>
+        </div>
+      </section>
+
+      <section>
+        <h2>Acids and Bases Practice Quiz</h2>
+        <p>Here are a number of practice quizzes. Complete as many as you need to prepare for your test.</p>
+        <ol class="quiz-links">
+          <li><a href="https://www.visionlearning.com/en/library/Chemistry/1/Acids-and-Bases/58/quiz/submit" target="_blank" rel="noreferrer">Quiz 1</a></li>
+          <li><a href="https://www.thoughtco.com/acids-and-bases-quiz-4045347" target="_blank" rel="noreferrer">Quiz 2</a></li>
+          <li><a href="https://www.quia.com/quiz/264207.html?AP_rand=257402189" target="_blank" rel="noreferrer">Quiz 3</a></li>
+          <li><a href="https://www.qldscienceteachers.com/junior-science/chemistry/quizzes/acids-and-bases" target="_blank" rel="noreferrer">Quiz 4</a></li>
+          <li><a href="https://www.ducksters.com/science/quiz/acids_and_bases_questions.php" target="_blank" rel="noreferrer">Quiz 5</a></li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Salts</h2>
+        <p>Salts are ionic compounds formed when acids and bases react.</p>
+        <ul>
+          <li>Salts are also produced when oxides or carbonates react with acids, or when metals react with acids.</li>
+        </ul>
+        <p>Table salt, NaCl, is found in seawater, salt lakes, or rock deposits.</p>
+        <ul>
+          <li>Salt was once very valuable as a commodity.</li>
+          <li>Iodine is now added to salt to minimize goiter (a disease of the thyroid).</li>
+        </ul>
+        <p>NaCl is only one kind of salt.</p>
+        <ul>
+          <li>A salt is made up of a positive ion from a base and negative ion from an acid.</li>
+          <li>Salts are found in many things.</li>
+          <li>In batteries, explosives, and fertilizers.</li>
+          <li>In multivitamins.</li>
+          <li>In many living cells.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Neutralization</h2>
+        <p>Neutralization reactions occur when an acid and a base react to produce a salt and water.</p>
+        <div class="embed-block">
+          <span class="embed-title">Video</span>
+          <iframe
+            class="video-frame"
+            src="https://www.youtube.com/embed/gtcE8TosEq4"
+            title="Neutralization video"
+            loading="lazy"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </section>
+
+      <section>
+        <h2>Metal and Non-metal Oxides</h2>
+        <div class="equation-block">
+          <p><strong>Metal oxides react with water to form bases.</strong></p>
+          <p>Na₂O(s) + H₂O(l) → 2 NaOH(aq)</p>
+          <p><strong>Non-metal oxides react with water to form acids.</strong></p>
+          <p>SO₂(g) + H₂O(l) → H₂SO₃(aq)</p>
+          <p>Non-metal oxides are formed from the burning of fossil fuels.</p>
+          <p>Add water in the atmosphere = acid precipitation.</p>
+        </div>
+        <div class="resource-list">
+          <div class="embed-block">
+            <span class="embed-title">Video</span>
+            <iframe
+              class="video-frame"
+              src="https://www.youtube.com/embed/yCMchx6Q9Is"
+              title="Metal oxides and non-metal oxides video"
+              loading="lazy"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <div class="embed-block">
+            <span class="embed-title">Video</span>
+            <iframe
+              class="video-frame"
+              src="https://www.youtube.com/embed/MtL64hRoTzQ"
+              title="Acid precipitation video"
+              loading="lazy"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Acid Reactions with Metals and Carbonates</h2>
+        <div class="two-column">
+          <div class="panel">
+            <h3>Acids and Metals</h3>
+            <ul>
+              <li>The most reactive metals, at the bottom of groups 1 and 2, react vigorously with water and acids.</li>
+              <li>All other metals are less reactive than those in groups 1 and 2.</li>
+              <li>When metals do react with acids, H₂ gas is usually released.</li>
+            </ul>
+            <div class="equation-block">
+              <p>2 HCl(aq) + Mg(s) → MgCl₂(s) + H₂(g)</p>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>Acids and Carbonates</h3>
+            <ul>
+              <li>Carbonates (CO₃²⁻) neutralize acids, protecting locations with natural carbonate supplies from acid precipitation.</li>
+            </ul>
+            <div class="equation-block">
+              <p>H₂SO₄(aq) + CaCO₃(s) → CaSO₄(s) + H₂O(aq) + CO₂(g)</p>
+              <p>sulphuric acid + calcium carbonate ➝ calcium sulfate + water + carbon dioxide</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Salts Review</h2>
+        <p>Check your understanding of Salts below.</p>
+        <div class="embed-block">
+          <span class="embed-title">Embedded Review</span>
+          <iframe
+            class="practice-frame"
+            src="https://cghuisunshine.github.io/Science/acid_reactions_gap_fill.html"
+            title="Salts review exercise"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </section>
+
+      <section>
+        <h2>Acid, Base, Salt Practice Quiz</h2>
+        <div class="resource-block">
+          <span class="resource-title">Practice Link</span>
+          <p><a href="https://cghuisunshine.github.io/Science/acid_base_salt_reflecting.html" target="_blank" rel="noreferrer">Open the acid, base, salt practice quiz</a></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer-note">
+      Review the naming patterns, pH rules, and reaction equations before moving on to
+      the embedded practice activities and quiz links.
+    </footer>
+  </article>
+  <script>
+    function autoSizeEmbed(iframe) {
+      try {
+        const doc = iframe.contentWindow?.document;
+        if (!doc) return;
+        const body = doc.body;
+        const html = doc.documentElement;
+        const nextHeight = Math.max(
+          body?.scrollHeight || 0,
+          body?.offsetHeight || 0,
+          html?.clientHeight || 0,
+          html?.scrollHeight || 0,
+          html?.offsetHeight || 0
+        );
+
+        if (nextHeight > 0) {
+          iframe.style.height = `${nextHeight}px`;
+        }
+      } catch (_error) {
+        // The local relative embed can be measured when hosted from the same origin.
+      }
+    }
+
+    const autoSizeEmbeds = Array.from(
+      document.querySelectorAll('iframe[data-autosize="true"]')
+    );
+
+    autoSizeEmbeds.forEach((iframe) => {
+      iframe.addEventListener('load', () => {
+        autoSizeEmbed(iframe);
+        setTimeout(() => autoSizeEmbed(iframe), 150);
+        setTimeout(() => autoSizeEmbed(iframe), 500);
+      });
+    });
+
+    window.addEventListener('resize', () => {
+      autoSizeEmbeds.forEach(autoSizeEmbed);
+    });
+  </script>
+</body>
+</html>
