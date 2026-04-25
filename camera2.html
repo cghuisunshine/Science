@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Camera Photo to Clipboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #f6f7fb;
+      color: #222;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .box {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .surface-frame {
+      width: 100%;
+      max-width: 720px;
+      margin: 15px auto;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      background: #000;
+      overflow: hidden;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+
+    video, canvas, img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: #000;
+    }
+
+    .surface-panel {
+      position: absolute;
+      inset: 0;
+      object-fit: cover;
+    }
+
+    .is-hidden {
+      display: none;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    button {
+      padding: 12px 18px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    button.secondary {
+      background: #16a34a;
+    }
+
+    button.secondary:hover {
+      background: #15803d;
+    }
+
+    button.gray {
+      background: #555;
+    }
+
+    #status {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .note {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Take Photo and Copy to Clipboard</h1>
+
+  <div class="box">
+    <h2>Camera Surface</h2>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <div id="captureWindow" class="surface-frame" title="Double-click to take a photo">
+      <video id="video" class="surface-panel" autoplay playsinline></video>
+      <img
+        id="preview"
+        class="surface-panel is-hidden"
+        alt="Captured photo will appear here"
+      />
+    </div>
+
+    <div class="buttons">
+      <button onclick="startCamera()">Start Camera</button>
+      <button onclick="takePhoto()">Take Photo</button>
+      <button class="secondary" onclick="copyPhoto()">Copy Photo to Clipboard</button>
+      <button onclick="downloadPhoto()">Download Photo</button>
+      <button class="gray" onclick="stopCamera()">Stop Camera</button>
+    </div>
+
+    <p id="status"></p>
+
+    <p class="note">
+      Double-click the same window to capture, copy, and return to live preview.
+      After the copy step, go to ChatGPT web and press <b>Command + V</b> in the
+      message box.
+    </p>
+  </div>
+
+  <script>
+    const captureWindow = document.getElementById("captureWindow");
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const preview = document.getElementById("preview");
+    const statusText = document.getElementById("status");
+
+    let stream = null;
+    let photoBlob = null;
+    let previewUrl = null;
+    let surfaceMode = "live";
+    let cameraActive = false;
+
+    function syncCaptureWindowSize() {
+      const width = video.videoWidth;
+      const height = video.videoHeight;
+
+      if (!width || !height) {
+        return;
+      }
+
+      captureWindow.style.aspectRatio = `${width} / ${height}`;
+    }
+
+    function setSurfaceMode(mode) {
+      surfaceMode = mode;
+      const showingCaptured = mode === "captured";
+      video.classList.toggle("is-hidden", showingCaptured);
+      preview.classList.toggle("is-hidden", !showingCaptured);
+      captureWindow.title = showingCaptured
+        ? "Double-click to copy the captured photo"
+        : "Double-click to take a photo";
+    }
+
+    function setPreviewImage(blob) {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+
+      previewUrl = URL.createObjectURL(blob);
+      preview.src = previewUrl;
+    }
+
+    video.addEventListener("loadedmetadata", syncCaptureWindowSize);
+
+    captureWindow.addEventListener("dblclick", () => {
+      if (!cameraActive) {
+        startCamera();
+        return;
+      }
+
+      if (surfaceMode === "captured") {
+        copyPhoto();
+      } else {
+        takePhoto();
+      }
+    });
+
+    async function startCamera() {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            facingMode: "user"
+          },
+          audio: false
+        });
+
+        video.srcObject = stream;
+        cameraActive = true;
+        syncCaptureWindowSize();
+        setSurfaceMode("live");
+        statusText.textContent = "Camera started.";
+      } catch (err) {
+        console.error(err);
+        statusText.textContent = "Could not access camera. Check browser permission.";
+      }
+    }
+
+    function stopCamera() {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+        stream = null;
+        cameraActive = false;
+        setSurfaceMode("live");
+        statusText.textContent = "Camera stopped.";
+      }
+    }
+
+    function takePhoto() {
+      if (!stream) {
+        statusText.textContent = "Please start the camera first.";
+        return;
+      }
+
+      const width = video.videoWidth;
+      const height = video.videoHeight;
+
+      if (!width || !height) {
+        statusText.textContent = "Camera is not ready yet. Try again in a second.";
+        return;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      captureWindow.style.aspectRatio = `${width} / ${height}`;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, width, height);
+
+      canvas.toBlob(blob => {
+        if (!blob) {
+          statusText.textContent = "Could not create the photo. Try again.";
+          return;
+        }
+
+        photoBlob = blob;
+        setPreviewImage(blob);
+        setSurfaceMode("captured");
+        statusText.textContent = "Photo captured.";
+      }, "image/png");
+    }
+
+    async function copyPhoto() {
+      if (!photoBlob) {
+        statusText.textContent = "Please take a photo first.";
+        return;
+      }
+
+      try {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            "image/png": photoBlob
+          })
+        ]);
+
+        setSurfaceMode("live");
+        statusText.textContent = "Photo copied! Now paste it into ChatGPT with Command + V.";
+      } catch (err) {
+        console.error(err);
+        statusText.textContent =
+          "Copy failed. Try Chrome, or use the Download Photo button instead.";
+      }
+    }
+
+    function downloadPhoto() {
+      if (!photoBlob) {
+        statusText.textContent = "Please take a photo first.";
+        return;
+      }
+
+      const url = URL.createObjectURL(photoBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "camera-photo.png";
+      a.click();
+
+      statusText.textContent = "Photo downloaded.";
+    }
+
+    setSurfaceMode("live");
+    startCamera();
+  </script>
+
+</body>
+</html>
