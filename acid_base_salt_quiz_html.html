@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acids, Bases, and Salts Quiz</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --correct: #16a34a;
+      --wrong: #dc2626;
+      --soft-blue: #eaf2ff;
+      --soft-green: #ecfdf3;
+      --soft-red: #fef2f2;
+      --border: #e5e7eb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #eef4ff, var(--bg));
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    body[data-lang-mode="en"] .lang-zh {
+      display: none !important;
+    }
+
+    body[data-lang-mode="zh"] .lang-en {
+      display: none !important;
+    }
+
+    .lang-zh {
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", Arial, Helvetica, sans-serif;
+    }
+
+    body[data-lang-mode="bi"] .lang-en + .lang-zh {
+      margin-left: 0.35em;
+    }
+
+    header {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 18px 18px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .toolbar {
+      max-width: 980px;
+      margin: 0 auto 18px;
+      padding: 0 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .language-controls {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .score-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-weight: 700;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+    }
+
+    .mode-button {
+      border-radius: 0;
+      border-right: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+    }
+
+    .mode-button:last-child {
+      border-right: 0;
+    }
+
+    .mode-button[aria-pressed="true"] {
+      background: #e5e7eb;
+    }
+
+    button.secondary {
+      background: #374151;
+    }
+
+    button:hover { filter: brightness(0.95); }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 18px 40px;
+    }
+
+    .question-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 16px 0;
+      padding: 20px;
+    }
+
+    .question-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .question-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--soft-blue);
+      color: var(--primary);
+      font-weight: 800;
+      margin-right: 8px;
+    }
+
+    .question-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      margin: 0;
+      flex: 1;
+    }
+
+    .formula {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 1.7rem;
+      font-style: italic;
+      margin: 10px 0 16px 42px;
+    }
+
+    .options {
+      margin: 12px 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    label.option {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      background: #fff;
+    }
+
+    label.option:hover {
+      background: #f9fafb;
+    }
+
+    input[type="radio"] {
+      margin-top: 4px;
+      transform: scale(1.1);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 14px;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-weight: 600;
+    }
+
+    .feedback.correct {
+      display: block;
+      background: var(--soft-green);
+      color: var(--correct);
+      border: 1px solid #bbf7d0;
+    }
+
+    .feedback.wrong {
+      display: block;
+      background: var(--soft-red);
+      color: var(--wrong);
+      border: 1px solid #fecaca;
+    }
+
+    .explanation {
+      margin-top: 8px;
+      font-weight: 400;
+      color: #374151;
+    }
+
+    .answer-highlight-correct {
+      border-color: #86efac !important;
+      background: #f0fdf4 !important;
+    }
+
+    .answer-highlight-wrong {
+      border-color: #fecaca !important;
+      background: #fef2f2 !important;
+    }
+
+    .note {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 8px;
+      padding: 14px;
+      margin: 18px 0;
+      color: #92400e;
+    }
+
+    @media (max-width: 640px) {
+      .question-card { padding: 16px; }
+      .formula { margin-left: 0; font-size: 1.45rem; }
+      .toolbar { align-items: stretch; }
+      .score-box, .toolbar button, .language-controls { width: 100%; }
+      .language-controls .mode-button { flex: 1; }
+    }
+  </style>
+</head>
+<body data-lang-mode="en">
+  <header>
+    <h1>
+      <span class="lang-en">Acids, Bases, and Salts Quiz</span>
+      <span class="lang-zh" lang="zh-Hans">酸、碱和盐测验</span>
+    </h1>
+    <p class="subtitle">
+      <span class="lang-en">Practice identifying salts, acids, bases, and pH effects.</span>
+      <span class="lang-zh" lang="zh-Hans">练习辨认盐、酸、碱以及 pH 的变化。</span>
+    </p>
+  </header>
+
+  <section class="toolbar">
+    <div class="score-box" id="scoreBox">Score: 0 / 10</div>
+    <div>
+      <div class="language-controls" role="group" aria-label="Language mode">
+        <button class="mode-button" type="button" data-set-lang="en" aria-pressed="true">English</button>
+        <button class="mode-button" type="button" data-set-lang="bi" aria-pressed="false">En+Zh</button>
+        <button class="mode-button" type="button" data-set-lang="zh" aria-pressed="false">中文</button>
+      </div>
+      <button onclick="checkAll()">
+        <span class="lang-en">Check All</span>
+        <span class="lang-zh" lang="zh-Hans">检查全部</span>
+      </button>
+      <button class="secondary" onclick="resetQuiz()">
+        <span class="lang-en">Reset</span>
+        <span class="lang-zh" lang="zh-Hans">重置</span>
+      </button>
+    </div>
+  </section>
+
+  <main>
+    <div class="note">
+      <span class="lang-en">Tip: A salt is commonly formed when an acid reacts with a base. Hydroxides such as NaOH and KOH are usually bases.</span>
+      <span class="lang-zh" lang="zh-Hans">提示：盐通常由酸和碱反应形成。像 NaOH 和 KOH 这样的氢氧化物通常是碱。</span>
+    </div>
+
+    <div id="quiz"></div>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        text: "The following compound is a salt.",
+        textZh: "下列化合物是一种盐。",
+        formula: "Ca(CH₃COO)₂",
+        options: ["true", "false"],
+        optionsZh: ["正确", "错误"],
+        answer: "true",
+        explanation: "Ca(CH₃COO)₂ is calcium acetate. It contains Ca²⁺ and acetate ions, so it is a salt.",
+        explanationZh: "Ca(CH₃COO)₂ 是醋酸钙。它含有 Ca²⁺ 和醋酸根离子，所以它是盐。"
+      },
+      {
+        text: "The following compound is a salt.",
+        textZh: "下列化合物是一种盐。",
+        formula: "ZnCl₂",
+        options: ["true", "false"],
+        optionsZh: ["正确", "错误"],
+        answer: "true",
+        explanation: "ZnCl₂ is zinc chloride. It contains Zn²⁺ and Cl⁻ ions, so it is a salt.",
+        explanationZh: "ZnCl₂ 是氯化锌。它含有 Zn²⁺ 和 Cl⁻ 离子，所以它是盐。"
+      },
+      {
+        text: "The following compound is a salt.",
+        textZh: "下列化合物是一种盐。",
+        formula: "Bi(OH)₅",
+        options: ["true", "false"],
+        optionsZh: ["正确", "错误"],
+        answer: "false",
+        explanation: "Bi(OH)₅ contains hydroxide ions, OH⁻. Hydroxides are usually classified as bases, not salts.",
+        explanationZh: "Bi(OH)₅ 含有氢氧根离子 OH⁻。氢氧化物通常归类为碱，而不是盐。"
+      },
+      {
+        text: "What is the best chemical definition of a salt?",
+        textZh: "盐的最佳化学定义是什么？",
+        formula: "",
+        options: [
+          "a material containing a metal ion and carbonate ion",
+          "a material found by evaporating sea water",
+          "a material containing a metal ion and an oxide ion",
+          "a material formed by the reaction of an acid with a base"
+        ],
+        optionsZh: [
+          "含有金属离子和碳酸根离子的物质",
+          "通过蒸发海水得到的物质",
+          "含有金属离子和氧离子的物质",
+          "由酸和碱反应形成的物质"
+        ],
+        answer: "a material formed by the reaction of an acid with a base",
+        explanation: "A salt is commonly formed in a neutralization reaction: acid + base → salt + water.",
+        explanationZh: "盐通常在中和反应中形成：酸 + 碱 → 盐 + 水。"
+      },
+      {
+        text: "The material Na₂CO₃ is",
+        textZh: "物质 Na₂CO₃ 是",
+        formula: "Na₂CO₃",
+        options: ["a salt.", "an acid.", "covalent.", "a base."],
+        optionsZh: ["一种盐。", "一种酸。", "共价化合物。", "一种碱。"],
+        answer: "a salt.",
+        explanation: "Na₂CO₃ is sodium carbonate. It contains Na⁺ and CO₃²⁻ ions, so it is a salt.",
+        explanationZh: "Na₂CO₃ 是碳酸钠。它含有 Na⁺ 和 CO₃²⁻ 离子，所以它是盐。"
+      },
+      {
+        text: "Which is the formula of a salt?",
+        textZh: "哪一个是盐的化学式？",
+        formula: "",
+        options: ["CCl₄", "HBr", "Na₂S", "Au(OH)₃", "KOH"],
+        optionsZh: ["CCl₄", "HBr", "Na₂S", "Au(OH)₃", "KOH"],
+        answer: "Na₂S",
+        explanation: "Na₂S is sodium sulfide, an ionic salt. HBr is an acid, KOH and Au(OH)₃ are hydroxides/bases, and CCl₄ is covalent.",
+        explanationZh: "Na₂S 是硫化钠，是一种离子盐。HBr 是酸，KOH 和 Au(OH)₃ 是氢氧化物/碱，CCl₄ 是共价化合物。"
+      },
+      {
+        text: "The following compound is a salt.",
+        textZh: "下列化合物是一种盐。",
+        formula: "Na₂SO₄",
+        options: ["true", "false"],
+        optionsZh: ["正确", "错误"],
+        answer: "true",
+        explanation: "Na₂SO₄ is sodium sulfate. It contains Na⁺ and SO₄²⁻ ions, so it is a salt.",
+        explanationZh: "Na₂SO₄ 是硫酸钠。它含有 Na⁺ 和 SO₄²⁻ 离子，所以它是盐。"
+      },
+      {
+        text: "You have an acid and a base. You combine them and leave in the sun. What would you expect to find when you come back two hours later?",
+        textZh: "你有一种酸和一种碱。你把它们混合后放在阳光下。两小时后回来，你预计会发现什么？",
+        formula: "",
+        options: ["a cloudy solution", "a basic solution", "a salt", "a colour change"],
+        optionsZh: ["浑浊溶液", "碱性溶液", "一种盐", "颜色变化"],
+        answer: "a salt",
+        explanation: "Acid + base → salt + water. In the sun, some water may evaporate, leaving salt behind.",
+        explanationZh: "酸 + 碱 → 盐 + 水。在阳光下，一些水可能蒸发，留下盐。"
+      },
+      {
+        text: "Which of these substances if added to acid could create an explosion?",
+        textZh: "下列哪种物质加入酸中可能产生爆炸？",
+        formula: "",
+        options: ["metal", "base", "non-metal oxide", "salt"],
+        optionsZh: ["金属", "碱", "非金属氧化物", "盐"],
+        answer: "metal",
+        explanation: "Some metals react with acids to produce hydrogen gas. Hydrogen is flammable and can explode if it builds up near a spark or flame.",
+        explanationZh: "一些金属与酸反应会产生氢气。氢气易燃，如果在火花或火焰附近积聚，可能爆炸。"
+      },
+      {
+        text: "Which of these substances, when added to water, would lower the pH?",
+        textZh: "下列哪种物质加入水中会降低 pH？",
+        formula: "I. NaOH   II. Na₂O   III. Zn   IV. SO₂",
+        options: ["IV only", "I and IV", "II and III", "II only"],
+        optionsZh: ["只有 IV", "I 和 IV", "II 和 III", "只有 II"],
+        answer: "IV only",
+        explanation: "SO₂ is a non-metal oxide. It reacts with water to form sulfurous acid, H₂SO₃, lowering the pH. NaOH and Na₂O make water basic.",
+        explanationZh: "SO₂ 是非金属氧化物。它与水反应形成亚硫酸 H₂SO₃，从而降低 pH。NaOH 和 Na₂O 会使水呈碱性。"
+      }
+    ];
+
+    const labels = {
+      score: ["Score:", "得分："],
+      checkQuestion: ["Check This Question", "检查本题"],
+      chooseFirst: ["Please choose an answer first.", "请先选择一个答案。"],
+      correct: ["Correct!", "正确！"],
+      wrong: ["Not quite.", "不完全正确。"],
+      answer: ["Answer:", "答案："]
+    };
+
+    const modeButtons = [];
+
+    function renderI18n(en, zh) {
+      return `<span class="lang-en">${escapeHtml(en)}</span><span class="lang-zh" lang="zh-Hans">${escapeHtml(zh)}</span>`;
+    }
+
+    function renderQuiz() {
+      const quiz = document.getElementById("quiz");
+      quiz.innerHTML = "";
+
+      questions.forEach((q, index) => {
+        const card = document.createElement("section");
+        card.className = "question-card";
+        card.dataset.index = index;
+
+        const optionsHtml = q.options.map((option, optionIndex) => `
+          <label class="option" data-option="${escapeHtml(option)}">
+            <input type="radio" name="q${index}" value="${escapeHtml(option)}" />
+            <span>${renderI18n(option, q.optionsZh[optionIndex])}</span>
+          </label>
+        `).join("");
+
+        card.innerHTML = `
+          <div class="question-top">
+            <p class="question-title"><span class="question-number">${index + 1}</span>${renderI18n(q.text, q.textZh)}</p>
+          </div>
+          ${q.formula ? `<div class="formula">${q.formula}</div>` : ""}
+          <div class="options">${optionsHtml}</div>
+          <div class="actions">
+            <button onclick="checkQuestion(${index})">${renderI18n(labels.checkQuestion[0], labels.checkQuestion[1])}</button>
+          </div>
+          <div class="feedback" id="feedback${index}"></div>
+        `;
+
+        quiz.appendChild(card);
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function checkQuestion(index) {
+      const q = questions[index];
+      const card = document.querySelector(`.question-card[data-index="${index}"]`);
+      const selected = card.querySelector(`input[name="q${index}"]:checked`);
+      const feedback = document.getElementById(`feedback${index}`);
+
+      card.querySelectorAll(".option").forEach(label => {
+        label.classList.remove("answer-highlight-correct", "answer-highlight-wrong");
+      });
+
+      if (!selected) {
+        feedback.className = "feedback wrong";
+        feedback.innerHTML = renderI18n(labels.chooseFirst[0], labels.chooseFirst[1]);
+        updateScore();
+        return false;
+      }
+
+      const isCorrect = selected.value === q.answer;
+
+      card.querySelectorAll(".option").forEach(label => {
+        const input = label.querySelector("input");
+        if (input.value === q.answer) label.classList.add("answer-highlight-correct");
+        if (input.checked && !isCorrect) label.classList.add("answer-highlight-wrong");
+      });
+
+      feedback.className = isCorrect ? "feedback correct" : "feedback wrong";
+      feedback.innerHTML = `
+        ${isCorrect ? renderI18n(labels.correct[0], labels.correct[1]) : renderI18n(labels.wrong[0], labels.wrong[1])}
+        <div class="explanation">
+          <strong>${renderI18n(labels.answer[0], labels.answer[1])}</strong>
+          ${renderI18n(q.answer, q.optionsZh[q.options.indexOf(q.answer)])}<br>
+          ${renderI18n(q.explanation, q.explanationZh)}
+        </div>
+      `;
+
+      updateScore();
+      return isCorrect;
+    }
+
+    function checkAll() {
+      questions.forEach((_, index) => checkQuestion(index));
+      updateScore();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function updateScore() {
+      let score = 0;
+      questions.forEach((q, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        if (selected && selected.value === q.answer) score++;
+      });
+      document.getElementById("scoreBox").innerHTML = `${renderI18n(labels.score[0], labels.score[1])} ${score} / ${questions.length}`;
+    }
+
+    function resetQuiz() {
+      document.querySelectorAll("input[type='radio']").forEach(input => input.checked = false);
+      document.querySelectorAll(".feedback").forEach(box => {
+        box.className = "feedback";
+        box.innerHTML = "";
+      });
+      document.querySelectorAll(".option").forEach(label => {
+        label.classList.remove("answer-highlight-correct", "answer-highlight-wrong");
+      });
+      updateScore();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function setMode(mode) {
+      document.body.dataset.langMode = mode;
+      document.documentElement.lang = mode === "zh" ? "zh-Hans" : "en";
+      modeButtons.forEach(button => {
+        button.setAttribute("aria-pressed", String(button.dataset.setLang === mode));
+      });
+    }
+
+    document.querySelectorAll(".mode-button").forEach(button => {
+      modeButtons.push(button);
+      button.addEventListener("click", () => setMode(button.dataset.setLang));
+    });
+
+    renderQuiz();
+    updateScore();
+    setMode("en");
+  </script>
+</body>
+</html>

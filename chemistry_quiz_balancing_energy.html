@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chemistry Quiz: Balancing Equations and Energy Changes</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #d1d5db;
+      --accent: #2563eb;
+      --correct: #15803d;
+      --wrong: #b91c1c;
+      --soft-correct: #dcfce7;
+      --soft-wrong: #fee2e2;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    body[data-lang-mode="en"] .lang-zh {
+      display: none !important;
+    }
+
+    body[data-lang-mode="zh"] .lang-en {
+      display: none !important;
+    }
+
+    .lang-zh {
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", Arial, Helvetica, sans-serif;
+    }
+
+    body[data-lang-mode="bi"] .lang-en + .lang-zh {
+      margin-left: 0.35em;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+      color: white;
+      padding: 32px 18px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.6rem, 4vw, 2.5rem);
+    }
+
+    header p {
+      margin: 0;
+      font-size: 1rem;
+      opacity: 0.95;
+    }
+
+    main {
+      max-width: 950px;
+      margin: 24px auto;
+      padding: 0 16px 40px;
+    }
+
+    .score-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .score-box strong {
+      color: var(--accent);
+    }
+
+    .question-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .question-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 14px;
+    }
+
+    .equation {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(1.25rem, 3.5vw, 2rem);
+      margin: 12px 0 18px;
+      line-height: 1.5;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .equation-list {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(1.05rem, 3vw, 1.55rem);
+      margin: 12px 0 18px;
+      overflow-x: auto;
+    }
+
+    .equation-list div {
+      margin: 8px 0;
+      white-space: nowrap;
+    }
+
+    label.option {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 10px 0;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    label.option:hover {
+      border-color: var(--accent);
+      background: #eff6ff;
+    }
+
+    input[type="radio"] {
+      margin-right: 8px;
+      transform: scale(1.1);
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--accent);
+      color: white;
+      margin-top: 12px;
+    }
+
+    .language-controls {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-right: 8px;
+    }
+
+    .mode-button {
+      border-radius: 0;
+      border-right: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      margin-top: 0;
+    }
+
+    .mode-button:last-child {
+      border-right: 0;
+    }
+
+    .mode-button[aria-pressed="true"] {
+      background: #e5e7eb;
+    }
+
+    button.secondary {
+      background: #374151;
+    }
+
+    button:hover {
+      filter: brightness(0.95);
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .feedback.correct {
+      display: block;
+      background: var(--soft-correct);
+      color: var(--correct);
+      border-color: #86efac;
+    }
+
+    .feedback.wrong {
+      display: block;
+      background: var(--soft-wrong);
+      color: var(--wrong);
+      border-color: #fca5a5;
+    }
+
+    .explanation {
+      color: #374151;
+      margin-top: 8px;
+    }
+
+    .atom-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: white;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .atom-table th,
+    .atom-table td {
+      border: 1px solid var(--border);
+      padding: 8px;
+      text-align: center;
+    }
+
+    .atom-table th {
+      background: #f3f4f6;
+    }
+
+    .footer-actions {
+      text-align: center;
+      margin-top: 26px;
+    }
+
+    @media (max-width: 600px) {
+      .question-card {
+        padding: 16px;
+      }
+
+      .score-box {
+        align-items: flex-start;
+      }
+
+      .language-controls,
+      .footer-actions button,
+      .score-box button {
+        width: 100%;
+      }
+
+      .language-controls .mode-button {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+<body data-lang-mode="en">
+  <header>
+    <h1>
+      <span class="lang-en">Chemistry Quiz</span>
+      <span class="lang-zh" lang="zh-Hans">化学测验</span>
+    </h1>
+    <p>
+      <span class="lang-en">Balancing chemical equations, exothermic reactions, and endothermic reactions</span>
+      <span class="lang-zh" lang="zh-Hans">配平化学方程式、放热反应和吸热反应</span>
+    </p>
+  </header>
+
+  <main>
+    <section class="score-box">
+      <div>
+        <span class="lang-en">Score:</span>
+        <span class="lang-zh" lang="zh-Hans">得分：</span>
+        <strong id="score">0</strong> / <strong>4</strong>
+      </div>
+      <div id="summary">
+        <span class="lang-en">Answer each question, then click “Check This Question.”</span>
+        <span class="lang-zh" lang="zh-Hans">回答每道题，然后点击“检查本题”。</span>
+      </div>
+      <div class="language-controls" role="group" aria-label="Language mode">
+        <button class="mode-button" type="button" data-set-lang="en" aria-pressed="true">English</button>
+        <button class="mode-button" type="button" data-set-lang="bi" aria-pressed="false">En+Zh</button>
+        <button class="mode-button" type="button" data-set-lang="zh" aria-pressed="false">中文</button>
+      </div>
+    </section>
+
+    <section class="question-card" data-answer="false" data-answer-zh="错误">
+      <div class="question-title">
+        <span class="lang-en">1. True or False. The equation below is balanced.</span>
+        <span class="lang-zh" lang="zh-Hans">1. 判断正误。下面的方程式已经配平。</span>
+      </div>
+      <div class="equation">2 Cr + FeO<sub>3</sub> → 2 Fe + CrO<sub>3</sub></div>
+
+      <label class="option"><input type="radio" name="q1" value="true" /> <span class="lang-en">true</span><span class="lang-zh" lang="zh-Hans">正确</span></label>
+      <label class="option"><input type="radio" name="q1" value="false" /> <span class="lang-en">false</span><span class="lang-zh" lang="zh-Hans">错误</span></label>
+
+      <button onclick="checkQuestion(this)"><span class="lang-en">Check This Question</span><span class="lang-zh" lang="zh-Hans">检查本题</span></button>
+      <div class="feedback"></div>
+      <div class="explanation" hidden>
+        <strong><span class="lang-en">Explanation:</span><span class="lang-zh" lang="zh-Hans">解释：</span></strong>
+        <span class="lang-en">It is not balanced because chromium and iron do not match on both sides.</span>
+        <span class="lang-zh" lang="zh-Hans">它没有配平，因为铬和铁在方程式两边的数量不相等。</span>
+        <table class="atom-table">
+          <tr>
+            <th><span class="lang-en">Element</span><span class="lang-zh" lang="zh-Hans">元素</span></th>
+            <th><span class="lang-en">Left side</span><span class="lang-zh" lang="zh-Hans">左边</span></th>
+            <th><span class="lang-en">Right side</span><span class="lang-zh" lang="zh-Hans">右边</span></th>
+          </tr>
+          <tr><td>Cr</td><td>2</td><td>1</td></tr>
+          <tr><td>Fe</td><td>1</td><td>2</td></tr>
+          <tr><td>O</td><td>3</td><td>3</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section class="question-card" data-answer="I and III only" data-answer-zh="只有 I 和 III">
+      <div class="question-title">
+        <span class="lang-en">2. Which equations are balanced?</span>
+        <span class="lang-zh" lang="zh-Hans">2. 哪些方程式已经配平？</span>
+      </div>
+      <div class="equation-list">
+        <div><em>I</em> &nbsp; P<sub>4</sub>O<sub>10</sub> + 10 C → P<sub>4</sub> + 10 CO</div>
+        <div><em>II</em> &nbsp; C<sub>2</sub>H<sub>2</sub> + 5 O → 2 CO<sub>2</sub> + 2 H<sub>2</sub>O</div>
+        <div><em>III</em> &nbsp; Ca<sub>3</sub>(PO<sub>4</sub>)<sub>2</sub> + 4 H<sub>3</sub>PO<sub>4</sub> → 3 Ca(H<sub>2</sub>PO<sub>4</sub>)<sub>2</sub></div>
+      </div>
+
+      <label class="option"><input type="radio" name="q2" value="II and III only" /> <span class="lang-en">II and III only</span><span class="lang-zh" lang="zh-Hans">只有 II 和 III</span></label>
+      <label class="option"><input type="radio" name="q2" value="I and III only" /> <span class="lang-en">I and III only</span><span class="lang-zh" lang="zh-Hans">只有 I 和 III</span></label>
+      <label class="option"><input type="radio" name="q2" value="I only" /> <span class="lang-en">I only</span><span class="lang-zh" lang="zh-Hans">只有 I</span></label>
+      <label class="option"><input type="radio" name="q2" value="They are all balanced" /> <span class="lang-en">They are all balanced</span><span class="lang-zh" lang="zh-Hans">它们都已经配平</span></label>
+
+      <button onclick="checkQuestion(this)"><span class="lang-en">Check This Question</span><span class="lang-zh" lang="zh-Hans">检查本题</span></button>
+      <div class="feedback"></div>
+      <div class="explanation" hidden>
+        <strong><span class="lang-en">Explanation:</span><span class="lang-zh" lang="zh-Hans">解释：</span></strong>
+        <span class="lang-en">I is balanced and III is balanced. II is not balanced because hydrogen and oxygen do not match. In II, the left side has H = 2 and O = 5, but the right side has H = 4 and O = 6.</span>
+        <span class="lang-zh" lang="zh-Hans">I 已经配平，III 也已经配平。II 没有配平，因为氢和氧的数量不相等。在 II 中，左边 H = 2、O = 5，但右边 H = 4、O = 6。</span>
+      </div>
+    </section>
+
+    <section class="question-card" data-answer="It causes an increase in the temperature of the system." data-answer-zh="它会使系统温度升高。">
+      <div class="question-title">
+        <span class="lang-en">3. Which one of the following statements is true about an exothermic reaction?</span>
+        <span class="lang-zh" lang="zh-Hans">3. 关于放热反应，下列哪一项说法是正确的？</span>
+      </div>
+
+      <label class="option"><input type="radio" name="q3" value="It causes an increase in the temperature of the system." /> <span class="lang-en">It causes an increase in the temperature of the system.</span><span class="lang-zh" lang="zh-Hans">它会使系统温度升高。</span></label>
+      <label class="option"><input type="radio" name="q3" value="It requires more energy than it releases." /> <span class="lang-en">It requires more energy than it releases.</span><span class="lang-zh" lang="zh-Hans">它需要的能量多于释放的能量。</span></label>
+      <label class="option"><input type="radio" name="q3" value="It has products with a higher heat content." /> <span class="lang-en">It has products with a higher heat content.</span><span class="lang-zh" lang="zh-Hans">它的产物具有更高的热含量。</span></label>
+      <label class="option"><input type="radio" name="q3" value="It causes a reduction in the temperature of the system." /> <span class="lang-en">It causes a reduction in the temperature of the system.</span><span class="lang-zh" lang="zh-Hans">它会使系统温度降低。</span></label>
+
+      <button onclick="checkQuestion(this)"><span class="lang-en">Check This Question</span><span class="lang-zh" lang="zh-Hans">检查本题</span></button>
+      <div class="feedback"></div>
+      <div class="explanation" hidden>
+        <strong><span class="lang-en">Explanation:</span><span class="lang-zh" lang="zh-Hans">解释：</span></strong>
+        <span class="lang-en">An exothermic reaction releases heat energy. Because heat is released, the temperature usually increases.</span>
+        <span class="lang-zh" lang="zh-Hans">放热反应会释放热能。因为热被释放出来，温度通常会上升。</span>
+      </div>
+    </section>
+
+    <section class="question-card" data-answer="CaCO3(s) -> CaO(s) + CO2(g), ΔH = 177.7 kJ" data-answer-zh="CaCO3(s) -> CaO(s) + CO2(g), ΔH = 177.7 kJ">
+      <div class="question-title">
+        <span class="lang-en">4. Which of the following represents an endothermic reaction?</span>
+        <span class="lang-zh" lang="zh-Hans">4. 下列哪一个表示吸热反应？</span>
+      </div>
+
+      <label class="option"><input type="radio" name="q4" value="2B5H9(l) + 12O2(g) -> 5B2O3(s) + 9H2O(l) + 8753 kJ" /> 2B<sub>5</sub>H<sub>9</sub><sub>(l)</sub> + 12O<sub>2</sub><sub>(g)</sub> → 5B<sub>2</sub>O<sub>3</sub><sub>(s)</sub> + 9H<sub>2</sub>O<sub>(l)</sub> + 8753 kJ</label>
+      <label class="option"><input type="radio" name="q4" value="Zn(s) + 2HCl(aq) -> ZnCl2(aq) + H2(g) + 152 kJ" /> Zn<sub>(s)</sub> + 2HCl<sub>(aq)</sub> → ZnCl<sub>2</sub><sub>(aq)</sub> + H<sub>2</sub><sub>(g)</sub> + 152 kJ</label>
+      <label class="option"><input type="radio" name="q4" value="S(s) + O2(g) -> SO2(g), ΔH = -297 kJ" /> S<sub>(s)</sub> + O<sub>2</sub><sub>(g)</sub> → SO<sub>2</sub><sub>(g)</sub>, ΔH = −297 kJ</label>
+      <label class="option"><input type="radio" name="q4" value="CaCO3(s) -> CaO(s) + CO2(g), ΔH = 177.7 kJ" /> CaCO<sub>3</sub><sub>(s)</sub> → CaO<sub>(s)</sub> + CO<sub>2</sub><sub>(g)</sub>, ΔH = 177.7 kJ</label>
+
+      <button onclick="checkQuestion(this)"><span class="lang-en">Check This Question</span><span class="lang-zh" lang="zh-Hans">检查本题</span></button>
+      <div class="feedback"></div>
+      <div class="explanation" hidden>
+        <strong><span class="lang-en">Explanation:</span><span class="lang-zh" lang="zh-Hans">解释：</span></strong>
+        <span class="lang-en">Endothermic reactions absorb heat. A positive ΔH means heat is absorbed. Since ΔH = +177.7 kJ, this reaction is endothermic.</span>
+        <span class="lang-zh" lang="zh-Hans">吸热反应会吸收热量。正的 ΔH 表示热量被吸收。因为 ΔH = +177.7 kJ，所以这个反应是吸热反应。</span>
+      </div>
+    </section>
+
+    <div class="footer-actions">
+      <button class="secondary" onclick="resetQuiz()"><span class="lang-en">Reset Quiz</span><span class="lang-zh" lang="zh-Hans">重置测验</span></button>
+    </div>
+  </main>
+
+  <script>
+    const checkedQuestions = new Map();
+    const modeButtons = Array.from(document.querySelectorAll('.mode-button'));
+    const labels = {
+      chooseFirst: ['Please choose an answer first.', '请先选择一个答案。'],
+      correct: ['Correct!', '正确！'],
+      wrongPrefix: ['Not quite. The correct answer is: ', '不完全正确。正确答案是：'],
+      checked: ['You have checked', '你已经检查了'],
+      ofQuestions: ['of 4 questions.', '道题，共 4 道题。'],
+      complete: ['Quiz complete! Final score:', '测验完成！最终得分：'],
+      initialSummary: ['Answer each question, then click “Check This Question.”', '回答每道题，然后点击“检查本题”。']
+    };
+
+    function i18n(en, zh) {
+      return `<span class="lang-en">${escapeHtml(en)}</span><span class="lang-zh" lang="zh-Hans">${escapeHtml(zh)}</span>`;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('"', '&quot;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;');
+    }
+
+    function checkQuestion(button) {
+      const card = button.closest('.question-card');
+      const correctAnswer = card.dataset.answer;
+      const correctAnswerZh = card.dataset.answerZh;
+      const selected = card.querySelector('input[type="radio"]:checked');
+      const feedback = card.querySelector('.feedback');
+      const explanation = card.querySelector('.explanation');
+      const questionIndex = Array.from(document.querySelectorAll('.question-card')).indexOf(card);
+
+      if (!selected) {
+        feedback.className = 'feedback wrong';
+        feedback.innerHTML = i18n(labels.chooseFirst[0], labels.chooseFirst[1]);
+        explanation.hidden = true;
+        return;
+      }
+
+      const isCorrect = selected.value === correctAnswer;
+      checkedQuestions.set(questionIndex, isCorrect);
+
+      if (isCorrect) {
+        feedback.className = 'feedback correct';
+        feedback.innerHTML = i18n(labels.correct[0], labels.correct[1]);
+      } else {
+        feedback.className = 'feedback wrong';
+        feedback.innerHTML =
+          i18n(labels.wrongPrefix[0], labels.wrongPrefix[1]) +
+          i18n(correctAnswer, correctAnswerZh);
+      }
+
+      explanation.hidden = false;
+      updateScore();
+    }
+
+    function updateScore() {
+      let score = 0;
+      checkedQuestions.forEach(value => {
+        if (value) score++;
+      });
+
+      document.getElementById('score').textContent = score;
+      const answered = checkedQuestions.size;
+      const summary = document.getElementById('summary');
+
+      if (answered < 4) {
+        summary.innerHTML = `${i18n(labels.checked[0], labels.checked[1])} ${answered} ${i18n(labels.ofQuestions[0], labels.ofQuestions[1])}`;
+      } else {
+        summary.innerHTML = `${i18n(labels.complete[0], labels.complete[1])} ${score} / 4.`;
+      }
+    }
+
+    function resetQuiz() {
+      document.querySelectorAll('input[type="radio"]').forEach(input => input.checked = false);
+      document.querySelectorAll('.feedback').forEach(box => {
+        box.className = 'feedback';
+        box.innerHTML = '';
+      });
+      document.querySelectorAll('.explanation').forEach(exp => exp.hidden = true);
+      checkedQuestions.clear();
+      document.getElementById('score').textContent = '0';
+      document.getElementById('summary').innerHTML = i18n(labels.initialSummary[0], labels.initialSummary[1]);
+    }
+
+    function setMode(mode) {
+      document.body.dataset.langMode = mode;
+      document.documentElement.lang = mode === 'zh' ? 'zh-Hans' : 'en';
+      modeButtons.forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.setLang === mode));
+      });
+    }
+
+    modeButtons.forEach(button => {
+      button.addEventListener('click', () => setMode(button.dataset.setLang));
+    });
+
+    setMode('en');
+  </script>
+</body>
+</html>
