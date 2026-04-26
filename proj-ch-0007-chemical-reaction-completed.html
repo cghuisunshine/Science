@@ -1,0 +1,1226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PROJ-CH-0007: Chemical Reaction - Completed Project</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      color-scheme: light;
+      --page-width: 8.5in;
+      --page-height: 11in;
+      --sheet-pad: 0.62in;
+      --ink: #171717;
+      --muted: #4a5563;
+      --line: #9aa4b2;
+      --soft-line: #d8dde5;
+      --paper: #ffffff;
+      --page-bg: #d7d7d7;
+      --header: #dbe8f5;
+      --header-strong: #6f98c7;
+      --panel: #f7f8fa;
+      --panel-2: #eef2f6;
+      --accent: #2f6f63;
+      --oxygen: #c96363;
+      --hydrogen: #f3f3f3;
+      --nitrogen: #7596cf;
+      --carbon: #30343b;
+      --bread: #d8a45d;
+      --cheese: #f3cc46;
+      --meat: #a9544a;
+      --lettuce: #75a95d;
+      --ui-border: #bcbcbc;
+      --ui-bg: #f4f4f4;
+      --ui-active: #ddd;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--page-bg);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      padding: 16px 0 36px;
+    }
+
+    body[data-lang-mode="en"] .lang-zh {
+      display: none !important;
+    }
+
+    body[data-lang-mode="zh"] .lang-en {
+      display: none !important;
+    }
+
+    a {
+      color: #0645ad;
+      text-decoration: underline;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    sub {
+      line-height: 0;
+    }
+
+    .mode-bar {
+      width: min(var(--page-width), calc(100vw - 24px));
+      margin: 0 auto 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--ui-border);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .mode-title {
+      font-size: 14px;
+      line-height: 1.2;
+    }
+
+    .mode-controls {
+      display: inline-flex;
+      border: 1px solid var(--ui-border);
+      background: var(--ui-bg);
+    }
+
+    .mode-button {
+      border: 0;
+      border-right: 1px solid var(--ui-border);
+      background: transparent;
+      color: #111;
+      font: inherit;
+      font-size: 14px;
+      line-height: 1;
+      padding: 8px 14px;
+      cursor: pointer;
+    }
+
+    .mode-button:last-child {
+      border-right: 0;
+    }
+
+    .mode-button[aria-pressed="true"] {
+      background: var(--ui-active);
+      font-weight: 700;
+    }
+
+    .sheet {
+      width: min(var(--page-width), calc(100vw - 24px));
+      min-height: var(--page-height);
+      margin: 0 auto 18px;
+      padding: var(--sheet-pad);
+      background: var(--paper);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 0.22in;
+      padding-bottom: 0.12in;
+      border-bottom: 2px solid var(--header-strong);
+    }
+
+    .project-code {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    h1 {
+      font-size: 30px;
+      line-height: 1.08;
+      margin-bottom: 8px;
+      color: #13324a;
+    }
+
+    h2 {
+      font-size: 19px;
+      line-height: 1.18;
+      margin-bottom: 9px;
+      color: #17364d;
+    }
+
+    h3 {
+      font-size: 16px;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      color: #1c3d55;
+    }
+
+    .brand {
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
+      color: #000;
+      font-weight: 700;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .brand-word {
+      font-size: 26px;
+      letter-spacing: -0.05em;
+    }
+
+    .brand-suffix {
+      align-self: flex-end;
+      color: #707070;
+      font-size: 18px;
+      letter-spacing: -0.04em;
+      margin-bottom: 1px;
+    }
+
+    .logo-icon {
+      width: 0.52in;
+      height: auto;
+      display: block;
+      margin-top: -4px;
+    }
+
+    .lang-zh {
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+    }
+
+    .translation {
+      margin-top: 4px;
+      line-height: 1.25;
+      color: #26394a;
+      font-size: 0.92em;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .meta-item {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 9px 10px;
+      min-height: 58px;
+    }
+
+    .meta-label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .meta-value {
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .question-box,
+    .claim-box,
+    .summary-box {
+      border: 1px solid var(--line);
+      margin-bottom: 16px;
+      background: #fff;
+    }
+
+    .box-heading {
+      background: var(--header);
+      border-bottom: 1px solid var(--line);
+      padding: 8px 10px;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .box-body {
+      padding: 12px 14px;
+      font-size: 14px;
+      line-height: 1.48;
+    }
+
+    .inquiry {
+      font-size: 22px;
+      line-height: 1.18;
+      text-align: center;
+    }
+
+    .claim {
+      font-size: 17px;
+      line-height: 1.44;
+    }
+
+    .claim strong {
+      color: #17364d;
+    }
+
+    .requirement-list {
+      margin: 0;
+      padding-left: 20px;
+      line-height: 1.45;
+    }
+
+    .requirement-list li {
+      margin-bottom: 5px;
+    }
+
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .evidence-card {
+      border: 1px solid var(--line);
+      background: #fff;
+      min-height: 286px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .evidence-head {
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-2);
+      padding: 8px 10px;
+    }
+
+    .evidence-title {
+      font-weight: 700;
+      line-height: 1.18;
+      margin-bottom: 3px;
+    }
+
+    .evidence-kind {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .evidence-visual {
+      min-height: 130px;
+      padding: 10px;
+      border-bottom: 1px solid var(--soft-line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background:
+        linear-gradient(#eef1f5 1px, transparent 1px),
+        linear-gradient(90deg, #eef1f5 1px, transparent 1px),
+        #fafafa;
+      background-size: 24px 24px;
+    }
+
+    .evidence-notes {
+      padding: 9px 10px 11px;
+      font-size: 12.5px;
+      line-height: 1.36;
+      flex: 1;
+    }
+
+    .evidence-notes p {
+      margin-bottom: 7px;
+    }
+
+    .reaction-line {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 700;
+      color: #17364d;
+    }
+
+    .balance-note {
+      display: block;
+      color: var(--muted);
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      gap: 3px;
+      min-width: 56px;
+    }
+
+    .food {
+      width: 54px;
+      height: 15px;
+      border: 1px solid rgba(0, 0, 0, 0.35);
+    }
+
+    .food.bread {
+      height: 18px;
+      border-radius: 10px 10px 4px 4px;
+      background: var(--bread);
+    }
+
+    .food.cheese {
+      background: var(--cheese);
+    }
+
+    .food.meat {
+      background: var(--meat);
+    }
+
+    .food.lettuce {
+      background: var(--lettuce);
+    }
+
+    .plus,
+    .arrow {
+      font-size: 24px;
+      font-weight: 700;
+      color: #222;
+    }
+
+    .counter {
+      display: grid;
+      grid-template-columns: repeat(2, 20px);
+      gap: 5px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mini {
+      width: 20px;
+      height: 14px;
+      border: 1px solid rgba(0, 0, 0, 0.35);
+      background: var(--bread);
+    }
+
+    .mini.cheese {
+      background: var(--cheese);
+    }
+
+    .mini.meat {
+      background: var(--meat);
+    }
+
+    .mini.lettuce {
+      background: var(--lettuce);
+    }
+
+    .molecule {
+      display: grid;
+      place-items: center;
+      position: relative;
+      width: 94px;
+      height: 82px;
+    }
+
+    .atom {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.4);
+      font-size: 13px;
+      font-weight: 700;
+      color: #111;
+      position: absolute;
+      box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.55);
+    }
+
+    .atom.h {
+      background: var(--hydrogen);
+    }
+
+    .atom.o {
+      width: 46px;
+      height: 46px;
+      background: var(--oxygen);
+      color: #fff;
+    }
+
+    .atom.n {
+      width: 46px;
+      height: 46px;
+      background: var(--nitrogen);
+      color: #fff;
+    }
+
+    .atom.c {
+      width: 46px;
+      height: 46px;
+      background: var(--carbon);
+      color: #fff;
+    }
+
+    .water .o,
+    .ammonia .n,
+    .methane .c {
+      left: 24px;
+      top: 20px;
+    }
+
+    .water .h1 {
+      left: 3px;
+      top: 4px;
+    }
+
+    .water .h2 {
+      right: 3px;
+      top: 4px;
+    }
+
+    .ammonia .h1 {
+      left: 5px;
+      top: 2px;
+    }
+
+    .ammonia .h2 {
+      right: 5px;
+      top: 2px;
+    }
+
+    .ammonia .h3 {
+      left: 28px;
+      bottom: 0;
+    }
+
+    .methane .h1 {
+      left: 28px;
+      top: 0;
+    }
+
+    .methane .h2 {
+      right: 0;
+      top: 23px;
+    }
+
+    .methane .h3 {
+      left: 28px;
+      bottom: 0;
+    }
+
+    .methane .h4 {
+      left: 0;
+      top: 23px;
+    }
+
+    .game-board {
+      display: grid;
+      grid-template-columns: repeat(4, 44px);
+      gap: 7px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .game-cell {
+      min-height: 38px;
+      border: 1px solid var(--line);
+      background: #fff;
+      display: grid;
+      place-items: center;
+      padding: 3px;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .game-cell.ok {
+      border-color: #2f6f63;
+      background: #edf6f2;
+      color: #20594e;
+    }
+
+    .game-cell.left {
+      border-color: #a3651d;
+      background: #fff5e8;
+      color: #7b4815;
+    }
+
+    .mini-equation {
+      grid-column: 1 / -1;
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 6px 8px;
+      text-align: center;
+      font-weight: 700;
+      color: #17364d;
+    }
+
+    .source-note {
+      font-size: 12px;
+      line-height: 1.35;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .footer {
+      position: absolute;
+      left: var(--sheet-pad);
+      right: var(--sheet-pad);
+      bottom: 0.28in;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .footer .page-no {
+      justify-self: center;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25em;
+    }
+
+    body[data-lang-mode="bi"] .sheet {
+      padding-top: 0.48in;
+    }
+
+    body[data-lang-mode="bi"] .evidence-notes,
+    body[data-lang-mode="bi"] .box-body {
+      font-size: 12px;
+      line-height: 1.28;
+    }
+
+    body[data-lang-mode="bi"] .evidence-card {
+      min-height: 330px;
+    }
+
+    body[data-lang-mode="bi"] h1 {
+      font-size: 27px;
+    }
+
+    body[data-lang-mode="zh"] .inquiry {
+      font-size: 21px;
+    }
+
+    @media (max-width: 760px) {
+      body {
+        padding: 0;
+      }
+
+      .mode-bar {
+        width: 100%;
+        margin: 0;
+        position: sticky;
+        top: 0;
+        z-index: 5;
+      }
+
+      .sheet {
+        width: 100%;
+        min-height: auto;
+        margin-bottom: 0;
+        padding: 22px 16px 42px;
+        box-shadow: none;
+      }
+
+      .page-head,
+      .meta-grid,
+      .evidence-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-head {
+        display: block;
+      }
+
+      .brand {
+        margin-top: 12px;
+      }
+
+      .evidence-grid {
+        display: grid;
+      }
+
+      .footer {
+        position: static;
+        margin-top: 18px;
+      }
+    }
+
+    @media print {
+      @page {
+        size: letter;
+        margin: 0;
+      }
+
+      html,
+      body {
+        background: #fff;
+      }
+
+      body {
+        padding: 0;
+      }
+
+      .mode-bar {
+        display: none;
+      }
+
+      .sheet {
+        width: var(--page-width);
+        min-height: var(--page-height);
+        margin: 0;
+        box-shadow: none;
+        break-after: page;
+      }
+
+      .sheet:last-child {
+        break-after: auto;
+      }
+    }
+  </style>
+</head>
+<body data-lang-mode="en">
+  <div class="mode-bar" aria-label="Language mode controls">
+    <div class="mode-title">
+      <span class="lang-en">View mode:</span>
+      <span class="lang-zh" lang="zh-Hans">显示模式：</span>
+    </div>
+    <div class="mode-controls" role="group" aria-label="Language mode">
+      <button class="mode-button" type="button" data-set-lang="en" aria-pressed="true">English</button>
+      <button class="mode-button" type="button" data-set-lang="bi" aria-pressed="false">En+Zh</button>
+      <button class="mode-button" type="button" data-set-lang="zh" aria-pressed="false">中文</button>
+    </div>
+  </div>
+
+  <main>
+    <section class="sheet" aria-label="Cover and conclusion">
+      <header class="page-head">
+        <div>
+          <div class="project-code">
+            <span class="lang-en">PROJ-CH-0007</span>
+            <span class="lang-zh" lang="zh-Hans">PROJ-CH-0007</span>
+          </div>
+          <h1>
+            <span class="lang-en">Chemical Reaction Completed Project</span>
+            <span class="lang-zh" lang="zh-Hans">化学反应完成项目</span>
+          </h1>
+          <p class="translation">
+            <span class="lang-en">Reactants, Products and Leftovers simulation record</span>
+            <span class="lang-zh" lang="zh-Hans">“反应物、产物和剩余物”模拟记录</span>
+          </p>
+        </div>
+        <div class="brand" aria-label="WCLN.ca">
+          <span class="brand-word">WCLN</span>
+          <span class="brand-suffix">.ca</span>
+          <img class="logo-icon" src="./assets/proj-ch-0007/wcln-icon.png" alt="">
+        </div>
+      </header>
+
+      <div class="meta-grid" aria-label="Student information">
+        <div class="meta-item">
+          <span class="meta-label">
+            <span class="lang-en">Name</span>
+            <span class="lang-zh" lang="zh-Hans">姓名</span>
+          </span>
+          <span class="meta-value">Student</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">
+            <span class="lang-en">Date</span>
+            <span class="lang-zh" lang="zh-Hans">日期</span>
+          </span>
+          <span class="meta-value">2026-04-26</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">
+            <span class="lang-en">Simulation</span>
+            <span class="lang-zh" lang="zh-Hans">模拟</span>
+          </span>
+          <span class="meta-value">Reactants, Products and Leftovers</span>
+        </div>
+      </div>
+
+      <section class="question-box" aria-labelledby="inquiry-question">
+        <div class="box-heading" id="inquiry-question">
+          <span class="lang-en">Inquiry Question</span>
+          <span class="lang-zh" lang="zh-Hans">探究问题</span>
+        </div>
+        <div class="box-body inquiry">
+          <span class="lang-en">Given that you cannot get something from nothing, how do chemical reactions work?</span>
+          <span class="lang-zh" lang="zh-Hans">既然不可能从“无”中得到“有”，化学反应是怎样发生的？</span>
+        </div>
+      </section>
+
+      <section class="claim-box" aria-labelledby="claim-title">
+        <div class="box-heading" id="claim-title">
+          <span class="lang-en">Conservation of Mass Claim</span>
+          <span class="lang-zh" lang="zh-Hans">质量守恒结论</span>
+        </div>
+        <div class="box-body claim">
+          <p>
+            <span class="lang-en"><strong>Chemical reactions work because atoms are rearranged, not created or destroyed.</strong> Reactants supply all of the atoms that appear in the products. When the exact ratio is used, all atoms are used in the products. When too much of one reactant is added, leftover reactants do not disappear; they remain after the reaction.</span>
+            <span class="lang-zh" lang="zh-Hans"><strong>化学反应之所以能够发生，是因为原子被重新排列，而不是被创造或消灭。</strong>反应物提供了产物中出现的全部原子。比例刚好时，所有原子都会进入产物；某种反应物过量时，剩余的反应物不会消失，而会在反应后保留下来。</span>
+          </p>
+          <p>
+            <span class="lang-en">The PhET simulation showed the same pattern in sandwiches, molecules, and game levels: balanced recipes conserve the number of each part or atom.</span>
+            <span class="lang-zh" lang="zh-Hans">PhET 模拟在三明治、分子和游戏关卡中都显示了同样的规律：平衡的“配方”会守恒每一种部件或原子的数量。</span>
+          </p>
+          <p class="source-note">
+            <span class="lang-en">Simulation source: <a href="https://phet.colorado.edu/sims/html/reactants-products-and-leftovers/latest/reactants-products-and-leftovers_en.html">PhET Reactants, Products and Leftovers</a>.</span>
+            <span class="lang-zh" lang="zh-Hans">模拟来源：<a href="https://phet.colorado.edu/sims/html/reactants-products-and-leftovers/latest/reactants-products-and-leftovers_en.html">PhET 反应物、产物和剩余物</a>。</span>
+          </p>
+        </div>
+      </section>
+
+      <section class="summary-box" aria-labelledby="requirements-title">
+        <div class="box-heading" id="requirements-title">
+          <span class="lang-en">Requirement Checklist</span>
+          <span class="lang-zh" lang="zh-Hans">要求清单</span>
+        </div>
+        <div class="box-body">
+          <ol class="requirement-list">
+            <li>
+              <span class="lang-en">3 sandwich examples are completed.</span>
+              <span class="lang-zh" lang="zh-Hans">已完成 3 个三明治示例。</span>
+            </li>
+            <li>
+              <span class="lang-en">3 molecule examples are completed.</span>
+              <span class="lang-zh" lang="zh-Hans">已完成 3 个分子示例。</span>
+            </li>
+            <li>
+              <span class="lang-en">4 game examples are completed, including Level 1, Level 2, and Level 3.</span>
+              <span class="lang-zh" lang="zh-Hans">已完成 4 个游戏示例，包括第 1、2、3 级。</span>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <footer class="footer" aria-label="Page footer">
+        <div>2026-04-26</div>
+        <div class="page-no">
+          <span class="lang-en">Page <strong>1</strong> of <strong>4</strong></span>
+          <span class="lang-zh" lang="zh-Hans">第 <strong>1</strong> 页，共 <strong>4</strong> 页</span>
+        </div>
+        <div></div>
+      </footer>
+    </section>
+
+    <section class="sheet" aria-label="Sandwich evidence">
+      <header class="page-head">
+        <div>
+          <div class="project-code">PROJ-CH-0007</div>
+          <h2>
+            <span class="lang-en">Evidence A: Sandwich Recipes</span>
+            <span class="lang-zh" lang="zh-Hans">证据 A：三明治配方</span>
+          </h2>
+          <p class="translation">
+            <span class="lang-en">The sandwich tab models limiting and excess reactants with visible parts.</span>
+            <span class="lang-zh" lang="zh-Hans">三明治页面用看得见的材料来模拟限量反应物和过量反应物。</span>
+          </p>
+        </div>
+      </header>
+
+      <div class="evidence-grid">
+        <article class="evidence-card" data-evidence-id="sandwich-cheese">
+          <div class="evidence-head">
+            <div class="evidence-title">
+              <span class="lang-en">Cheese Sandwich</span>
+              <span class="lang-zh" lang="zh-Hans">奶酪三明治</span>
+            </div>
+            <div class="evidence-kind">Sandwich example 1 of 3</div>
+          </div>
+          <div class="evidence-visual" aria-label="Cheese sandwich model">
+            <div class="counter">
+              <span class="mini"></span><span class="mini"></span>
+              <span class="mini cheese"></span><span></span>
+            </div>
+            <span class="arrow">--></span>
+            <div class="stack">
+              <span class="food bread"></span>
+              <span class="food cheese"></span>
+              <span class="food bread"></span>
+            </div>
+          </div>
+          <div class="evidence-notes">
+            <p>
+              <span class="reaction-line">2 bread + 1 cheese --> 1 cheese sandwich</span>
+              <span class="lang-en">All parts are used, so there are no leftovers.</span>
+              <span class="lang-zh" lang="zh-Hans">所有材料都被用完，所以没有剩余。</span>
+            </p>
+            <span class="balance-note">
+              <span class="lang-en">Balanced count: bread 2 = 2, cheese 1 = 1.</span>
+              <span class="lang-zh" lang="zh-Hans">平衡数量：面包 2 = 2，奶酪 1 = 1。</span>
+            </span>
+          </div>
+        </article>
+
+        <article class="evidence-card" data-evidence-id="sandwich-meat-cheese">
+          <div class="evidence-head">
+            <div class="evidence-title">
+              <span class="lang-en">Meat and Cheese Sandwich</span>
+              <span class="lang-zh" lang="zh-Hans">肉和奶酪三明治</span>
+            </div>
+            <div class="evidence-kind">Sandwich example 2 of 3</div>
+          </div>
+          <div class="evidence-visual" aria-label="Meat and cheese sandwich model">
+            <div class="counter">
+              <span class="mini"></span><span class="mini"></span>
+              <span class="mini cheese"></span><span class="mini meat"></span>
+            </div>
+            <span class="arrow">--></span>
+            <div class="stack">
+              <span class="food bread"></span>
+              <span class="food meat"></span>
+              <span class="food cheese"></span>
+              <span class="food bread"></span>
+            </div>
+          </div>
+          <div class="evidence-notes">
+            <p>
+              <span class="reaction-line">2 bread + 1 cheese + 1 meat --> 1 sandwich</span>
+              <span class="lang-en">The recipe succeeds only when each required part is present.</span>
+              <span class="lang-zh" lang="zh-Hans">只有每一种所需材料都存在时，配方才能成功。</span>
+            </p>
+            <span class="balance-note">
+              <span class="lang-en">Balanced count: every input part appears in the product.</span>
+              <span class="lang-zh" lang="zh-Hans">平衡数量：每个输入材料都出现在产物中。</span>
+            </span>
+          </div>
+        </article>
+
+        <article class="evidence-card" data-evidence-id="sandwich-custom">
+          <div class="evidence-head">
+            <div class="evidence-title">
+              <span class="lang-en">Custom Sandwich with Leftover</span>
+              <span class="lang-zh" lang="zh-Hans">有剩余的自定义三明治</span>
+            </div>
+            <div class="evidence-kind">Sandwich example 3 of 3</div>
+          </div>
+          <div class="evidence-visual" aria-label="Custom sandwich model with leftover lettuce">
+            <div class="counter">
+              <span class="mini"></span><span class="mini"></span>
+              <span class="mini meat"></span><span class="mini lettuce"></span>
+              <span class="mini lettuce"></span><span></span>
+            </div>
+            <span class="arrow">--></span>
+            <div class="stack">
+              <span class="food bread"></span>
+              <span class="food lettuce"></span>
+              <span class="food meat"></span>
+              <span class="food bread"></span>
+            </div>
+            <span class="plus">+</span>
+            <span class="mini lettuce" title="leftover lettuce"></span>
+          </div>
+          <div class="evidence-notes">
+            <p>
+              <span class="reaction-line">2 bread + 1 meat + 2 lettuce --> 1 sandwich + 1 lettuce leftover</span>
+              <span class="lang-en">Extra lettuce is not destroyed. It remains as a leftover reactant.</span>
+              <span class="lang-zh" lang="zh-Hans">多余的生菜没有被消灭，而是作为剩余反应物保留下来。</span>
+            </p>
+            <span class="balance-note">
+              <span class="lang-en">Balanced count includes the leftover: lettuce 2 = 1 used + 1 leftover.</span>
+              <span class="lang-zh" lang="zh-Hans">平衡数量包括剩余物：生菜 2 = 用掉 1 + 剩余 1。</span>
+            </span>
+          </div>
+        </article>
+      </div>
+
+      <footer class="footer" aria-label="Page footer">
+        <div>2026-04-26</div>
+        <div class="page-no">
+          <span class="lang-en">Page <strong>2</strong> of <strong>4</strong></span>
+          <span class="lang-zh" lang="zh-Hans">第 <strong>2</strong> 页，共 <strong>4</strong> 页</span>
+        </div>
+        <div></div>
+      </footer>
+    </section>
+
+    <section class="sheet" aria-label="Molecule evidence">
+      <header class="page-head">
+        <div>
+          <div class="project-code">PROJ-CH-0007</div>
+          <h2>
+            <span class="lang-en">Evidence B: Molecule Products</span>
+            <span class="lang-zh" lang="zh-Hans">证据 B：分子产物</span>
+          </h2>
+          <p class="translation">
+            <span class="lang-en">The molecule tab shows that balanced coefficients conserve each type of atom.</span>
+            <span class="lang-zh" lang="zh-Hans">分子页面显示，平衡系数会守恒每一种原子。</span>
+          </p>
+        </div>
+      </header>
+
+      <div class="evidence-grid">
+        <article class="evidence-card" data-evidence-id="molecule-water">
+          <div class="evidence-head">
+            <div class="evidence-title">
+              <span class="lang-en">Water Product</span>
+              <span class="lang-zh" lang="zh-Hans">水分子产物</span>
+            </div>
+            <div class="evidence-kind">Molecule example 1 of 3</div>
+          </div>
+          <div class="evidence-visual" aria-label="Two water molecules">
+            <div class="molecule water">
+              <span class="atom h h1">H</span>
+              <span class="atom h h2">H</span>
+              <span class="atom o">O</span>
+            </div>
+            <div class="molecule water">
+              <span class="atom h h1">H</span>
+              <span class="atom h h2">H</span>
+              <span class="atom o">O</span>
+            </div>
+          </div>
+          <div class="evidence-notes">
+            <p>
+              <span class="reaction-line">2H<sub>2</sub> + O<sub>2</sub> --> 2H<sub>2</sub>O</span>
+              <span class="lang-en">Four hydrogen atoms and two oxygen atoms appear before and after the reaction.</span>
+              <span class="lang-zh" lang="zh-Hans">反应前后都有 4 个氢原子和 2 个氧原子。</span>
+            </p>
+            <span class="balance-note">H: 4 = 4; O: 2 = 2.</span>
+          </div>
+        </article>
+
+        <article class="evidence-card" data-evidence-id="molecule-ammonia">
+          <div class="evidence-head">
+            <div class="evidence-title">
+              <span class="lang-en">Ammonia Product</span>
+              <span class="lang-zh" lang="zh-Hans">氨分子产物</span>
+            </div>
+            <div class="evidence-kind">Molecule example 2 of 3</div>
+          </div>
+          <div class="evidence-visual" aria-label="Two ammonia molecules">
+            <div class="molecule ammonia">
+              <span class="atom h h1">H</span>
+              <span class="atom h h2">H</span>
+              <span class="atom h h3">H</span>
+              <span class="atom n">N</span>
+            </div>
+            <div class="molecule ammonia">
+              <span class="atom h h1">H</span>
+              <span class="atom h h2">H</span>
+              <span class="atom h h3">H</span>
+              <span class="atom n">N</span>
+            </div>
+          </div>
+          <div class="evidence-notes">
+            <p>
+              <span class="reaction-line">N<sub>2</sub> + 3H<sub>2</sub> --> 2NH<sub>3</sub></span>
+              <span class="lang-en">The coefficient 3 supplies six hydrogen atoms, enough for two ammonia molecules.</span>
+              <span class="lang-zh" lang="zh-Hans">系数 3 提供 6 个氢原子，足够形成 2 个氨分子。</span>
+            </p>
+            <span class="balance-note">N: 2 = 2; H: 6 = 6.</span>
+          </div>
+        </article>
+
+        <article class="evidence-card" data-evidence-id="molecule-methane">
+          <div class="evidence-head">
+            <div class="evidence-title">
+              <span class="lang-en">Methane Product</span>
+              <span class="lang-zh" lang="zh-Hans">甲烷分子产物</span>
+            </div>
+            <div class="evidence-kind">Molecule example 3 of 3</div>
+          </div>
+          <div class="evidence-visual" aria-label="Methane molecule">
+            <div class="molecule methane">
+              <span class="atom h h1">H</span>
+              <span class="atom h h2">H</span>
+              <span class="atom h h3">H</span>
+              <span class="atom h h4">H</span>
+              <span class="atom c">C</span>
+            </div>
+          </div>
+          <div class="evidence-notes">
+            <p>
+              <span class="reaction-line">C + 2H<sub>2</sub> --> CH<sub>4</sub></span>
+              <span class="lang-en">One carbon atom combines with four hydrogen atoms. No atoms are missing or added.</span>
+              <span class="lang-zh" lang="zh-Hans">1 个碳原子与 4 个氢原子结合，没有原子丢失或新增。</span>
+            </p>
+            <span class="balance-note">C: 1 = 1; H: 4 = 4.</span>
+          </div>
+        </article>
+      </div>
+
+      <footer class="footer" aria-label="Page footer">
+        <div>2026-04-26</div>
+        <div class="page-no">
+          <span class="lang-en">Page <strong>3</strong> of <strong>4</strong></span>
+          <span class="lang-zh" lang="zh-Hans">第 <strong>3</strong> 页，共 <strong>4</strong> 页</span>
+        </div>
+        <div></div>
+      </footer>
+    </section>
+
+    <section class="sheet" aria-label="Game evidence">
+      <header class="page-head">
+        <div>
+          <div class="project-code">PROJ-CH-0007</div>
+          <h2>
+            <span class="lang-en">Evidence C: Game Examples</span>
+            <span class="lang-zh" lang="zh-Hans">证据 C：游戏示例</span>
+          </h2>
+          <p class="translation">
+            <span class="lang-en">Four game examples are shown below, including at least one from Level 1, Level 2, and Level 3.</span>
+            <span class="lang-zh" lang="zh-Hans">下面展示 4 个游戏示例，至少包括第 1、2、3 级各一个。</span>
+          </p>
+        </div>
+      </header>
+
+      <div class="evidence-grid">
+        <article class="evidence-card" data-evidence-id="game-level-1">
+          <div class="evidence-head">
+            <div class="evidence-title">
+              <span class="lang-en">Game Example: Level 1</span>
+              <span class="lang-zh" lang="zh-Hans">游戏示例：第 1 级</span>
+            </div>
+            <div class="evidence-kind">Game example 1 of 4</div>
+          </div>
+          <div class="evidence-visual" aria-label="Level 1 game example">
+            <div class="game-board">
+              <div class="mini-equation">2 bread + 1 cheese --> sandwich</div>
+              <div class="game-cell ok">2 bread</div>
+              <div class="game-cell ok">1 cheese</div>
+              <div class="game-cell ok">1 made</div>
+              <div class="game-cell ok">0 left</div>
+            </div>
+          </div>
+          <div class="evidence-notes">
+            <p>
+              <span class="lang-en">Level 1 checked a simple recipe. The product matched the exact reactant ratio.</span>
+              <span class="lang-zh" lang="zh-Hans">第 1 级检查简单配方。产物与反应物比例完全匹配。</span>
+            </p>
+            <span class="balance-note">
+              <span class="lang-en">Result: correct, no leftovers.</span>
+              <span class="lang-zh" lang="zh-Hans">结果：正确，没有剩余。</span>
+            </span>
+          </div>
+        </article>
+
+        <article class="evidence-card" data-evidence-id="game-level-2">
+          <div class="evidence-head">
+            <div class="evidence-title">
+              <span class="lang-en">Game Example: Level 2</span>
+              <span class="lang-zh" lang="zh-Hans">游戏示例：第 2 级</span>
+            </div>
+            <div class="evidence-kind">Game example 2 of 4</div>
+          </div>
+          <div class="evidence-visual" aria-label="Level 2 game example">
+            <div class="game-board">
+              <div class="mini-equation">2H<sub>2</sub> + O<sub>2</sub> --> 2H<sub>2</sub>O</div>
+              <div class="game-cell ok">4 H</div>
+              <div class="game-cell ok">2 O</div>
+              <div class="game-cell ok">2 water</div>
+              <div class="game-cell ok">0 left</div>
+            </div>
+          </div>
+          <div class="evidence-notes">
+            <p>
+              <span class="lang-en">Level 2 used molecules instead of sandwich parts. Atom counts stayed balanced.</span>
+              <span class="lang-zh" lang="zh-Hans">第 2 级使用分子而不是三明治材料。原子数保持平衡。</span>
+            </p>
+            <span class="balance-note">H: 4 = 4; O: 2 = 2.</span>
+          </div>
+        </article>
+
+        <article class="evidence-card" data-evidence-id="game-level-3">
+          <div class="evidence-head">
+            <div class="evidence-title">
+              <span class="lang-en">Game Example: Level 3</span>
+              <span class="lang-zh" lang="zh-Hans">游戏示例：第 3 级</span>
+            </div>
+            <div class="evidence-kind">Game example 3 of 4</div>
+          </div>
+          <div class="evidence-visual" aria-label="Level 3 game example">
+            <div class="game-board">
+              <div class="mini-equation">N<sub>2</sub> + 3H<sub>2</sub> --> 2NH<sub>3</sub></div>
+              <div class="game-cell ok">2 N</div>
+              <div class="game-cell ok">6 H</div>
+              <div class="game-cell ok">2 NH3</div>
+              <div class="game-cell ok">0 left</div>
+            </div>
+          </div>
+          <div class="evidence-notes">
+            <p>
+              <span class="lang-en">Level 3 required choosing coefficients. The balanced ratio created the maximum product.</span>
+              <span class="lang-zh" lang="zh-Hans">第 3 级需要选择系数。平衡比例生成了最大数量的产物。</span>
+            </p>
+            <span class="balance-note">N: 2 = 2; H: 6 = 6.</span>
+          </div>
+        </article>
+
+        <article class="evidence-card" data-evidence-id="game-challenge">
+          <div class="evidence-head">
+            <div class="evidence-title">
+              <span class="lang-en">Game Example: Leftovers Challenge</span>
+              <span class="lang-zh" lang="zh-Hans">游戏示例：剩余物挑战</span>
+            </div>
+            <div class="evidence-kind">Game example 4 of 4</div>
+          </div>
+          <div class="evidence-visual" aria-label="Game challenge with leftovers">
+            <div class="game-board">
+              <div class="mini-equation">C + 3H<sub>2</sub> --> CH<sub>4</sub> + H<sub>2</sub></div>
+              <div class="game-cell ok">1 C</div>
+              <div class="game-cell ok">6 H</div>
+              <div class="game-cell ok">1 CH4</div>
+              <div class="game-cell left">1 H2 left</div>
+            </div>
+          </div>
+          <div class="evidence-notes">
+            <p>
+              <span class="lang-en">The challenge showed excess hydrogen. One H<sub>2</sub> molecule was left because only four hydrogen atoms fit into CH<sub>4</sub>.</span>
+              <span class="lang-zh" lang="zh-Hans">挑战显示氢气过量。因为 CH<sub>4</sub> 只需要 4 个氢原子，所以剩下 1 个 H<sub>2</sub> 分子。</span>
+            </p>
+            <span class="balance-note">
+              <span class="lang-en">Count with leftovers: C 1 = 1; H 6 = 4 in product + 2 leftover.</span>
+              <span class="lang-zh" lang="zh-Hans">包括剩余物的数量：C 1 = 1；H 6 = 产物中 4 + 剩余 2。</span>
+            </span>
+          </div>
+        </article>
+      </div>
+
+      <footer class="footer" aria-label="Page footer">
+        <div>2026-04-26</div>
+        <div class="page-no">
+          <span class="lang-en">Page <strong>4</strong> of <strong>4</strong></span>
+          <span class="lang-zh" lang="zh-Hans">第 <strong>4</strong> 页，共 <strong>4</strong> 页</span>
+        </div>
+        <div></div>
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const body = document.body;
+      const buttons = Array.from(document.querySelectorAll(".mode-button"));
+
+      function setMode(mode) {
+        body.dataset.langMode = mode;
+        document.documentElement.lang = mode === "zh" ? "zh-Hans" : "en";
+        buttons.forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.setLang === mode));
+        });
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          setMode(button.dataset.setLang);
+        });
+      });
+
+      setMode("en");
+    })();
+  </script>
+</body>
+</html>
