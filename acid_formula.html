@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Acid Formulas Matching</title>
+  <link rel="icon" href="data:,">
   <style>
     :root{
       --bg-dark:#002c63;
@@ -40,6 +41,13 @@
     body{
       padding:0;
     }
+
+    body[data-lang-mode="en"] .lang-zh{ display:none!important; }
+    body[data-lang-mode="zh"] .lang-en{ display:none!important; }
+    .lang-zh{
+      font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC","Trebuchet MS",Arial,sans-serif;
+    }
+    body[data-lang-mode="bi"] .lang-en + .lang-zh{ margin-left:0.35em; }
 
     .top-badge{
       position:fixed;
@@ -112,6 +120,27 @@
       box-shadow:0 4px 10px rgba(0,0,0,0.18);
       backdrop-filter: blur(2px);
     }
+
+    .language-controls{
+      display:inline-flex;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.34);
+      border-radius:10px;
+      background:rgba(0,0,0,0.22);
+    }
+
+    .mode-button{
+      border-radius:0;
+      padding:10px 16px;
+      background:transparent;
+      color:#fff;
+      box-shadow:none;
+      border-right:1px solid rgba(255,255,255,0.25);
+      font-size:16px;
+    }
+
+    .mode-button:last-child{ border-right:0; }
+    .mode-button[aria-pressed="true"]{ background:rgba(255,255,255,0.2); }
 
     .game{
       display:grid;
@@ -367,19 +396,24 @@
     }
   </style>
 </head>
-<body>
+<body data-lang-mode="en">
   <div class="top-badge">1.00</div>
 
   <div class="page">
     <div class="brand">WCLN.ca</div>
 
-    <h1 class="title">Acid Formulas</h1>
-    <div class="subtitle">Match terms until ALL are green.</div>
+    <h1 class="title"><span class="lang-en">Acid Formulas</span><span class="lang-zh" lang="zh-Hans">酸的化学式</span></h1>
+    <div class="subtitle"><span class="lang-en">Match terms until ALL are green.</span><span class="lang-zh" lang="zh-Hans">配对直到全部变成绿色。</span></div>
 
     <div class="hud">
-      <div class="pill">Score: <span id="score">0</span> / <span id="total">8</span></div>
-      <div class="pill">Completed: <span id="percent">0%</span></div>
-      <div class="pill">Progress saved automatically</div>
+      <div class="pill"><span class="lang-en">Score:</span><span class="lang-zh" lang="zh-Hans">得分：</span> <span id="score">0</span> / <span id="total">8</span></div>
+      <div class="pill"><span class="lang-en">Completed:</span><span class="lang-zh" lang="zh-Hans">已完成：</span> <span id="percent">0%</span></div>
+      <div class="pill"><span class="lang-en">Progress saved automatically</span><span class="lang-zh" lang="zh-Hans">进度会自动保存</span></div>
+      <div class="language-controls" role="group" aria-label="Language mode">
+        <button class="mode-button" type="button" data-set-lang="en" aria-pressed="true">English</button>
+        <button class="mode-button" type="button" data-set-lang="bi" aria-pressed="false">En+Zh</button>
+        <button class="mode-button" type="button" data-set-lang="zh" aria-pressed="false">中文</button>
+      </div>
     </div>
 
     <div class="game">
@@ -388,29 +422,42 @@
     </div>
 
     <div class="controls">
-      <button class="btn-check" id="checkBtn">Check All</button>
-      <button class="btn-solve" id="solveBtn">Solve</button>
-      <button class="btn-clear" id="clearBtn">Clear Placements</button>
-      <button class="btn-reset" id="resetBtn">Shuffle + Reset</button>
+      <button class="btn-check" id="checkBtn"><span class="lang-en">Check All</span><span class="lang-zh" lang="zh-Hans">检查全部</span></button>
+      <button class="btn-solve" id="solveBtn"><span class="lang-en">Solve</span><span class="lang-zh" lang="zh-Hans">显示答案</span></button>
+      <button class="btn-clear" id="clearBtn"><span class="lang-en">Clear Placements</span><span class="lang-zh" lang="zh-Hans">清除放置</span></button>
+      <button class="btn-reset" id="resetBtn"><span class="lang-en">Shuffle + Reset</span><span class="lang-zh" lang="zh-Hans">重新洗牌 + 重置</span></button>
     </div>
 
     <div class="status" id="status"></div>
-    <div class="small-note">Drag or tap-and-drag a formula into the correct drop box.</div>
+    <div class="small-note"><span class="lang-en">Drag or tap-and-drag a formula into the correct drop box.</span><span class="lang-zh" lang="zh-Hans">拖动或轻触拖动化学式到正确的放置框。</span></div>
   </div>
 
   <script>
     const STORAGE_KEY = 'acid-formulas-progress-v2';
 
     const items = [
-      { formula: 'HF', plain: 'HF', name: 'Hydrofluoric' },
-      { formula: 'HNO<sub>3</sub>', plain: 'HNO3', name: 'Nitric' },
-      { formula: 'H<sub>2</sub>SO<sub>4</sub>', plain: 'H2SO4', name: 'Sulfuric' },
-      { formula: 'H<sub>3</sub>PO<sub>4</sub>', plain: 'H3PO4', name: 'Phosphoric' },
-      { formula: 'H<sub>2</sub>CO<sub>3</sub>', plain: 'H2CO3', name: 'Carbonic' },
-      { formula: 'CH<sub>3</sub>COOH', plain: 'CH3COOH', name: 'Acetic' },
-      { formula: 'HClO', plain: 'HClO', name: 'Hypochlorous' },
-      { formula: 'H<sub>3</sub>BO<sub>3</sub>', plain: 'H3BO3', name: 'Boric' }
+      { formula: 'HF', plain: 'HF', name: 'Hydrofluoric', nameZh: '氢氟酸' },
+      { formula: 'HNO<sub>3</sub>', plain: 'HNO3', name: 'Nitric', nameZh: '硝酸' },
+      { formula: 'H<sub>2</sub>SO<sub>4</sub>', plain: 'H2SO4', name: 'Sulfuric', nameZh: '硫酸' },
+      { formula: 'H<sub>3</sub>PO<sub>4</sub>', plain: 'H3PO4', name: 'Phosphoric', nameZh: '磷酸' },
+      { formula: 'H<sub>2</sub>CO<sub>3</sub>', plain: 'H2CO3', name: 'Carbonic', nameZh: '碳酸' },
+      { formula: 'CH<sub>3</sub>COOH', plain: 'CH3COOH', name: 'Acetic', nameZh: '乙酸' },
+      { formula: 'HClO', plain: 'HClO', name: 'Hypochlorous', nameZh: '次氯酸' },
+      { formula: 'H<sub>3</sub>BO<sub>3</sub>', plain: 'H3BO3', name: 'Boric', nameZh: '硼酸' }
     ];
+
+    const labels = {
+      dropHere: ['drop here', '放到这里'],
+      correct: ['Correct', '正确']
+    };
+
+    const statusTranslations = {
+      'Correct match!': '匹配正确！',
+      'Not quite. Try another formula.': '不完全正确。换一个化学式试试。',
+      'Excellent! All matches are correct.': '全部匹配正确！',
+      'Excellent! All are green.': '全部都变成绿色了！',
+      'Solved. Press Shuffle + Reset to play again.': '已显示答案。按重新洗牌 + 重置再玩一次。'
+    };
 
     const formulaBank = document.getElementById('formulaBank');
     const matchList = document.getElementById('matchList');
@@ -422,6 +469,7 @@
     const solveBtn = document.getElementById('solveBtn');
     const clearBtn = document.getElementById('clearBtn');
     const resetBtn = document.getElementById('resetBtn');
+    const modeButtons = Array.from(document.querySelectorAll('.mode-button'));
 
     totalEl.textContent = String(items.length);
 
@@ -431,6 +479,25 @@
 
     function shuffle(arr){
       return [...arr].sort(() => Math.random() - 0.5);
+    }
+
+    function escapeHtml(str){
+      return String(str ?? '').replace(/[&<>"']/g, ch => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[ch]));
+    }
+
+    function renderI18n(en, zh){
+      return `<span class="lang-en">${escapeHtml(en)}</span><span class="lang-zh" lang="zh-Hans">${escapeHtml(zh ?? en)}</span>`;
+    }
+
+    function setMode(mode){
+      const nextMode = ['en','bi','zh'].includes(mode) ? mode : 'en';
+      document.body.dataset.langMode = nextMode;
+      document.documentElement.lang = nextMode === 'zh' ? 'zh-Hans' : 'en';
+      modeButtons.forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.setLang === nextMode));
+      });
     }
 
     function saveState(){
@@ -507,7 +574,7 @@
 
       const drop = document.createElement('div');
       drop.className = 'drop-zone';
-      drop.textContent = 'drop here';
+      drop.innerHTML = renderI18n(labels.dropHere[0], labels.dropHere[1]);
 
       drop.addEventListener('dragover', e => {
         e.preventDefault();
@@ -530,11 +597,11 @@
 
       const label = document.createElement('div');
       label.className = 'name-box';
-      label.textContent = item.name;
+      label.innerHTML = renderI18n(item.name, item.nameZh);
 
       const solvedTag = document.createElement('div');
       solvedTag.className = 'solved-tag';
-      solvedTag.textContent = 'Correct';
+      solvedTag.innerHTML = renderI18n(labels.correct[0], labels.correct[1]);
 
       row.appendChild(wrap);
       row.appendChild(label);
@@ -551,7 +618,7 @@
     }
 
     function clearDropContents(drop){
-      drop.textContent = 'drop here';
+      drop.innerHTML = renderI18n(labels.dropHere[0], labels.dropHere[1]);
       drop.classList.remove('filled', 'correct-fill');
       delete drop.dataset.formulaPlain;
       delete drop.dataset.formula;
@@ -642,7 +709,7 @@
       if (correct === items.length) {
         setStatus('Excellent! All matches are correct.', true);
       } else {
-        setStatus(`You have ${correct} of ${items.length} correct.`, false);
+        setStatus(`You have ${correct} of ${items.length} correct.`, false, `你答对了 ${correct} / ${items.length} 个。`);
       }
 
       saveState();
@@ -671,8 +738,8 @@
       }
     }
 
-    function setStatus(message, win=false){
-      statusEl.textContent = message;
+    function setStatus(message, win=false, zhMessage=statusTranslations[message] || message){
+      statusEl.innerHTML = message ? renderI18n(message, zhMessage) : '';
       statusEl.className = win ? 'status win' : 'status';
     }
 
@@ -852,8 +919,12 @@
     solveBtn.addEventListener('click', solveAll);
     clearBtn.addEventListener('click', clearPlacements);
     resetBtn.addEventListener('click', resetShuffle);
+    modeButtons.forEach(button => {
+      button.addEventListener('click', () => setMode(button.dataset.setLang));
+    });
 
     render(loadState());
+    setMode('en');
   </script>
 </body>
 </html>
