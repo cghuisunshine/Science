@@ -110,7 +110,7 @@
   <div class="box">
     <h2>Camera Surface</h2>
     <canvas id="canvas" style="display:none;"></canvas>
-    <div id="captureWindow" class="surface-frame" title="Double-click to take a photo">
+    <div id="captureWindow" class="surface-frame" title="Double-click or press Space to take a photo">
       <video id="video" class="surface-panel" autoplay playsinline></video>
       <img
         id="preview"
@@ -130,7 +130,7 @@
     <p id="status"></p>
 
     <p class="note">
-      Double-click the same window to capture, copy, and return to live preview.
+      Double-click the same window or press <b>Space</b> to capture, copy, and return to live preview.
       After the copy step, go to ChatGPT web and press <b>Command + V</b> in the
       message box.
     </p>
@@ -166,8 +166,8 @@
       video.classList.toggle("is-hidden", showingCaptured);
       preview.classList.toggle("is-hidden", !showingCaptured);
       captureWindow.title = showingCaptured
-        ? "Double-click to copy the captured photo"
-        : "Double-click to take a photo";
+        ? "Double-click or press Space to copy the captured photo"
+        : "Double-click or press Space to take a photo";
     }
 
     function setPreviewImage(blob) {
@@ -181,7 +181,7 @@
 
     video.addEventListener("loadedmetadata", syncCaptureWindowSize);
 
-    captureWindow.addEventListener("dblclick", () => {
+    function handleCaptureAction() {
       if (!cameraActive) {
         startCamera();
         return;
@@ -192,6 +192,17 @@
       } else {
         takePhoto();
       }
+    }
+
+    captureWindow.addEventListener("dblclick", handleCaptureAction);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.code !== "Space") {
+        return;
+      }
+
+      event.preventDefault();
+      handleCaptureAction();
     });
 
     async function startCamera() {
