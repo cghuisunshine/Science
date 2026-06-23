@@ -449,7 +449,7 @@
             <p>${fullFmt.format(s)}<br>${timeRange(s,e)}</p>
           </div>
           <div class="tags">
-            <span class="tag">${nextIndex === idx ? "下一节课" : (e < past ? "已结束" : "待上课")}</span>
+            <span class="tag">${nextIndex === idx ? "下一节课" : (e < now ? "已结束" : "待上课")}</span>
           </div>
         `;
         timeline.appendChild(card);
