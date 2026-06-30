@@ -298,6 +298,9 @@
     <h2 class="section-title">未来 7 天课程</h2>
     <div id="timeline" class="timeline"></div>
 
+    <h2 class="section-title">过去课程</h2>
+    <div id="pastTimeline" class="timeline"></div>
+
     <h2 class="section-title">全部课程日历</h2>
     <div id="months"></div>
   </div>
@@ -346,7 +349,6 @@
       { title:"Bruce 数理计算机", start:"2026-05-26T18:30:00", end:"2026-05-26T20:30:00" },
       { title:"Bruce 数理计算机", start:"2026-05-28T18:30:00", end:"2026-05-28T20:30:00" },
 
-<<<<<<< HEAD
       { title:"Bruce 数理计算机", start:"2026-06-02T18:30:00", end:"2026-06-02T20:30:00" },
       { title:"Bruce 数理计算机", start:"2026-06-04T18:30:00", end:"2026-06-04T20:30:00" },
       { title:"Bruce 数理计算机", start:"2026-06-09T18:30:00", end:"2026-06-09T20:30:00" },
@@ -362,6 +364,7 @@
 
     const personFilter = document.getElementById("personFilter");
     const timeline = document.getElementById("timeline");
+    const pastTimeline = document.getElementById("pastTimeline");
     const monthsWrap = document.getElementById("months");
 
     const weekdayFmt = new Intl.DateTimeFormat("zh-CN", { weekday:"short" });
@@ -417,6 +420,10 @@
           return s >= now && s <= weekAhead;
         })
         .sort((a, b) => new Date(a.ev.start) - new Date(b.ev.start));
+      const pastEvents = filteredEvents
+        .map((ev, idx) => ({ ev, idx }))
+        .filter(({ ev }) => new Date(ev.end) < now)
+        .sort((a, b) => new Date(b.ev.start) - new Date(a.ev.start));
       const calendarEvents = filteredEvents.map((ev, idx) => ({ ev, idx }));
 
       if(nextEv){
@@ -456,6 +463,32 @@
           </div>
         `;
         timeline.appendChild(card);
+      });
+
+      pastTimeline.innerHTML = "";
+      if(pastEvents.length === 0){
+        pastTimeline.innerHTML = `<div class="empty">当前筛选条件下没有过去的课程。</div>`;
+      }
+
+      pastEvents.forEach(({ ev, idx }) => {
+        const s = new Date(ev.start), e = new Date(ev.end);
+        const card = document.createElement("div");
+        card.className = "event past";
+
+        card.innerHTML = `
+          <div class="date">
+            <div class="md">${md(s)}</div>
+            <div class="wk">${weekdayFmt.format(s)}</div>
+          </div>
+          <div class="main">
+            <h3>${ev.title}</h3>
+            <p>${fullFmt.format(s)}<br>${timeRange(s,e)}</p>
+          </div>
+          <div class="tags">
+            <span class="tag">已结束</span>
+          </div>
+        `;
+        pastTimeline.appendChild(card);
       });
 
       const grouped = {};
