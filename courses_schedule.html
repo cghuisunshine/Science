@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>课程安排 2026</title>
+  <title>课程安排 2026–2027</title>
   <style>
     :root{
       --bg:#fffdf2;
@@ -291,6 +291,7 @@
             <option value="Bruce">Bruce</option>
             <option value="Eva">Eva</option>
             <option value="Alice">Alice</option>
+            <option value="Math8-12">Math8-12 tutoring</option>
           </select>
         </div>
       </div>
@@ -430,6 +431,13 @@
       { title:"Alice Physics11", start:"2026-12-27T13:00:00", end:"2026-12-27T15:00:00" },
 
     ];
+    // Every Monday, October 19, 2026 through the end of June 2027.
+    // Advance by calendar days so the session stays at 17:00 across DST changes.
+    for (const date = new Date(2026, 9, 19); date <= new Date(2027, 5, 30); date.setDate(date.getDate() + 7)) {
+      const pad = n => String(n).padStart(2, "0");
+      const day = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+      events.push({ title:"Math8-12 tutoring", start:`${day}T17:00:00`, end:`${day}T21:00:00` });
+    }
     events.sort((a,b)=> new Date(a.start) - new Date(b.start));
 
     const personFilter = document.getElementById("personFilter");
@@ -471,6 +479,7 @@
       if(ev.title.startsWith("Bruce")) return "Bruce";
       if(ev.title.startsWith("Eva")) return "Eva";
       if(ev.title.startsWith("Alice")) return "Alice";
+      if(ev.title.startsWith("Math8-12")) return "Math8-12";
       return "other";
     }
 
