@@ -5,270 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>课程安排 2026–2027</title>
   <style>
-    :root{
-      --bg:#fffdf2;
-      --card:#ffffff;
-      --border:#d9d1a8;
-      --accent:#f4c400;
-      --accent-2:#f29a49;
-      --next:#dff7df;
-      --next-border:#29a34a;
-      --past:#8b8b8b;
-      --text:#1f1f1f;
-      --shadow:0 8px 24px rgba(0,0,0,.08);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-                   "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
-      background:linear-gradient(180deg,#fffde8 0%, #fffaf0 100%);
-      color:var(--text);
-    }
-    .wrap{
-      max-width:1100px;
-      margin:0 auto;
-      padding:24px 16px 48px;
-    }
-    h1{
-      margin:0 0 10px;
-      font-size:clamp(28px,4vw,44px);
-      line-height:1.1;
-    }
-    .sub{
-      margin:0 0 20px;
-      color:#5c5c5c;
-      font-size:15px;
-    }
-    .hero{
-      background:linear-gradient(135deg, #fff06a 0%, #ffd86b 100%);
-      border:2px solid #222;
-      border-radius:20px;
-      box-shadow:var(--shadow);
-      padding:20px;
-      margin-bottom:22px;
-    }
-    .hero-grid{
-      display:grid;
-      grid-template-columns:1.2fr .8fr;
-      gap:16px;
-      align-items:start;
-    }
-    .next-box, .stats{
-      background:rgba(255,255,255,.72);
-      border:2px solid #222;
-      border-radius:16px;
-      padding:16px;
-    }
-    .stats{
-      display:flex;
-      flex-wrap:wrap;
-      align-content:flex-start;
-      gap:8px;
-    }
-    .next-label{
-      display:inline-block;
-      background:#1f1f1f;
-      color:#fff;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:13px;
-      margin-bottom:10px;
-    }
-    .filter-box{
-      background:rgba(255,255,255,.72);
-      border:2px solid #222;
-      border-radius:16px;
-      padding:16px;
-    }
-    .filter-label{
-      display:block;
-      font-size:13px;
-      font-weight:700;
-      margin-bottom:8px;
-      color:#444;
-    }
-    .filter-select{
-      width:100%;
-      padding:12px 14px;
-      border:2px solid #222;
-      border-radius:12px;
-      background:#fff;
-      font-size:16px;
-      font-weight:700;
-      color:#1f1f1f;
-    }
-    .next-title{
-      font-size:28px;
-      font-weight:800;
-      margin:0 0 6px;
-    }
-    .next-meta{
-      font-size:18px;
-      font-weight:700;
-      margin:0 0 6px;
-    }
-    .hint{
-      color:#555;
-      font-size:14px;
-      margin-top:6px;
-    }
-    .pill{
-      display:inline-flex;
-      width:fit-content;
-      max-width:100%;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid #333;
-      background:#fff;
-      font-size:13px;
-      font-weight:600;
-      white-space:nowrap;
-    }
-    .section-title{
-      margin:28px 0 12px;
-      font-size:24px;
-    }
-    .timeline{
-      display:grid;
-      gap:12px;
-    }
-    .empty{
-      background:rgba(255,255,255,.78);
-      border:2px dashed #b8ae7c;
-      border-radius:16px;
-      padding:18px;
-      color:#5a5a5a;
-      font-size:16px;
-      text-align:center;
-    }
-    .event{
-      background:var(--card);
-      border:2px solid #222;
-      border-radius:16px;
-      box-shadow:var(--shadow);
-      padding:14px 16px;
-      display:grid;
-      grid-template-columns:140px 1fr auto;
-      gap:12px;
-      align-items:center;
-      transition:.2s ease;
-    }
-    .event:hover{ transform:translateY(-2px); }
-    .date{
-      background:linear-gradient(180deg, #f59b4b 0%, #f4c400 100%);
-      border:2px solid #222;
-      border-radius:12px;
-      padding:10px;
-      text-align:center;
-      font-weight:800;
-    }
-    .date .md{font-size:26px; line-height:1;}
-    .date .wk{font-size:14px; margin-top:6px;}
-    .main h3{
-      margin:0 0 6px;
-      font-size:22px;
-    }
-    .main p{
-      margin:0;
-      font-size:16px;
-      color:#444;
-      line-height:1.45;
-    }
-    .tags{
-      text-align:right;
-    }
-    .tag{
-      display:inline-block;
-      min-width:92px;
-      text-align:center;
-      padding:8px 12px;
-      border-radius:999px;
-      border:2px solid #222;
-      background:#fff8cf;
-      font-weight:800;
-      font-size:14px;
-    }
-    .event.next{
-      background:var(--next);
-      border-color:var(--next-border);
-      box-shadow:0 10px 28px rgba(41,163,74,.18);
-    }
-    .event.next .tag{
-      background:#2fb34e;
-      color:white;
-      border-color:#1e7934;
-    }
-    .event.past{
-      opacity:.65;
-    }
-    .month{
-      margin-top:26px;
-      border:2px solid #222;
-      border-radius:18px;
-      overflow:hidden;
-      background:#fff;
-      box-shadow:var(--shadow);
-    }
-    .month details{
-      display:block;
-    }
-    .month summary{
-      list-style:none;
-      cursor:pointer;
-      margin:0;
-      padding:12px 16px;
-      background:#f4c400;
-      font-size:22px;
-      font-weight:800;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .month summary::-webkit-details-marker{
-      display:none;
-    }
-    .month summary::after{
-      content:"▼";
-      font-size:14px;
-      transition:transform .2s ease;
-    }
-    .month details:not([open]) summary::after{
-      transform:rotate(-90deg);
-    }
-    .month ul{
-      list-style:none;
-      margin:0;
-      padding:0;
-    }
-    .month li{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      padding:12px 16px;
-      border-top:1px solid #ece5bf;
-      font-size:16px;
-    }
-    .month li.next-row{
-      background:#e9fbe9;
-      outline:2px solid #2fb34e;
-      outline-offset:-2px;
-      font-weight:800;
-    }
-    .footer{
-      margin-top:24px;
-      color:#666;
-      font-size:13px;
-    }
-    @media (max-width: 800px){
-      .hero-grid{grid-template-columns:1fr}
-      .event{
-        grid-template-columns:1fr;
-        align-items:start;
-      }
-      .tags{text-align:left}
-    }
+    :root{--bg:#fffdf2;--card:#fff;--accent:#f4c400;--next:#dff7df;--next-border:#29a34a;--text:#1f1f1f;--shadow:0 8px 24px rgba(0,0,0,.08)}
+    *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;background:linear-gradient(180deg,#fffde8 0%,#fffaf0 100%);color:var(--text)}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 48px} h1{margin:0 0 10px;font-size:clamp(28px,4vw,44px);line-height:1.1}.sub{margin:0 0 20px;color:#5c5c5c;font-size:15px}
+    .hero{background:linear-gradient(135deg,#fff06a 0%,#ffd86b 100%);border:2px solid #222;border-radius:20px;box-shadow:var(--shadow);padding:20px;margin-bottom:22px}.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:start}
+    .next-box,.filter-box{background:rgba(255,255,255,.72);border:2px solid #222;border-radius:16px;padding:16px}.next-label{display:inline-block;background:#1f1f1f;color:#fff;padding:6px 10px;border-radius:999px;font-size:13px;margin-bottom:10px}.next-title{font-size:28px;font-weight:800;margin:0 0 6px}.next-meta{font-size:18px;font-weight:700;margin:0 0 6px}.hint{color:#555;font-size:14px;margin-top:6px}
+    .filter-label{display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#444}.filter-select{width:100%;padding:12px 14px;border:2px solid #222;border-radius:12px;background:#fff;font-size:16px;font-weight:700;color:#1f1f1f}.section-title{margin:28px 0 12px;font-size:24px}.timeline{display:grid;gap:12px}.empty{background:rgba(255,255,255,.78);border:2px dashed #b8ae7c;border-radius:16px;padding:18px;color:#5a5a5a;font-size:16px;text-align:center}
+    .event{background:var(--card);border:2px solid #222;border-radius:16px;box-shadow:var(--shadow);padding:14px 16px;display:grid;grid-template-columns:140px 1fr auto;gap:12px;align-items:center;transition:.2s ease}.event:hover{transform:translateY(-2px)}.date{background:linear-gradient(180deg,#f59b4b 0%,#f4c400 100%);border:2px solid #222;border-radius:12px;padding:10px;text-align:center;font-weight:800}.date .md{font-size:26px;line-height:1}.date .wk{font-size:14px;margin-top:6px}.main h3{margin:0 0 6px;font-size:22px}.main p{margin:0;font-size:16px;color:#444;line-height:1.45}.tags{text-align:right}.tag{display:inline-block;min-width:92px;text-align:center;padding:8px 12px;border-radius:999px;border:2px solid #222;background:#fff8cf;font-weight:800;font-size:14px}.event.next{background:var(--next);border-color:var(--next-border);box-shadow:0 10px 28px rgba(41,163,74,.18)}.event.next .tag{background:#2fb34e;color:#fff;border-color:#1e7934}
+    .month{margin-top:26px;border:2px solid #222;border-radius:18px;overflow:hidden;background:#fff;box-shadow:var(--shadow)}.month summary{list-style:none;cursor:pointer;margin:0;padding:12px 16px;background:#f4c400;font-size:22px;font-weight:800;display:flex;align-items:center;justify-content:space-between;gap:12px}.month summary::-webkit-details-marker{display:none}.month summary::after{content:"▼";font-size:14px;transition:transform .2s ease}.month details:not([open]) summary::after{transform:rotate(-90deg)}.month ul{list-style:none;margin:0;padding:0}.month li{display:flex;justify-content:space-between;gap:10px;padding:12px 16px;border-top:1px solid #ece5bf;font-size:16px}.month li.next-row{background:#e9fbe9;outline:2px solid #2fb34e;outline-offset:-2px;font-weight:800}
+    @media(max-width:800px){.hero-grid{grid-template-columns:1fr}.event{grid-template-columns:1fr;align-items:start}.tags{text-align:left}}
   </style>
 </head>
 <body>
@@ -287,305 +32,85 @@
         <div class="filter-box">
           <label class="filter-label" for="personFilter">筛选课程</label>
           <select id="personFilter" class="filter-select">
-            <option value="all">全部</option>
-            <option value="Bruce">Bruce</option>
-            <option value="Eva">Eva</option>
-            <option value="Alice">Alice</option>
-            <option value="Math8-12">Math8-12 tutoring</option>
+            <option value="all">全部</option><option value="Bruce">Bruce</option><option value="Eva">Eva</option><option value="Alice">Alice</option><option value="Math8-12">Math8-12 tutoring</option>
           </select>
         </div>
       </div>
     </div>
-
-    <h2 class="section-title">未来 7 天课程</h2>
-    <div id="timeline" class="timeline"></div>
-
-    <h2 class="section-title">全部课程日历</h2>
-    <div id="months"></div>
+    <h2 class="section-title">未来 7 天课程</h2><div id="timeline" class="timeline"></div>
+    <h2 class="section-title">全部课程日历</h2><div id="months"></div>
   </div>
-
-  <script>
-    let events = [
-      { title:"Eva Science 10", start:"2026-03-07T13:00:00", end:"2026-03-07T15:00:00" },
-      { title:"Eva Science 10", start:"2026-03-14T13:00:00", end:"2026-03-14T15:00:00" },
-      { title:"Eva Science 10", start:"2026-03-21T13:00:00", end:"2026-03-21T15:00:00" },
-      { title:"Eva Science 10", start:"2026-03-28T13:00:00", end:"2026-03-28T15:00:00" },
-      { title:"Eva Science 10", start:"2026-04-04T13:00:00", end:"2026-04-04T15:00:00" },
-      { title:"Eva Science 10", start:"2026-04-11T13:00:00", end:"2026-04-11T15:00:00" },
-      { title:"Eva Math 11", start:"2026-04-12T13:00:00", end:"2026-04-12T15:00:00" },
-      { title:"Eva Science 10", start:"2026-04-19T13:00:00", end:"2026-04-19T15:00:00" },
-      { title:"Eva Science 10", start:"2026-04-26T13:00:00", end:"2026-04-26T15:00:00" },
-      { title:"Eva Math 11", start:"2026-05-01T13:00:00", end:"2026-05-01T15:00:00" },
-
-      { title:"Bruce 计算机补习", start:"2026-03-02T18:30:00", end:"2026-03-02T20:30:00" },
-      { title:"Bruce 计算机补习", start:"2026-03-05T18:30:00", end:"2026-03-05T20:30:00" },
-      { title:"Bruce 计算机补习", start:"2026-03-09T18:30:00", end:"2026-03-09T20:30:00" },
-      { title:"Bruce 计算机补习", start:"2026-03-12T18:30:00", end:"2026-03-12T20:30:00" },
-      { title:"Bruce 计算机补习", start:"2026-03-17T18:30:00", end:"2026-03-17T20:30:00" },
-      { title:"Bruce 计算机补习", start:"2026-03-19T18:30:00", end:"2026-03-19T20:30:00" },
-      { title:"Bruce 计算机补习", start:"2026-03-24T18:30:00", end:"2026-03-24T20:30:00" },
-      { title:"Bruce 计算机补习", start:"2026-03-26T18:30:00", end:"2026-03-26T20:30:00" },
-      { title:"Bruce 计算机补习", start:"2026-03-31T18:30:00", end:"2026-03-31T20:30:00" },
-
-      { title:"Bruce 数理计算机", start:"2026-04-02T18:30:00", end:"2026-04-02T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-04-03T18:30:00", end:"2026-04-03T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-04-07T18:30:00", end:"2026-04-07T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-04-09T18:30:00", end:"2026-04-09T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-04-10T18:30:00", end:"2026-04-10T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-04-14T18:30:00", end:"2026-04-14T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-04-16T18:30:00", end:"2026-04-16T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-04-21T18:30:00", end:"2026-04-21T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-04-23T18:30:00", end:"2026-04-23T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-04-28T18:30:00", end:"2026-04-28T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-04-30T18:30:00", end:"2026-04-30T20:30:00" },
-
-      { title:"Bruce 数理计算机", start:"2026-05-16T18:30:00", end:"2026-05-16T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-05-23T18:30:00", end:"2026-05-23T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-05-12T18:30:00", end:"2026-05-12T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-05-14T18:30:00", end:"2026-05-14T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-05-19T18:30:00", end:"2026-05-19T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-05-21T18:30:00", end:"2026-05-21T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-05-26T18:30:00", end:"2026-05-26T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-05-28T18:30:00", end:"2026-05-28T20:30:00" },
-
-      { title:"Bruce 数理计算机", start:"2026-06-02T18:30:00", end:"2026-06-02T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-06-04T18:30:00", end:"2026-06-04T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-06-09T18:30:00", end:"2026-06-09T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-06-11T18:30:00", end:"2026-06-11T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-06-16T18:30:00", end:"2026-06-16T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-06-18T18:30:00", end:"2026-06-18T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-06-23T18:30:00", end:"2026-06-23T20:30:00" },
-      { title:"Bruce 数理计算机", start:"2026-06-25T18:30:00", end:"2026-06-25T20:30:00" },
-
-      { title:"Bruce 数理化计算机", start:"2026-08-11T18:30:00", end:"2026-08-11T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-08-13T18:30:00", end:"2026-08-13T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-08-18T18:30:00", end:"2026-08-18T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-08-20T18:30:00", end:"2026-08-20T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-08-25T18:30:00", end:"2026-08-25T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-08-27T18:30:00", end:"2026-08-27T20:30:00" },
-
-      // Bruce: every Wednesday and Saturday, September–December 2026
-      { title:"Bruce 数理化计算机", start:"2026-09-02T18:30:00", end:"2026-09-02T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-09-05T18:30:00", end:"2026-09-05T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-09-09T18:30:00", end:"2026-09-09T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-09-12T18:30:00", end:"2026-09-12T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-09-16T18:30:00", end:"2026-09-16T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-09-19T18:30:00", end:"2026-09-19T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-09-23T18:30:00", end:"2026-09-23T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-09-26T18:30:00", end:"2026-09-26T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-09-30T18:30:00", end:"2026-09-30T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-10-03T18:30:00", end:"2026-10-03T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-10-07T18:30:00", end:"2026-10-07T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-10-10T18:30:00", end:"2026-10-10T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-10-14T18:30:00", end:"2026-10-14T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-10-17T18:30:00", end:"2026-10-17T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-10-21T18:30:00", end:"2026-10-21T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-10-24T18:30:00", end:"2026-10-24T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-10-28T18:30:00", end:"2026-10-28T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-10-31T18:30:00", end:"2026-10-31T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-11-04T18:30:00", end:"2026-11-04T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-11-07T18:30:00", end:"2026-11-07T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-11-11T18:30:00", end:"2026-11-11T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-11-14T18:30:00", end:"2026-11-14T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-11-18T18:30:00", end:"2026-11-18T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-11-21T18:30:00", end:"2026-11-21T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-11-25T18:30:00", end:"2026-11-25T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-11-28T18:30:00", end:"2026-11-28T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-12-02T18:30:00", end:"2026-12-02T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-12-05T18:30:00", end:"2026-12-05T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-12-09T18:30:00", end:"2026-12-09T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-12-12T18:30:00", end:"2026-12-12T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-12-16T18:30:00", end:"2026-12-16T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-12-19T18:30:00", end:"2026-12-19T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-12-23T18:30:00", end:"2026-12-23T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-12-26T18:30:00", end:"2026-12-26T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-12-30T18:30:00", end:"2026-12-30T20:30:00" },
-
-      // Bruce: every Thursday, October 8–December 31, 2026, 6:30–8:30 PM
-      { title:"Bruce 数理化计算机", start:"2026-10-08T18:30:00", end:"2026-10-08T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-10-15T18:30:00", end:"2026-10-15T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-10-22T18:30:00", end:"2026-10-22T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-10-29T18:30:00", end:"2026-10-29T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-11-05T18:30:00", end:"2026-11-05T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-11-12T18:30:00", end:"2026-11-12T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-11-19T18:30:00", end:"2026-11-19T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-11-26T18:30:00", end:"2026-11-26T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-12-03T18:30:00", end:"2026-12-03T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-12-10T18:30:00", end:"2026-12-10T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-12-17T18:30:00", end:"2026-12-17T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-12-24T18:30:00", end:"2026-12-24T20:30:00" },
-      { title:"Bruce 数理化计算机", start:"2026-12-31T18:30:00", end:"2026-12-31T20:30:00" },
-
-      // Alice: every Sunday, October 11–December 27, 2026, 1:00–3:00 PM
-      { title:"Alice Physics11", start:"2026-10-11T13:00:00", end:"2026-10-11T15:00:00" },
-      { title:"Alice Physics11", start:"2026-10-18T13:00:00", end:"2026-10-18T15:00:00" },
-      { title:"Alice Physics11", start:"2026-10-25T13:00:00", end:"2026-10-25T15:00:00" },
-      { title:"Alice Physics11", start:"2026-11-01T13:00:00", end:"2026-11-01T15:00:00" },
-      { title:"Alice Physics11", start:"2026-11-08T13:00:00", end:"2026-11-08T15:00:00" },
-      { title:"Alice Physics11", start:"2026-11-15T13:00:00", end:"2026-11-15T15:00:00" },
-      { title:"Alice Physics11", start:"2026-11-22T13:00:00", end:"2026-11-22T15:00:00" },
-      { title:"Alice Physics11", start:"2026-11-29T13:00:00", end:"2026-11-29T15:00:00" },
-      { title:"Alice Physics11", start:"2026-12-06T13:00:00", end:"2026-12-06T15:00:00" },
-      { title:"Alice Physics11", start:"2026-12-13T13:00:00", end:"2026-12-13T15:00:00" },
-      { title:"Alice Physics11", start:"2026-12-20T13:00:00", end:"2026-12-20T15:00:00" },
-      { title:"Alice Physics11", start:"2026-12-27T13:00:00", end:"2026-12-27T15:00:00" },
-
-    ];
-    // Every Monday, October 19, 2026 through the end of June 2027.
-    // Advance by calendar days so the session stays at 17:00 across DST changes.
-    for (const date = new Date(2026, 9, 19); date <= new Date(2027, 5, 30); date.setDate(date.getDate() + 7)) {
-      const pad = n => String(n).padStart(2, "0");
-      const day = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-      events.push({ title:"Math8-12 tutoring", start:`${day}T17:00:00`, end:`${day}T21:00:00` });
+<script>
+  const events = [];
+  const add = (title,start,end) => events.push({title,start,end});
+  const pad = n => String(n).padStart(2,"0");
+  const dayString = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  function weekly(title, firstDate, lastDate, startTime, endTime){
+    const [y,m,d] = firstDate.split("-").map(Number), [ey,em,ed] = lastDate.split("-").map(Number);
+    const date = new Date(y,m-1,d), last = new Date(ey,em-1,ed);
+    for(; date <= last; date.setDate(date.getDate()+7)){
+      const day = dayString(date); add(title,`${day}T${startTime}:00`,`${day}T${endTime}:00`);
     }
-    events.sort((a,b)=> new Date(a.start) - new Date(b.start));
+  }
+  function addDates(title, dates, startTime, endTime){ for(const d of dates) add(title,`${d}T${startTime}:00`,`${d}T${endTime}:00`); }
 
-    const personFilter = document.getElementById("personFilter");
-    const timeline = document.getElementById("timeline");
-    const monthsWrap = document.getElementById("months");
+  // Eva
+  addDates("Eva Science 10",["2026-03-07","2026-03-14","2026-03-21","2026-03-28","2026-04-04","2026-04-11","2026-04-19","2026-04-26"],"13:00","15:00");
+  addDates("Eva Math 11",["2026-04-12","2026-05-01"],"13:00","15:00");
 
-    const weekdayFmt = new Intl.DateTimeFormat("zh-CN", { weekday:"short" });
-    const fullFmt = new Intl.DateTimeFormat("zh-CN", {
-      year:"numeric", month:"long", day:"numeric", weekday:"long",
-      hour:"numeric", minute:"2-digit"
-    });
-    const monthFmt = new Intl.DateTimeFormat("zh-CN", { year:"numeric", month:"long" });
+  // Bruce historical schedule
+  addDates("Bruce 计算机补习",["2026-03-02","2026-03-05","2026-03-09","2026-03-12","2026-03-17","2026-03-19","2026-03-24","2026-03-26","2026-03-31"],"18:30","20:30");
+  addDates("Bruce 数理计算机",["2026-04-02","2026-04-03","2026-04-07","2026-04-09","2026-04-10","2026-04-14","2026-04-16","2026-04-21","2026-04-23","2026-04-28","2026-04-30","2026-05-12","2026-05-14","2026-05-16","2026-05-19","2026-05-21","2026-05-23","2026-05-26","2026-05-28","2026-06-02","2026-06-04","2026-06-09","2026-06-11","2026-06-16","2026-06-18","2026-06-23","2026-06-25"],"18:30","20:30");
+  addDates("Bruce 数理化计算机",["2026-08-11","2026-08-13","2026-08-18","2026-08-20","2026-08-25","2026-08-27"],"18:30","20:30");
 
-    function md(date){
-      const m = date.getMonth() + 1;
-      const d = date.getDate();
-      return `${m}/${d}`;
-    }
+  // Bruce: Wednesday + Saturday pattern begun in September 2026.
+  // Saturdays remain 6:30–8:30 PM. Wednesdays switch to 6:00–8:00 PM starting Oct 21.
+  weekly("Bruce 数理化计算机","2026-09-02","2026-10-14","18:30","20:30");
+  weekly("Bruce 数理化计算机","2026-09-05","2026-12-26","18:30","20:30");
+  weekly("Bruce 数理化计算机","2026-10-21","2026-12-30","18:00","20:00");
 
-    function timeRange(s, e){
-      const pad = n => String(n).padStart(2,"0");
-      return `${pad(s.getHours())}:${pad(s.getMinutes())}–${pad(e.getHours())}:${pad(e.getMinutes())}`;
-    }
+  // Bruce Thursdays: 6:30–8:30 PM through Oct 15, then 6:00–8:00 PM from Oct 22.
+  weekly("Bruce 数理化计算机","2026-10-08","2026-10-15","18:30","20:30");
+  weekly("Bruce 数理化计算机","2026-10-22","2026-12-31","18:00","20:00");
 
-    function countdownText(ms){
-      if(ms < 0) return "课程已开始或已结束";
-      const totalMin = Math.floor(ms / 60000);
-      const days = Math.floor(totalMin / (60*24));
-      const hours = Math.floor((totalMin % (60*24)) / 60);
-      const mins = totalMin % 60;
-      let parts = [];
-      if(days) parts.push(`${days}天`);
-      if(hours) parts.push(`${hours}小时`);
-      parts.push(`${mins}分钟`);
-      return `距离开始还有 ${parts.join("")}`;
-    }
+  // New Bruce recurring sessions.
+  weekly("Bruce 数理化计算机","2026-10-18","2026-12-27","16:00","18:00");
+  weekly("Bruce 数理化计算机","2026-10-20","2026-12-29","19:00","20:30");
 
-    function eventOwner(ev){
-      if(ev.title.startsWith("Bruce")) return "Bruce";
-      if(ev.title.startsWith("Eva")) return "Eva";
-      if(ev.title.startsWith("Alice")) return "Alice";
-      if(ev.title.startsWith("Math8-12")) return "Math8-12";
-      return "other";
-    }
+  // Alice: Sundays 1:00–3:00 PM through December.
+  weekly("Alice Physics11","2026-10-11","2026-12-27","13:00","15:00");
 
-    function render(){
-      const now = new Date();
-      const weekAhead = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-      const filterValue = personFilter.value;
-      const filteredEvents = events.filter(ev => filterValue === "all" || eventOwner(ev) === filterValue);
-      let nextIndex = filteredEvents.findIndex(ev => new Date(ev.start) >= now);
-      if(nextIndex === -1) nextIndex = null;
+  // Math8-12 tutoring: Mondays 5:00–9:00 PM through June 2027.
+  weekly("Math8-12 tutoring","2026-10-19","2027-06-28","17:00","21:00");
 
-      const nextEv = nextIndex !== null ? filteredEvents[nextIndex] : null;
-      const weekEvents = filteredEvents
-        .map((ev, idx) => ({ ev, idx }))
-        .filter(({ ev }) => {
-          const s = new Date(ev.start);
-          return s >= now && s <= weekAhead;
-        })
-        .sort((a, b) => new Date(a.ev.start) - new Date(b.ev.start));
-      const calendarEvents = filteredEvents.map((ev, idx) => ({ ev, idx }));
+  events.sort((a,b)=>new Date(a.start)-new Date(b.start));
 
-      if(nextEv){
-        const s = new Date(nextEv.start), e = new Date(nextEv.end);
-        document.getElementById("nextTitle").textContent = nextEv.title;
-        document.getElementById("nextMeta").textContent = `${fullFmt.format(s)} · ${timeRange(s,e)}`;
-        document.getElementById("countdown").textContent = countdownText(s - now);
-      } else {
-        document.getElementById("nextTitle").textContent = "已没有后续课程";
-        document.getElementById("nextMeta").textContent = "当前列表中的课程已全部结束";
-        document.getElementById("countdown").textContent = "";
-      }
+  const personFilter=document.getElementById("personFilter"), timeline=document.getElementById("timeline"), monthsWrap=document.getElementById("months");
+  const weekdayFmt=new Intl.DateTimeFormat("zh-CN",{weekday:"short"});
+  const fullFmt=new Intl.DateTimeFormat("zh-CN",{year:"numeric",month:"long",day:"numeric",weekday:"long",hour:"numeric",minute:"2-digit"});
+  const monthFmt=new Intl.DateTimeFormat("zh-CN",{year:"numeric",month:"long"});
+  const md=d=>`${d.getMonth()+1}/${d.getDate()}`;
+  const timeRange=(s,e)=>`${pad(s.getHours())}:${pad(s.getMinutes())}–${pad(e.getHours())}:${pad(e.getMinutes())}`;
+  function countdownText(ms){ if(ms<0)return"课程已开始或已结束"; const totalMin=Math.floor(ms/60000),days=Math.floor(totalMin/1440),hours=Math.floor((totalMin%1440)/60),mins=totalMin%60,parts=[]; if(days)parts.push(`${days}天`); if(hours)parts.push(`${hours}小时`); parts.push(`${mins}分钟`); return `距离开始还有 ${parts.join("")}`; }
+  function eventOwner(ev){ if(ev.title.startsWith("Bruce"))return"Bruce"; if(ev.title.startsWith("Eva"))return"Eva"; if(ev.title.startsWith("Alice"))return"Alice"; if(ev.title.startsWith("Math8-12"))return"Math8-12"; return"other"; }
 
-      timeline.innerHTML = "";
-      if(weekEvents.length === 0){
-        timeline.innerHTML = `<div class="empty">未来 7 天内没有符合条件的课程，下方日历显示全部符合条件的课程。</div>`;
-      }
+  function render(){
+    const now=new Date(), weekAhead=new Date(now.getTime()+7*86400000), filterValue=personFilter.value;
+    const filtered=events.filter(ev=>filterValue==="all"||eventOwner(ev)===filterValue);
+    let nextIndex=filtered.findIndex(ev=>new Date(ev.start)>=now); if(nextIndex===-1)nextIndex=null;
+    const nextEv=nextIndex!==null?filtered[nextIndex]:null;
+    const weekEvents=filtered.map((ev,idx)=>({ev,idx})).filter(({ev})=>{const s=new Date(ev.start);return s>=now&&s<=weekAhead;});
 
-      weekEvents.forEach(({ ev, idx }) => {
-        const s = new Date(ev.start), e = new Date(ev.end);
-        const card = document.createElement("div");
-        card.className = "event";
-        if(nextIndex === idx) card.classList.add("next");
-        if(e < now) card.classList.add("past");
+    if(nextEv){const s=new Date(nextEv.start),e=new Date(nextEv.end);document.getElementById("nextTitle").textContent=nextEv.title;document.getElementById("nextMeta").textContent=`${fullFmt.format(s)} · ${timeRange(s,e)}`;document.getElementById("countdown").textContent=countdownText(s-now);}else{document.getElementById("nextTitle").textContent="已没有后续课程";document.getElementById("nextMeta").textContent="当前列表中的课程已全部结束";document.getElementById("countdown").textContent="";}
 
-        card.innerHTML = `
-          <div class="date">
-            <div class="md">${md(s)}</div>
-            <div class="wk">${weekdayFmt.format(s)}</div>
-          </div>
-          <div class="main">
-            <h3>${ev.title}</h3>
-            <p>${fullFmt.format(s)}<br>${timeRange(s,e)}</p>
-          </div>
-          <div class="tags">
-            <span class="tag">${nextIndex === idx ? "下一节课" : (e < now ? "已结束" : "待上课")}</span>
-          </div>
-        `;
-        timeline.appendChild(card);
-      });
+    timeline.innerHTML=""; if(!weekEvents.length)timeline.innerHTML='<div class="empty">未来 7 天内没有符合条件的课程，下方日历显示全部符合条件的课程。</div>';
+    weekEvents.forEach(({ev,idx})=>{const s=new Date(ev.start),e=new Date(ev.end),card=document.createElement("div");card.className="event"+(nextIndex===idx?" next":"");card.innerHTML=`<div class="date"><div class="md">${md(s)}</div><div class="wk">${weekdayFmt.format(s)}</div></div><div class="main"><h3>${ev.title}</h3><p>${fullFmt.format(s)}<br>${timeRange(s,e)}</p></div><div class="tags"><span class="tag">${nextIndex===idx?"下一节课":"待上课"}</span></div>`;timeline.appendChild(card);});
 
-      const grouped = {};
-      calendarEvents.forEach(({ ev, idx }) => {
-        const s = new Date(ev.start);
-        const key = `${s.getFullYear()}-${String(s.getMonth()+1).padStart(2,'0')}`;
-        if(!grouped[key]) grouped[key] = [];
-        grouped[key].push({ev, idx});
-      });
-
-      monthsWrap.innerHTML = "";
-      if(calendarEvents.length === 0){
-        monthsWrap.innerHTML = `<div class="empty">当前筛选条件下没有课程。</div>`;
-        return;
-      }
-
-      Object.keys(grouped).forEach(key => {
-        const monthBox = document.createElement("section");
-        monthBox.className = "month";
-        const monthEvents = grouped[key];
-        const firstDate = new Date(monthEvents[0].ev.start);
-        const isPastMonth =
-          firstDate.getFullYear() < now.getFullYear() ||
-          (firstDate.getFullYear() === now.getFullYear() && firstDate.getMonth() < now.getMonth());
-        monthBox.innerHTML = `
-          <details ${isPastMonth ? "" : "open"}>
-            <summary>${monthFmt.format(firstDate)}（${monthEvents.length}节课）</summary>
-            <ul></ul>
-          </details>
-        `;
-        const ul = monthBox.querySelector("ul");
-        monthEvents.forEach(({ev, idx}) => {
-          const s = new Date(ev.start), e = new Date(ev.end);
-          const li = document.createElement("li");
-          if(idx === nextIndex) li.classList.add("next-row");
-          li.innerHTML = `
-            <span>${md(s)} ${weekdayFmt.format(s)} · ${ev.title}</span>
-            <strong>${timeRange(s,e)}</strong>
-          `;
-          ul.appendChild(li);
-        });
-        monthsWrap.appendChild(monthBox);
-      });
-    }
-
-    personFilter.addEventListener("change", render);
-    render();
-    setInterval(render, 60000);
-  </script>
+    const grouped={}; filtered.forEach((ev,idx)=>{const s=new Date(ev.start),key=`${s.getFullYear()}-${pad(s.getMonth()+1)}`;(grouped[key]??=[]).push({ev,idx});}); monthsWrap.innerHTML="";
+    if(!filtered.length){monthsWrap.innerHTML='<div class="empty">当前筛选条件下没有课程。</div>';return;}
+    Object.keys(grouped).forEach(key=>{const monthEvents=grouped[key],firstDate=new Date(monthEvents[0].ev.start),isPast=firstDate.getFullYear()<now.getFullYear()||(firstDate.getFullYear()===now.getFullYear()&&firstDate.getMonth()<now.getMonth()),box=document.createElement("section");box.className="month";box.innerHTML=`<details ${isPast?"":"open"}><summary>${monthFmt.format(firstDate)}（${monthEvents.length}节课）</summary><ul></ul></details>`;const ul=box.querySelector("ul");monthEvents.forEach(({ev,idx})=>{const s=new Date(ev.start),e=new Date(ev.end),li=document.createElement("li");if(idx===nextIndex)li.classList.add("next-row");li.innerHTML=`<span>${md(s)} ${weekdayFmt.format(s)} · ${ev.title}</span><strong>${timeRange(s,e)}</strong>`;ul.appendChild(li);});monthsWrap.appendChild(box);});
+  }
+  personFilter.addEventListener("change",render); render(); setInterval(render,60000);
+</script>
 </body>
 </html>
